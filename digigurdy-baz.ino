@@ -1,4 +1,4 @@
-// VERSION 117 with 5th tuning option 
+// VERSION 117 with 5th tuning option
 // Has louder buzz to work with latest version of FluidSynth on Android phones. On bs-16i turn down buzz slider else will be too loud.
 // ADDING EEPROM to remember previous settings.   // If you do not already have the EEPROM library in Documents--->Arduino----> libraries folder, you can download it from here. Put the files into a folder just called EEPROM inside your libraries folder.
 //    https://github.com/PaulStoffregen/EEPROM
@@ -7,45 +7,22 @@
 // DJ duplicated all usbMIDI lines to MIDI included MIDI.h and MIDI serial to allow Teensy 3.6 or 3.5 to output to a serial DIN socket as well using the MIDI library
 // EXPERIMENTAL PITCHBEND VERSION. For now commented out but it could be used and does work
 
-
 //DJ Add Serial/Midiout put via 5 pin midi din socket  Teensy Pin 1 TX to  midi pin 5 Teensy 3.3V out to midi pin 4
 
-
-// NOTE: 
+// NOTE:
 // To CHANGE TUNING you now press top left and top right keys at same time.
 // To enter DEMO MODE you now press left top dark blue button and rightmost LOWER button together.
 
 // This stops people accidentally entering Demo mode as happened with the earlier system.
-
 // For Digi Nerdy Gurdy there are now 3 extra digital pins which allow easier navigation of the tuning options rather than using key combinations.
-
-
-
-
-// This is for the white Adafruit 1.3" 126 x 64 monochrome OLED screen 
-
-
-
-
+// This is for the white Adafruit 1.3" 126 x 64 monochrome OLED screen
 // Bug fixed so can still play it using big button if motor totally fails i.e. is in effect disconnected OR if keybox is disconnected from soundbox in the case of the DigiNerdyGurdy
-
-
 // Has crank override button, one press for ON next press for OFF instead of holding it down all the time.
-
 // On Fluid synth you are using the soundfont viennaaltomod10.sf2 or later modified by me to include buzzes of different types and also keyclicks of different types.
-// This is a soundfont from the open source Midi-Gurdy project at midigurdy.com to which I have just added a few extra sounds, mainly some trompette buzzes recorded for me by Nigel Eaton, 
+// This is a soundfont from the open source Midi-Gurdy project at midigurdy.com to which I have just added a few extra sounds, mainly some trompette buzzes recorded for me by Nigel Eaton,
 // some keyclick sounds and some extra drum and cymbal sounds just for fun if you want the crank to make a drum sound instead of a buzz for example.
 
-
- 
-
-
-
-
-
-
-
-//SUMMARY OF PINS 
+//SUMMARY OF PINS
 
 //DJ Add Serial/Midiout put via 5 pin midi din socket  Teensy Pin 1 TX to  midi pin 5 Teensy 3.3V out to midi pin 4
 
@@ -68,11 +45,14 @@
 #include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
-//#include <Adafruit_SSD1306.h> // Note used in this version. This is used if you have an Adafruit OLED screen that requires the SSD1306 driver
-#include <Adafruit_SH1106.h>   // <-------------------------------------------------------------------------------------  Must use the Wonho-maker version of the Adafruit_SH1106 library for it to work correctly
+
+// SSD1306 displays should comment out SH1106 and uncomment SSD1306
+// MUST use this version of SH1106 code: https://github.com/wonho-maker/Adafruit_SH1106
+//#include <Adafruit_SSD1306.h>
+#include <Adafruit_SH1106.h>
+
 #include <MIDI.h> // The MIDI Library
 #include <EEPROM.h>
-
 
 
 //MIDI_CREATE_DEFAULT_INSTANCE();
@@ -100,23 +80,23 @@ MIDI_CREATE_INSTANCE(HardwareSerial, Serial1, MIDI);  // NOTE Serial1 transmit P
 // For Melody Soft, use a velocity range of 0-31
 // For Melody Medium, use a velocity range of 32-63
 // For Melody Attack, use a velocity range of 64-127
- //int noteVol = 56; // Velocity of melody notes range  zero to 127 
+ //int noteVol = 56; // Velocity of melody notes range  zero to 127
  int noteVol = 56;
  int DVol = 56;  //volume of DRONES where 127 is highest value possible
- 
+
  int buzzvolume = 127;
  int buzzrootkey = 62;
- 
+
  int clickvolume = 127;
 
 
- 
+
  int buzzthreshold = 20; // Potentiometer code has been set up to give a value of 20 at its mid point when cranking at medium speed
 
 
- 
+
  const int channel = 1;
- 
+
  int tonestatus;
  int octavestatus;
 
@@ -134,7 +114,7 @@ int chan1midi = 67;   // default is G4
 int chan2midi = 55;   // default is G3
 int trompmidi = 60;  // default is C4
 int dronemidi = 36;   // default is C2
- 
+
 //XXXXXXXXXXXXXXXXXXXXXXXXX   EEPROM XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 // start reading from the first byte (address 0) of the EEPROM
 int tuningaddress = 1;     // address for tuning value 1 to 14 in the EEPROM is 1
@@ -162,11 +142,11 @@ int settings;
       int octaveupbuttonstatus;
       int octavedownbuttonstatus;
       int capobuttonstatus;
-      
+
 
 
  //int keyboxstatus[25];  // array representing status of each key at any time
-//XXXXXXXXXXXXXXXXXXX End of setup variables XXXXXXXXXXXXXXXXXXXXXXXXXXXX 
+//XXXXXXXXXXXXXXXXXXX End of setup variables XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 
 
@@ -231,8 +211,8 @@ int highertrigger;
 // If using software SPI (the default case for regular arduinos):
 #define OLED_MOSI   9       // Also known as DATA and sometimes as SDA <---------------------------------------------------------------------------------------------------------------------------------------
 #define OLED_CLK   10       // Also known as SCK sometimes <---------------------------------------------------------------------------------------------------------------------------------------------------
-#define OLED_DC    11   
-#define OLED_CS    12     
+#define OLED_DC    11
+#define OLED_CS    12
 #define OLED_RESET 13
 Adafruit_SH1106 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS); //         <----------------------------------------------------------------------------------------------- Changed to this for our SH1106 driver screen
 
@@ -490,7 +470,7 @@ static const unsigned char PROGMEM logo17_glcd_bmp[] ={
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 
 };
- 
+
 
 //Bitmap A4
 static const unsigned char PROGMEM logo18_glcd_bmp[] ={
@@ -557,7 +537,7 @@ static const unsigned char PROGMEM logo18_glcd_bmp[] ={
 0x3F, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
 
@@ -626,7 +606,7 @@ static const unsigned char PROGMEM logo19_glcd_bmp[] ={
 0x3F, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00  
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
 
@@ -3086,7 +3066,7 @@ static const unsigned char PROGMEM logo54_glcd_bmp[] ={
 0x00, 0x00, 0x00, 0x00, 0x00, 0xE3, 0xED, 0x80, 0x67, 0xDC, 0x76, 0xCC, 0xF6, 0xDB, 0x6D, 0xB6,
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0xB0, 0x00, 0x00, 0x00,
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0xE0, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00  
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
 // End of bitmaps for intro screen
@@ -3157,7 +3137,7 @@ static const unsigned char PROGMEM logo55_glcd_bmp[] ={
 0x00, 0x00, 0x01, 0xF0, 0x0F, 0xC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0xF8, 0x00,
 0x00, 0x00, 0x00, 0x3F, 0xFE, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-};    
+};
 
 // Extra note bitmaps added 27th Oct 2020
 
@@ -3296,7 +3276,7 @@ static const unsigned char PROGMEM logo57_glcd_bmp[] ={
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 0x3F, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00  
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
 //Bitmap for C4#  MIDI 61
@@ -3365,7 +3345,7 @@ static const unsigned char PROGMEM logo58_glcd_bmp[] ={
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00  
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
 //Bitmap for C4  MIDI 60
@@ -3434,7 +3414,7 @@ static const unsigned char PROGMEM logo59_glcd_bmp[] ={
 0x00, 0x00, 0x1E, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 0x00, 0x00, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00  
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
 //Bitmap for B3  MIDI 59
@@ -3502,7 +3482,7 @@ static const unsigned char PROGMEM logo60_glcd_bmp[] ={
 0x00, 0x00, 0x3E, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 0x00, 0x00, 0x1C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00  
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
 //Bitmap for A3#  MIDI 58
@@ -3570,7 +3550,7 @@ static const unsigned char PROGMEM logo61_glcd_bmp[] ={
 0x00, 0x00, 0x7F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 0x00, 0x00, 0x3E, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 0x00, 0x00, 0x1C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00  
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
 //Bitmap for A3  MIDI 57
@@ -3638,7 +3618,7 @@ static const unsigned char PROGMEM logo62_glcd_bmp[] ={
 0x00, 0x00, 0x3F, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 0x00, 0x00, 0x1F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 0x00, 0x00, 0x0E, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00  
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
 //Bitmap for G3#  MIDI 56
@@ -3706,7 +3686,7 @@ static const unsigned char PROGMEM logo63_glcd_bmp[] ={
 0x00, 0x00, 0x7F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 0x00, 0x00, 0x3E, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 0x00, 0x00, 0x1C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00  
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
 //Bitmap for G3  MIDI 55
@@ -3775,31 +3755,31 @@ static const unsigned char PROGMEM logo64_glcd_bmp[] ={
 0x00, 0x00, 0x3F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 0x00, 0x00, 0x1E, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 0x00, 0x00, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00  
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
 
 
 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  SONG LIST FOR DEMO MODE XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 //Each block of 4 characters represents a note. The first 2 digits are the MIDI code for the note, e.g. G4 would be 67.  NOTE: Silence is represented by 00
-//The next 2 digits represent how long the note or silent pause sounds for on a scale of 1 to 16. 
+//The next 2 digits represent how long the note or silent pause sounds for on a scale of 1 to 16.
 // 16 is a whole note, 8 is a half note, 4 is a quarter note, 2 is an eighth note and 1 is a sixteenth note in terms of duration.
 // After each note there is a space or a "|" symbol where the "|" represents the end of each bar.
 // The software plays the sequence of notes in each string until it reaches the end where there are some X symbols which tell it that it has reached the end of the song being played.
 
 // 1 The Congress (reel)
  const char signMessage1[] PROGMEM  = {"7602 6902 6902 6702 6904 7102 7402|7602 8102 8102 7802 7902 7602 7402 7902|7602 6902 7202 6902 7602 6902 7202 6902|7102 6702 6702 6902 7102 7402 7602 7902|7602 6902 6902 6702 6904 7102 7402|7602 8102 8102 7802 7902 7602 7402 7102|7202 7102 7202 7402 7602 7902 7602 7402|7202 6902 7102 6702 6904 7102 7402|7602 6902 6902 6702 6904 7102 7402|7602 8102 8102 7802 7902 7602 7402 7902|7602 6902 7202 6902 7602 6902 7202 6902|7102 6702 6702 6902 7102 7402 7602 7902|7602 6902 6902 6702 6904 7102 7402|7602 8102 8102 7802 7902 7602 7402 7102|7202 7102 7202 7402 7602 7902 7602 7402|7202 6902 7102 6702 6904 7102 7402|7602 8102 8102 7902 8102 8302 8102 7902|7602 8102 8102 7902 7602 7902 7102 7902|7602 7902 7102 7902 7602 7902 7102 7902|7602 8102 8102 7802 7902 7602 7102 7902|7602 8102 8102 7902 8104 8102 7902|7602 8102 8102 7802 7902 7602 7402 7102|7204 7202 7402 7604 7602 7402|7202 6902 7102 6702 6904 7102 7402|7602 8102 8102 7902 8102 8302 8102 7902|7602 8102 8102 7902 7602 7902 7102 7902|7602 7902 7102 7902 7602 7902 7102 7902|7602 8102 8102 7802 7902 7602 7102 7902|7602 8102 8102 7902 8104 8102 7902|7602 8102 8102 7802 7902 7602 7402 7102|7204 7202 7402 7604 7602 7402|7202 6902 7102 6702 6908|XXXXXXXXXXXXXXXXXXXXX"};
- 
+
 
 // 2 The Gravel Walks (reel)
  //const char signMessage2[] PROGMEM  = {"6904 7602 6902 7202 7102 6902 7602 6902|6904 7602 6902 7102 6902 6702 7102|6904 7602 6902 7102 7202 7402 7602 7802|7902 7602 7402 7202 7102 6902 6702 7102|6904 7602 6902 7202 7102 6902 7602 6902|6904 7602 6902 7102 6902 6702 7102|6904 7602 6902 7102 7202 7402 7602 7802|7902 7602 7402 7202 7102 6902 6702 7102|6904 8102 6902 7902 6902 7802 6902|6904 7602 6902 7102 6902 6702 7102|6904 8102 6902 7902 6902 7802 6902|7902 7602 7402 7202 7102 6902 6702 7102|6904 8102 6902 7702 6902 7802 6902|6904 7602 6902 7102 6902 6702 7102|6902 7102 7202 7402 7602 7802 7902 8102|7902 7602 7402 7202 7102 6902 6702 7102|7202 7102 6902 7102 6702 6904 6902 7102|7202 6902 6902 7402 7102 6902 6702 7102|7202 7102 6902 7102 6702 6902 7102 7202 7402|7602 7802 7902 7602 7402 7102 6702 7102|7202 7102 6902 7102 6702 6904 6902 7102|7202 6902 6902 7402 7102 6902 6702 7102|7202 7102 6902 7102 6702 6902 7102 7202 7402|7602 7802 7902 7602 7402 7102 6702 7102|7204 7902 7202 8102 7202 7902 7202|7204 7902 7202 7102 6902 6702 7102|7204 7902 7202 8102 7202 7902 8102|7902 7602 7402 7202 7102 6902 6702 7102|7204 7902 7202 8102 7202 7902 7202|7204 7902 7202 7102 6902 6702 7102|6902 7102 7202 7402 7602 7702 7902 8102|7902 7602 7402 7202 7102 6902 6702 7102|7204 7902 7202 8102 7202 7902 7202|7204 7902 7202 7102 6902 6702 7102|7204 7902 7202 8102 7202 7902 8102|7902 7602 7402 7202 7102 6902 6702 7102|7204 7902 7202 8102 7202 7902 7202|7204 7902 7202 7102 6902 6702 7102|6902 7102 7202 7402 7602 7702 7902 8102|7902 7602 7402 7202 7102 6902 6702 7102XXXXXXXXXXXXXXXXXXX"};
 const char signMessage2[] PROGMEM  = {"6904 7602 6902 7202 7102 6902 7602 6902|6904 7602 6902 7102 6902 6702 7102|6904 7602 6902 7102 7202 7402 7602 7802|7902 7602 7402 7202 7102 6902 6702 7102|6904 7602 6902 7202 7102 6902 7602 6902|6904 7602 6902 7102 6902 6702 7102|6904 7602 6902 7102 7202 7402 7602 7802|7902 7602 7402 7202 7102 6902 6702 7102|6904 8102 6902 7902 6902 7802 6902|6904 7602 6902 7102 6902 6702 7102|6904 8102 6902 7902 6902 7802 6902|7902 7602 7402 7202 7102 6902 6702 7102|6904 8102 6902 7702 6902 7802 6902|6904 7602 6902 7102 6902 6702 7102|6902 7102 7202 7402 7602 7802 7902 8102|7902 7602 7402 7202 7102 6902 6702 7102|7202 7102 6902 7102 6702 6904 6902 7102|7202 6902 6902 7402 7102 6902 6702 7102|7202 7102 6902 7102 6702 6902 7102 7202 7402|7602 7802 7902 7602 7402 7102 6702 7102|7202 7102 6902 7102 6702 6904 6902 7102|7202 6902 6902 7402 7102 6902 6702 7102|7202 7102 6902 7102 6702 6902 7102 7202 7402|7602 7802 7902 7602 7402 7102 6702 7102|7204 7902 7202 8102 7202 7902 7202|7204 7902 7202 7102 6902 6702 7102|7204 7902 7202 8102 7202 7902 8102|7902 7602 7402 7202 7102 6902 6702 7102|7204 7902 7202 8102 7202 7902 7202|7204 7902 7202 7102 6902 6702 7102|6902 7102 7202 7402 7602 7702 7902 8102|7902 7602 7402 7202 7102 6902 6702 7102|7204 7902 7202 8102 7202 7902 7202|7204 7902 7202 7102 6902 6702 7102|7204 7902 7202 8102 7202 7902 8102|7902 7602 7402 7202 7102 6902 6702 7102|7204 7902 7202 8102 7202 7902 7202|7204 7902 7202 7102 6902 6702 7102|6902 7102 7202 7402 7602 7702 7902 8102|7902 7602 7402 7202 7102 6902 6708 XXXXXXXXXXXXXXXXXXX"};
 
-// 3 La Jument de Michao 
+// 3 La Jument de Michao
  const char signMessage3[] PROGMEM  = {"7401 7202 7102|6903 7101 6902 6702 6904 7402 7201 7101|6901 6901 6901 7101 6902 6702 6903 7401 7202 7102|6903 7101 6902 6702 6904 7402 7201 7101|6901 6901 6901 7101 6902 6702 6904 6902 6901 6901|6902 6901 7101 7201 7201 7101 6901 6702 6702 7202 7101 7201|7401 7401 7201 7101 6902 6702 6904 6902 6901 6901|6902 6901 7101 7201 7201 7101 6901 6702 6702 7202 7101 7201|7401 7401 7201 7101 6902 6702 6903 7401 7202 7102|6903 7101 6902 6702 6903 6901 6901 6701 6901 7101|7202 7102 6901 6901 6901 6701 6903 6901 6901 6901 6901 6901|6902 6902 6901 7101 7201 6901 6702 6702 7201 7201 7101 7201|7402 7402 6901 6901 6901 6701 6903 6901 6901 6901 6901 6901|6902 6902 6901 7101 7201 6901 6702 6702 7201 7201 7101 7201|7402 7402 6901 6901 6901 6701 6903 6901 7402 7202|6901 6901 6901 6901 7402 7202 7103 7101 6901 6901 6901 7101|7202 7102 6901 6901 6901 6701 6903 6901 7402 7202|6901 6901 6901 6901 7402 7202 7103 7101 6901 6901 6901 7101|7202 7102 6901 6901 6901 6701 6908|XXXXXXXXXXXXX"};
 
 // 4 Brenda Stubbert's (reel)
-const char signMessage4[] PROGMEM  = {"7102|6901 6901 6902 7102|6902 6702 6902 6902 7102 6901 6901 6902 7102 6902 7602 7402 7402 7602|6704 7102 6902 7102 6702 6702 7102|7204 7102 6902 7102 6702 6702 7102|6901 6901 6902 7102 6902 6702 6902 6902 7102|6901 6901 6902 7102 6902 7602 7402 7402 8102|7902 7602 7402 7102 6702 6902 7102 7402|7401 7603 7402 7102 7602 6902 6902|7102|6901 6901 6902 7102|6902 6702 6902 6902 7102 6901 6901 6902 7102 6902 7602 7402 7402 7602|6704 7102 6902 7102 6702 6702 7102|7204 7102 6902 7102 6702 6702 7102|6901 6901 6902 7102 6902 6702 6902 6902 7102|6901 6901 6902 7102 6902 7602 7402 7402 8102|7902 7602 7402 7102 6702 6902 7102 7402|7401 7603 7402 7102 7602 6902 6902|7102|6901 6901 6902 8104 6901 6901 6902 7904|6902 8102 7902 7602 8102 7902 7602 7902|6704 7102 6902 7102 6702 6702 7102|7204 7102 6902 7102 6702 6702 7102|6901 6901 6902 8104 6901 6901 6902 7904|6902 8102 7902 7602 8102 7902 7602 8102|7902 7602 7402 7102 6702 6902 7102 7402|7101 7603 7402 7102 7602 6902 6902|7102|6901 6901 6902 8104 6901 6901 6902 7904|6902 8102 7902 7602 8102 7902 7602 7902|6704 7102 6902 7102 6702 6702 7102|7204 7102 6902 7102 6702 6702 7102|6901 6901 6902 8104 6901 6901 6902 7904|6902 8102 7902 7602 8102 7902 7602 8102|7902 7602 7402 7102 6702 6902 7102 7402|7101 7603 7402 7102 7602 6902 6902|7102|6901 6901 6902 8104 6901 6901 6902 7904|6902 8102 7902 7602 8102 7902 7602 7902|6704 7102 6902 7102 6702 6702 7102|7204 7102 6902 7102 6702 6702 7102|6901 6901 6902 7102 6902 6702 6902 6902 7102|6901 6901 6902 7102 6902 7602 7402 7402 8102|7902 7602 7402 7102 6702 6902 7102 7402|7401 7603 7402 7102 7602 6902 6902 XXXXXXXXXXX"}; 
+const char signMessage4[] PROGMEM  = {"7102|6901 6901 6902 7102|6902 6702 6902 6902 7102 6901 6901 6902 7102 6902 7602 7402 7402 7602|6704 7102 6902 7102 6702 6702 7102|7204 7102 6902 7102 6702 6702 7102|6901 6901 6902 7102 6902 6702 6902 6902 7102|6901 6901 6902 7102 6902 7602 7402 7402 8102|7902 7602 7402 7102 6702 6902 7102 7402|7401 7603 7402 7102 7602 6902 6902|7102|6901 6901 6902 7102|6902 6702 6902 6902 7102 6901 6901 6902 7102 6902 7602 7402 7402 7602|6704 7102 6902 7102 6702 6702 7102|7204 7102 6902 7102 6702 6702 7102|6901 6901 6902 7102 6902 6702 6902 6902 7102|6901 6901 6902 7102 6902 7602 7402 7402 8102|7902 7602 7402 7102 6702 6902 7102 7402|7401 7603 7402 7102 7602 6902 6902|7102|6901 6901 6902 8104 6901 6901 6902 7904|6902 8102 7902 7602 8102 7902 7602 7902|6704 7102 6902 7102 6702 6702 7102|7204 7102 6902 7102 6702 6702 7102|6901 6901 6902 8104 6901 6901 6902 7904|6902 8102 7902 7602 8102 7902 7602 8102|7902 7602 7402 7102 6702 6902 7102 7402|7101 7603 7402 7102 7602 6902 6902|7102|6901 6901 6902 8104 6901 6901 6902 7904|6902 8102 7902 7602 8102 7902 7602 7902|6704 7102 6902 7102 6702 6702 7102|7204 7102 6902 7102 6702 6702 7102|6901 6901 6902 8104 6901 6901 6902 7904|6902 8102 7902 7602 8102 7902 7602 8102|7902 7602 7402 7102 6702 6902 7102 7402|7101 7603 7402 7102 7602 6902 6902|7102|6901 6901 6902 8104 6901 6901 6902 7904|6902 8102 7902 7602 8102 7902 7602 7902|6704 7102 6902 7102 6702 6702 7102|7204 7102 6902 7102 6702 6702 7102|6901 6901 6902 7102 6902 6702 6902 6902 7102|6901 6901 6902 7102 6902 7602 7402 7402 8102|7902 7602 7402 7102 6702 6902 7102 7402|7401 7603 7402 7102 7602 6902 6902 XXXXXXXXXXX"};
 
 // 5 Father Kelly (reel)
 const char signMessage5[] PROGMEM  = {"7402 7602|7804 7402 7802 7602 7402 7102 7402|6902 7402 7402 7302 7402 7602 7802 8102|7904 7602 7802 7902 7802 7602 7402|7102 7602 7602 7402 7602 7802 7902 7602|7804 7402 7802 7602 7402 7102 7402|6902 7402 7402 7302 7402 7602 7802 7902|8104 7802 8102 8104 7802 8102|7902 7602 7302 7602 7404|7402 7602|7804 7402 7802 7602 7402 7102 7402|6902 7402 7402 7302 7402 7602 7802 8102|7904 7602 7802 7902 7802 7602 7402|7102 7602 7602 7402 7602 7802 7902 7602|7804 7402 7802 7602 7402 7102 7402|6902 7402 7402 7302 7402 7602 7802 7902|8104 7802 8102 8104 7802 8102|7902 7602 7302 7602 7404|7802 7902|8104 7802 8102 7402 8102 7802 8102|8104 7802 8102 7402 8102 7802 8102|7802 7102 7102 7102 7602 7402 7302 7102|6902 7102 7302 7402 7602 7402 7302 7102|8104 7802 8102 7402 8102 7802 8102|8104 7802 8102 7402 8102 7802 8102|7904 7602 7902 7804 7402 7802|7602 7402 7302 7602 7404|7802 7902|8104 7802 8102 7402 8102 7802 8102|8104 7802 8102 7402 8102 7802 8102|7802 7102 7102 7102 7602 7402 7302 7102|6902 7102 7302 7402 7602 7402 7302 7102|8104 7802 8102 7402 8102 7802 8102|8104 7802 8102 7402 8102 7802 8102|7904 7602 7902 7804 7402 7802|7602 7402 7302 7602 7404|XXXXXXXXXXXXXXXXXXXXX"};
@@ -3826,7 +3806,7 @@ const char signMessage10[] PROGMEM  = {"6902|6902 7102 6902 8106|8102 7902 7602 
 // 11 Monster Cafe 2
 const char signMessage11[] PROGMEM  = {"7203 7501 7401 7201 7401 7501|7702 7902 7404|7401 7201 7401 7501 7701 7501 7401 7201|7001 7201 7401 7501 7402 7202|7203 7501 7401 7201 7401 7501|7702 7902 7404|7401 7201 7401 7501 7701 7501 7401 7201|7001 7201 7401 7001 7204|7203 7501 7401 7201 7401 7501|7702 7902 7404|7401 7201 7401 7501 7701 7501 7401 7201|7001 7201 7401 7501 7402 7202|7203 7501 7401 7201 7401 7501|7702 7902 7404|7401 7201 7401 7501 7701 7501 7401 7201|7001 7201 7401 7001 7204|7202 7501 7201 7204|7002 7402 7702 7002|6903 7201 7001 6901 7001 7201|7401 7201 7001 6901 7002 6702|7202 7501 7201 7204|7002 7402 7702 7002|6903 7201 7001 6901 7001 7201|7401 7201 7001 6901 6704|7202 7501 7201 7204|7002 7402 7702 7002|6903 7201 7001 6901 7001 7201|7401 7201 7001 6901 7002 6702|7202 7501 7201 7204|7002 7402 7702 7002|6903 7201 7001 6901 7001 7201|7401 7201 7001 6901 6704|XXXXXXXXXXXXXXXX"};
 
-// 12 Thunderstruck 
+// 12 Thunderstruck
 const char signMessage12[] PROGMEM  = {"8101 6901 7901 6901 7801 6901 7901 6901 7701 6901 7601 6901 7701 6901 7401 6901|7601 6901 7301 6901 7401 6901 7201 6901 7401 6901 7201 6901 7401 6901 7201 6901|8101 6901 7901 6901 7801 6901 7901 6901 7701 6901 7601 6901 7701 6901 7401 6901|7601 6901 7301 6901 7401 6901 7201 6901 7401 6901 7201 6901 7401 6901 7201 6901|8101 6901 7901 6901 7801 6901 7901 6901 7701 6901 7601 6901 7701 6901 7401 6901|7601 6901 7301 6901 7401 6901 7201 6901 7401 6901 7201 6901 7401 6901 7201 6901|8101 6901 7901 6901 7801 6901 7901 6901 7701 6901 7601 6901 7701 6901 7401 6901|7601 6901 7301 6901 7401 6901 7201 6901 7401 6901 7201 6901 7401 6901 7201 6901|8101 6901 7901 6901 7801 6901 7901 6901 7701 6901 7601 6901 7701 6901 7401 6901|7601 6901 7301 6901 7401 6901 7201 6901 7401 6901 7201 6901 7401 6901 7201 6901|8101 6901 7901 6901 7801 6901 7901 6901 7701 6901 7601 6901 7701 6901 7401 6901|7601 6901 7301 6901 7401 6901 7201 6901 7401 6901 7201 6901 7401 6901 7201 6901|8101 6901 7901 6901 7801 6901 7901 6901 7701 6901 7601 6901 7701 6901 7401 6901|7601 6901 7301 6901 7401 6901 7201 6901 7401 6901 7201 6901 7401 6901 7201 6901|8101 6901 7901 6901 7801 6901 7901 6901 7701 6901 7601 6901 7701 6901 7401 6901|7601 6901 7301 6901 7401 6901 7201 6901 7401 6901 7201 6901 7401 6901 7201 6901|8101 6901 7901 6901 7801 6901 7901 6901 7701 6901 7601 6901 7701 6901 7401 6901|7601 6901 7301 6901 7401 6901 7201 6901 7401 6901 7201 6901 7401 6901 7201 6901|8101 6901 7901 6901 7801 6901 7901 6901 7701 6901 7601 6901 7701 6901 7401 6901|7601 6901 7301 6901 7401 6901 7201 6901 7401 6901 7201 6901 7401 6901 7201 6901|8101 6901 7901 6901 7801 6901 7901 6901 7701 6901 7601 6901 7701 6901 7401 6901|7601 6901 7301 6901 7401 6901 7201 6901 7401 6901 7201 6901 7401 6901 7201 6901|8101 6901 7901 6901 7801 6901 7901 6901 7701 6901 7601 6901 7701 6901 7401 6901|7601 6901 7301 6901 7401 6901 7201 6901 7401 6901 7201 6901 7401 6901 7201 6901|8101 6901 7901 6901 7801 6901 7901 6901 7701 6901 7601 6901 7701 6901 7401 6901|7601 6901 7301 6901 7401 6901 7201 6901 7401 6901 7201 6901 7401 6901 7201 6901|7601 6901 7301 6901 7401 6901 7201 6901 7401 6901 7201 6901 7401 6901 7201 6901|8101 6901 7901 6901 7801 6901 7901 6901 7701 6901 7601 6901 7801 6901 7401 6901|7601 6901 7301 6901 7401 6901 7201 6901 7401 6901 7201 6901 7401 6901 7201 6901|8101 6901 7901 6901 7801 6901 7901 6901 7701 6901 7601 6901 7701 6901 7401 6901|7601 6901 7301 6901 7401 6901 7201 6901 7401 6901 7201 6901 7401 6901 7201 6901|7401 6901 7701 6901 7401 6901 7701 6901 7401 6901 7701 6901 7401 6901 7701 6901|7301 6901 7601 6901 7201 6901 7601 6901 7201 6901 7601 6901 7202 7602|7401 6901 7701 6901 7401 6901 7701 6901 7401 6901 7701 6901 7401 6901 7701 6901|7301 6901 7601 6901 7201 6901 7601 6901 7201 6901 7601 6901 7202 7602|XXXXXXXXXXXXXXXX"};
 
  // 13 Sí Beag Sí Mór
@@ -3859,7 +3839,7 @@ const char signMessage21[] PROGMEM = {"7204 7404 7404 7202 8008|7902 7702 7902 8
 // 22 Blowzabella (Key: Gmaj)
 const char signMessage22[] PROGMEM = {"7402 7201 7101 6901 6701|7202 6901 7102 6701|7402 7201 7101 6901 6701|6902 7401 6703|7402 7201 7101 6901 6701|7202 6901 7102 6701|7402 7201 7101 6901 6701|6902 7401 6703|7902 7401 7101 6901 7101|7201 7101 6901 7101 6901 6701|7902 7401 7101 6901 7101|7201 7101 6901 6703|7902 7401 7101 6901 7101|7201 7101 6901 7101 6901 6701|7902 7401 7101 6901 7101|7201 7101 6901 6703|7101 6901 7101 7201 7101 7201|7403 7402 7201|7101 7201 7101 6901 7101 6901|6703 6702 6901|7101 6901 7101 7201 7101 7201|7403 7402 7201|7101 7201 7101 6901 7101 6901|6703 6702 6901|7102 6701 7102 6701|6901 7101 6901 7102 6701|7102 6701 7102 6701|6901 7101 6901 6703|7102 6701 7102 6701|6901 7101 6901 7102 6701|7102 6701 7102 6701|6901 7101 6901 6703|XXXXXXXXXXXXXXXXXXXXX"};
 
-// 23 Herr Mannelig                                  
+// 23 Herr Mannelig
 const char signMessage23[] PROGMEM = {"0008 0004 0002 8302|8302 8402 8302 8102 7904 7602 7802|7902 8102 7902 7802 7604 7602 7802|7904 7902 7902 8104 7902 8102|8308 7904 7902 8302|8302 8402 8302 8102 7904 7602 7802|7902 8102 7902 7802 7604 7602 7802|7908 8102 8101 7902 8102|8308 7904 7902 8302|8302 8402 8302 8102 7902 7902 7602 7802|7902 8102 7902 7802 7604 7602 7802|7908 8104 7902 8102|8308 8604 0002 8302|8302 8402 8302 8102 7904 7602 7802|7902 8102 7902 7802 7604 7602 7802|7902 8102 8102 7901 7801|7608|XXXXXXXXXXXXXXXXXXXXX"};
 
 
@@ -3907,7 +3887,7 @@ char myChar;
 
 
 
-  //ANALOG INPUTS 
+  //ANALOG INPUTS
   int crankvoltagePin = A1;  //analog voltage from the crank motor connected to Pin 15 which is also analog i.e. A1
   int potentiometerPin = A2; // analog voltage from potentiometer connected to Pin 16 which is also A2
 
@@ -3926,7 +3906,7 @@ int turnrestoff;
 
 int a;
 int aold;
-//NOTE: The letters aa bb etc below are identifier codes for each note. 
+//NOTE: The letters aa bb etc below are identifier codes for each note.
 //Also below is a commented table of what note each identifier corresponds to, and what pin that note's microswitch is wired to on the Teensy 3.5 board
 //The board Pins seem not to be in order because all the sharp notes are wired to one row of pins and the main notes to another. This keeps the wiring neater, I think, maybe.
 int SAMPLES = 500;
@@ -3934,7 +3914,7 @@ int s_val[500];
 
 
 //        Teensy Pin || MIDI value || Note in G/C tuning               Note in D/G tuning || MIDI Value
-int aa;//     37            91         G6                               D6                      86          
+int aa;//     37            91         G6                               D6                      86
 int bb;//     36            89         F6                               C6                      84
 int cc;//     20            90         F6#                              C6#                     85
 int dd;//     35            88         E6                               B5                      83
@@ -3965,33 +3945,33 @@ int xx;//     2             68         G4#                              D4#     
 
 
 
-             
 
 
-Bounce button2 = Bounce(2, 5);  
-Bounce button24 = Bounce(24, 5);  
-Bounce button3 = Bounce(3, 5); 
-Bounce button25 = Bounce(25, 5);  
-Bounce button26 = Bounce(26, 5);  
-Bounce button4 = Bounce(4, 5);  
-Bounce button27 = Bounce(27, 5);  
-Bounce button5 = Bounce(5, 5);  
-Bounce button28 = Bounce(28, 5);  
-Bounce button29 = Bounce(29, 5);  
-Bounce button6 = Bounce(6, 5);  
-Bounce button30 = Bounce(30, 5);  
-Bounce button7 = Bounce(7, 5);  
-Bounce button31 = Bounce(31, 5);  
-Bounce button8 = Bounce(8, 5); 
-Bounce button32 = Bounce(32, 5);  
-Bounce button33 = Bounce(33, 5);  
-Bounce button18 = Bounce(18, 5);  
-Bounce button34 = Bounce(34, 5);  
-Bounce button19 = Bounce(19, 5);  
-Bounce button35 = Bounce(35, 5);  
-Bounce button20 = Bounce(20, 5);  
-Bounce button36 = Bounce(36, 5); 
-Bounce button37 = Bounce(37, 5);  
+
+Bounce button2 = Bounce(2, 5);
+Bounce button24 = Bounce(24, 5);
+Bounce button3 = Bounce(3, 5);
+Bounce button25 = Bounce(25, 5);
+Bounce button26 = Bounce(26, 5);
+Bounce button4 = Bounce(4, 5);
+Bounce button27 = Bounce(27, 5);
+Bounce button5 = Bounce(5, 5);
+Bounce button28 = Bounce(28, 5);
+Bounce button29 = Bounce(29, 5);
+Bounce button6 = Bounce(6, 5);
+Bounce button30 = Bounce(30, 5);
+Bounce button7 = Bounce(7, 5);
+Bounce button31 = Bounce(31, 5);
+Bounce button8 = Bounce(8, 5);
+Bounce button32 = Bounce(32, 5);
+Bounce button33 = Bounce(33, 5);
+Bounce button18 = Bounce(18, 5);
+Bounce button34 = Bounce(34, 5);
+Bounce button19 = Bounce(19, 5);
+Bounce button35 = Bounce(35, 5);
+Bounce button20 = Bounce(20, 5);
+Bounce button36 = Bounce(36, 5);
+Bounce button37 = Bounce(37, 5);
 
 
 
@@ -4007,17 +3987,17 @@ void setup() {
  Serial.println("Ready");
  delay(2000);
  }
- 
+
 
  MIDI.begin();     // Turns on Serial MIDI sending MIDI out via the Tx pin which is Pin 1 on any Teesny 3.x board
 
 
- //XXXXXXXXXXXXXXXXXXXXXXXXX For displaying info on OLED XXXXXXXXXXXXXXXXXXXXXXXX 
+ //XXXXXXXXXXXXXXXXXXXXXXXXX For displaying info on OLED XXXXXXXXXXXXXXXXXXXXXXXX
   // by default, we'll generate the high voltage from the 3.3v line internally! (neat!)
   //display.begin(SSD1306_SWITCHCAPVCC);
   display.begin(SH1106_SWITCHCAPVCC);  // <------------------------------------------------------------------------------------------------------------------------------------------------------- Change this
   // init done
-  
+
   // Show image buffer on the display hardware.
   // internally, this will display the splashscreen.
   display.display();
@@ -4028,46 +4008,46 @@ void setup() {
 
 // Intro animated sequence
       //display.clearDisplay();
-      display.drawBitmap(0, 0,  logo47_glcd_bmp, 128, 64, 1); 
+      display.drawBitmap(0, 0,  logo47_glcd_bmp, 128, 64, 1);
       display.display();
       delay(2000);
        display.clearDisplay();
-      display.drawBitmap(0, 0,  logo48_glcd_bmp, 128, 64, 1); 
+      display.drawBitmap(0, 0,  logo48_glcd_bmp, 128, 64, 1);
       display.display();
       delay(200);
        display.clearDisplay();
-      display.drawBitmap(0, 0,  logo49_glcd_bmp, 128, 64, 1); 
+      display.drawBitmap(0, 0,  logo49_glcd_bmp, 128, 64, 1);
       display.display();
       delay(200);
        display.clearDisplay();
-      display.drawBitmap(0, 0,  logo50_glcd_bmp, 128, 64, 1); 
+      display.drawBitmap(0, 0,  logo50_glcd_bmp, 128, 64, 1);
       display.display();
       delay(200);
        display.clearDisplay();
-      display.drawBitmap(0, 0,  logo51_glcd_bmp, 128, 64, 1); 
+      display.drawBitmap(0, 0,  logo51_glcd_bmp, 128, 64, 1);
       display.display();
       delay(200);
        display.clearDisplay();
-      display.drawBitmap(0, 0,  logo52_glcd_bmp, 128, 64, 1); 
+      display.drawBitmap(0, 0,  logo52_glcd_bmp, 128, 64, 1);
       display.display();
       delay(200);
        display.clearDisplay();
-      display.drawBitmap(0, 0,  logo53_glcd_bmp, 128, 64, 1); 
+      display.drawBitmap(0, 0,  logo53_glcd_bmp, 128, 64, 1);
       display.display();
       delay(200);
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo54_glcd_bmp, 128, 64, 1); 
+      display.drawBitmap(0, 0,  logo54_glcd_bmp, 128, 64, 1);
       display.display();
       //delay(2000);
 
 
 
-  
 
 
-  
 
-  
+
+
+
  //XXXXXXXXXXXXXXXXXXXXXXXXX End of setup for displaying notes on OLED XXXXXXXXXXXXXXXXXXXX
 
 
@@ -4076,7 +4056,7 @@ void setup() {
   pinMode(crankvoltagePin, INPUT);
   pinMode(potentiometerPin, INPUT);
 
-  
+
 
   //  Crank overrride button
   pinMode(crankoverridePin, INPUT);
@@ -4092,7 +4072,7 @@ void setup() {
 
 
 
-  
+
 
   pinMode(2, INPUT_PULLUP);
   pinMode(24, INPUT_PULLUP);
@@ -4111,22 +4091,22 @@ void setup() {
   pinMode(8, INPUT_PULLUP);
   pinMode(32, INPUT_PULLUP);
   pinMode(33, INPUT_PULLUP);
-  pinMode(18, INPUT_PULLUP);   
+  pinMode(18, INPUT_PULLUP);
   pinMode(34, INPUT_PULLUP);
-  pinMode(19, INPUT_PULLUP);   
+  pinMode(19, INPUT_PULLUP);
   pinMode(35, INPUT_PULLUP);
-  pinMode(20, INPUT_PULLUP);   
+  pinMode(20, INPUT_PULLUP);
   pinMode(36, INPUT_PULLUP);
   pinMode(37, INPUT_PULLUP);
 
 
 
-  
+
 
 
 
 // SELF TEST
-// Work out of crank module is present or not 
+// Work out of crank module is present or not
 // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Work out Standard Deviation of lots of samples of analog Pin 2 i.e. the one the crank gearmotor is connected to XXXXXXXXXXXXXXXXXXXXXXXX
 // If gearmotor of the crank module is connected the variation in voltage readings will be very small
 // If crank module gearmotor for any reason is not connected then voltage on analog Pin 2 will wander randomly and its SD will be larger
@@ -4148,7 +4128,7 @@ void setup() {
     Serial.println(meanSample);
                  }
 
-  
+
   // HOW TO FIND STANDARD DEVIATION
   // STEP 1, FIND THE MEAN. (We Just did.)
 
@@ -4179,7 +4159,7 @@ void setup() {
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0,0);
-  
+
   if(crankmodulepresent == 1){
     if(debug == 1){
       Serial.println("Crank module detected");
@@ -4231,9 +4211,9 @@ void setup() {
   display.println(" ");
   display.println("(X) Key:  NO");
   display.println("(Change the Settings)");
-  
-  
-  
+
+
+
   display.display();
   delay(1000);
 
@@ -4247,26 +4227,26 @@ void setup() {
 
 
 
-  
+
   while (settings == 0){
       button20.update();  //press upper right blue key to select NOTES display i.e. original style of display
       if (button20.fallingEdge()){
                     settings = 1;     // 1 means we want to KEEP PREVIOUS SETTINGS
                     display.println("  KEEPING SETTINGS");
-                    display.display(); 
-                    delay(1000);                 
+                    display.display();
+                    delay(1000);
                                   }
 
       button2.update();  //press upper left dark blue key to select Do Re Mi display style
       if (button2.fallingEdge()){
                     settings = 2;     // 2 means we want to CHANGE THE PREVIOUS SETTINGS i.e. change the tuning and or display style
                     display.println("CHANGING SETTINGS...");
-                    display.display(); 
-                    delay(1000); 
-                                  }                            
+                    display.display();
+                    delay(1000);
+                                  }
                                   }    // end of while loop
-  
-  
+
+
 if (settings == 2){       // i.e. we DO want to enter menus to change the settings
 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Do RE MI or original display selection XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
  // Choose  Do Re Mi display or Original display with notes shown
@@ -4285,23 +4265,23 @@ if (settings == 2){       // i.e. we DO want to enter menus to change the settin
   delay(1000);
 
 
-  
+
   while (displaystyle == 0){
       button20.update();  //press upper right blue key to select NOTES display i.e. original style of display
       if (button20.fallingEdge()){
                     displaystyle = 1;     // 1 means we want Notes style display
                     display.println("    NOTES DISPLAY");
-                    display.display(); 
-                    delay(1000);                 
+                    display.display();
+                    delay(1000);
                                   }
 
       button2.update();  //press upper left dark blue key to select Do Re Mi display style
       if (button2.fallingEdge()){
                     displaystyle = 2;     // 2 means we want Do Re Mi style of display
                     display.println("  Do Re Mi DISPLAY");
-                    display.display(); 
-                    delay(1000); 
-                                  }                            
+                    display.display();
+                    delay(1000);
+                                  }
                                   }    // end of while loop
 
  // -------------------  SAVE THE NEW PREFERRED DISPLAY STYLE TO EEPROM ---------------------------
@@ -4335,17 +4315,17 @@ tunings();     // Set up your tuning options
       if (button20.fallingEdge()){
                     drones_silent = 0;     // 0 represents we do not want the drones silenced
                     display.println("     DRONES ON");
-                    display.display(); 
-                    delay(2000);                 
+                    display.display();
+                    delay(2000);
                                   }
 
       button2.update();  //press upper left dark blue key to select Drones OFF i.e. silent
       if (button2.fallingEdge()){
                     drones_silent = 1;     // 1 represents the fact that we do want the drones silenced i.e. OFF
                     display.println("     DRONES OFF");
-                    display.display(); 
-                    delay(2000); 
-                                  }                            
+                    display.display();
+                    delay(2000);
+                                  }
                                   }    // end of while loop
 
  // -------------------  SAVE THE NEW On or OFF DRONES PREFERENCE TO EEPROM ---------------------------
@@ -4364,36 +4344,36 @@ if(settings == 1){
       // read a byte from the current address of the EEPROM
       value = EEPROM.read(tuningaddress);
       choosekey = value;  // NOTE we also have to iupdate what trompmidi and dronemidi values are for each choosekey value
-      
+
 // Retrieve display style value from EEPROM
       value = EEPROM.read(displaytypeaddress);
       displaystyle = value;
 
 // Retrieve drones on or off value from EEPROM
       value = EEPROM.read(droneaddress);
-      drones_silent = value;   
+      drones_silent = value;
 
 // Retrieve tromp MIDI value from EEPROM
       value = EEPROM.read(trompmidiaddress);
       trompmidi = value;
 
-// Retrieve drone MIDI value from EEPROM      
+// Retrieve drone MIDI value from EEPROM
       value = EEPROM.read(dronemidiaddress);
       dronemidi = value;
 
-// Retrieve Chan1 open melody string MIDI value from EEPROM      
+// Retrieve Chan1 open melody string MIDI value from EEPROM
       value = EEPROM.read(chan1midiaddress);
       chan1midi = value;
 
-// Retrieve Chan2 open melody string MIDI value from EEPROM      
+// Retrieve Chan2 open melody string MIDI value from EEPROM
       value = EEPROM.read(chan2midiaddress);
-      chan2midi = value;      
-      
-// Retrieve tonestatus value from EEPROM      
+      chan2midi = value;
+
+// Retrieve tonestatus value from EEPROM
       value = EEPROM.read(tonestatusaddress);
       tonestatus = value;
 
-// Retrieve octavestatus value from EEPROM      
+// Retrieve octavestatus value from EEPROM
       value = EEPROM.read(octavestatusaddress);
       octavestatus = value;
 
@@ -4430,21 +4410,21 @@ buzzrootkey = trompmidi;     // Set the buzz pitch to match the trompette value
 
                     display.print("Melody Chan 1:   ");
                     MIDInote = chan1midi;
-                    putinthenote();    
+                    putinthenote();
                     display.print("Melody Chan 2:   ");
                     MIDInote = chan2midi;
-                    putinthenote();                   
+                    putinthenote();
                     if(tonestatus == 1){display.print("Tromp-Ch3 CapoON ");}
                     else{display.print("Tromp-Ch3 CapOFF ");}
                     MIDInote = trompmidi;
                     putinthenote();
                     if(tonestatus == 1){display.print("Drone-Ch4 CapoON ");}
-                    else{display.print("Drone-Ch4 CapOFF ");}          
+                    else{display.print("Drone-Ch4 CapOFF ");}
                     MIDInote = dronemidi;
                     putinthenote();
                     display.print("(O) Key = START");
- 
- 
+
+
   display.display();
   delay(1000);
 
@@ -4453,24 +4433,24 @@ buzzrootkey = trompmidi;     // Set the buzz pitch to match the trompette value
   while (waiting == 2){
       button20.update();  //press upper right blue key to continue
       if (button20.fallingEdge()){
-                            waiting = 0;  
+                            waiting = 0;
                                   }
-      delay(100);                            
-                       } 
+      delay(100);
+                       }
 
 
-  
+
                   }  // end of if settingsequals 1 i.e at this point we need to pull from EEPROM the values for the tuning option we saved last time and want to use now and the display style we used last time and also want to use now.
 
 
 
 
-                      
 
 
 
 
-  
+
+
 
                           display.clearDisplay();
                           display.drawBitmap(0, 0,  logo55_glcd_bmp, 128, 64, 1);   // Crank when ready screen display
@@ -4479,13 +4459,13 @@ buzzrootkey = trompmidi;     // Set the buzz pitch to match the trompette value
 
 
                   //Silence the buzz as for some odd reason it sometimes comes on at this point and at other times it does not
-                  usbMIDI.sendNoteOff(buzzrootkey, 0, 5);   // Chien buzz off on channel 5  
-                  MIDI.sendNoteOff(buzzrootkey, 0, 5);                        
+                  usbMIDI.sendNoteOff(buzzrootkey, 0, 5);   // Chien buzz off on channel 5
+                  MIDI.sendNoteOff(buzzrootkey, 0, 5);
 
   //int midpoint = analogRead(pitchbendPin);  // 0 to 1023 in value  read once on setup NOTE Make sure pitchbend knob is in middle at startup as this zeroes it in effect
-  
+
   //    highertrigger = midpoint + 50;   // sets up a dead zone in the pitchbend potentiometer of 50 either way of midpoint before note is bent
-  //    lowertrigger = midpoint - 50;                    
+  //    lowertrigger = midpoint - 50;
 
 
 }  // end of void setup
@@ -4529,7 +4509,7 @@ if(crankmodulepresent == 1){
       // Temporary for debugging
       crankvoltage = analogRead(crankvoltagePin);
 
-      
+
       //Serial.print("crankvoltage=");
       //Serial.println(crankvoltage);
       //Serial.print("     potvalue=");
@@ -4543,18 +4523,18 @@ if(crankmodulepresent == 1){
 
 
 
-      
+
 
 
                                            }  // end of if samplethebuzzpotentiometer etc
- 
+
   if (samplecrankvoltage == buzzsamplinginterval){
       samplecrankvoltage = 0;
-      crankvoltage = analogRead(crankvoltagePin);   
+      crankvoltage = analogRead(crankvoltagePin);
                                         }
 
                            } // end of if crankmodulepresent equals 1
-                           
+
 
 
 
@@ -4563,27 +4543,27 @@ if(crankmodulepresent == 1){
  cr = cr + 1;
  if (cr == 200){     // Looks at big arcade gaming button status every 200 program cycles
      buttonstateold = buttonstate;
-  
-  if (digitalRead(crankoverridePin) == LOW){                 
+
+  if (digitalRead(crankoverridePin) == LOW){
                                      buttonstate = 1;         // Pressing override button
                                            }
       else{ buttonstate = 0;}                                 // Not pressing override button
 
-                    
-  
+
+
   if (buttonstate == 1 && buttonstateold == 0){                     // You have just pressed button now
                         if(crankbutton == 0){
                                       crankbutton = 1;              // Crankbutton value changes state between 0 and 1 with each press of the button
                                              }
-                        else {crankbutton = 0; }                    
-                                               }                                     
+                        else {crankbutton = 0; }
+                                               }
    cr = 0;
-     
+
      // For debugging
    //Serial.print("crankbutton =");
    //Serial.print(crankbutton);
    //Serial.print("   tempcounter =");
-   //Serial.print(tempcounter); 
+   //Serial.print(tempcounter);
    //Serial.print("   crankvoltage =");
    //Serial.println(crankvoltage);
    //Serial.println(" ");
@@ -4596,16 +4576,16 @@ if(crankmodulepresent == 1){
      // so if we take the potentiometer value and subtract 512 from it we will then get a value of -512 to +511
      // NOTE: We may need to put in a dead zone between say 505 and 519 to account for the potentiometer not quite returning to exact centre point of its travel otherwise DG would always play slightly sharp or slightly flat
      // if we then multiply that value by 15 we will get a range of -7680 to +7665 which is within range and should give us a big swing of pitch for initial tests
-     
+
      //PitchValue = (pitchbendsample - 512) * 15;
 
      PitchValue = 0;
-     
+
      if(pitchbendsample < lowertrigger){ PitchValue = (lowertrigger - pitchbendsample) * (-15); }
      if(pitchbendsample > highertrigger){ PitchValue = (pitchbendsample - highertrigger) * 15; }
-     
 
-     
+
+
      usbMIDI.sendPitchBend(PitchValue, 1);    // Channel 1
      usbMIDI.sendPitchBend(PitchValue, 2);    // Channel 2
      MIDI.sendPitchBend(PitchValue, 1);    // Channel 1
@@ -4613,14 +4593,14 @@ if(crankmodulepresent == 1){
 
      //Serial.print("PitchValue: ");
      //Serial.println(PitchValue);
-     */ 
+     */
 
 
-   
-   
+
+
                 }    // end of sample the gaming button status every 200 cycles
    //XXXXXXXXXXXXXXXXXXXXXXXXXXXXX  END OF READ CRANK FIRE BUTTON STATUS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-  
+
 
   button2.update();
   button24.update();
@@ -4639,11 +4619,11 @@ if(crankmodulepresent == 1){
   button8.update();
   button32.update();
   button33.update();
-  button18.update();   
+  button18.update();
   button34.update();
-  button19.update();   
+  button19.update();
   button35.update();
-  button20.update();   
+  button20.update();
   button36.update();
   button37.update();
 
@@ -4652,7 +4632,7 @@ if(crankmodulepresent == 1){
 
 
  // Note: On messages when each button is pressed
- 
+
   if (button37.fallingEdge()) {
     aa = 1;
     a = a + 1;     //    The term a is a variable that is used to detect if the state of any of the buttons has changed, if not we leave things as they are until a state change is detected
@@ -4662,14 +4642,14 @@ if(crankmodulepresent == 1){
     if (button36.fallingEdge()) {
     bb = 1;
 
-    a = a + 1; 
+    a = a + 1;
   }
 
-    if (button20.fallingEdge()) {  
+    if (button20.fallingEdge()) {
     cc = 1;
 
     a = a + 1;
-  } 
+  }
 
     if (button35.fallingEdge()) {
     dd = 1;
@@ -4677,7 +4657,7 @@ if(crankmodulepresent == 1){
         a = a + 1;
   }
 
-    if (button19.fallingEdge()) {    
+    if (button19.fallingEdge()) {
     ee = 1;
 
         a = a + 1;
@@ -4689,17 +4669,17 @@ if(crankmodulepresent == 1){
         a = a + 1;
   }
 
-   if (button18.fallingEdge()) {    
+   if (button18.fallingEdge()) {
    gg = 1;
- 
+
         a = a + 1;
-  } 
+  }
 
    if (button33.fallingEdge()) {
     hh = 1;
 
-        a = a + 1; 
-  } 
+        a = a + 1;
+  }
 
     if (button32.fallingEdge()) {
     ii = 1;
@@ -4716,14 +4696,14 @@ if(crankmodulepresent == 1){
     if (button31.fallingEdge()) {
     kk = 1;
 
-        a = a + 1; 
+        a = a + 1;
   }
 
   if (button7.fallingEdge()) {
     ll = 1;
 
-        a = a + 1; 
-  } 
+        a = a + 1;
+  }
 
      if (button30.fallingEdge()) {
      mm = 1;
@@ -4734,20 +4714,20 @@ if(crankmodulepresent == 1){
     if (button6.fallingEdge()) {
     nn = 1;
 
-        a = a + 1; 
+        a = a + 1;
   }
 
     if (button29.fallingEdge()) {
     oo = 1;
 
-        a = a + 1; 
+        a = a + 1;
   }
 
     if (button28.fallingEdge()) {
     pp = 1;
 
-        a = a + 1; 
-  } 
+        a = a + 1;
+  }
 
     if (button5.fallingEdge()) {
     qq = 1;
@@ -4756,13 +4736,13 @@ if(crankmodulepresent == 1){
   }
 
     if (button27.fallingEdge()) {
-    rr = 1;  
+    rr = 1;
 
         a = a + 1;
   }
 
     if (button4.fallingEdge()) {
-    ss = 1;  
+    ss = 1;
 
         a = a + 1;
   }
@@ -4771,7 +4751,7 @@ if(crankmodulepresent == 1){
     tt = 1;
 
         a = a + 1;
-  } 
+  }
 
    if (button25.fallingEdge()) {
     uu = 1;
@@ -4779,7 +4759,7 @@ if(crankmodulepresent == 1){
         a = a + 1;
   }
 
-      if (button3.fallingEdge()) {                     
+      if (button3.fallingEdge()) {
     vv = 1;
 
         a = a + 1;
@@ -4798,13 +4778,13 @@ if(crankmodulepresent == 1){
   }
 
 
-    
-  
 
 
-  
 
-  
+
+
+
+
   if (button2.risingEdge()) {
     xx = 0;
     a = a - 1;
@@ -4815,11 +4795,11 @@ if(crankmodulepresent == 1){
     a = a - 1;
 
   }
-  if (button3.risingEdge()) {                 
+  if (button3.risingEdge()) {
     vv = 0;
     a = a - 1;
 
-  } 
+  }
   if (button25.risingEdge()) {
     uu = 0;
     a = a - 1;
@@ -4829,7 +4809,7 @@ if(crankmodulepresent == 1){
     tt = 0;
     a = a - 1;
 
-  } 
+  }
   if (button4.risingEdge()) {
     ss = 0;
     a = a - 1;
@@ -4839,7 +4819,7 @@ if(crankmodulepresent == 1){
     rr = 0;
     a = a - 1;
 
-  } 
+  }
   if (button5.risingEdge()) {
     qq = 0;
     a = a - 1;
@@ -4849,7 +4829,7 @@ if(crankmodulepresent == 1){
     pp = 0;
     a = a - 1;
 
-  }  
+  }
   if (button29.risingEdge()) {
     oo = 0;
     a = a - 1;
@@ -4859,7 +4839,7 @@ if(crankmodulepresent == 1){
     nn = 0;
     a = a - 1;
 
-  } 
+  }
   if (button30.risingEdge()) {
     mm = 0;
     a = a - 1;
@@ -4869,7 +4849,7 @@ if(crankmodulepresent == 1){
     ll = 0;
     a = a - 1;
 
-  } 
+  }
   if (button31.risingEdge()) {
     kk = 0;
     a = a - 1;
@@ -4879,7 +4859,7 @@ if(crankmodulepresent == 1){
     jj = 0;
     a = a - 1;
 
-  } 
+  }
   if (button32.risingEdge()) {
     ii = 0;
     a = a - 1;
@@ -4889,8 +4869,8 @@ if(crankmodulepresent == 1){
     hh = 0;
     a = a - 1;
 
-  }       
-    if (button18.risingEdge()) {    
+  }
+    if (button18.risingEdge()) {
     gg = 0;
     a = a - 1;
 
@@ -4900,21 +4880,21 @@ if(crankmodulepresent == 1){
     a = a - 1;
 
   }
-  if (button19.risingEdge()) {   
+  if (button19.risingEdge()) {
     ee = 0;
     a = a - 1;
 
-  } 
+  }
   if (button35.risingEdge()) {
     dd = 0;
     a = a - 1;
 
   }
-  if (button20.risingEdge()) {   
+  if (button20.risingEdge()) {
     cc = 0;
     a = a - 1;
 
-  } 
+  }
   if (button36.risingEdge()) {
     bb = 0;
     a = a - 1;
@@ -4924,7 +4904,7 @@ if(crankmodulepresent == 1){
     aa = 0;
     a = a - 1;
 
-  } 
+  }
 
 
 
@@ -4934,7 +4914,7 @@ if(crankmodulepresent == 1){
 
 
 
-  
+
 
 
 
@@ -4945,8 +4925,8 @@ if(crankmodulepresent == 1){
                     checkforcapochange();
                                }
             }   // end of check for a capo change while playing
-  
-            
+
+
 
 
 // Look to see if we are wanting to go into demo mode
@@ -4964,7 +4944,7 @@ if (aa == 1 && xx == 1){  //i.e. if pressing left Blue key and lower rightmost k
 
 
 
-                        
+
   //delay(1000);
   demo1();
 
@@ -4979,7 +4959,7 @@ if (digitalRead(octavedownbuttonPin) == LOW){ octavedownbuttonstatus = 1; }
 
 
 // Look to see if we want to change tuning
-if ((cc == 1 && xx == 1)|| (octaveupbuttonstatus == 1 && octavedownbuttonstatus == 1)){  //i.e. if pressing left upper dark BLUE key and upper rightmost light blue keys at same time go into tuning mode                                                                             
+if ((cc == 1 && xx == 1)|| (octaveupbuttonstatus == 1 && octavedownbuttonstatus == 1)){  //i.e. if pressing left upper dark BLUE key and upper rightmost light blue keys at same time go into tuning mode
     octaveupbuttonstatus = 0;   // Reset these status values to zero
     octavedownbuttonstatus = 0;
     cc = 0;
@@ -5007,22 +4987,22 @@ if ((cc == 1 && xx == 1)|| (octaveupbuttonstatus == 1 && octavedownbuttonstatus 
       if (button20.fallingEdge()){
                     drones_silent = 0;     // 0 represents we do not want the drones silenced
                     display.println("   DRONES ON");
-                    display.display(); 
-                    delay(2000);                 
+                    display.display();
+                    delay(2000);
                                   }
 
       button2.update();  //press upper left dark blue key to select Drones OFF i.e. silent
       if (button2.fallingEdge()){
                     drones_silent = 1;     // 1 represents the fact that we do want the drones silenced i.e. OFF
                     display.println("   DRONES OFF");
-                    display.display(); 
-                    delay(2000); 
-                                  }                            
+                    display.display();
+                    delay(2000);
+                                  }
                                   }    // end of while loop
 
  // -------------------  SAVE THE NEW On or OFF DRONES PREFERENCE TO EEPROM ---------------------------
  EEPROM.write(droneaddress, drones_silent);
-    
+
 
                           display.clearDisplay();
                           display.drawBitmap(0, 0,  logo55_glcd_bmp, 128, 64, 1);   // Crank when ready screen display
@@ -5030,7 +5010,7 @@ if ((cc == 1 && xx == 1)|| (octaveupbuttonstatus == 1 && octavedownbuttonstatus 
                           initialrun = 1;
 
 
-                        
+
   delay(1000);
 }  // end of see if you want to change the tuning or not
 
@@ -5041,10 +5021,10 @@ if ((cc == 1 && xx == 1)|| (octaveupbuttonstatus == 1 && octavedownbuttonstatus 
 
 
 
-if (aold != a && tempcounter > 50){   // i.e. a key is being pressed and we are cranking, so we need to cut the G4 open string 
+if (aold != a && tempcounter > 50){   // i.e. a key is being pressed and we are cranking, so we need to cut the G4 open string
 //Analyse status of each button and sound the highest note among them while silencing the rest. Sequence of anaylysis starts at the highest note and works down to the lowest.
 //The reason I compare aold with a is to use it as a mechanism to look for a change in status of any of the buttons. If no change, let the attached PC or phone play the last note that was sent a bit longer.
-//If you keep sending it unecessary MIDI data you get a stacatto effect from the attached device. 
+//If you keep sending it unecessary MIDI data you get a stacatto effect from the attached device.
 //Only need to send it new MIDI data when the overall button status changes i.e. you let go of a button or press a new one.
 //tempcounter is greater than zer if cranking or pressing the big gaming FIRE button. If doing neither then no notes will be playable.
 
@@ -5057,197 +5037,197 @@ turnrestoff = 0;
 
 
 
-    
+
 
 
 // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  Melody string section start, both variants as regards the drones XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 //if(choosekey == 1 || choosekey == 2 || choosekey == 10){
 
-if (aa == 1){     
+if (aa == 1){
       turnrestoff = 1;
       shift = 24;
-      highestnotebeingplayed = chan2midi + shift;                              
+      highestnotebeingplayed = chan2midi + shift;
       }
 
 
-                      
-if (cc == 1 && turnrestoff == 0){       
+
+if (cc == 1 && turnrestoff == 0){
       turnrestoff = 1;
       shift = 23;
-      highestnotebeingplayed = chan2midi + shift;   
-                                } 
+      highestnotebeingplayed = chan2midi + shift;
+                                }
 
-                      
-if (bb == 1 && turnrestoff == 0){           
+
+if (bb == 1 && turnrestoff == 0){
       turnrestoff = 1;
       shift = 22;
-      highestnotebeingplayed = chan2midi + shift; 
-                                }    
+      highestnotebeingplayed = chan2midi + shift;
+                                }
 
-                      
-if (dd == 1 && turnrestoff == 0){       
+
+if (dd == 1 && turnrestoff == 0){
       turnrestoff = 1;
       shift = 21;
-      highestnotebeingplayed = chan2midi + shift;  
+      highestnotebeingplayed = chan2midi + shift;
                                 }
 
-                      
-if (ee == 1 && turnrestoff == 0){              
+
+if (ee == 1 && turnrestoff == 0){
       turnrestoff = 1;
       shift = 20;
-      highestnotebeingplayed = chan2midi + shift; 
-                                }  
+      highestnotebeingplayed = chan2midi + shift;
+                                }
 
-                      
-if (ff == 1 && turnrestoff == 0){                
+
+if (ff == 1 && turnrestoff == 0){
       turnrestoff = 1;
       shift = 19;
-      highestnotebeingplayed = chan2midi + shift; 
+      highestnotebeingplayed = chan2midi + shift;
                                 }
 
 
-if (gg == 1 && turnrestoff == 0){        
+if (gg == 1 && turnrestoff == 0){
       turnrestoff = 1;
       shift = 18;
-      highestnotebeingplayed = chan2midi + shift; 
-                                }  
-
-                      
-if (hh == 1 && turnrestoff == 0){             
-      turnrestoff = 1;
-      shift = 17;
-      highestnotebeingplayed = chan2midi + shift; 
+      highestnotebeingplayed = chan2midi + shift;
                                 }
 
-                      
-if (ii == 1 && turnrestoff == 0){                
+
+if (hh == 1 && turnrestoff == 0){
+      turnrestoff = 1;
+      shift = 17;
+      highestnotebeingplayed = chan2midi + shift;
+                                }
+
+
+if (ii == 1 && turnrestoff == 0){
 
       turnrestoff = 1;
       shift = 16;
-      highestnotebeingplayed = chan2midi + shift;  
+      highestnotebeingplayed = chan2midi + shift;
                                 }
 
-                      
-if (jj == 1 && turnrestoff == 0){                  
+
+if (jj == 1 && turnrestoff == 0){
       turnrestoff = 1;
       shift = 15;
-      highestnotebeingplayed = chan2midi + shift;   
-                                } 
+      highestnotebeingplayed = chan2midi + shift;
+                                }
 
-                      
-if (kk == 1 && turnrestoff == 0){                  
+
+if (kk == 1 && turnrestoff == 0){
       turnrestoff = 1;
       shift = 14;
-      highestnotebeingplayed = chan2midi + shift;   
+      highestnotebeingplayed = chan2midi + shift;
                                 }
 
-                      
-if (ll == 1 && turnrestoff == 0){                  
+
+if (ll == 1 && turnrestoff == 0){
       turnrestoff = 1;
       shift = 13;
-      highestnotebeingplayed = chan2midi + shift;   
-                                } 
+      highestnotebeingplayed = chan2midi + shift;
+                                }
 
-                      
-if (mm == 1 && turnrestoff == 0){                      
+
+if (mm == 1 && turnrestoff == 0){
       turnrestoff = 1;
       shift = 12;
-      highestnotebeingplayed = chan2midi + shift;  
-                                } 
-                                
+      highestnotebeingplayed = chan2midi + shift;
+                                }
 
-                      
-if (nn == 1 && turnrestoff == 0){                     
+
+
+if (nn == 1 && turnrestoff == 0){
       turnrestoff = 1;
       shift = 11;
-      highestnotebeingplayed = chan2midi + shift;   
+      highestnotebeingplayed = chan2midi + shift;
                                 }
 
-                      
-if (oo == 1 && turnrestoff == 0){                      
+
+if (oo == 1 && turnrestoff == 0){
       turnrestoff = 1;
       shift = 10;
-      highestnotebeingplayed = chan2midi + shift;   
+      highestnotebeingplayed = chan2midi + shift;
                                 }
-                                
 
-                      
-if (pp == 1 && turnrestoff == 0){                     
+
+
+if (pp == 1 && turnrestoff == 0){
       turnrestoff = 1;
       shift = 9;
-      highestnotebeingplayed = chan2midi + shift;   
+      highestnotebeingplayed = chan2midi + shift;
                                 }
-                                 
 
-                      
-if (qq == 1 && turnrestoff == 0){                      
+
+
+if (qq == 1 && turnrestoff == 0){
       turnrestoff = 1;
       shift = 8;
-      highestnotebeingplayed = chan2midi + shift;   
-                                } 
-                                
+      highestnotebeingplayed = chan2midi + shift;
+                                }
 
-                      
-if (rr == 1 && turnrestoff == 0){                    
+
+
+if (rr == 1 && turnrestoff == 0){
       turnrestoff = 1;
       shift = 7;
-      highestnotebeingplayed = chan2midi + shift;   
+      highestnotebeingplayed = chan2midi + shift;
                                 }
-                                
 
-                      
-if (ss == 1 && turnrestoff == 0){                    
+
+
+if (ss == 1 && turnrestoff == 0){
       turnrestoff = 1;
       shift = 6;
-      highestnotebeingplayed = chan2midi + shift;   
-                                } 
-                                 
-
-                      
-if (tt == 1 && turnrestoff == 0){                  
-      turnrestoff = 1; 
-      shift = 5;
-      highestnotebeingplayed = chan2midi + shift;   
+      highestnotebeingplayed = chan2midi + shift;
                                 }
-                                
 
-                      
-if (uu == 1 && turnrestoff == 0){                 
+
+
+if (tt == 1 && turnrestoff == 0){
+      turnrestoff = 1;
+      shift = 5;
+      highestnotebeingplayed = chan2midi + shift;
+                                }
+
+
+
+if (uu == 1 && turnrestoff == 0){
       turnrestoff = 1;
       shift = 4;
-      highestnotebeingplayed = chan2midi + shift;   
+      highestnotebeingplayed = chan2midi + shift;
                                 }
-                                  
 
-                      
-if (vv == 1 && turnrestoff == 0){                     
+
+
+if (vv == 1 && turnrestoff == 0){
       turnrestoff = 1;
       shift = 3;
-      highestnotebeingplayed = chan2midi + shift;   
+      highestnotebeingplayed = chan2midi + shift;
                                 }
-                                
 
-                      
-if (ww == 1 && turnrestoff == 0){                      
+
+
+if (ww == 1 && turnrestoff == 0){
       turnrestoff = 1;
       shift = 2;
-      highestnotebeingplayed = chan2midi + shift;   
+      highestnotebeingplayed = chan2midi + shift;
                                 }
-                                
 
-                      
-if (xx == 1 && turnrestoff == 0){                     
+
+
+if (xx == 1 && turnrestoff == 0){
       turnrestoff = 1;
       shift = 1;
-      highestnotebeingplayed = chan2midi + shift;   
+      highestnotebeingplayed = chan2midi + shift;
                                 }
-                                
 
-                     
 
-if (dronestate == 1 && turnrestoff == 0){                     //open string 
-      highestnotebeingplayed = chan2midi; 
+
+
+if (dronestate == 1 && turnrestoff == 0){                     //open string
+      highestnotebeingplayed = chan2midi;
       shift = 0;
                                 }
 
@@ -5262,24 +5242,24 @@ if (dronestate == 1 && turnrestoff == 0){                     //open string
 
 secondmelodyhighest = chan1midi + shift;   // Defines the MIDI note to sound for the second melody string which is on Chan1 which is a bit confusing
 
-soundnote();    
-                                
+soundnote();
+
 prevhighestnotebeingplayed = highestnotebeingplayed;
 prevsecondmelodyhighest = secondmelodyhighest;
-                                
+
 
 // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  Play melody string section end XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-    
-                   
 
 
-                                
-                                
 
-     
-} // end of if aold not equal to a                                                                                          
-  
+
+
+
+
+
+} // end of if aold not equal to a
+
 
 
 
@@ -5291,20 +5271,20 @@ prevsecondmelodyhighest = secondmelodyhighest;
 if (crankvoltage > dronethreshold) {     // Crank voltage at analog pin will be 0 to 1023 so a threshold of about 20 here is chosen by trial and error just to detect that you are actually turning the crank, even just slowly.
 
       tempcounter = tempcounter + 500;                    // If turning crank this counter goes up and maximises at 1500
-      if(tempcounter > 1500){tempcounter = 1500; }      
+      if(tempcounter > 1500){tempcounter = 1500; }
                            }
                      else {
    tempcounter = tempcounter - 1;                         // If not turning crank this count decays to zero over a couple of seconds
    if(tempcounter < 0){ tempcounter = 0; }
                            }
 
-//  Why have this tempcounter? Reason is so that if one momentary voltage-read of the analog pin is zero for some reason, dirt on motor brush or something, but actually you are still cranking, 
+//  Why have this tempcounter? Reason is so that if one momentary voltage-read of the analog pin is zero for some reason, dirt on motor brush or something, but actually you are still cranking,
 //  it smoothes out any such glitches i.e. drone will only stop if you genuinely do stop cranking.
 
 
 
 if (crankbutton == 1){ tempcounter = 1500; }  // If pressing override button then simulate turning the crank by making tempcounter higher than 100
-if (crankmodulepresent == 0 && crankbutton == 0){ tempcounter = 0; }  
+if (crankmodulepresent == 0 && crankbutton == 0){ tempcounter = 0; }
 // If no crank module and using crankbutton to turn notes off then need to command tempcounter to be 0 not just let it decay which is what you would do if crank was present
 
 
@@ -5314,7 +5294,7 @@ if (tempcounter >= 50 && dronestate == 0) {   // Drones currently off, now we wa
 
          pausecounter = 0;
          initialrun = 0;
-        if(drones_silent == 0){                     // Drones silent not activated i.e. we do want to have the drone code turining them on and off 
+        if(drones_silent == 0){                     // Drones silent not activated i.e. we do want to have the drone code turining them on and off
 
                   //Serial.println("DronesOn");
                   usbMIDI.sendNoteOn(trompmidi, DVol, 3);     //   Turns ON trompette you have chosen to link to Channel 3 in the phone app.
@@ -5325,23 +5305,23 @@ if (tempcounter >= 50 && dronestate == 0) {   // Drones currently off, now we wa
 
 
 
-                                                                                                      
+
 
                                         }
          dronestate = 1;   // i.e. drones are ON
-         
+
          recrank = 1;    // This means when goes through keyscanner, i.e. next step, the keyclicks will not sound as key already is pressed.
          a = a + 1;  //Triggers a first run through the key scanner ending in the bit that turns on open melody string if no keys are pressed but dronestate == 1
 
-                                }  
+                                }
 
-                                                         
+
 
 if (tempcounter < 50 && dronestate == 1){      // Drones currently on, now we want to turn drones OFF
 
-                  
-                 
-                 if(drones_silent == 0){                     // Drones silent not activated i.e. we do want to have the drone code turning them on and off 
+
+
+                 if(drones_silent == 0){                     // Drones silent not activated i.e. we do want to have the drone code turning them on and off
 
                   //Serial.println("DronesOff");
                   usbMIDI.sendNoteOff(trompmidi, 0, 3);     //   Turns off trompette you have chosen to link to Channel 3 in the phone app.
@@ -5349,18 +5329,18 @@ if (tempcounter < 50 && dronestate == 1){      // Drones currently on, now we wa
                   MIDI.sendNoteOff(trompmidi, 0, 3);     //   Turns off trompette you have chosen to link to Channel 3 in the phone app.
                   MIDI.sendNoteOff(dronemidi, 0, 4);     //   Turns off drone you have chosen to link to Channel 4 in the phone app.
 
-                  
 
 
 
-                   
+
+
                                         }
 
 
 
 
-                                        
-                 
+
+
                  dronestate = 0;  // i.e. Drones are OFF
 
 
@@ -5381,53 +5361,53 @@ if (tempcounter < 50 && dronestate == 1){      // Drones currently on, now we wa
                    MIDI.sendNoteOff(highestnotebeingplayed, noteVol, 2);  // The basic note is on Ch2
                    MIDI.sendNoteOff(secondmelodyhighest, noteVol, 1);       // The one octave higher note is on Ch 1
                    MIDI.sendNoteOff(83, clickvolume, 6);     // Key click OFF   on channel 6
-                                    
 
 
 
 
-                 
+
+
                  tempcounter = 0;   // Stops a scan through the key states until we start cranking again
-                       
+
                                   }   // End of if tempcounter < 50 and dronestate == 1
 
 
 
 
 
-                   if(tempcounter < 50){ 
+                   if(tempcounter < 50){
 
 
 
-                                  
-                                  
+
+
                    pausecounter = pausecounter + 1;
-                   
+
                    if (pausecounter == 1 && initialrun != 1){
                                   display.clearDisplay();
                                   display.display();
                                           }   // When stop cranking screen initially goes black
 
-                   if(pausecounter == 25000){   
+                   if(pausecounter == 25000){
                             int i2;
                                // This makes sure all melody notes are OFF when you stop cranking, a kind of safety backup to prevent any notes getting stuck in on state
                                //Serial.println("Turning all melody notes off as backup procedure");
                                //So, if you stop cranking for more than about 1 second then this code will run to turn off all the notes that might still be stuck in ON state.
                                //Strictly this should not be required but especially with iPad software like bs-16i sometimes it is to prevent odd notes being left in ON state when you stop cranking.
- 
- 
+
+
  clearallMIDI();     // Precautionary blitz clearout of any MIDI notes that might be in the ON state on any channel
 
-                  
-                                                              
+
+
                                      //display.clearDisplay();
                                      //display.setTextSize(1);
-                                     //display.setCursor(0,30);                     
+                                     //display.setCursor(0,30);
                                      //display.print("      All Stop");
-                                     //display.display();                     
+                                     //display.display();
                                               }
 
-                   if(pausecounter == 30000){        
+                   if(pausecounter == 30000){
                           //pausecounter = 30000;   // This makes it put up the Crank When Ready message after a delay, just the once when it first hits 30000, it will be 30001 thereafter
                           display.clearDisplay();
                           display.drawBitmap(0, 0,  logo55_glcd_bmp, 128, 64, 1);   // Crank when ready screen display
@@ -5436,7 +5416,7 @@ if (tempcounter < 50 && dronestate == 1){      // Drones currently on, now we wa
 
                    if(pausecounter > 30001){ pausecounter = 30001; } // Stops pause counter going up to some huge value if stopped cranking for a long time
 
-                                           
+
                                        }   // End of if tempcounter < 50
 // XXXXXXXXXXXXXXXX  BUZZ  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
@@ -5449,25 +5429,25 @@ if(crankvoltage > potvalueadjusted && chienstatus == 0 ){     //Chien Buzz on vi
         if(drones_silent == 0){    // i.e. we DO want to hear the drones and the chien buzz
           if (buzzcountdown2 == 0){
     //usbMIDI.sendNoteOff(buzzrootkey, buzzvolume, 5);   // Chien buzz off on channel 5    NOT SURE WHY WE TURN IT OFF THEN STRAIGHT ON AGAIN NEED TO COME BACK TO THIS LATER <--------------------
-        
+
         usbMIDI.sendNoteOn(buzzrootkey, buzzvolume, 5);   //Chien buzz ON
         MIDI.sendNoteOn(buzzrootkey, buzzvolume, 5);   //Chien buzz ON
 
                                }
                               }
-        buzzcountdown = buzzcountdownstartvalue;  
-        buzzcountdown2 = buzzcountdown2startvalue;                     
+        buzzcountdown = buzzcountdownstartvalue;
+        buzzcountdown2 = buzzcountdown2startvalue;
         chienstatus = 1;
                                }
 
-        
 
-                               
+
+
 if(crankvoltage < potvalueadjusted && chienstatus == 1){   //Chien buzz off assumining buzz is starting in the on status
-       if(drones_silent == 0){                     // Drones silent not activated i.e. we do want to have the drone code turining them on and off 
-        
-        buzzcountdown = buzzcountdown - 1; 
-        
+       if(drones_silent == 0){                     // Drones silent not activated i.e. we do want to have the drone code turining them on and off
+
+        buzzcountdown = buzzcountdown - 1;
+
         if (buzzcountdown <= 0){ buzzcountdown = 0; }
         if (buzzcountdown <= 0){
         usbMIDI.sendNoteOff(buzzrootkey, buzzvolume, 5);   // Chien buzz off on channel 5
@@ -5477,7 +5457,7 @@ if(crankvoltage < potvalueadjusted && chienstatus == 1){   //Chien buzz off assu
         chienstatus = 0;
                                   }
                              }
-                           
+
                                                          }
 
 
@@ -5486,15 +5466,15 @@ if(crankvoltage < potvalueadjusted && chienstatus == 1){   //Chien buzz off assu
 // Alternative way of ending the buzz i.e. it times out rather than being stopped by decay in voltage below set threshold. Time is set in user settings at start of program listing.
 if(buzzcountdown > 0){ buzzcountdown = buzzcountdown - 1;}
 if (buzzcountdown <= 0 && chienstatus == 1){   //Chien buzz off assumining buzz is starting in the on status
-       if(drones_silent == 0){                     // Drones silent not activated i.e. we do want to have the drone code turining them on and off 
+       if(drones_silent == 0){                     // Drones silent not activated i.e. we do want to have the drone code turining them on and off
         usbMIDI.sendNoteOff(middy, buzzvolume, 4);   // Chien buzz off on channel 4
         //Serial.println("Buzz OFF");
                              }
-        chienstatus = 0;                   
+        chienstatus = 0;
                                                          }
-    
+
 */
-// XXXXXXXXXXXXXXXXXXXXXXXX End of look at crank situation XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX    
+// XXXXXXXXXXXXXXXXXXXXXXXX End of look at crank situation XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 
 
@@ -5535,24 +5515,24 @@ void demo1(){
 
   //Serial.println("demo mode");
 
-// text display 
+// text display
   display.clearDisplay();
   display.setTextSize(3);
   display.setCursor(0,0);
   display.println(" DEMO");
   display.println(" MODE");
-  display.display();  
+  display.display();
   delay(2000);
 
 clearallMIDI();     // Precautionary blitz clearout of any MIDI notes that might be in the ON state on any channel
-  
+
 
 display.clearDisplay();
 
 
-// text display 
+// text display
   display.setTextSize(2);
-  
+
   display.setCursor(0,0);
   display.println("DEMO MODE");
   display.setTextSize(1);
@@ -5570,23 +5550,23 @@ display.clearDisplay();
 
   //Serial.println("Choose your song");
 
-  
 
 
 
 
- 
 
 
 
-                        
+
+
+
 
 song = 1;   // if you dont choose a song it will just default to song 1
 int choosesong = 0;
   while (choosesong == 0){
       button24.update();  //A4 key  in G/C tuning
-      if (button24.fallingEdge()){    
-      display.clearDisplay();  
+      if (button24.fallingEdge()){
+      display.clearDisplay();
       display.setCursor(0,0);
       display.setTextSize(1);
       display.println("   Song 1");
@@ -5596,71 +5576,71 @@ int choosesong = 0;
       display.display();
       validsong = 1;  //if no song for this button saved yet, then give it a zero
 
-      
+
       song = 1;}
 
       button25.update();  //B4 key
-      if (button25.fallingEdge()){    
-      display.clearDisplay();  
+      if (button25.fallingEdge()){
+      display.clearDisplay();
       display.setCursor(0,0);
       display.setTextSize(1);
       display.println("   Song 2");
       display.println(" ");
       display.println("The Gravel Walks");
       display.println("(reel)");
-      display.display();  
+      display.display();
       validsong = 1;
-   
-      
+
+
       song = 2;}
 
       button26.update();  //C5 key
-      if (button26.fallingEdge()){    
-      display.clearDisplay();  
+      if (button26.fallingEdge()){
+      display.clearDisplay();
       display.setCursor(0,0);
       display.setTextSize(1);
       display.println("   Song 3");
       display.println(" ");
       display.println("La Jument de Michao");
-      display.display(); 
+      display.display();
       validsong = 1;
-     
-      
+
+
       song = 3;}
 
       button27.update();  //D5 key
-      if (button27.fallingEdge()){    
-      display.clearDisplay();  
+      if (button27.fallingEdge()){
+      display.clearDisplay();
       display.setCursor(0,0);
       display.setTextSize(1);
       display.println("   Song 4");
       display.println(" ");
       display.println("Brenda Stubbert's");
       display.println("(reel)");
-      display.display(); 
+      display.display();
       validsong = 1;
- 
-      
+
+
       song = 4;}
 
       button28.update();  //E5 key
-      if (button28.fallingEdge()){    
-      display.clearDisplay();  
+      if (button28.fallingEdge()){
+      display.clearDisplay();
       display.setCursor(0,0);
       display.setTextSize(1);
       display.println("   Song 5");
       display.println(" ");
       display.println("Father Kelly");
       display.println("(reel)");
-      display.display(); 
+      display.display();
       validsong = 1;
-      
-      
+
+
       song = 5;}
 
       button29.update();  //F5 key
-      if (button29.fallingEdge()){    
-      display.clearDisplay();  
+      if (button29.fallingEdge()){
+      display.clearDisplay();
       display.setCursor(0,0);
       display.setTextSize(1);
       display.println("   Song 6");
@@ -5669,13 +5649,13 @@ int choosesong = 0;
       display.println("(reel)");
       display.display();
       validsong = 1;
-      
-      
+
+
       song = 6;}
 
       button30.update();  //G5 key
-      if (button30.fallingEdge()){    
-      display.clearDisplay();  
+      if (button30.fallingEdge()){
+      display.clearDisplay();
       display.setCursor(0,0);
       display.setTextSize(1);
       display.println("   Song 7");
@@ -5684,43 +5664,43 @@ int choosesong = 0;
       display.println("Andrey Vinogradov");
       display.display();
       validsong = 1;
-      
-      
+
+
       song = 7;}
 
       button31.update();  //A5 key
-      if (button31.fallingEdge()){    
-      display.clearDisplay();  
+      if (button31.fallingEdge()){
+      display.clearDisplay();
       display.setCursor(0,0);
       display.setTextSize(1);
       display.println("   Song 8");
       display.println(" ");
       display.println("She Sells Sanctuary");
       display.println("(The Cult)");
-      display.display();  
+      display.display();
       validsong = 1;
-   
-      
+
+
       song = 8;}
 
       button32.update();  //B5 key
-      if (button32.fallingEdge()){    
-      display.clearDisplay();  
+      if (button32.fallingEdge()){
+      display.clearDisplay();
       display.setCursor(0,0);
       display.setTextSize(1);
       display.println("   Song 9");
       display.println(" ");
       display.println("Alan's SCottische");
       display.println("(after Dede)");
-      display.display();  
+      display.display();
       validsong = 1;
-   
-      
+
+
       song = 9;}
 
       button33.update();  //C6 key
-      if (button33.fallingEdge()){    
-      display.clearDisplay();  
+      if (button33.fallingEdge()){
+      display.clearDisplay();
       display.setCursor(0,0);
       display.setTextSize(1);
       display.println("   Song 10");
@@ -5728,118 +5708,118 @@ int choosesong = 0;
       display.println("Mathew Briggs");
       display.display();
       validsong = 1;
-       
-      
+
+
       song = 10;}
 
       button34.update();  //D6 key
-      if (button34.fallingEdge()){    
-      display.clearDisplay();  
+      if (button34.fallingEdge()){
+      display.clearDisplay();
       display.setCursor(0,0);
       display.setTextSize(1);
       display.println("   Song 11");
       display.println(" ");
       display.println("Monster Cafe II");
       display.print("Nigel Eaton");
-      display.display();  
+      display.display();
       validsong = 1;
-    
-      
+
+
       song = 11;}
 
       button35.update();  //E6 key
-      if (button35.fallingEdge()){    
-      display.clearDisplay();  
+      if (button35.fallingEdge()){
+      display.clearDisplay();
       display.setCursor(0,0);
       display.setTextSize(1);
       display.println("   Song 12");
       display.println(" ");
       display.println("Thunderstruck");
       display.print("   AC/DC");
-      display.display(); 
+      display.display();
       validsong = 1;
-   
-      
+
+
       song = 12;}
 
       button36.update();  //F6 key
-      if (button36.fallingEdge()){    
-      display.clearDisplay();  
+      if (button36.fallingEdge()){
+      display.clearDisplay();
       display.setCursor(0,0);
       display.setTextSize(1);
       display.println("    Song 13");
       display.println(" ");
       display.println("Si Beag Si Mor");
-      display.display(); 
+      display.display();
       validsong = 1;
-     
-      
+
+
       song = 13;}
 
       button37.update();  //G6 key
-      if (button37.fallingEdge()){    
-      display.clearDisplay();  
+      if (button37.fallingEdge()){
+      display.clearDisplay();
       display.setCursor(0,0);
       display.setTextSize(1);
       display.println("   Song 14");
       display.println(" ");
       display.println("King Billy's March");
-      display.display(); 
+      display.display();
       validsong = 1;
-      
-      
+
+
       song = 14;}
 
 
             button2.update();  //G4# key
-      if (button2.fallingEdge()){    
-      display.clearDisplay();  
+      if (button2.fallingEdge()){
+      display.clearDisplay();
       display.setCursor(0,0);
       display.setTextSize(1);
       display.println("   Song 15");
       display.println(" ");
       display.println("The Morning Dew");
-      display.display(); 
+      display.display();
       validsong = 1;
-      
-      
+
+
       song = 15;}
 
 
                   button3.update();  //A4# key
-      if (button3.fallingEdge()){    
-      display.clearDisplay();  
+      if (button3.fallingEdge()){
+      display.clearDisplay();
       display.setCursor(0,0);
       display.setTextSize(1);
       display.println("   Song 16");
       display.println(" ");
       display.println("Banish Misfortune");
-      display.display(); 
+      display.display();
       validsong = 1;
-      
-      
+
+
       song = 16;}
 
 
                   button4.update();  //C5# key
-      if (button4.fallingEdge()){    
-      display.clearDisplay();  
+      if (button4.fallingEdge()){
+      display.clearDisplay();
       display.setCursor(0,0);
       display.setTextSize(1);
       display.println("   Song 17");
       display.println(" ");
       display.println("The Blarney Pilgrim");
-      display.display(); 
+      display.display();
       validsong = 1;
-      
-      
+
+
       song = 17;}
 
 
 
                   button5.update();  //D5# key
-      if (button5.fallingEdge()){    
-      display.clearDisplay();  
+      if (button5.fallingEdge()){
+      display.clearDisplay();
       display.setCursor(0,0);
       display.setTextSize(1);
       display.println("   Song 18");
@@ -5847,89 +5827,89 @@ int choosesong = 0;
       display.println("The Wind That");
       display.println(" ");
       display.println("Shakes The Barley");
-      display.display(); 
+      display.display();
       validsong = 1;
-      
-      
+
+
       song = 18;}
 
 
 
 
                   button6.update();  //F5# key
-      if (button6.fallingEdge()){    
-      display.clearDisplay();  
+      if (button6.fallingEdge()){
+      display.clearDisplay();
       display.setCursor(0,0);
       display.setTextSize(1);
       display.println("   Song 19");
       display.println(" ");
       display.println("Morrison's");
-      display.display(); 
+      display.display();
       validsong = 1;
-      
-      
+
+
       song = 19;}
 
 
                   button7.update();  //G5# key
-      if (button7.fallingEdge()){    
-      display.clearDisplay();  
+      if (button7.fallingEdge()){
+      display.clearDisplay();
       display.setCursor(0,0);
       display.setTextSize(1);
       display.println("   Song 20");
       display.println(" ");
       display.println("Eight Step Waltz");
-      display.display(); 
+      display.display();
       validsong = 1;
-      
-      
+
+
       song = 20;}
 
 
                   button8.update();  //A5# key
-      if (button8.fallingEdge()){    
-      display.clearDisplay();  
+      if (button8.fallingEdge()){
+      display.clearDisplay();
       display.setCursor(0,0);
       display.setTextSize(1);
       display.println("   Song 21");
       display.println(" ");
       display.println("   Kopanitsa");
-      display.display(); 
+      display.display();
       validsong = 1;
-      
-      
+
+
       song = 21;}
 
 
                   button18.update();  //C6# key
-      if (button18.fallingEdge()){    
-      display.clearDisplay();  
+      if (button18.fallingEdge()){
+      display.clearDisplay();
       display.setCursor(0,0);
       display.setTextSize(1);
       display.println("   Song 22");
       display.println(" ");
       display.println("Blowzabella");
-      display.display(); 
+      display.display();
       validsong = 1;
-      
-      
+
+
       song = 22;}
 
 
 
                   button19.update();  //D6# key
-      if (button19.fallingEdge()){    
-      display.clearDisplay();  
+      if (button19.fallingEdge()){
+      display.clearDisplay();
       display.setCursor(0,0);
       display.setTextSize(1);
       display.println("   Song 23");
       display.println(" ");
       display.println("Herr Mannelig");
-      display.display(); 
+      display.display();
       validsong = 1;
-      
-      
-      song = 23;}      
+
+
+      song = 23;}
 
 
 
@@ -5938,16 +5918,16 @@ int choosesong = 0;
 
 
 
-// Confirm the song selection and continue, by pressing the top right blue key 
+// Confirm the song selection and continue, by pressing the top right blue key
       button20.update();
               if (button20.fallingEdge()){
                             choosesong = 1;
-                                  } 
-     
-      
+                                  }
+
+
   }//end of while choosesong equals zero
 
-  
+
 
 
   if (validsong == 1){
@@ -5995,7 +5975,7 @@ int choosesong = 0;
   display.println("    13");}
     if (playbackspeed == 29){
   display.println("    14");}
-  
+
   display.setTextSize(1);
   display.println(" ");
   display.println("Press (O) key");
@@ -6003,22 +5983,22 @@ int choosesong = 0;
   display.println("Press again to abort");
   display.println("during playback.");
   display.display();
-  
+
 
 
 
 
   int startdemo = 0;
-  
+
   while (startdemo == 0){
       button20.update();
       if (button20.fallingEdge()){    //if pressing upper right white key, falling edge will be true
       startdemo = 1;
 
-// Drones in demo mode are disabled for now as may not sound the correct drones, best to just not have them in demo mode for simplicity.      
-                                         
-                              
-                      
+// Drones in demo mode are disabled for now as may not sound the correct drones, best to just not have them in demo mode for simplicity.
+
+
+
                                   }
 
       delay(50);
@@ -6026,7 +6006,7 @@ int choosesong = 0;
 
 
 
-      
+
   display.clearDisplay();
   display.setTextSize(2);
   display.setCursor(0,0);
@@ -6043,8 +6023,8 @@ int choosesong = 0;
   delay(1000);
   display.display();
   delay(1000);
-                
-  
+
+
 
 
   //Serial.println("sending out MIDI demo now");
@@ -6057,34 +6037,34 @@ int choosesong = 0;
     p = 0;
     endoftune = 0;
     noteVol = 127;
-    
+
 while (endoftune == 0){
    playtune();
    button20.update();  //press upper right blue key to exit playback
-      if (button20.fallingEdge()){ 
+      if (button20.fallingEdge()){
         break;
       }
 }//end of while end of tune equals zero
               // Turn off these 2 notes just in case they were left on, albeit with a volume of zero, now we are at the end of the demo tune to be played.
-              usbMIDI.sendNoteOff(103, 0, 1); 
+              usbMIDI.sendNoteOff(103, 0, 1);
               usbMIDI.sendNoteOff(103, 0, 2);
-              MIDI.sendNoteOff(103, 0, 1); 
+              MIDI.sendNoteOff(103, 0, 1);
               MIDI.sendNoteOff(103, 0, 2);
 
 
 // We have already done a MIDI clearout at start of demo mode to make sure everything is off
-/*   
+/*
 //Turn off the drones anyway even if they werent turned on, just to make sure we have cancelled them at end of demo tune playback
-if(drones_silent == 0){                     // Drones silent not activated i.e. we do want to have the drone code turining them on and off 
-      
-      
-      usbMIDI.sendNoteOff(62, 0, 3);   
+if(drones_silent == 0){                     // Drones silent not activated i.e. we do want to have the drone code turining them on and off
+
+
+      usbMIDI.sendNoteOff(62, 0, 3);
       usbMIDI.sendNoteOff(43, 0, 4);
                        }
-      
+
       usbMIDI.sendNoteOff(67, 0, 2);  // Turn off open melody string on channel 2 if in G/C mode
       usbMIDI.sendNoteOff(79, 0, 1);  // Turn off open second melody melody string on channel 1 if in G/C mode
-      
+
       usbMIDI.sendNoteOff(62, 0, 2);  // Turn off open melody string on channel 2 if in D/G mode
       usbMIDI.sendNoteOff(74, 0, 1);  // Turn off open second melody string on channel 1 if in D/G mode
 
@@ -6096,13 +6076,13 @@ if(drones_silent == 0){                     // Drones silent not activated i.e. 
 */
 
 
-      
-      
-      
-      
+
+
+
+
       dronestate = 0;
 
-     
+
 //Serial.println("XXXXXXXXXXXX end of tune XXXXXXXXXXXXXXXXXXXX");
   display.clearDisplay();
   display.setTextSize(2);
@@ -6141,7 +6121,7 @@ if(drones_silent == 0){                     // Drones silent not activated i.e. 
                           display.clearDisplay();
                           display.drawBitmap(0, 0,  logo55_glcd_bmp, 128, 64, 1);   // Crank when ready screen display
                           display.display();
-  
+
 }  //end of void demo
 
 
@@ -6154,7 +6134,7 @@ if(drones_silent == 0){                     // Drones silent not activated i.e. 
 
 void playtune(){
 
-  
+
   getnote();
     //Print the  midi value and duration followed by a space for debugging
     //Serial.print(MidiValue);
@@ -6165,198 +6145,198 @@ void playtune(){
     //Play the note
     if (endoftune == 0){
       if(MidiValue == 0){
-              usbMIDI.sendNoteOn(103, 0, 1); 
+              usbMIDI.sendNoteOn(103, 0, 1);
               usbMIDI.sendNoteOn(103, 0, 2);
-               MIDI.sendNoteOn(103, 0, 1); 
+               MIDI.sendNoteOn(103, 0, 1);
               MIDI.sendNoteOn(103, 0, 2);
               //If MidiValue is zero that means we want silence. So we send out a high note, but a real existing note value in this case 103, at a volume of zero for required duration. Not sure if this is best way to do it but it works OK
                     if (dronestate == 1){
-                      if(drones_silent == 0){                     // Drones silent not activated i.e. we do want to have the drone code turining them on and off 
+                      if(drones_silent == 0){                     // Drones silent not activated i.e. we do want to have the drone code turining them on and off
                       //usbMIDI.sendNoteOff(62, 0, 2);   // Drone off
                       //usbMIDI.sendNoteOff(43, 0, 3);   // Drone off
                                              }
                       dronestate = 0;
                                         }
                          }
-                       else{                  
+                       else{
                          usbMIDI.sendNoteOn(MidiValue, noteVol, 2);  // Lower melody string on Ch2
                          MIDI.sendNoteOn(MidiValue, noteVol, 2);  // Lower melody string on Ch2
                          note2 = MidiValue + 12;
                          usbMIDI.sendNoteOn(note2, noteVol, 1);  // Higher melody string on Ch1
                          MIDI.sendNoteOn(note2, noteVol, 1);  // Higher melody string on Ch1
                          if (MidiValue != 67){ usbMIDI.sendNoteOn(MidiValue, clickvolume, 6);  }   // Key click ON on channel 6 unless the note is open G string when you would not get a key click
-                         if (MidiValue != 67){ MIDI.sendNoteOn(MidiValue, clickvolume, 6);  } 
+                         if (MidiValue != 67){ MIDI.sendNoteOn(MidiValue, clickvolume, 6);  }
                          if (dronestate == 0){
                                // Turn drones back on if they were off during a period of silence
-                                   if(drones_silent == 0){                     // Drones silent not activated i.e. we do want to have the drone code turining them on and off 
+                                   if(drones_silent == 0){                     // Drones silent not activated i.e. we do want to have the drone code turining them on and off
                                      //usbMIDI.sendNoteOn(62, DVol, 2);     //   Drone we have associated with Channel 2
                                      //lusbMIDI.sendNoteOn(43, DVol, 3);     //   Drone we have associated with Channel 3
                                                           }
                                      dronestate = 1;
-                                                              
-                                     
+
+
                                                }
                             }
-    //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX DISPLAY THE NOTE XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX    
+    //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX DISPLAY THE NOTE XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 switch (MidiValue) {
   case 0:
       display.clearDisplay();
       //just clear display during a pause where no sound is required
-      display.display();  
+      display.display();
       break;
   case 91:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo31_glcd_bmp, 128, 64, 1); 
-      display.display();  
+      display.drawBitmap(0, 0,  logo31_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
   case 89:
       display.clearDisplay();
       display.drawBitmap(0, 0,  logo30_glcd_bmp, 128, 64, 1);
-      display.display();       
+      display.display();
       break;
   case 90:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo41_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo41_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
   case 88:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo29_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo29_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
   case 87:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo40_glcd_bmp, 128, 64, 1); 
-      display.display();  
+      display.drawBitmap(0, 0,  logo40_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
   case 86:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo28_glcd_bmp, 128, 64, 1); 
-      display.display();        
+      display.drawBitmap(0, 0,  logo28_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
   case 85:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo39_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo39_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
   case 84:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo27_glcd_bmp, 128, 64, 1); 
-      display.display();  
+      display.drawBitmap(0, 0,  logo27_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
   case 83:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo26_glcd_bmp, 128, 64, 1); 
-      display.display();  
+      display.drawBitmap(0, 0,  logo26_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
   case 82:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo38_glcd_bmp, 128, 64, 1); 
-      display.display();        
+      display.drawBitmap(0, 0,  logo38_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
   case 81:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo25_glcd_bmp, 128, 64, 1); 
-      display.display();   
+      display.drawBitmap(0, 0,  logo25_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
   case 80:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo37_glcd_bmp, 128, 64, 1); 
-      display.display();   
+      display.drawBitmap(0, 0,  logo37_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
   case 79:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo24_glcd_bmp, 128, 64, 1); 
-      display.display();  
+      display.drawBitmap(0, 0,  logo24_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
   case 78:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo36_glcd_bmp, 128, 64, 1); 
-      display.display();        
+      display.drawBitmap(0, 0,  logo36_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
   case 77:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo23_glcd_bmp, 128, 64, 1); 
-      display.display();  
+      display.drawBitmap(0, 0,  logo23_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
   case 76:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo22_glcd_bmp, 128, 64, 1); 
-      display.display();  
+      display.drawBitmap(0, 0,  logo22_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
   case 75:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo35_glcd_bmp, 128, 64, 1); 
-      display.display();   
+      display.drawBitmap(0, 0,  logo35_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
   case 74:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo21_glcd_bmp, 128, 64, 1); 
-      display.display();        
+      display.drawBitmap(0, 0,  logo21_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
   case 73:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo34_glcd_bmp, 128, 64, 1); 
-      display.display();   
+      display.drawBitmap(0, 0,  logo34_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
   case 72:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo20_glcd_bmp, 128, 64, 1); 
-      display.display();  
+      display.drawBitmap(0, 0,  logo20_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
   case 71:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo19_glcd_bmp, 128, 64, 1); 
-      display.display();  
+      display.drawBitmap(0, 0,  logo19_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
   case 70:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo33_glcd_bmp, 128, 64, 1); 
-      display.display();        
+      display.drawBitmap(0, 0,  logo33_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
   case 69:
-      display.clearDisplay(); 
-      display.drawBitmap(0, 0,  logo18_glcd_bmp, 128, 64, 1); 
-      display.display();  
+      display.clearDisplay();
+      display.drawBitmap(0, 0,  logo18_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
   case 68:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo32_glcd_bmp, 128, 64, 1); 
-      display.display();   
+      display.drawBitmap(0, 0,  logo32_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
   case 67:
-      display.clearDisplay(); 
+      display.clearDisplay();
       display.drawBitmap(0, 0,  logo17_glcd_bmp, 128, 64, 1);
-      display.display();  
+      display.display();
       break;
 
   case 66:
-      display.clearDisplay(); 
+      display.clearDisplay();
       display.drawBitmap(0, 0,  logo42_glcd_bmp, 128, 64, 1);
-      display.display();  
+      display.display();
       break;
   case 65:
-      display.clearDisplay(); 
+      display.clearDisplay();
       display.drawBitmap(0, 0,  logo43_glcd_bmp, 128, 64, 1);
-      display.display();  
+      display.display();
       break;
   case 64:
-      display.clearDisplay(); 
+      display.clearDisplay();
       display.drawBitmap(0, 0,  logo44_glcd_bmp, 128, 64, 1);
-      display.display();  
+      display.display();
       break;
   case 63:
-      display.clearDisplay(); 
+      display.clearDisplay();
       display.drawBitmap(0, 0,  logo45_glcd_bmp, 128, 64, 1);
-      display.display();  
+      display.display();
       break;
   case 62:
-      display.clearDisplay(); 
+      display.clearDisplay();
       display.drawBitmap(0, 0,  logo46_glcd_bmp, 128, 64, 1);
-      display.display();  
-      break;                   
+      display.display();
+      break;
                      }   // end of case series
-//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX END OF DISPLAY THE NOTE XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX 
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX END OF DISPLAY THE NOTE XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     delay(NoteDurationms); //sound note for required time
     usbMIDI.sendNoteOff(MidiValue, 0, 2);    //then stop sounding the base note on melody channel 2
     usbMIDI.sendNoteOff(note2, 0, 1);    //then stop sounding higher octave one on melody channel 1
@@ -6364,7 +6344,7 @@ switch (MidiValue) {
     MIDI.sendNoteOff(MidiValue, 0, 2);    //then stop sounding the base note on melody channel 2
     MIDI.sendNoteOff(note2, 0, 1);    //then stop sounding higher octave one on melody channel 1
     MIDI.sendNoteOff(MidiValue, 0, 6);     // Key click OFF   on channel 6
- 
+
           if(MidiValue == 0){
               usbMIDI.sendNoteOff(103, 0, 1);   // If there was a silent pause we turn this off now it is over, on melody channels 1 and 2
               usbMIDI.sendNoteOff(103, 0, 2);
@@ -6373,9 +6353,9 @@ switch (MidiValue) {
                            }
   p = p + 5;  //jump from start of current quadruplet to start position of next quadruplet of values. We jump 5 as there is a space between each set of 4 characters to make the notes they represent easier to create and read.
                         }  // end of endoftune equals zero
-  
-  
-  
+
+
+
 } //end of playtune
 
 
@@ -6391,7 +6371,7 @@ switch(song){
    case 0:
     myChar =  pgm_read_byte_near(signMessage1 + p);
     convertedstring = myChar - '0';
-    MIDItens = convertedstring;    
+    MIDItens = convertedstring;
       myChar =  pgm_read_byte_near(signMessage1 + p + 1);
     convertedstring = myChar - '0';
     MIDIunits = convertedstring;
@@ -6411,13 +6391,13 @@ switch(song){
 
 
 
-  
+
 
 // XXXXXXXXXXXXXXXXXXXXX Song 2 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
    case 2:
     myChar =  pgm_read_byte_near(signMessage2 + p);
     convertedstring = myChar - '0';
-    MIDItens = convertedstring;  
+    MIDItens = convertedstring;
       myChar =  pgm_read_byte_near(signMessage2 + p + 1);
     convertedstring = myChar - '0';
     MIDIunits = convertedstring;
@@ -6434,7 +6414,7 @@ switch(song){
    case 3:
     myChar =  pgm_read_byte_near(signMessage3 + p);
     convertedstring = myChar - '0';
-    MIDItens = convertedstring;   
+    MIDItens = convertedstring;
       myChar =  pgm_read_byte_near(signMessage3 + p + 1);
     convertedstring = myChar - '0';
     MIDIunits = convertedstring;
@@ -6451,7 +6431,7 @@ switch(song){
    case 4:
     myChar =  pgm_read_byte_near(signMessage4 + p);
     convertedstring = myChar - '0';
-    MIDItens = convertedstring; 
+    MIDItens = convertedstring;
       myChar =  pgm_read_byte_near(signMessage4 + p + 1);
     convertedstring = myChar - '0';
     MIDIunits = convertedstring;
@@ -6469,7 +6449,7 @@ switch(song){
    case 5:
     myChar =  pgm_read_byte_near(signMessage5 + p);
     convertedstring = myChar - '0';
-    MIDItens = convertedstring;   
+    MIDItens = convertedstring;
       myChar =  pgm_read_byte_near(signMessage5 + p + 1);
     convertedstring = myChar - '0';
     MIDIunits = convertedstring;
@@ -6487,7 +6467,7 @@ switch(song){
    case 6:
     myChar =  pgm_read_byte_near(signMessage6 + p);
     convertedstring = myChar - '0';
-    MIDItens = convertedstring;  
+    MIDItens = convertedstring;
       myChar =  pgm_read_byte_near(signMessage6 + p + 1);
     convertedstring = myChar - '0';
     MIDIunits = convertedstring;
@@ -6505,7 +6485,7 @@ switch(song){
     case 7:
     myChar =  pgm_read_byte_near(signMessage7 + p);
     convertedstring = myChar - '0';
-    MIDItens = convertedstring;   
+    MIDItens = convertedstring;
       myChar =  pgm_read_byte_near(signMessage7 + p + 1);
     convertedstring = myChar - '0';
     MIDIunits = convertedstring;
@@ -6516,14 +6496,14 @@ switch(song){
     convertedstring = myChar - '0';
     notedurationunits = convertedstring;
     if (myChar == 'X'){ endoftune = 1;}
-        break;      
+        break;
 
 
 // XXXXXXXXXXXXXXXXXXXXXXXXXX Song 8 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
    case 8:
     myChar =  pgm_read_byte_near(signMessage8 + p);
     convertedstring = myChar - '0';
-    MIDItens = convertedstring; 
+    MIDItens = convertedstring;
       myChar =  pgm_read_byte_near(signMessage8 + p + 1);
     convertedstring = myChar - '0';
     MIDIunits = convertedstring;
@@ -6557,7 +6537,7 @@ switch(song){
      case 10:
     myChar =  pgm_read_byte_near(signMessage10 + p);
     convertedstring = myChar - '0';
-    MIDItens = convertedstring; 
+    MIDItens = convertedstring;
       myChar =  pgm_read_byte_near(signMessage10 + p + 1);
     convertedstring = myChar - '0';
     MIDIunits = convertedstring;
@@ -6568,14 +6548,14 @@ switch(song){
     convertedstring = myChar - '0';
     notedurationunits = convertedstring;
     if (myChar == 'X'){ endoftune = 1;}
-        break; 
+        break;
 
 
 // XXXXXXXXXXXXXXXXXXXXXXXXXXX Song 11 XXXXXXXXXXXXXXXXXXXXXXXXXXXX
      case 11:
     myChar =  pgm_read_byte_near(signMessage11 + p);
     convertedstring = myChar - '0';
-    MIDItens = convertedstring;    
+    MIDItens = convertedstring;
       myChar =  pgm_read_byte_near(signMessage11 + p + 1);
     convertedstring = myChar - '0';
     MIDIunits = convertedstring;
@@ -6590,7 +6570,7 @@ switch(song){
 
 
 
- // XXXXXXXXXXXXXXXXXXXXXXXXXXXXX Song 12 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX                       
+ // XXXXXXXXXXXXXXXXXXXXXXXXXXXXX Song 12 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
      case 12:
     myChar =  pgm_read_byte_near(signMessage12 + p);
     convertedstring = myChar - '0';
@@ -6622,7 +6602,7 @@ switch(song){
     convertedstring = myChar - '0';
     notedurationunits = convertedstring;
     if (myChar == 'X'){ endoftune = 1;}
-        break;  
+        break;
 
 // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Song 14 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
       case 14:
@@ -6657,7 +6637,7 @@ switch(song){
     convertedstring = myChar - '0';
     notedurationunits = convertedstring;
     if (myChar == 'X'){ endoftune = 1;}
-        break;                
+        break;
 
 
 // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Song 16 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -6804,22 +6784,22 @@ switch(song){
     convertedstring = myChar - '0';
     notedurationunits = convertedstring;
     if (myChar == 'X'){ endoftune = 1;}
-        break;                  
+        break;
 
 
-                           
+
 
 }    // End of switch
 
-         
-        
+
+
 // For debugging purposes
     //Serial.print("Acquired MIDI value = ");
     //Serial.print(MIDItens);
     //Serial.print(MIDIunits);
     //Serial.print(notedurationtens);
     //Serial.println(notedurationunits);
-    
+
 
     MidiValue = (MIDItens * 10) + MIDIunits;
     NoteDurationSixteenths = (notedurationtens * 10) + notedurationunits;  //duration in sixteenths
@@ -6827,8 +6807,8 @@ switch(song){
 
 
 
-  
- 
+
+
 }//end of getnote
 
 
@@ -6852,72 +6832,72 @@ playbackspeed = 6;   //default speed
       playbackspeed = 16;}
 
       button25.update();  //B4 key
-      if (button25.fallingEdge()){    //if pressing handle button, falling edge will be true        
+      if (button25.fallingEdge()){    //if pressing handle button, falling edge will be true
       choosespd = 1;
       playbackspeed = 17;}
 
       button26.update();  //C5 key
-      if (button26.fallingEdge()){    //if pressing handle button, falling edge will be true       
+      if (button26.fallingEdge()){    //if pressing handle button, falling edge will be true
       choosespd = 1;
       playbackspeed = 18;}
 
       button27.update();  //D5 key
-      if (button27.fallingEdge()){    //if pressing handle button, falling edge will be true       
+      if (button27.fallingEdge()){    //if pressing handle button, falling edge will be true
       choosespd = 1;
       playbackspeed = 19;}
 
       button28.update();  //E5 key
-      if (button28.fallingEdge()){    //if pressing handle button, falling edge will be true       
+      if (button28.fallingEdge()){    //if pressing handle button, falling edge will be true
       choosespd = 1;
       playbackspeed = 20;}
 
       button29.update();  //F5 key
-      if (button29.fallingEdge()){    //if pressing handle button, falling edge will be true       
+      if (button29.fallingEdge()){    //if pressing handle button, falling edge will be true
       choosespd = 1;
       playbackspeed = 21;}
 
       button30.update();  //G5 key
-      if (button30.fallingEdge()){    //if pressing handle button, falling edge will be true        
+      if (button30.fallingEdge()){    //if pressing handle button, falling edge will be true
       choosespd = 1;
       playbackspeed = 22;}
 
       button31.update();  //A5 key
-      if (button31.fallingEdge()){    //if pressing handle button, falling edge will be true        
+      if (button31.fallingEdge()){    //if pressing handle button, falling edge will be true
       choosespd = 1;
       playbackspeed = 23;}
 
       button32.update();  //A5 key
-      if (button32.fallingEdge()){    //if pressing handle button, falling edge will be true        
+      if (button32.fallingEdge()){    //if pressing handle button, falling edge will be true
       choosespd = 1;
       playbackspeed = 24;}
 
       button33.update();  //C6 key
-      if (button33.fallingEdge()){    //if pressing handle button, falling edge will be true        
+      if (button33.fallingEdge()){    //if pressing handle button, falling edge will be true
       choosespd = 1;
       playbackspeed = 25;}
 
       button34.update();  //D6 key
-      if (button34.fallingEdge()){    //if pressing handle button, falling edge will be true        
+      if (button34.fallingEdge()){    //if pressing handle button, falling edge will be true
       choosespd = 1;
       playbackspeed = 26;}
 
       button35.update();  //E6 key
-      if (button35.fallingEdge()){    //if pressing handle button, falling edge will be true        
+      if (button35.fallingEdge()){    //if pressing handle button, falling edge will be true
       choosespd = 1;
       playbackspeed = 27;}
 
       button36.update();  //F6 key
-      if (button36.fallingEdge()){    //if pressing handle button, falling edge will be true       
+      if (button36.fallingEdge()){    //if pressing handle button, falling edge will be true
       choosespd = 1;
       playbackspeed = 28;}
 
       button37.update();  //G6 key
-      if (button37.fallingEdge()){    //if pressing handle button, falling edge will be true       
+      if (button37.fallingEdge()){    //if pressing handle button, falling edge will be true
       choosespd = 1;
       playbackspeed = 29;}
 
 
-     
+
       delay(50);
   }//end of while choosespd equals zero
 
@@ -6939,7 +6919,7 @@ if(highestnotebeingplayed != prevhighestnotebeingplayed){
       MIDI.sendNoteOff(prevhighestnotebeingplayed, noteVol, 2);  // Base melody string on channel 2
       MIDI.sendNoteOff(prevsecondmelodyhighest, noteVol, 1); // Higher melody string on channel 1
       MIDI.sendNoteOff(83, clickvolume, 6);     // Key click OFF   on channel 6
- 
+
       //Serial.print("Note ");
       //Serial.print(prevhighestnotebeingplayed);
       //Serial.println(" silenced.");
@@ -6954,18 +6934,18 @@ if(highestnotebeingplayed != prevhighestnotebeingplayed){
 
       // Put in keyclick sounds except for when we are playing the open note AND except for when we are recranking with a key still held down, whwre you would also not hear a click normally.
       if (recrank != 1){
-      
-      
-                 if(highestnotebeingplayed != chan2midi){  // i.e. if we are NOT playing the open string thenm we DO need to sound a keyclick 
-                 usbMIDI.sendNoteOn(83, clickvolume, 6);     // Key click ON on channel 6 
-                 MIDI.sendNoteOn(83, clickvolume, 6);        // Key click ON on channel 6        
+
+
+                 if(highestnotebeingplayed != chan2midi){  // i.e. if we are NOT playing the open string thenm we DO need to sound a keyclick
+                 usbMIDI.sendNoteOn(83, clickvolume, 6);     // Key click ON on channel 6
+                 MIDI.sendNoteOn(83, clickvolume, 6);        // Key click ON on channel 6
                                                   }
-                                          
-                                         
-                                          
-                                          
+
+
+
+
                          }
- 
+
              }  //end of if highestnote being played is not equal to previous one
 
 
@@ -6984,7 +6964,7 @@ if(highestnotebeingplayed != prevhighestnotebeingplayed){
       //MIDI.sendNoteOff(prevhighestnotebeingplayed, noteVol, 2);  // Base melody string on channel 2
       //MIDI.sendNoteOff(prevsecondmelodyhighest, noteVol, 1); // Higher melody string on channel 1
       MIDI.sendNoteOff(83, clickvolume, 6);     // Key click OFF   on channel 6
-    
+
         //Play the new note
       usbMIDI.sendNoteOn(highestnotebeingplayed, noteVol, 2); // Base melody string on channel 2
       usbMIDI.sendNoteOn(secondmelodyhighest, noteVol, 1); // Higher melody string on channel 1
@@ -6993,11 +6973,11 @@ if(highestnotebeingplayed != prevhighestnotebeingplayed){
                      }
 
 
-      
+
       // For debugging
       //Serial.print("Recrank = ");
-      //Serial.println(recrank);                    
-      recrank = 0;   // Resets it to zero                   
+      //Serial.println(recrank);
+      recrank = 0;   // Resets it to zero
       //Serial.print("Recrank set to 0.  New note ");
       //Serial.print(highestnotebeingplayed);
       //Serial.println(" being played.");
@@ -7011,7 +6991,7 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("A8");
-      display.display(); 
+      display.display();
       break;
 
   case 116:
@@ -7019,7 +6999,7 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("G8#");
-      display.display(); 
+      display.display();
       break;
 */
   case 115:
@@ -7027,7 +7007,7 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("G8");
-      display.display(); 
+      display.display();
       break;
 
   case 114:
@@ -7035,7 +7015,7 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("F8#");
-      display.display(); 
+      display.display();
       break;
 
   case 113:
@@ -7043,7 +7023,7 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("F8");
-      display.display(); 
+      display.display();
       break;
 
   case 112:
@@ -7051,7 +7031,7 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("E8");
-      display.display(); 
+      display.display();
       break;
 
   case 111:
@@ -7059,7 +7039,7 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("D8#");
-      display.display(); 
+      display.display();
       break;
 
   case 110:
@@ -7067,7 +7047,7 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("D8");
-      display.display(); 
+      display.display();
       break;
 
   case 109:
@@ -7075,7 +7055,7 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("C9#");
-      display.display(); 
+      display.display();
       break;
 
   case 108:
@@ -7083,7 +7063,7 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("C8");
-      display.display(); 
+      display.display();
       break;
 
   case 107:
@@ -7091,23 +7071,23 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("B7");
-      display.display(); 
-      break; 
+      display.display();
+      break;
 
   case 106:
       display.clearDisplay();
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("A7#");
-      display.display(); 
-      break;   
+      display.display();
+      break;
 
   case 105:
       display.clearDisplay();
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("A7");
-      display.display(); 
+      display.display();
       break;
 
   case 104:
@@ -7115,11 +7095,11 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("G7#");
-      display.display(); 
-      break;                                                                          
+      display.display();
+      break;
 
 
-  
+
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
@@ -7128,7 +7108,7 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("G7");
-      display.display(); 
+      display.display();
       break;
 
   case 102:
@@ -7136,7 +7116,7 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("F7#");
-      display.display(); 
+      display.display();
       break;
 
   case 101:
@@ -7144,7 +7124,7 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("F7");
-      display.display(); 
+      display.display();
       break;
 
   case 100:
@@ -7152,7 +7132,7 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("E7");
-      display.display(); 
+      display.display();
       break;
 
   case 99:
@@ -7160,44 +7140,44 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("D7#");
-      display.display(); 
-      break;                        
+      display.display();
+      break;
 
 
 
 
-//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  
+//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   case 98:
       display.clearDisplay();
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("D7");
-      display.display(); 
-      break;  
+      display.display();
+      break;
 
   case 97:
       display.clearDisplay();
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("C7#");
-      display.display(); 
-      break;  
+      display.display();
+      break;
 
   case 96:
       display.clearDisplay();
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("C7");
-      display.display(); 
-      break;  
+      display.display();
+      break;
 
   case 95:
       display.clearDisplay();
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("B6");
-      display.display(); 
-      break;  
+      display.display();
+      break;
 
   case 94:
       display.clearDisplay();
@@ -7214,7 +7194,7 @@ switch (highestnotebeingplayed) {
       //display.setCursor(40,20);
       //display.println("A6");
       display.drawBitmap(0, 0,  logo56_glcd_bmp, 128, 64, 1);
-      display.display(); 
+      display.display();
       break;
 
 
@@ -7224,188 +7204,188 @@ switch (highestnotebeingplayed) {
       //display.setCursor(40,20);
       //display.println("G6#");
       display.drawBitmap(0, 0,  logo57_glcd_bmp, 128, 64, 1);
-      display.display(); 
+      display.display();
       break;
 
 
   case 91:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo31_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo31_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
 
   case 90:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo41_glcd_bmp, 128, 64, 1); 
-      display.display(); 
-      break; 
+      display.drawBitmap(0, 0,  logo41_glcd_bmp, 128, 64, 1);
+      display.display();
+      break;
 
   case 89:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo30_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo30_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
-          
+
   case 88:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo29_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo29_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
-           
+
   case 87:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo40_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo40_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
 
   case 86:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo28_glcd_bmp, 128, 64, 1); 
-      display.display(); 
-      break;    
+      display.drawBitmap(0, 0,  logo28_glcd_bmp, 128, 64, 1);
+      display.display();
+      break;
 
   case 85:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo39_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo39_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
 
   case 84:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo27_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo27_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
-      
+
   case 83:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo26_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo26_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
 
   case 82:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo38_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo38_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
 
   case 81:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo25_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo25_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
-      
+
   case 80:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo37_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo37_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
 
   case 79:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo24_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo24_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
-      
+
   case 78:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo36_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo36_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
 
   case 77:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo23_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo23_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
-      
+
   case 76:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo22_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo22_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
-      
+
   case 75:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo35_glcd_bmp, 128, 64, 1); 
-      display.display(); 
-      break; 
+      display.drawBitmap(0, 0,  logo35_glcd_bmp, 128, 64, 1);
+      display.display();
+      break;
 
   case 74:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo21_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo21_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
 
   case 73:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo34_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo34_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
 
   case 72:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo20_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo20_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
 
   case 71:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo19_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo19_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
 
   case 70:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo33_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo33_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
-      
+
   case 69:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo18_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo18_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
-      
+
   case 68:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo32_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo32_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
 
   case 67:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo17_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo17_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
 
   case 66:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo42_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo42_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
 
   case 65:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo43_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo43_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
 
   case 64:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo44_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo44_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
-      
+
   case 63:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo45_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo45_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
 
   case 62:
       display.clearDisplay();
-      display.drawBitmap(0, 0,  logo46_glcd_bmp, 128, 64, 1); 
-      display.display(); 
+      display.drawBitmap(0, 0,  logo46_glcd_bmp, 128, 64, 1);
+      display.display();
       break;
 
   case 61:
@@ -7414,7 +7394,7 @@ switch (highestnotebeingplayed) {
       //display.setCursor(40,20);
       //display.println("C4#");
       display.drawBitmap(0, 0,  logo58_glcd_bmp, 128, 64, 1);
-      display.display(); 
+      display.display();
       break;
 
   case 60:
@@ -7423,7 +7403,7 @@ switch (highestnotebeingplayed) {
       //display.setCursor(40,20);
       //display.println("C4");
       display.drawBitmap(0, 0,  logo59_glcd_bmp, 128, 64, 1);
-      display.display(); 
+      display.display();
       break;
 
   case 59:
@@ -7432,16 +7412,16 @@ switch (highestnotebeingplayed) {
       //display.setCursor(40,20);
       //display.println("B3");
       display.drawBitmap(0, 0,  logo60_glcd_bmp, 128, 64, 1);
-      display.display(); 
+      display.display();
       break;
-      
+
   case 58:
       display.clearDisplay();
       //display.setTextSize(3);
       //display.setCursor(40,20);
       //display.println("A3#");
       display.drawBitmap(0, 0,  logo61_glcd_bmp, 128, 64, 1);
-      display.display(); 
+      display.display();
       break;
 
   case 57:
@@ -7450,7 +7430,7 @@ switch (highestnotebeingplayed) {
       //display.setCursor(40,20);
       //display.println("A3");
       display.drawBitmap(0, 0,  logo62_glcd_bmp, 128, 64, 1);
-      display.display(); 
+      display.display();
       break;
 
   case 56:
@@ -7459,24 +7439,24 @@ switch (highestnotebeingplayed) {
       //display.setCursor(40,20);
       //display.println("G3#");
       display.drawBitmap(0, 0,  logo63_glcd_bmp, 128, 64, 1);
-      display.display(); 
+      display.display();
       break;
-      
+
   case 55:
       display.clearDisplay();
       //display.setTextSize(3);
       //display.setCursor(40,20);
       //display.println("G3");
       display.drawBitmap(0, 0,  logo64_glcd_bmp, 128, 64, 1);
-      display.display(); 
+      display.display();
       break;
-      
+
   case 54:
       display.clearDisplay();
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("F3#");
-      display.display(); 
+      display.display();
       break;
 
   case 53:
@@ -7484,7 +7464,7 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("F3");
-      display.display(); 
+      display.display();
       break;
 
   case 52:
@@ -7492,26 +7472,26 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("E3");
-      display.display(); 
-      break; 
+      display.display();
+      break;
 
   case 51:
       display.clearDisplay();
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("D3#");
-      display.display(); 
-      break; 
+      display.display();
+      break;
 
   case 50:
       display.clearDisplay();
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("D3");
-      display.display(); 
-      break; 
+      display.display();
+      break;
 
-/*      
+/*
   //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
   case 49:
@@ -7519,7 +7499,7 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("C3#");
-      display.display(); 
+      display.display();
       break;
 
   case 48:
@@ -7527,7 +7507,7 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("C3");
-      display.display(); 
+      display.display();
       break;
 
   case 47:
@@ -7535,15 +7515,15 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("B2");
-      display.display(); 
-      break;       
+      display.display();
+      break;
 
   case 46:
       display.clearDisplay();
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("A2#");
-      display.display(); 
+      display.display();
       break;
 
   case 45:
@@ -7551,7 +7531,7 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("A2");
-      display.display(); 
+      display.display();
       break;
 
   case 44:
@@ -7559,7 +7539,7 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("G2#");
-      display.display(); 
+      display.display();
       break;
 
   case 43:
@@ -7567,16 +7547,16 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("G2");
-      display.display(); 
-      break;    
+      display.display();
+      break;
 
-//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx   
+//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   case 42:
       display.clearDisplay();
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("F2#");
-      display.display(); 
+      display.display();
       break;
 
   case 41:
@@ -7584,15 +7564,15 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("F2");
-      display.display(); 
-      break; 
+      display.display();
+      break;
 
   case 40:
       display.clearDisplay();
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("E2");
-      display.display(); 
+      display.display();
       break;
 
   case 39:
@@ -7600,7 +7580,7 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("D2#");
-      display.display(); 
+      display.display();
       break;
 
   case 38:
@@ -7608,7 +7588,7 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("D2");
-      display.display(); 
+      display.display();
       break;
 
   case 37:
@@ -7616,7 +7596,7 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("C2#");
-      display.display(); 
+      display.display();
       break;
 
   case 36:
@@ -7624,15 +7604,15 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("C2");
-      display.display(); 
-      break; 
+      display.display();
+      break;
 
   case 35:
       display.clearDisplay();
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("B1");
-      display.display(); 
+      display.display();
       break;
 
   case 34:
@@ -7640,15 +7620,15 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("A1#");
-      display.display(); 
-      break; 
+      display.display();
+      break;
 
   case 33:
       display.clearDisplay();
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("A1");
-      display.display(); 
+      display.display();
       break;
 
   case 32:
@@ -7656,7 +7636,7 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("G1#");
-      display.display(); 
+      display.display();
       break;
 
   case 31:
@@ -7664,16 +7644,16 @@ switch (highestnotebeingplayed) {
       display.setTextSize(3);
       display.setCursor(40,20);
       display.println("G1");
-      display.display(); 
-      break;                                  
- */     
-      
+      display.display();
+      break;
+ */
 
-                           
-                                          
 
-   } // Closed bracket after switch 
-}// Closed bracket after if displaystyle equals 1 
+
+
+
+   } // Closed bracket after switch
+}// Closed bracket after if displaystyle equals 1
 
 else {
 
@@ -7688,7 +7668,7 @@ switch (highestnotebeingplayed) {
       display.println("A");
       display.println("   8");
       display.println(" ");
-      display.display(); 
+      display.display();
       break;
 
   case 116:
@@ -7699,8 +7679,8 @@ switch (highestnotebeingplayed) {
       display.println("G");
       display.println("   8#");
       display.println(" ");
-      display.display(); 
-      break;  
+      display.display();
+      break;
 */
   case 115:
       display.clearDisplay();
@@ -7710,8 +7690,8 @@ switch (highestnotebeingplayed) {
       display.println("G");
       display.println("   8");
       display.println(" ");
-      display.display(); 
-      break; 
+      display.display();
+      break;
 
   case 114:
       display.clearDisplay();
@@ -7721,8 +7701,8 @@ switch (highestnotebeingplayed) {
       display.println("F");
       display.println("   8#");
       display.println(" ");
-      display.display(); 
-      break; 
+      display.display();
+      break;
 
   case 113:
       display.clearDisplay();
@@ -7732,8 +7712,8 @@ switch (highestnotebeingplayed) {
       display.println("F");
       display.println("   8");
       display.println(" ");
-      display.display(); 
-      break;  
+      display.display();
+      break;
 
   case 112:
       display.clearDisplay();
@@ -7743,7 +7723,7 @@ switch (highestnotebeingplayed) {
       display.println("E");
       display.println("   8");
       display.println(" ");
-      display.display(); 
+      display.display();
       break;
 
   case 111:
@@ -7754,8 +7734,8 @@ switch (highestnotebeingplayed) {
       display.println("D");
       display.println("   8#");
       display.println(" ");
-      display.display(); 
-      break;  
+      display.display();
+      break;
 
   case 110:
       display.clearDisplay();
@@ -7765,8 +7745,8 @@ switch (highestnotebeingplayed) {
       display.println("D");
       display.println("   8");
       display.println(" ");
-      display.display(); 
-      break; 
+      display.display();
+      break;
 
   case 109:
       display.clearDisplay();
@@ -7776,7 +7756,7 @@ switch (highestnotebeingplayed) {
       display.println("C");
       display.println("   8#");
       display.println(" ");
-      display.display(); 
+      display.display();
       break;
 
   case 108:
@@ -7787,7 +7767,7 @@ switch (highestnotebeingplayed) {
       display.println("C");
       display.println("   8");
       display.println(" ");
-      display.display(); 
+      display.display();
       break;
 
   case 107:
@@ -7798,7 +7778,7 @@ switch (highestnotebeingplayed) {
       display.println("B");
       display.println("   7");
       display.println(" ");
-      display.display(); 
+      display.display();
       break;
 
   case 106:
@@ -7809,8 +7789,8 @@ switch (highestnotebeingplayed) {
       display.println("A");
       display.println("   7#");
       display.println(" ");
-      display.display(); 
-      break;  
+      display.display();
+      break;
 
   case 105:
       display.clearDisplay();
@@ -7820,7 +7800,7 @@ switch (highestnotebeingplayed) {
       display.println("A");
       display.println("   7");
       display.println(" ");
-      display.display(); 
+      display.display();
       break;
 
   case 104:
@@ -7831,10 +7811,10 @@ switch (highestnotebeingplayed) {
       display.println("G");
       display.println("   7#");
       display.println(" ");
-      display.display(); 
-      break;  
+      display.display();
+      break;
 
-                                                                      
+
 
 
 //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -7846,7 +7826,7 @@ switch (highestnotebeingplayed) {
       display.println("G");
       display.println("   7");
       display.println(" ");
-      display.display(); 
+      display.display();
       break;
 
   case 102:
@@ -7856,8 +7836,8 @@ switch (highestnotebeingplayed) {
       display.setCursor(10,5);
       display.println("F");
       display.println("   7#");
-      display.println(" ");      
-      display.display(); 
+      display.println(" ");
+      display.display();
       break;
 
   case 101:
@@ -7868,7 +7848,7 @@ switch (highestnotebeingplayed) {
       display.println("F");
       display.println("   7");
       display.println(" ");
-      display.display(); 
+      display.display();
       break;
 
   case 100:
@@ -7879,7 +7859,7 @@ switch (highestnotebeingplayed) {
       display.println("E");
       display.println("   7");
       display.println(" ");
-      display.display(); 
+      display.display();
       break;
 
   case 99:
@@ -7890,13 +7870,13 @@ switch (highestnotebeingplayed) {
       display.println("D");
       display.println("   7#");
       display.println(" ");
-      display.display(); 
-      break;                        
+      display.display();
+      break;
 
 
 
 
-//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx   
+//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
 case 98:
@@ -7909,7 +7889,7 @@ case 98:
       display.println("   7");
       display.println("Mib/Re#");
       display.display();
-      break;  
+      break;
 
   case 97:
       display.clearDisplay();
@@ -7921,7 +7901,7 @@ case 98:
       display.println("   7");
       display.println("Do#");
       display.display();
-      break;  
+      break;
 
   case 96:
       display.clearDisplay();
@@ -7933,7 +7913,7 @@ case 98:
       display.println("   7");
       display.println("Do");
       display.display();
-      break;  
+      break;
 
   case 95:
       display.clearDisplay();
@@ -7945,7 +7925,7 @@ case 98:
       display.println("   6");
       display.println("Ti#");
       display.display();
-      break;  
+      break;
 
   case 94:
       display.clearDisplay();
@@ -8018,7 +7998,7 @@ case 98:
       display.println("Fa");
       display.display();
       break;
-         
+
   case 88:
       display.clearDisplay();
       //display.drawBitmap(0, 0,  logo29_glcd_bmp, 128, 64, 1);
@@ -8029,7 +8009,7 @@ case 98:
       display.println("Mi");
       display.display();
       break;
-           
+
   case 87:
       display.clearDisplay();
       //display.drawBitmap(0, 0,  logo40_glcd_bmp, 128, 64, 1);
@@ -8050,7 +8030,7 @@ case 98:
       display.println("   6");
       display.println("Re");
       display.display();
-      break;    
+      break;
 
   case 85:
       display.clearDisplay();
@@ -8073,7 +8053,7 @@ case 98:
       display.println("Do");
       display.display();
       break;
-     
+
   case 83:
       display.clearDisplay();
       //display.drawBitmap(0, 0,  logo26_glcd_bmp, 128, 64, 1);
@@ -8106,7 +8086,7 @@ case 98:
       display.println("La");
       display.display();
       break;
-     
+
   case 80:
       display.clearDisplay();
       //display.drawBitmap(0, 0,  logo37_glcd_bmp, 128, 64, 1);
@@ -8128,7 +8108,7 @@ case 98:
       display.println("Sol");
       display.display();
       break;
-     
+
   case 78:
       display.clearDisplay();
       //display.drawBitmap(0, 0,  logo36_glcd_bmp, 128, 64, 1);
@@ -8150,7 +8130,7 @@ case 98:
       display.println("Fa");
       display.display();
       break;
-     
+
   case 76:
       display.clearDisplay();
       //display.drawBitmap(0, 0,  logo22_glcd_bmp, 128, 64, 1);
@@ -8161,7 +8141,7 @@ case 98:
       display.println("Mi");
       display.display();
       break;
-     
+
   case 75:
       display.clearDisplay();
       //display.drawBitmap(0, 0,  logo35_glcd_bmp, 128, 64, 1);
@@ -8227,7 +8207,7 @@ case 98:
       display.println("Sib/La#");
       display.display();
       break;
-     
+
   case 69:
       display.clearDisplay();
       //display.drawBitmap(0, 0,  logo18_glcd_bmp, 128, 64, 1);
@@ -8238,7 +8218,7 @@ case 98:
       display.println("La");
       display.display();
       break;
-     
+
   case 68:
       display.clearDisplay();
       //display.drawBitmap(0, 0,  logo32_glcd_bmp, 128, 64, 1);
@@ -8293,7 +8273,7 @@ case 98:
       display.println("Mi");
       display.display();
       break;
-     
+
   case 63:
       display.clearDisplay();
       //display.drawBitmap(0, 0,  logo45_glcd_bmp, 128, 64, 1);
@@ -8354,7 +8334,7 @@ case 98:
       display.println("Si");
       display.display();
       break;
-     
+
   case 58:
       display.clearDisplay();
       /*display.setTextSize(3);
@@ -8393,7 +8373,7 @@ case 98:
       display.println("Sol#");
       display.display();
       break;
-     
+
   case 55:
       display.clearDisplay();
       /*display.setTextSize(3);
@@ -8406,7 +8386,7 @@ case 98:
       display.println("Sol");
       display.display();
       break;
-     
+
   case 54:
       display.clearDisplay();
       /*display.setTextSize(3);
@@ -8482,7 +8462,7 @@ case 98:
       display.println("C");
       display.println("   3#");
       display.println("  ");
-      display.display(); 
+      display.display();
       break;
 
   case 48:
@@ -8493,7 +8473,7 @@ case 98:
       display.println("C");
       display.println("   3");
       display.println("  ");
-      display.display(); 
+      display.display();
       break;
 
   case 47:
@@ -8504,8 +8484,8 @@ case 98:
       display.println("B");
       display.println("   2");
       display.println("  ");
-      display.display(); 
-      break;       
+      display.display();
+      break;
 
   case 46:
       display.clearDisplay();
@@ -8515,7 +8495,7 @@ case 98:
       display.println("A");
       display.println("   2#");
       display.println("  ");
-      display.display(); 
+      display.display();
       break;
 
   case 45:
@@ -8526,7 +8506,7 @@ case 98:
       display.println("A");
       display.println("   2");
       display.println("  ");
-      display.display(); 
+      display.display();
       break;
 
   case 44:
@@ -8537,7 +8517,7 @@ case 98:
       display.println("G");
       display.println("   2#");
       display.println("  ");
-      display.display(); 
+      display.display();
       break;
 
   case 43:
@@ -8548,8 +8528,8 @@ case 98:
       display.println("G");
       display.println("   2");
       display.println("  ");
-      display.display(); 
-      break;    
+      display.display();
+      break;
 
 
   //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -8561,7 +8541,7 @@ case 98:
       display.println("F");
       display.println("   2#");
       display.println("  ");
-      display.display(); 
+      display.display();
       break;
 
    case 41:
@@ -8572,7 +8552,7 @@ case 98:
       display.println("F");
       display.println("   2");
       display.println("  ");
-      display.display(); 
+      display.display();
       break;
 
   case 40:
@@ -8583,7 +8563,7 @@ case 98:
       display.println("E");
       display.println("   2");
       display.println("  ");
-      display.display(); 
+      display.display();
       break;
 
   case 39:
@@ -8594,7 +8574,7 @@ case 98:
       display.println("D");
       display.println("   2#");
       display.println("  ");
-      display.display(); 
+      display.display();
       break;
 
   case 38:
@@ -8605,7 +8585,7 @@ case 98:
       display.println("D");
       display.println("   2");
       display.println("  ");
-      display.display(); 
+      display.display();
       break;
 
   case 37:
@@ -8616,7 +8596,7 @@ case 98:
       display.println("C");
       display.println("   2");
       display.println("  ");
-      display.display(); 
+      display.display();
       break;
 
   case 36:
@@ -8627,7 +8607,7 @@ case 98:
       display.println("C");
       display.println("   2");
       display.println("  ");
-      display.display(); 
+      display.display();
       break;
 
   case 35:
@@ -8638,7 +8618,7 @@ case 98:
       display.println("B");
       display.println("   1");
       display.println("  ");
-      display.display(); 
+      display.display();
       break;
 
   case 34:
@@ -8649,7 +8629,7 @@ case 98:
       display.println("A");
       display.println("   1#");
       display.println("  ");
-      display.display(); 
+      display.display();
       break;
 
   case 33:
@@ -8660,8 +8640,8 @@ case 98:
       display.println("A");
       display.println("   1");
       display.println("  ");
-      display.display(); 
-      break; 
+      display.display();
+      break;
 
   case 32:
       display.clearDisplay();
@@ -8671,8 +8651,8 @@ case 98:
       display.println("G");
       display.println("   1#");
       display.println("  ");
-      display.display(); 
-      break; 
+      display.display();
+      break;
 
   case 31:
       display.clearDisplay();
@@ -8682,21 +8662,21 @@ case 98:
       display.println("G");
       display.println("   1");
       display.println("  ");
-      display.display(); 
-      break;                                                               
- */             
-  
+      display.display();
+      break;
+ */
+
 
            }  // Closed bracket after second switch
 
            }   // closed bracket after else
 
- 
-      
-          
-                    
-  
-  
+
+
+
+
+
+
 }  // end of soundnotekey
 
 
@@ -8714,7 +8694,7 @@ void clearallMIDI(){   // Precautionary step that turns everything off that migh
 
 
 
-  
+
 
   display.clearDisplay();
   display.setTextSize(1);
@@ -8726,7 +8706,7 @@ void clearallMIDI(){   // Precautionary step that turns everything off that migh
 
 
 
-  
+
                                //int i2;
                                                     usbMIDI.sendNoteOff(chan2midi, 0, 2);  // Turns OFF last used note on Ch2
                                                     usbMIDI.sendNoteOff(chan1midi, 0, 1);  //  Turns OFF last used note on Ch1
@@ -8734,193 +8714,193 @@ void clearallMIDI(){   // Precautionary step that turns everything off that migh
                                                     MIDI.sendNoteOff(chan1midi, 0, 1);  // Turns OFF last used note on Ch1
 
 
-                               
-                               
+
+
                                for (int i = 43; i <= 103; i++) {
-                               
-                                                    
+
+
                                                     usbMIDI.sendNoteOff(i, 0, 2);  // Turns OFF any notes that might still be on, on channel 2, the base melody notes channel.
-                                                    usbMIDI.sendNoteOff(i, 0, 1);  // Turns OFF any notes that might still be on, on channel 1, the high melody notes channel. 
+                                                    usbMIDI.sendNoteOff(i, 0, 1);  // Turns OFF any notes that might still be on, on channel 1, the high melody notes channel.
                                                     MIDI.sendNoteOff(i, 0, 2);  // Turns OFF any notes that might still be on, on channel 2, the base melody notes channel.
-                                                    MIDI.sendNoteOff(i, 0, 1);  // Turns OFF any notes that might still be on, on channel 1, the high melody notes channel. 
-                                  
+                                                    MIDI.sendNoteOff(i, 0, 1);  // Turns OFF any notes that might still be on, on channel 1, the high melody notes channel.
+
                                                     //delay(20);
                                                               }
 
-            /*                                                  
+            /*
                                for (int i = 50; i <= 110; i++) {
-                                                    usbMIDI.sendNoteOff(i, 0, 6);  
+                                                    usbMIDI.sendNoteOff(i, 0, 6);
                                                     MIDI.sendNoteOff(i, 0, 6); // Turns OFF any keyclicks that might be associated with each of these notes too on channel 6
                                                     delay(20);
                                                                }
             */
 
-                  usbMIDI.sendNoteOff(83, clickvolume, 6);  
+                  usbMIDI.sendNoteOff(83, clickvolume, 6);
                   MIDI.sendNoteOff(83, clickvolume, 6); // Turns OFF any keyclicks on channel 6
 
-                  /*                                             
+                  /*
                   // Then do exactly the same for the drones. Any drones that might still be on for any reason get turned off if crank stopped for more than about 1 second.
                   if(choosekey ==1){   // melody string is G and we want Trompette D4   and a drone of G2 turned OFF
                   usbMIDI.sendNoteOff(62, 0, 3);     //   Plays Trompette D4 you have chosen to link to Channel 3 in the phone app.
                   usbMIDI.sendNoteOff(43, 0, 4);     //   Plays drone G2 you have chosen to lionk to Channel 4 in the phone app.
                   MIDI.sendNoteOff(62, 0, 3);     //   Plays Trompette D4 you have chosen to link to Channel 3 in the phone app.
                   MIDI.sendNoteOff(43, 0, 4);     //   Plays drone G2 you have chosen to lionk to Channel 4 in the phone app.
-                  
+
                           }
                   if(choosekey == 2){   // melody string is G and we want Trompette C4   and a drone of C3 turned OFF
                   usbMIDI.sendNoteOff(60, 0, 3);     //   Plays Trompette C4 you have chosen to link to Channel 3 in the phone app.
                   usbMIDI.sendNoteOff(48, 0, 4);     //   Plays drone C3 you have chosen to lionk to Channel 4 in the phone app.
                   MIDI.sendNoteOff(60, 0, 3);     //   Plays Trompette C4 you have chosen to link to Channel 3 in the phone app.
                   MIDI.sendNoteOff(48, 0, 4);     //   Plays drone C3 you have chosen to lionk to Channel 4 in the phone app.
-                     
+
                           }
                   if(choosekey == 3){   // melody string is D and we want Trompette D4   and a drone of D2 turned OFF
                   usbMIDI.sendNoteOff(62, 0, 3);     //   Plays Trompette D4 you have chosen to link to Channel 3 in the phone app.
                   usbMIDI.sendNoteOff(38, 0, 4);     //   Plays drone D2 you have chosen to lionk to Channel 4 in the phone app.
                   MIDI.sendNoteOff(62, 0, 3);     //   Plays Trompette D4 you have chosen to link to Channel 3 in the phone app.
                   MIDI.sendNoteOff(38, 0, 4);     //   Plays drone D2 you have chosen to lionk to Channel 4 in the phone app.
-                    
+
                           }
                   if(choosekey == 4){   // melody string is D and we want Trompette D4   and a drone of G2 turned OFF
                   usbMIDI.sendNoteOff(62, 0, 3);     //   Plays Trompette D4 you have chosen to link to Channel 3 in the phone app.
                   usbMIDI.sendNoteOff(43, 0, 4);     //   Plays drone G2 you have chosen to link to Channel 4 in the phone app.
                   MIDI.sendNoteOff(62, 0, 3);     //   Plays Trompette D4 you have chosen to link to Channel 3 in the phone app.
                   MIDI.sendNoteOff(43, 0, 4);     //   Plays drone G2 you have chosen to link to Channel 4 in the phone app.
-                          
-                          }  
+
+                          }
                   if(choosekey == 5){   // melody string is D and we want Trompette D4   and a drone of A3 turned OFF
                   usbMIDI.sendNoteOff(62, 0, 3);     //   Plays Trompette D4 you have chosen to link to Channel 3 in the phone app.
                   usbMIDI.sendNoteOff(57, 0, 4);     //   Plays drone A3 you have chosen to link to Channel 4 in the phone app.
                   MIDI.sendNoteOff(62, 0, 3);     //   Plays Trompette D4 you have chosen to link to Channel 3 in the phone app.
                   MIDI.sendNoteOff(57, 0, 4);     //   Plays drone A3 you have chosen to link to Channel 4 in the phone app.
-                        
+
                           }
                   if(choosekey == 6){   // melody string is G3 very low G and we want Trompette D4   and a drone of D3 turned OFF
                   usbMIDI.sendNoteOff(62, 0, 3);     //   Plays Trompette A3 you have chosen to link to Channel 3 in the phone app.
                   usbMIDI.sendNoteOff(50, 0, 4);     //   Plays drone D3 you have chosen to link to Channel 4 in the phone app.
                   MIDI.sendNoteOff(62, 0, 3);     //   Plays Trompette A3 you have chosen to link to Channel 3 in the phone app.
                   MIDI.sendNoteOff(50, 0, 4);     //   Plays drone D3 you have chosen to link to Channel 4 in the phone app.
-                        
+
                           }
                   if(choosekey == 7){   // melody string is D4 and we want Trompette D4   and a drone of D3 turned OFF
                   usbMIDI.sendNoteOff(62, DVol, 3);     //   Plays Trompette D4 you have chosen to link to Channel 3 in the phone app.
-                  usbMIDI.sendNoteOff(50, DVol, 4);     //   Plays drone D3 you have chosen to link to Channel 4 in the phone app.             
+                  usbMIDI.sendNoteOff(50, DVol, 4);     //   Plays drone D3 you have chosen to link to Channel 4 in the phone app.
                   MIDI.sendNoteOff(62, DVol, 3);     //   Plays Trompette D4 you have chosen to link to Channel 3 in the phone app.
-                  MIDI.sendNoteOff(50, DVol, 4);     //   Plays drone D3 you have chosen to link to Channel 4 in the phone app.             
-                                
+                  MIDI.sendNoteOff(50, DVol, 4);     //   Plays drone D3 you have chosen to link to Channel 4 in the phone app.
+
                                   }
                   if(choosekey == 8){   // melody string is A4 and we want Trompette E4   and a drone of A2 turned OFF
                   usbMIDI.sendNoteOff(64, DVol, 3);     //   Plays Trompette E4 you have chosen to link to Channel 3 in the phone app.
-                  usbMIDI.sendNoteOff(45, DVol, 4);     //   Plays drone A2 you have chosen to link to Channel 4 in the phone app.             
+                  usbMIDI.sendNoteOff(45, DVol, 4);     //   Plays drone A2 you have chosen to link to Channel 4 in the phone app.
                   MIDI.sendNoteOff(64, DVol, 3);     //   Plays Trompette E4 you have chosen to link to Channel 3 in the phone app.
                   MIDI.sendNoteOff(45, DVol, 4);
                                   }
                   if(choosekey == 9){   // melody string is G3 and we want Trompette C4   and a drone of G2 turned OFF
                   usbMIDI.sendNoteOff(60, 0, 3);     //   Plays Trompette C4 you have chosen to link to Channel 3 in the phone app.
-                  usbMIDI.sendNoteOff(43, 0, 4);     //   Plays drone G2 you have chosen to link to Channel 4 in the phone app.             
+                  usbMIDI.sendNoteOff(43, 0, 4);     //   Plays drone G2 you have chosen to link to Channel 4 in the phone app.
                   MIDI.sendNoteOff(60, 0, 3);     //   Plays Trompette C4 you have chosen to link to Channel 3 in the phone app.
-                  MIDI.sendNoteOff(43, 0, 4);     //   Plays drone G2 you have chosen to link to Channel 4 in the phone app.             
-                                
+                  MIDI.sendNoteOff(43, 0, 4);     //   Plays drone G2 you have chosen to link to Channel 4 in the phone app.
+
                                   }
                   if(choosekey == 10){   // melody string is G4 and we want Trompette C4   and a drone of G2 turned OFF
                   usbMIDI.sendNoteOff(60, 0, 3);     //   Plays Trompette C4 you have chosen to link to Channel 3 in the phone app.
-                  usbMIDI.sendNoteOff(43, 0, 4);     //   Plays drone G2 you have chosen to link to Channel 4 in the phone app.             
+                  usbMIDI.sendNoteOff(43, 0, 4);     //   Plays drone G2 you have chosen to link to Channel 4 in the phone app.
                   MIDI.sendNoteOff(60, 0, 3);     //   Plays Trompette C4 you have chosen to link to Channel 3 in the phone app.
-                  MIDI.sendNoteOff(43, 0, 4);  
-                                  }   
+                  MIDI.sendNoteOff(43, 0, 4);
+                                  }
 
                   if(choosekey == 11){   // melody string is G3 and we want Trompette C4   and a drone of G2 turned OFF
                   usbMIDI.sendNoteOff(60, 0, 3);     //   Plays Trompette C4 you have chosen to link to Channel 3 in the phone app.
-                  usbMIDI.sendNoteOff(36, 0, 4);     //   Plays drone G2 you have chosen to link to Channel 4 in the phone app.             
+                  usbMIDI.sendNoteOff(36, 0, 4);     //   Plays drone G2 you have chosen to link to Channel 4 in the phone app.
                   MIDI.sendNoteOff(60, 0, 3);     //   Plays Trompette C4 you have chosen to link to Channel 3 in the phone app.
-                  MIDI.sendNoteOff(36, 0, 4);     //   Plays drone G2 you have chosen to link to Channel 4 in the phone app.             
-                                 
-                                  }  
+                  MIDI.sendNoteOff(36, 0, 4);     //   Plays drone G2 you have chosen to link to Channel 4 in the phone app.
+
+                                  }
 
                   if(choosekey == 12){   // melody string is G3 and we want Trompette D4   and a drone of D2 turned OFF
                   usbMIDI.sendNoteOff(62, 0, 3);     //   Plays Trompette D4 you have chosen to link to Channel 3 in the phone app.
-                  usbMIDI.sendNoteOff(38, 0, 4);     //   Plays drone D2 you have chosen to link to Channel 4 in the phone app.             
+                  usbMIDI.sendNoteOff(38, 0, 4);     //   Plays drone D2 you have chosen to link to Channel 4 in the phone app.
                   MIDI.sendNoteOff(62, 0, 3);     //   Plays Trompette D4 you have chosen to link to Channel 3 in the phone app.
-                  MIDI.sendNoteOff(38, 0, 4);  
-                                  } 
-                                                                                                           
+                  MIDI.sendNoteOff(38, 0, 4);
+                                  }
+
                   if(choosekey == 13){   // melody string is G3 and we want Trompette G4   and a drone of G2 turned OFF
                   usbMIDI.sendNoteOff(67, 0, 3);     //   Plays Trompette G4 you have chosen to link to Channel 3 in the phone app.
-                  usbMIDI.sendNoteOff(43, 0, 4);     //   Plays drone G2 you have chosen to link to Channel 4 in the phone app.             
+                  usbMIDI.sendNoteOff(43, 0, 4);     //   Plays drone G2 you have chosen to link to Channel 4 in the phone app.
                   MIDI.sendNoteOff(67, 0, 3);     //   Plays Trompette G4 you have chosen to link to Channel 3 in the phone app.
-                  MIDI.sendNoteOff(43, 0, 4); 
-                                  }  
-                                  
+                  MIDI.sendNoteOff(43, 0, 4);
+                                  }
+
                   if(choosekey == 14){   // melody string is D3 and we want Trompette D4   and a drone of G2 turned OFF
                   usbMIDI.sendNoteOff(62, 0, 3);     //   Plays Trompette D4 you have chosen to link to Channel 3 in the phone app.
-                  usbMIDI.sendNoteOff(43, 0, 4);     //   Plays drone G2 you have chosen to link to Channel 4 in the phone app.             
+                  usbMIDI.sendNoteOff(43, 0, 4);     //   Plays drone G2 you have chosen to link to Channel 4 in the phone app.
                   MIDI.sendNoteOff(62, 0, 3);     //   Plays Trompette D4 you have chosen to link to Channel 3 in the phone app.
-                  MIDI.sendNoteOff(43, 0, 4);  
-                                  } 
+                  MIDI.sendNoteOff(43, 0, 4);
+                                  }
                   */
       // Turn off last used trompette on Chan 3
-                  usbMIDI.sendNoteOff(trompmidi, 0, 3);             
-                  MIDI.sendNoteOff(trompmidi, 0, 3); 
-      
+                  usbMIDI.sendNoteOff(trompmidi, 0, 3);
+                  MIDI.sendNoteOff(trompmidi, 0, 3);
+
       // Turn off last used drone on Chan 4
-                  usbMIDI.sendNoteOff(dronemidi, 0, 4);             
-                  MIDI.sendNoteOff(dronemidi, 0, 4); 
-
-                  
-                  
-
-      // Turn off all possible drones that might be on channel 3            
-                  usbMIDI.sendNoteOff(62, 0, 3);             
-                  MIDI.sendNoteOff(62, 0, 3);   
-
-                  usbMIDI.sendNoteOff(60, 0, 3);             
-                  MIDI.sendNoteOff(60, 0, 3);     
-                  
-                  usbMIDI.sendNoteOff(64, 0, 3);             
-                  MIDI.sendNoteOff(64, 0, 3);     
-
-                  usbMIDI.sendNoteOff(67, 0, 3);              
-                  MIDI.sendNoteOff(67, 0, 3);     
-
-      // Turn off all possible drones that might be on channel 4            
-                  usbMIDI.sendNoteOff(36, 0, 4);            
-                  MIDI.sendNoteOff(36, 0, 4); 
-
-                  usbMIDI.sendNoteOff(38, 0, 4);            
-                  MIDI.sendNoteOff(38, 0, 4);                       
-
-                  usbMIDI.sendNoteOff(43, 0, 4);            
-                  MIDI.sendNoteOff(43, 0, 4); 
-                  
-                  usbMIDI.sendNoteOff(45, 0, 4);            
-                  MIDI.sendNoteOff(45, 0, 4); 
-
-                  usbMIDI.sendNoteOff(48, 0, 4);            
-                  MIDI.sendNoteOff(48, 0, 4); 
-
-                  usbMIDI.sendNoteOff(50, 0, 4);            
-                  MIDI.sendNoteOff(50, 0, 4); 
-
-                  usbMIDI.sendNoteOff(57, 0, 4);            
-                  MIDI.sendNoteOff(57, 0, 4); 
+                  usbMIDI.sendNoteOff(dronemidi, 0, 4);
+                  MIDI.sendNoteOff(dronemidi, 0, 4);
 
 
 
 
+      // Turn off all possible drones that might be on channel 3
+                  usbMIDI.sendNoteOff(62, 0, 3);
+                  MIDI.sendNoteOff(62, 0, 3);
 
-                                  
+                  usbMIDI.sendNoteOff(60, 0, 3);
+                  MIDI.sendNoteOff(60, 0, 3);
+
+                  usbMIDI.sendNoteOff(64, 0, 3);
+                  MIDI.sendNoteOff(64, 0, 3);
+
+                  usbMIDI.sendNoteOff(67, 0, 3);
+                  MIDI.sendNoteOff(67, 0, 3);
+
+      // Turn off all possible drones that might be on channel 4
+                  usbMIDI.sendNoteOff(36, 0, 4);
+                  MIDI.sendNoteOff(36, 0, 4);
+
+                  usbMIDI.sendNoteOff(38, 0, 4);
+                  MIDI.sendNoteOff(38, 0, 4);
+
+                  usbMIDI.sendNoteOff(43, 0, 4);
+                  MIDI.sendNoteOff(43, 0, 4);
+
+                  usbMIDI.sendNoteOff(45, 0, 4);
+                  MIDI.sendNoteOff(45, 0, 4);
+
+                  usbMIDI.sendNoteOff(48, 0, 4);
+                  MIDI.sendNoteOff(48, 0, 4);
+
+                  usbMIDI.sendNoteOff(50, 0, 4);
+                  MIDI.sendNoteOff(50, 0, 4);
+
+                  usbMIDI.sendNoteOff(57, 0, 4);
+                  MIDI.sendNoteOff(57, 0, 4);
+
+
+
+
+
+
 
                   //Then do same for the buzz on channel 5just to make sure
-                  usbMIDI.sendNoteOff(buzzrootkey, buzzvolume, 5);   // Chien buzz off on channel 5  
+                  usbMIDI.sendNoteOff(buzzrootkey, buzzvolume, 5);   // Chien buzz off on channel 5
                   MIDI.sendNoteOff(buzzrootkey, buzzvolume, 5);
-                  MidiValue = 0;  // Reset the current midi value to silence 
+                  MidiValue = 0;  // Reset the current midi value to silence
 
   display.clearDisplay();
   display.setTextSize(1);
   display.setCursor(0,0);
   display.display();
 
-                                                               
+
  } // end of clearallMIDI
 
 
@@ -8938,32 +8918,32 @@ void tunings(){
 //Serial.println(choosekey);
 //               }
 
-// text display 
+// text display
   display.clearDisplay();
   display.setTextSize(2);
   display.setCursor(0,0);
   display.println(" ");
   display.println(" TUNINGS");
-  display.display();  
+  display.display();
   delay(2000);
 
-  
 
-// Choose  between 5 broad tuning options                                                         
+
+// Choose  between 5 broad tuning options
 clearallMIDI();
-  
+
 
   display.clearDisplay();
   display.setTextSize(1);
   display.setCursor(0,0);
-  display.println(" SELECT YOUR TUNING:"); 
+  display.println(" SELECT YOUR TUNING:");
   display.println("Use lower keys 1 - 5");
   display.println(" ");
 
   //display.display();
   //delay(3000);
 
-  
+
 
   //display.clearDisplay();
   //display.setTextSize(1);
@@ -8971,15 +8951,15 @@ clearallMIDI();
   display.println("1) G/C C Drones");
   display.println("2) G/C G Drones");
   display.println("3) D/G D Drones");
-  display.println("4) D/G G Drones");  
+  display.println("4) D/G G Drones");
   display.println("5) G/C CG Drones");
   display.display();
   delay(1000);
 
-  
+
        tonestatus = 0;     // start them at root setting. Tone can go up to 1 or back to 0
        octavestatus = 0;   // start them at root setting. Octave can go down one to become -1 or up one to become +1
- 
+
   while (choosekey == 0){
 
       button24.update();  //press button 1 to select G/C playing in C    g4 G3 C4 C2       C2 Drone and Octave Chanters
@@ -8992,9 +8972,9 @@ clearallMIDI();
                     chan1midi = 79;  // G4
                     chan2midi = 67;  // G3
                     trompmidi = 72;  // C4
-                    dronemidi = 48;  // C2             
+                    dronemidi = 48;  // C2
                     display.println("G/C C Drones");
-                    //display.println(" ");                    
+                    //display.println(" ");
                     display.print("Melody Chan 1:   ");
                     //display.println(chan1midi);
                     MIDInote = chan1midi;
@@ -9006,21 +8986,21 @@ clearallMIDI();
                     display.print("Tromp  Chan 3:   ");
                     //display.println(trompmidi);
                     MIDInote = trompmidi;
-                    putinthenote();    
+                    putinthenote();
                     display.print("Drone  Chan 4:   ");
                     //display.println(dronemidi);
                     MIDInote = dronemidi;
-                    putinthenote();  
+                    putinthenote();
                     //display.println("Adjust tone/octaves");
                     //display.println("then");
                     display.println("Buzz/KeyClick Ch 5/6");
                     //display.println("Adjust/Set Octave");
                     display.println("(O) Key = continue");
                     display.display();
-                    delay(2000);  
+                    delay(2000);
 
                     //microtweakthetunings();
-                                  
+
                                   }
 
       button25.update();  //press button 2 to select G/C Playing in G     g4 G3 D4 G2  Octave Chanters, for Trad unison chanters just fade channel 1 in synth. G drone same for trad and modern
@@ -9033,53 +9013,9 @@ clearallMIDI();
                     chan1midi = 79;  // G4
                     chan2midi = 67;  // G3
                     trompmidi = 67;  // G3
-                    dronemidi = 55;  // G2             
+                    dronemidi = 55;  // G2
                     display.println("G/C G Drones");
-                    //display.println(" ");                    
-                    display.print("Melody Chan 1:   ");
-                    //display.println(chan1midi);
-                    MIDInote = chan1midi;
-                    putinthenote();
-                    display.print("Melody Chan 2:   ");
-                    //display.println(chan2midi);
-                    MIDInote = chan2midi;
-                    putinthenote();
-                    display.print("Tromp  Chan 3:   ");
-                    //display.println(trompmidi); 
-                    MIDInote = trompmidi;
-                    putinthenote();   
-                    display.print("Drone  Chan 4:   ");
-                    //display.println(dronemidi);
-                    MIDInote = dronemidi;
-                    putinthenote();   
-                    //display.println("Adjust tone/octaves");
-                    //display.println("then");
-                    display.println("Buzz/KeyClick Ch 5/6");
-                    display.println("Adjust/Set Octave");
-                    display.println("(O) Key = continue");
-                    display.display();
-                    delay(2000);
-
-                    //microtweakthetunings();
-                    
-                                  }
-
-
-
-                                  
-      button26.update();  //press button 3 to select D/G Playing D or G       d5 D4 D4 D3 Identical for Modern and Trad 
-
-      if (button26.fallingEdge()){
-                    display.clearDisplay();
-                    display.setTextSize(1);
-                    display.setCursor(0,0);
-                    choosekey = 3;     // 3 represents D/Key of D tuning
-                    chan1midi = 74;  // D5
-                    chan2midi = 62;  // D4
-                    trompmidi = 62;  // D4
-                    dronemidi = 50;  // D3             
-                    display.println("D/G D Drones");
-                    //display.println(" ");                    
+                    //display.println(" ");
                     display.print("Melody Chan 1:   ");
                     //display.println(chan1midi);
                     MIDInote = chan1midi;
@@ -9091,11 +9027,11 @@ clearallMIDI();
                     display.print("Tromp  Chan 3:   ");
                     //display.println(trompmidi);
                     MIDInote = trompmidi;
-                    putinthenote();     
+                    putinthenote();
                     display.print("Drone  Chan 4:   ");
                     //display.println(dronemidi);
                     MIDInote = dronemidi;
-                    putinthenote();  
+                    putinthenote();
                     //display.println("Adjust tone/octaves");
                     //display.println("then");
                     display.println("Buzz/KeyClick Ch 5/6");
@@ -9105,7 +9041,51 @@ clearallMIDI();
                     delay(2000);
 
                     //microtweakthetunings();
-                    
+
+                                  }
+
+
+
+
+      button26.update();  //press button 3 to select D/G Playing D or G       d5 D4 D4 D3 Identical for Modern and Trad
+
+      if (button26.fallingEdge()){
+                    display.clearDisplay();
+                    display.setTextSize(1);
+                    display.setCursor(0,0);
+                    choosekey = 3;     // 3 represents D/Key of D tuning
+                    chan1midi = 74;  // D5
+                    chan2midi = 62;  // D4
+                    trompmidi = 62;  // D4
+                    dronemidi = 50;  // D3
+                    display.println("D/G D Drones");
+                    //display.println(" ");
+                    display.print("Melody Chan 1:   ");
+                    //display.println(chan1midi);
+                    MIDInote = chan1midi;
+                    putinthenote();
+                    display.print("Melody Chan 2:   ");
+                    //display.println(chan2midi);
+                    MIDInote = chan2midi;
+                    putinthenote();
+                    display.print("Tromp  Chan 3:   ");
+                    //display.println(trompmidi);
+                    MIDInote = trompmidi;
+                    putinthenote();
+                    display.print("Drone  Chan 4:   ");
+                    //display.println(dronemidi);
+                    MIDInote = dronemidi;
+                    putinthenote();
+                    //display.println("Adjust tone/octaves");
+                    //display.println("then");
+                    display.println("Buzz/KeyClick Ch 5/6");
+                    display.println("Adjust/Set Octave");
+                    display.println("(O) Key = continue");
+                    display.display();
+                    delay(2000);
+
+                    //microtweakthetunings();
+
                                   }
 
 
@@ -9120,9 +9100,9 @@ clearallMIDI();
                     chan1midi = 74;  // D5
                     chan2midi = 62;  // D4
                     trompmidi = 62;  // D4
-                    dronemidi = 43;  // G2             
+                    dronemidi = 43;  // G2
                     display.println("D/G G Drones");
-                    //display.println(" ");                    
+                    //display.println(" ");
                     display.print("Melody Chan 1:   ");
                     //display.println(chan1midi);
                     MIDInote = chan1midi;
@@ -9132,13 +9112,13 @@ clearallMIDI();
                     MIDInote = chan2midi;
                     putinthenote();
                     display.print("Tromp  Chan 3:   ");
-                    //display.println(trompmidi); 
+                    //display.println(trompmidi);
                     MIDInote = trompmidi;
-                    putinthenote();  
+                    putinthenote();
                     display.print("Drone  Chan 4:   ");
-                    //display.println(dronemidi); 
+                    //display.println(dronemidi);
                     MIDInote = dronemidi;
-                    putinthenote();  
+                    putinthenote();
                     //display.println("Adjust tone/octaves");
                     //display.println("then");
                     display.println("Buzz/KeyClick Ch 5/6");
@@ -9148,7 +9128,7 @@ clearallMIDI();
                     delay(2000);
 
                     //microtweakthetunings();
-                    
+
                                   }
 
 
@@ -9162,9 +9142,9 @@ clearallMIDI();
                     chan1midi = 67;  // G4
                     chan2midi = 55;  // G3
                     trompmidi = 72;  // C5
-                    dronemidi = 55;  // G3             
+                    dronemidi = 55;  // G3
                     display.println("G/C C5-Tr G3-Dr");
-                    //display.println(" ");                    
+                    //display.println(" ");
                     display.print("Melody Chan 1:   ");
                     //display.println(chan1midi);
                     MIDInote = chan1midi;
@@ -9176,9 +9156,9 @@ clearallMIDI();
                     display.print("Tromp  Chan 3:   ");
                     //display.println(trompmidi);
                     MIDInote = trompmidi;
-                    putinthenote();    
+                    putinthenote();
                     display.print("Drone  Chan 4:   ");
-                    //display.println(dronemidi); 
+                    //display.println(dronemidi);
                     MIDInote = dronemidi;
                     putinthenote();
                     display.println("Buzz/KeyClick Ch 5/6");
@@ -9186,14 +9166,14 @@ clearallMIDI();
                     display.println("(O) Key = continue");
                     display.display();
                     delay(2000);
-                    
+
 
                     //microtweakthetunings();
-                    
+
                                   }
 
-   
-                                                              
+
+
                                   }    // end of while choosekey = 0 loop
 
 
@@ -9210,16 +9190,16 @@ clearallMIDI();
   while (waiting == 2){
       button20.update();  //press upper right blue key to continue
       if (button20.fallingEdge()){
-                            waiting = 0;  
+                            waiting = 0;
                                   }
-      delay(100);                            
-                       }                     
+      delay(100);
+                       }
 
 
 
-                                  
+
    buzzrootkey = trompmidi;    // <<<<<<<<<<<<<<<<<<<<<<<<< Matthew Sz asked that the buzz should be same tone as the trompette string which does make sense actually
-                                  
+
 
 
  // Continuing on to next step
@@ -9246,8 +9226,8 @@ EEPROM.write(octavestatusaddress, octavestatus);
 clearallMIDI();
 
 
-                      
-              }  // End of void tunings 
+
+              }  // End of void tunings
 
 
 
@@ -9259,18 +9239,18 @@ clearallMIDI();
 
 void microtweakthetunings(){
 
-                    //display.clearDisplay();
-                    //display.setTextSize(1);
-                    //display.setCursor(0,0);
-                    //display.println("Adjust octave");
-                    //display.println("and Capo buttons");
-                    //display.display();
-                    delay(1000);
+  //display.clearDisplay();
+  //display.setTextSize(1);
+  //display.setCursor(0,0);
+  //display.println("Adjust octave");
+  //display.println("and Capo buttons");
+  //display.display();
+  delay(1000);
 
   // values to adjust are: chan1midi    chan2midi     trompmidi    dronemidi
   // Capo moves the Trompette and drone strings up or down 2 steps i.e. 1 full tone  UP = Upper key 1(Pin2) plus Key 8(Pin18)  DOWN = Upper key 1(Pin2) plus Key 9(Pin19)
   // OCTAVE moves ALL strings up or down a full octave     UP = Lower Key 1(Pin24) plus lower Key 13(Pin36)    DOWN = Lower key 1(Pin24) plus lower key 14(Pin37)
-                
+
 // set n = 0. While n = 0
 // Look at all the capo and octave button combinations in sequenece and allow them to adjust the 4 channel midi values. PLus each cycle, look at the light blue key (Pin20)
 // Display the new channel values on screen in real time
@@ -9278,18 +9258,14 @@ void microtweakthetunings(){
   //delay(2000);
   tweaktuning = 0;
 
-                                                      
-    while (tweaktuning == 0){
- //for (int x = 0; x < 255; x++) {
-                        
-                 lookforanewtuning();                         
-                                                                                                                
 
-                            }   // end of while tweaktuning == 0
-                            
+    while (tweaktuning == 0){
+                 lookforanewtuning();
+    }   // end of while tweaktuning == 0
+
                 tweaktuning = 0;
-                buzzrootkey = trompmidi;     // Set the buzz pitch to match the trompette value                         
-                            }  // end of void microtweakthetunings
+                buzzrootkey = trompmidi;     // Set the buzz pitch to match the trompette value
+}  // end of void microtweakthetunings
 
 
 
@@ -9304,14 +9280,14 @@ void microtweakthetunings(){
 
 
 void lookforanewtuning(){
- 
+
                     //display.clearDisplay();
                     //display.setTextSize(1);
                     //display.setCursor(0,0);
                     //display.println("Looking");
                     //display.display();
                     //delay(500);
-                   
+
       // Look at the key combinations to move the Trompette and Drone up or down a full tone i.e. 2 MIDI steps
       button2.update();
       if(button2.fallingEdge()){ but2status = 1; }
@@ -9338,25 +9314,25 @@ void lookforanewtuning(){
 
 
 
-   
 
 
 
 
-      
-      
+
+
+
 
    if (digitalRead(capobuttonPin) == LOW) { capobuttonstatus = 1; }
-      
+
 
       if ((but2status == 1 && but19status == 1) || capobuttonstatus == 1){         // i.e. selecting capo on off
 
 
                     capobuttonstatus = 0;    // Reset this if required
-      
-      
+
+
                     //Serial.println("UP or DOWN one tone");
-                    
+
                     display.clearDisplay();
                     display.setTextSize(1);
                     display.setCursor(0,0);
@@ -9370,32 +9346,32 @@ void lookforanewtuning(){
                     trompmidi = trompmidi + 2;
                     dronemidi = dronemidi + 2;
                     tonestatus = 1;
-                                        }                
-                    // Add in max min limits later             
+                                        }
+                    // Add in max min limits later
                     if(choosekey == 1){ display.println("   G/C C Drones"); }
                     if(choosekey == 2){ display.println("   G/C G Drones"); }
                     if(choosekey == 3){ display.println("   D/G D Drones"); }
                     if(choosekey == 4){ display.println("   D/G G Drones"); }
                     if(choosekey == 5){ display.println("  G/C CG Drones"); }
-                    //display.println(" ");                     
+                    //display.println(" ");
                     display.print("Melody Chan 1:   ");
                     //display.println(chan1midi);
                     MIDInote = chan1midi;
                           //if(MIDInote > 91 || MIDInote < 43){ display.println("ERR"); }
                           //else{ putinthenote(); }
-                          putinthenote();                  
+                          putinthenote();
                     display.print("Melody Chan 2:   ");
                     //display.println(chan2midi);
                     MIDInote = chan2midi;
                           //if(MIDInote > 91 || MIDInote < 43){ display.println("ERR"); }
                           //else{ putinthenote(); }
-                          putinthenote();   
+                          putinthenote();
                     display.print("Tromp  Chan 3:   ");
                     //display.println(trompmidi);
                     MIDInote = trompmidi;
                           //if(MIDInote > 103 || MIDInote < 43){ display.println("ERR"); }
-                          //else{ putinthenote(); } 
-                          putinthenote();                         
+                          //else{ putinthenote(); }
+                          putinthenote();
                     display.print("Drone  Chan 4:   ");
                     //display.println(dronemidi);
                     MIDInote = dronemidi;
@@ -9409,13 +9385,13 @@ void lookforanewtuning(){
                     if(octavestatus == -1){ display.print("DOWN"); }
                     display.print(" CAPO=");
                     if(tonestatus == 0){ display.println("OFF"); }
-                    if(tonestatus == 1){ display.println("ON"); }  
-                              
-                    display.println("Adjust Capo/Octaves"); 
+                    if(tonestatus == 1){ display.println("ON"); }
+
+                    display.println("Adjust Capo/Octaves");
                     display.println("(O) Key = CONFIRM");
                     display.display();
                     delay(2000);
-                                                          
+
 
                      } //end of if capo on or off required
 
@@ -9423,20 +9399,20 @@ void lookforanewtuning(){
 
 
 
-                     
 
 
-                     
+
+
       // Look at the key combinations to move ALL channels up or down one OCTAVE i.e. 12 MIDI steps
-      
-      
+
+
       if (digitalRead(octaveupbuttonPin) == LOW){ octaveupbuttonstatus = 1; }
       if (digitalRead(octavedownbuttonPin) == LOW){ octavedownbuttonstatus = 1; }
-      
-      
+
+
 
       if (but24status == 1 || octaveupbuttonstatus == 1 || octavedownbuttonstatus == 1){
-        
+
       if (but37status == 1 || octaveupbuttonstatus == 1){      // UP one OCTAVE
                     //Serial.println("UP one octave");
                     octaveupbuttonstatus = 0;    // Reset this
@@ -9450,33 +9426,33 @@ void lookforanewtuning(){
                     dronemidi = dronemidi + 12;
                     octavestatus = octavestatus + 1;
                                        }
-                    if (octavestatus > 1) {octavestatus = 1; }                   
-                    // Add in max min limits later             
+                    if (octavestatus > 1) {octavestatus = 1; }
+                    // Add in max min limits later
                     if(choosekey == 1){ display.println("   G/C C Drones"); }
                     if(choosekey == 2){ display.println("   G/C G Drones"); }
                     if(choosekey == 3){ display.println("   D/G D Drones"); }
                     if(choosekey == 4){ display.println("   D/G G Drones"); }
                     if(choosekey == 5){ display.println("  G/C CG Drones"); }
                     //if(choosekey == 5){ display.println("Trad G/C in C"); }
-                    //display.println(" ");                    
+                    //display.println(" ");
                     display.print("Melody Chan 1:   ");
                     //display.println(chan1midi);
                     MIDInote = chan1midi;
                           //if(MIDInote > 91 || MIDInote < 43){ display.println("ERR"); }
                           //else{ putinthenote(); }
-                          putinthenote();      
+                          putinthenote();
                     display.print("Melody Chan 2:   ");
                     //display.println(chan2midi);
                     MIDInote = chan2midi;
                           //if(MIDInote > 91 || MIDInote < 43){ display.println("ERR"); }
                           //else{ putinthenote(); }
-                          putinthenote();    
+                          putinthenote();
                     display.print("Tromp  Chan 3:   ");
                     //display.println(trompmidi);
                     MIDInote = trompmidi;
                           //if(MIDInote > 103 || MIDInote < 43){ display.println("ERR"); }
                           //else{ putinthenote(); }
-                          putinthenote();           
+                          putinthenote();
                     display.print("Drone  Chan 4:   ");
                     //display.println(dronemidi);
                     MIDInote = dronemidi;
@@ -9490,18 +9466,18 @@ void lookforanewtuning(){
                     if(octavestatus == -1){ display.print("DOWN"); }
                     display.print(" CAPO=");
                     if(tonestatus == 0){ display.println("OFF"); }
-                    if(tonestatus == 1){ display.println("ON"); } 
-                              
+                    if(tonestatus == 1){ display.println("ON"); }
+
                     display.println("Adjust Capo/Octaves");
                     display.println("(O) Key = CONFIRM");
                     display.display();
                     delay(2000);
                                                           }
-      
+
       if (but36status == 1 || octavedownbuttonstatus == 1){      // DOWN one OCTAVE
                     octavedownbuttonstatus = 0;   // Reset this
                     //Serial.println("DOWN one octave");
-                    
+
                     display.clearDisplay();
                     display.setTextSize(1);
                     display.setCursor(0,0);
@@ -9512,39 +9488,39 @@ void lookforanewtuning(){
                     dronemidi = dronemidi - 12;
                     octavestatus = octavestatus - 1;
                                           }
-                    if(octavestatus < -1){octavestatus = -1; }                     
-                    // Add in max min limits later             
+                    if(octavestatus < -1){octavestatus = -1; }
+                    // Add in max min limits later
                     if(choosekey == 1){ display.println("   G/C C Drones"); }
                     if(choosekey == 2){ display.println("   G/C G Drones"); }
                     if(choosekey == 3){ display.println("   D/G D Drones"); }
                     if(choosekey == 4){ display.println("   D/G G Drones"); }
                     if(choosekey == 5){ display.println("  G/C CG Drones"); }
                     //if(choosekey == 5){ display.println("Trad G/C in C"); }
-                    //display.println(" ");                    
+                    //display.println(" ");
                     display.print("Melody Chan 1:   ");
                     //display.println(chan1midi);
                     MIDInote = chan1midi;
                           //if(MIDInote > 91 || MIDInote < 43){ display.println("ERR"); }
                           //else{ putinthenote(); }
-                          putinthenote();      
+                          putinthenote();
                     display.print("Melody Chan 2:   ");
                     //display.println(chan2midi);
                     MIDInote = chan2midi;
                           //if(MIDInote > 91 || MIDInote < 43){ display.println("ERR"); }
                           //else{ putinthenote(); }
-                          putinthenote();     
+                          putinthenote();
                     display.print("Tromp  Chan 3:   ");
                     //display.println(trompmidi);
                     MIDInote = trompmidi;
                           //if(MIDInote > 103 || MIDInote < 43){ display.println("ERR"); }
                           //else{ putinthenote(); }
-                          putinthenote();          
+                          putinthenote();
                     display.print("Drone  Chan 4:   ");
                     //display.println(dronemidi);
                     MIDInote = dronemidi;
                           //if(MIDInote > 103 || MIDInote < 43){ display.println("ERR"); }
                           //else{ putinthenote(); }
-                          putinthenote();   
+                          putinthenote();
 
                     display.print("OCTAVE=");
                     if(octavestatus == 1){ display.print("UP"); }
@@ -9553,7 +9529,7 @@ void lookforanewtuning(){
                     display.print(" CAPO=");
                     if(tonestatus == 0){ display.println("OFF"); }
                     if(tonestatus == 1){ display.println("ON"); }
-                               
+
                     display.println("Adjust Capo/Octaves");
                     display.println("(O) Key = CONFIRM");
                     display.display();
@@ -9564,145 +9540,130 @@ void lookforanewtuning(){
 
       delay(200);
       but20status = 0;  // Keeps it to 0 ready for a new status check to see if it is being pressed.
-      button20.update();          // Light blue button press to exit the tweaktunings adjustment loop 
+      button20.update();          // Light blue button press to exit the tweaktunings adjustment loop
       if(button20.fallingEdge()){ but20status = 1; }
       if(button20.risingEdge()){ but20status = 0; }
               if (but20status == 1){ // i.e. pressing the light blue button
 
                                                       but20status = 0;
                                                       //break;
-                                                      tweaktuning = 1; 
+                                                      tweaktuning = 1;
 
                                                             }
-                             else {  tweaktuning = 0; }  
-                                         
+                             else {  tweaktuning = 0; }
+
                     //display.clearDisplay();
                     //display.setTextSize(1);
                     //display.setCursor(0,0);
                     //display.println("STILL Looking");
                     //display.print("tweaktuning=");
                     //display.println(tweaktuning);
-                   // display.display();   
-                    delay(50); 
-                     
+                   // display.display();
+                    delay(50);
+
 }  // end of void look for a new tuning
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
  void putinthenote(){
      switch (MIDInote) {
 
-/* 
+/*
   case 127:
       display.println("G9");
-      break;      
+      break;
 
   case 126:
       display.println("F9#");
-      break;      
+      break;
 
   case 125:
       display.println("F9");
-      break;      
+      break;
 
   case 124:
       display.println("E9");
-      break;     
+      break;
 
   case 123:
       display.println("D9#");
-      break;      
+      break;
 
   case 122:
       display.println("D9");
-      break;      
+      break;
 
   case 121:
       display.println("C9#");
-      break;      
+      break;
 
   case 120:
       display.println("C9");
-      break;      
+      break;
 
   case 119:
       display.println("B8");
-      break;      
+      break;
 
   case 118:
       display.println("A8#");
-      break;      
+      break;
 */
 
   case 117:
       display.println("A8");
-      break;      
+      break;
 
   case 116:
       display.println("G8#");
-      break;      
+      break;
 
   case 115:
       display.println("G8");
-      break;      
+      break;
 
   case 114:
       display.println("F8#");
-      break;      
+      break;
 
   case 113:
       display.println("F8");
-      break;      
+      break;
 
   case 112:
       display.println("E8");
-      break;      
+      break;
 
   case 111:
       display.println("D8#");
-      break;      
+      break;
 
   case 110:
       display.println("D8");
-      break;      
+      break;
 
   case 109:
       display.println("C8#");
-      break;      
+      break;
 
   case 108:
       display.println("C8");
-      break;      
+      break;
 
   case 107:
       display.println("B7");
-      break;      
+      break;
 
   case 106:
       display.println("A7#");
-      break;      
+      break;
 
   case 105:
       display.println("A5");
-      break;  
+      break;
 
   case 104:
       display.println("G7#");
-      break;   
+      break;
 
   case 103:
       display.println("G7");
@@ -9722,34 +9683,34 @@ void lookforanewtuning(){
 
   case 99:
       display.println("D7#");
-      break;                                        
-  
+      break;
+
   case 98:
       display.println("D7");
-      break;  
+      break;
 
   case 97:
       display.println("C7#");
-      break;  
+      break;
 
   case 96:
       display.println("C7");
-      break;  
+      break;
 
   case 95:
       display.println("B6");
-      break;  
+      break;
 
   case 94:
       display.println("A6#");
       break;
 
   case 93:
-      display.println("A6"); 
+      display.println("A6");
       break;
 
   case 92:
-      display.println("G6#"); 
+      display.println("G6#");
       break;
 
   case 91:
@@ -9758,23 +9719,23 @@ void lookforanewtuning(){
 
   case 90:
       display.println("F6#");
-      break; 
+      break;
 
   case 89:
       display.println("F6");
       break;
-          
+
   case 88:
-      display.println("E6"); 
+      display.println("E6");
       break;
-           
+
   case 87:
       display.println("D6#");
       break;
 
   case 86:
       display.println("D6");
-      break;    
+      break;
 
   case 85:
       display.println("C6#");
@@ -9783,7 +9744,7 @@ void lookforanewtuning(){
   case 84:
       display.println("C6");
       break;
-      
+
   case 83:
       display.println("B5");
       break;
@@ -9795,15 +9756,15 @@ void lookforanewtuning(){
   case 81:
       display.println("A5");
       break;
-      
+
   case 80:
-      display.println("G5#"); 
+      display.println("G5#");
       break;
 
   case 79:
       display.println("G5");
       break;
-      
+
   case 78:
       display.println("F5#");
       break;
@@ -9811,14 +9772,14 @@ void lookforanewtuning(){
   case 77:
       display.println("F5");
       break;
-      
+
   case 76:
       display.println("E5");
       break;
-      
+
   case 75:
       display.println("D5#");
-      break; 
+      break;
 
   case 74:
       display.println("D5");
@@ -9839,17 +9800,17 @@ void lookforanewtuning(){
   case 70:
       display.println("A4#");
       break;
-      
+
   case 69:
       display.println("A4");
       break;
-      
+
   case 68:
       display.println("G4#");
       break;
 
   case 67:
-      display.println("G4"); 
+      display.println("G4");
       break;
 
   case 66:
@@ -9863,9 +9824,9 @@ void lookforanewtuning(){
   case 64:
       display.println("E4");
       break;
-      
+
   case 63:
-      display.println("D4#"); 
+      display.println("D4#");
       break;
 
   case 62:
@@ -9883,9 +9844,9 @@ void lookforanewtuning(){
   case 59:
       display.println("B3");
       break;
-      
+
   case 58:
-      display.println("A3#"); 
+      display.println("A3#");
       break;
 
   case 57:
@@ -9895,13 +9856,13 @@ void lookforanewtuning(){
   case 56:
       display.println("G3#");
       break;
-      
+
   case 55:
       display.println("G3");
       break;
-      
+
   case 54:
-      display.println("F3#"); 
+      display.println("F3#");
       break;
 
   case 53:
@@ -9910,178 +9871,178 @@ void lookforanewtuning(){
 
   case 52:
       display.println("E3");
-      break; 
+      break;
 
   case 51:
-      display.println("D3#"); 
-      break; 
+      display.println("D3#");
+      break;
 
   case 50:
-      display.println("D3"); 
-      break;     
+      display.println("D3");
+      break;
 
   case 49:
-      display.println("C3#"); 
-      break; 
+      display.println("C3#");
+      break;
 
   case 48:
-      display.println("C3"); 
-      break; 
+      display.println("C3");
+      break;
 
   case 47:
-      display.println("B2"); 
-      break;  
+      display.println("B2");
+      break;
 
   case 46:
-      display.println("A2#"); 
-      break; 
+      display.println("A2#");
+      break;
 
   case 45:
-      display.println("A2"); 
+      display.println("A2");
       break;
 
   case 44:
-      display.println("G2#"); 
-      break;  
+      display.println("G2#");
+      break;
 
   case 43:
-      display.println("G2"); 
+      display.println("G2");
       break;
 
 
   case 42:
-      display.println("F2#"); 
+      display.println("F2#");
       break;
 
   case 41:
-      display.println("F2"); 
+      display.println("F2");
       break;
 
   case 40:
-      display.println("E2"); 
-      break;  
+      display.println("E2");
+      break;
 
   case 39:
-      display.println("D2#"); 
-      break; 
+      display.println("D2#");
+      break;
 
   case 38:
-      display.println("D2"); 
+      display.println("D2");
       break;
 
   case 37:
-      display.println("C2#"); 
+      display.println("C2#");
       break;
 
   case 36:
-      display.println("C2"); 
+      display.println("C2");
       break;
 
   case 35:
-      display.println("B1"); 
-      break;  
+      display.println("B1");
+      break;
 
   case 34:
-      display.println("A1#"); 
-      break;    
+      display.println("A1#");
+      break;
 
   case 33:
-      display.println("A1"); 
-      break;                      
+      display.println("A1");
+      break;
 
   case 32:
-      display.println("G1#"); 
-      break;              
+      display.println("G1#");
+      break;
 
   case 31:
-      display.println("G1"); 
+      display.println("G1");
       break;
 /*
 
   case 30:
-      display.println("F1#"); 
+      display.println("F1#");
       break;
-      
+
   case 29:
-      display.println("F1"); 
+      display.println("F1");
       break;
 
   case 28:
-      display.println("E1"); 
-      break; 
+      display.println("E1");
+      break;
 
   case 27:
-      display.println("D1#"); 
+      display.println("D1#");
       break;
 
   case 26:
-      display.println("D1"); 
-      break;  
+      display.println("D1");
+      break;
 
   case 25:
-      display.println("C1#"); 
+      display.println("C1#");
       break;
 
   case 24:
-      display.println("C1"); 
-      break; 
+      display.println("C1");
+      break;
 
   case 23:
-      display.println("B0"); 
-      break;  
+      display.println("B0");
+      break;
 
   case 22:
-      display.println("A0#"); 
-      break;  
+      display.println("A0#");
+      break;
 
   case 21:
-      display.println("A0"); 
-      break;  
+      display.println("A0");
+      break;
 
   case 20:
-      display.println("G0#"); 
+      display.println("G0#");
       break;
 
   case 19:
-      display.println("G0"); 
-      break;    
+      display.println("G0");
+      break;
 
   case 18:
-      display.println("F0#"); 
-      break;  
+      display.println("F0#");
+      break;
 
   case 17:
-      display.println("F0"); 
-      break;       
+      display.println("F0");
+      break;
 
   case 16:
-      display.println("E0"); 
+      display.println("E0");
       break;
 
   case 15:
-      display.println("D0#"); 
-      break;                                             
+      display.println("D0#");
+      break;
 
   case 14:
-      display.println("D0"); 
-      break;    
+      display.println("D0");
+      break;
 
   case 13:
-      display.println("C0#"); 
-      break;  
+      display.println("C0#");
+      break;
 
   case 12:
-      display.println("C0"); 
-      break;     
+      display.println("C0");
+      break;
 */
-                                                              
-                           
-
-   } // Closed bracket after switch         
 
 
 
-                  
+   } // Closed bracket after switch
+
+
+
+
  }  // end of void putinthenote
 
 
@@ -10092,15 +10053,15 @@ void lookforanewtuning(){
 
 
  void checkforcapochange(){   // check for a capo change on the fly while playing
-  
+
       // we already know button 2 is being pressed, that is why we are in this subroutine so next thing is to see if button 19, the capo button, is being pressed
       // if so we move capo up or back down accordingly
 
 
        /*
       if (gg == 1){      // Tr and Dr UP one full tone       button 18
-                    
-                    
+
+
                     //Serial.println("UP one tone");
                     display.clearDisplay();
                     display.setTextSize(1);
@@ -10117,20 +10078,20 @@ void lookforanewtuning(){
                     display.println("    CAPO APPLIED");
                                         }
                                else{  display.println("CAPO ALREADY APPLIED");    }
-                                        
+
                     // Add in max min limits later
                     display.println(" ");
                     display.println("Play when ready");
-                                          
+
                     display.display();
                     delay(2000);
-        
+
                                                           }
 */
       if (digitalRead(capobuttonPin) == LOW){ capobuttonstatus = 1; }
       if (ee == 1 || capobuttonstatus == 1){      // Tr and Dr DOWN one full tone    button 19    capobutton is pin 23 on new circuit board
                     capobuttonstatus = 0;   // Reset this
-                    //Serial.println("DOWN one tone");                
+                    //Serial.println("DOWN one tone");
                     display.clearDisplay();
                     display.setTextSize(1);
                     display.setCursor(0,0);
@@ -10138,8 +10099,8 @@ void lookforanewtuning(){
                     //display.println(" ");
                     int temporaryvalue = tonestatus;
                     if(temporaryvalue == 1){
-                    display.println("      CAPO OFF");   
-                    tonestatus = 0;              // tonestatus is bistable between 1 and 0 
+                    display.println("      CAPO OFF");
+                    tonestatus = 0;              // tonestatus is bistable between 1 and 0
                     trompmidi = trompmidi - 2;
                     dronemidi = dronemidi - 2;
                                       }
@@ -10147,13 +10108,13 @@ void lookforanewtuning(){
                     tonestatus = 1;
                     trompmidi = trompmidi + 2;
                     dronemidi = dronemidi + 2;
-                    display.println("      CAPO ON");             
+                    display.println("      CAPO ON");
                                            }
 
                     EEPROM.write(tonestatusaddress, tonestatus);
                     EEPROM.write(trompmidiaddress, trompmidi);
-                    EEPROM.write(dronemidiaddress, dronemidi);                       
-                    // Add in max min limits later 
+                    EEPROM.write(dronemidiaddress, dronemidi);
+                    // Add in max min limits later
 
                     if(choosekey == 1){ display.println("   G/C C Drones"); }
                     if(choosekey == 2){ display.println("   G/C G Drones"); }
@@ -10161,25 +10122,25 @@ void lookforanewtuning(){
                     if(choosekey == 4){ display.println("   D/G G Drones"); }
                     if(choosekey == 5){ display.println("  G/C CG Drones"); }
                     //if(choosekey == 5){ display.println("Trad G/C in C"); }
-                    //display.println(" ");                    
+                    //display.println(" ");
                     display.print("Melody Chan 1:   ");
                     //display.println(chan1midi);
                     MIDInote = chan1midi;
                           //if(MIDInote > 91 || MIDInote < 43){ display.println("ERR"); }
                           //else{ putinthenote(); }
-                          putinthenote();      
+                          putinthenote();
                     display.print("Melody Chan 2:   ");
                     //display.println(chan2midi);
                     MIDInote = chan2midi;
                           //if(MIDInote > 91 || MIDInote < 43){ display.println("ERR"); }
                           //else{ putinthenote(); }
-                          putinthenote();    
+                          putinthenote();
                     display.print("Tromp  Chan 3:   ");
                     //display.println(trompmidi);
                     MIDInote = trompmidi;
                           //if(MIDInote > 103 || MIDInote < 43){ display.println("ERR"); }
                           //else{ putinthenote(); }
-                          putinthenote();           
+                          putinthenote();
                     display.print("Drone  Chan 4:   ");
                     //display.println(dronemidi);
                     MIDInote = dronemidi;
@@ -10188,11 +10149,11 @@ void lookforanewtuning(){
                           putinthenote();
                     display.println(" ");
                     display.println("Play when ready");
-                              
+
                     display.display();
                     delay(2000);
                                                           }
 
-  buzzrootkey = trompmidi;     // Set the buzz pitch to match the new trompette value                  
- 
+  buzzrootkey = trompmidi;     // Set the buzz pitch to match the new trompette value
+
  }  // end of check for capo change on the fly while playing

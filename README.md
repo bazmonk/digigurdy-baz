@@ -15,4 +15,4 @@ The goal is to replicate the two-string drone combinations that can be done with
 
 Future plans are exploring using two additional channels to support a third or perhaps fourth droning string as well, essentially making it a six "string" gurdy.
 
-DIGIGURDY OWNERS: If you wish to use this code, I have a digigurdy with the SH1106 display, not SSD1306.  A few changes (left intact from the original code) are necessary to use the other display.
+DIGIGURDY OWNERS: If you wish to use this code, I have a digigurdy with the SH1106 display, not SSD1306.  A few changes (left intact from the original code) are necessary to use the other display.  I also have a newer (circa Feb '22) version that includes dedicated octave up/down and capo buttons.  These will also be necessary as I plan to re-purpose them in the tunings menu.
