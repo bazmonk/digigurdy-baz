@@ -5763,7 +5763,7 @@ void setup() {
   display.println("  Digi [Nerdy] Gurdy");
   display.println(" ");
   // display.setTextSize(1);
-  display.println("     John Dingley.");
+  display.println("     Basil Lalli");
   display.println("      SH1106_T25");
   display.println("Code117 5th Tuning");
   display.println(" includes SerialMIDI");
