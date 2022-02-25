@@ -5461,7 +5461,6 @@ int w;
 int drones;
 int drones_silent;
 // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX User Defined Variables
-// XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 int playbackspeed =
     20; // The bigger the value the slower it plays in demo mode for any given
         // speed selection using the menu presented
@@ -6041,8 +6040,7 @@ void setup() {
     // and the display style we used last time and also want to use now.
 
   display.clearDisplay();
-  display.drawBitmap(0, 0, logo55_glcd_bmp, 128, 64,
-                     1); // Crank when ready screen display
+  display.drawBitmap(0, 0, logo55_glcd_bmp, 128, 64, 1); // Crank when ready screen display
   display.display();
   initialrun = 1;
 
