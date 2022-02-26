@@ -3,9 +3,9 @@ Digigurdy Teensy code with a new tuning setup
 
 This is a personal fork of the digigurdy code (https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy).
 
-The current version (v116/7 as of this fork) offers four base tuning options (C/G with G or C drones, and G/D with D or G drones).  These can each be taken up or down an octave, and capo'ed up one whole tone.
+The latest version (v116/7 is the basis of this fork) offers four base tuning options (C/G with G or C drones, and G/D with D or G drones).  These can each be taken up or down an octave, and capo'ed up one whole tone.
 
-Currently this has been expanded to:
+This fork replaces that with:
 * Two base options: C/G or G/D
 * Three chanter options (normal is the 3/4 octave, high is 4/5, low is 2/3)
 * TEN drone/trompette options for each base option.
