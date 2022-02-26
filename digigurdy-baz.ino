@@ -80,7 +80,7 @@
 
 // Baz added these:
 #include <string>
-using namespace std
+using namespace std;
 
 // MIDI_CREATE_DEFAULT_INSTANCE();
 // Two lines below added from https://www.pjrc.com/teensy/td_libs_MIDI.html
@@ -5768,7 +5768,7 @@ void setup() {
   display.println(" ");
   display.println("     Basil Lalli     ");
   display.println("     John Dingley    ");
-  display.println("     Version 0.1     ");
+  display.println("     Version 0.2     ");
   display.println(" includes SerialMIDI");
   display.println("  White OLED screen");
   display.println(" ");
@@ -6860,7 +6860,6 @@ void loop() {
     } // When stop cranking screen initially goes black
 
     if (pausecounter == 25000) {
-      int i2;
       // This makes sure all melody notes are OFF when you stop cranking, a kind
       // of safety backup to prevent any notes getting stuck in on state
       // Serial.println("Turning all melody notes off as backup procedure");
@@ -10388,6 +10387,283 @@ string NoteNum[] = {
   "C9", "C9#", "D9", "D9#", "E9", "F9", "F9#", "G9"
 };
 
+int gc_or_dg; // 0 = G/C tuning, 1 = D/G tuning
+bool finished_tuning = false;
+string base_str;
+string display_str;
+bool completed;
+
+// Function choose_base_tuning() runs the first screen: G/C or D/G tuning.
+// This part just determines the gc_or_dg variable.
+void choose_base_tuning() {
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setCursor(0, 0);
+  display.print(
+    " Choose Base Tuning: \n"
+    "  (Use bottom keys)  \n"
+    "                     \n"
+    "       1. G/C        \n"
+    "                     \n"
+    "       2. D/G        \n"
+    "                     \n"
+    "                     \n"
+  );
+  display.display();
+  delay(1000); // I'm not sure what we're waiting for but John did it so I'm doing it for now
+
+  completed = false;
+
+  while(!completed) {
+    // Button24 is button #1 and they count up from there
+    button24.update();
+    if(button24.fallingEdge()) {
+      gc_or_dg = 0;
+      completed = true;
+    };
+
+    button25.update();
+    if(button25.fallingEdge()) {
+      gc_or_dg = 1;
+      completed = true;
+    };
+  };
+};
+
+// Function choose_chanter_tuning() runs the chanter selection screen.
+// This sets chan1midi and chan2midi
+void choose_chanter_tuning() {
+
+  if (gc_or_dg == 0) {
+    base_str = "G/C";
+    chan1midi = Note(g4); // high chanter
+    chan2midi = Note(g3); // low chanter
+  } else {
+    base_str = "D/G";
+    chan1midi = Note(d4);
+    chan2midi = Note(d3);
+  };
+
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setCursor(0, 0);
+  display_str = "         " + base_str + "         \n"
+                "  Select Chanters:   \n"
+                "                     \n"
+                "   1. Norm: " + NoteNum[chan2midi] + "/" + NoteNum[chan1midi] + "    \n"
+                "   2. Low:  " + NoteNum[chan2midi - 12] + "/" + NoteNum[chan1midi - 12] + "    \n"
+                "   3. High: " + NoteNum[chan2midi + 12] + "/" + NoteNum[chan1midi + 12] + "    \n"
+                "                     \n"
+                "                     \n";
+  display.print(display_str.c_str());
+  display.display();
+  delay(1000); // I'm not sure what we're waiting for but John did it so I'm doing it for now
+
+  // Poll for buttons 1-3 and adjust chanter tuning if necessary.
+  completed = false;
+
+  while(!completed) {
+    button24.update();
+    if (button24.fallingEdge()) {
+      completed = true;
+    };
+
+    button25.update();
+    if (button25.fallingEdge()) {
+      chan1midi = chan1midi - 12;
+      chan2midi = chan2midi - 12;
+      completed = true;
+    };
+
+    button26.update();
+    if (button26.fallingEdge()) {
+      chan1midi = chan1midi + 12;
+      chan2midi = chan2midi + 12;
+      completed = true;
+    };
+  };
+};
+
+// Function choose_drone_tuning() runs the drone/trompette selection.
+// This sets dronemidi and trompmidi
+void choose_drone_tuning() {
+
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setCursor(0, 0);
+  if (gc_or_dg == 0) {
+    display_str = " " + base_str + ", " + NoteNum[chan2midi] + "/" + NoteNum[chan1midi] + " Chanters \n"
+             " Select Drone/Tromp: \n"
+             " 1. C2/G2 | 6. G2/C4 \n"
+             " 2. C2/C3 | 7. C3/G3 \n"
+             " 3. C2/G4 | 8. C3/C4 \n"
+             " 4. G2/C3 | 9. G3/C4 \n"
+             " 5. G2/G3 |10. G3/G4 \n"
+             "                     \n";
+    display.print(display_str.c_str());
+  } else {
+    display_str = " " + base_str + ", " + NoteNum[chan2midi] + "/" + NoteNum[chan1midi] + " Chanters \n"
+             " Select Drone/Tromp: \n"
+             " 1. D2/G2 | 6. G2/D4 \n"
+             " 2. D2/D3 | 7. D3/G3 \n"
+             " 3. D2/G4 | 8. D3/D4 \n"
+             " 4. G2/D3 | 9. G3/D4 \n"
+             " 5. G2/G3 |10. G3/G4 \n"
+             "                     \n";
+    display.print(display_str.c_str());
+  };
+  display.display();
+  delay(1000);
+
+  // Poll for buttons 1-10 and adjust drone/trompette as per the above strings
+  completed = false;
+
+  while(!completed) {
+    button24.update();
+    if (button24.fallingEdge()) {
+      dronemidi = (gc_or_dg == 0) ? Note(c2) : Note(d2);
+      trompmidi = Note(g2);
+      completed = true;
+    };
+
+    button25.update();
+    if (button25.fallingEdge()) {
+      dronemidi = (gc_or_dg == 0) ? Note(c2) : Note(d2);
+      trompmidi = (gc_or_dg == 0) ? Note(c3) : Note(d3);
+      completed = true;
+    };
+
+    button26.update();
+    if (button26.fallingEdge()) {
+      dronemidi = (gc_or_dg == 0) ? Note(c2) : Note(d2);
+      trompmidi = Note(g4);
+      completed = true;
+    };
+
+    button27.update();
+    if (button27.fallingEdge()) {
+      dronemidi = Note(g2);
+      trompmidi = (gc_or_dg == 0) ? Note(c3) : Note(d3);
+      completed = true;
+    };
+
+    button28.update();
+    if (button28.fallingEdge()) {
+      dronemidi = Note(g2);
+      trompmidi = Note(g3);
+      completed = true;
+    };
+
+    button29.update();
+    if (button29.fallingEdge()) {
+      dronemidi = Note(g2);
+      trompmidi = (gc_or_dg == 0) ? Note(c4) : Note(d4);
+      completed = true;
+    };
+
+    button30.update();
+    if (button30.fallingEdge()) {
+      dronemidi = (gc_or_dg == 0) ? Note(c3) : Note(d3);
+      trompmidi = Note(g3);
+      completed = true;
+    };
+
+    button31.update(); // 8
+    if (button31.fallingEdge()) {
+      dronemidi = (gc_or_dg == 0) ? Note(c3) : Note(d3);
+      trompmidi = (gc_or_dg == 0) ? Note(c4) : Note(d4);
+      completed = true;
+    };
+
+    button32.update(); // 9
+    if (button32.fallingEdge()) {
+      dronemidi = Note(g3);
+      trompmidi = (gc_or_dg == 0) ? Note(c4) : Note(d4);
+      completed = true;
+    };
+
+    button33.update(); // 10
+    if (button33.fallingEdge()) {
+      dronemidi = Note(g3);
+      trompmidi = Note(g4);
+      completed = true;
+    };
+  };
+};
+
+// Function choose_capo_tuning() runt the capo selection.
+// This optionally pushes the drone and tromp notes up a full step (+2 MIDI notes).
+void choose_capo_tuning() {
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setCursor(0, 0);
+  display_str = " " + base_str + ", " + NoteNum[chan2midi] + "/" + NoteNum[chan1midi] + " Chanters \n"
+           "  " + NoteNum[dronemidi] + "/" + NoteNum[trompmidi] + " Drone/Tromp  \n"
+           "      Use Capo?      \n"
+           "                     \n"
+           "  1. No              \n"
+           "  2. +1 Whole Step   \n"
+           "                     \n"
+           "                     \n";
+  display.print(display_str.c_str());
+  display.display();
+  delay(1000); // I'm not sure what we're waiting for but John did it so I'm doing it for now
+
+  completed = false;
+
+  while(!completed) {
+    // Button24 is button #1 and they count up from there
+    button24.update();
+    if(button24.fallingEdge()) {
+      // +0, nothing to do here...
+      completed = true;
+    };
+
+    button25.update();
+    if(button25.fallingEdge()) {
+      // Up whole step
+      dronemidi = dronemidi + 2;
+      trompmidi = trompmidi + 2;
+      completed = true;
+    };
+  };
+};
+
+// Function summary_tuning() prints a summary of all these selections and prompts the user to
+// accept them or not.
+void summary_tuning() {
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setCursor(0, 0);
+  display_str = "      SUMMARY:       \n"
+           " " + base_str + ", " + NoteNum[chan2midi] + "/" + NoteNum[chan1midi] + " Chanters \n"
+           "  " + NoteNum[dronemidi] + "/" + NoteNum[trompmidi] + " Drone/Tromp  \n"
+           "                     \n"
+           "      Accept?        \n"
+           "                     \n"
+           "    1. Continue      \n"
+           "    2. Start Over    \n";
+  display.print(display_str.c_str());
+  display.display();
+  delay(1000); // I'm not sure what we're waiting for but John did it so I'm doing it for now
+
+  completed = false;
+
+  while(!completed) {
+    // Button24 is button #1 and they count up from there
+    button24.update();
+    if(button24.fallingEdge()) {
+      finished_tuning = true;
+      completed = true;
+    };
+
+    button25.update();
+    if(button25.fallingEdge()) {
+      completed = true;
+    };
+  };
+};
+
 // Function tunings() accepts no arguments and presents the user with a series of menu prompts
 // on-screen in order to set a tuning for the gurdy.  Function returns no data, however it modifies
 // these global variables.  These are int values that correspond to MIDI note numbers.  A table of
@@ -10402,288 +10678,6 @@ string NoteNum[] = {
 //  dronemidi - drone (low)
 void tunings() {
 
-  int gc_or_dg; // 0 = G/C tuning, 1 = D/G tuning
-  bool finished_tuning = false;
-
-  // Function choose_base_tuning() runs the first screen: G/C or D/G tuning.
-  // This part just determines the gc_or_dg variable.
-  void choose_base_tuning() {
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setCursor(0, 0);
-    display.print(
-      " Choose Base Tuning: \n"
-      "  (Use bottom keys)  \n"
-      "                     \n"
-      "       1. G/C        \n"
-      "                     \n"
-      "       2. D/G        \n"
-      "                     \n"
-      "                     \n"
-    );
-    display.display();
-    delay(1000); // I'm not sure what we're waiting for but John did it so I'm doing it for now
-
-    bool completed = false;
-    string base_str;
-
-    while(!completed) {
-      // Button24 is button #1 and they count up from there
-      button24.update();
-      if(button24.fallingEdge()) {
-        gc_or_dg = 0;
-        completed = true;
-      };
-
-      button25.update();
-      if(button25.fallingEdge()) {
-        gc_or_dg = 1;
-        complete = true;
-      };
-    };
-  };
-
-  // Function choose_chanter_tuning() runs the chanter selection screen.
-  // This sets chan1midi and chan2midi
-  void choose_chanter_tuning() {
-
-    if (gc_or_dg == 0) {
-      base_str = "G/C";
-      chan1midi = Note(g4); // high chanter
-      chan2midi = Note(g3); // low chanter
-    } else {
-      base_str = "D/G";
-      chan1midi = Note(d4);
-      chan2midi = Note(d3);
-    };
-
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setCursor(0, 0);
-    display.print(
-      "         " + base_str + "         \n"
-      "  Select Chanters:   \n"
-      "                     \n"
-      "   1. Norm: " + NoteNum[chan2midi] + "/" + NoteNum[chan1midi] + "    \n"
-      "   2. Low:  " + NoteNum[chan2midi - 12] + "/" + NoteNum[chan1midi - 12] + "    \n"
-      "   3. High: " + NoteNum[chan2midi + 12] + "/" + NoteNum[chan1midi + 12] + "    \n"
-      "                     \n"
-      "                     \n"
-    );
-    display.display();
-    delay(1000); // I'm not sure what we're waiting for but John did it so I'm doing it for now
-
-    // Poll for buttons 1-3 and adjust chanter tuning if necessary.
-    bool completed = false;
-
-    while(!completed) {
-      button24.update();
-      if (button24.fallingEdge()) {
-        completed = true;
-      };
-
-      button25.update();
-      if (button25.fallingEdge()) {
-        chan1midi = chan1midi - 12;
-        chan2midi = chan2midi - 12;
-        completed = true;
-      };
-
-      button26.update();
-      if (button26.fallingEdge()) {
-        chan1midi = chan1midi + 12;
-        chan2midi = chan2midi + 12;
-        completed = true;
-      };
-    };
-  };
-
-  // Function choose_drone_tuning() runs the drone/trompette selection.
-  // This sets dronemidi and trompmidi
-  void choose_drone_tuning() {
-
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setCursor(0, 0);
-    if (gc_or_dg == 0) {
-      display.print(
-        " " + base_str + ", " + NoteNum[channel2midi] + "/" + NoteNum[channel1midi] + " Chanters \n"
-        " Select Drone/Tromp: \n"
-        " 1. C2/G2 | 6. G2/C4 \n"
-        " 2. C2/C3 | 7. C3/G3 \n"
-        " 3. C2/G4 | 8. C3/C4 \n"
-        " 4. G2/C3 | 9. G3/C4 \n"
-        " 5. G2/G3 |10. G3/G4 \n"
-        "                     \n"
-      );
-    } else {
-      display.print(
-        " " + base_str + ", " + NoteNum[channel2midi] + "/" + NoteNum[channel1midi] + " Chanters \n"
-        " Select Drone/Tromp: \n"
-        " 1. D2/G2 | 6. G2/D4 \n"
-        " 2. D2/D3 | 7. D3/G3 \n"
-        " 3. D2/G4 | 8. D3/D4 \n"
-        " 4. G2/D3 | 9. G3/D4 \n"
-        " 5. G2/G3 |10. G3/G4 \n"
-        "                     \n"
-      );
-    };
-    display.display();
-    delay(1000);
-
-    // Poll for buttons 1-10 and adjust drone/trompette as per the above strings
-    bool completed = false;
-
-    while(!completed) {
-      button24.update();
-      if (button24.fallingEdge()) {
-        dronemidi = (gc_or_dg == 0) ? Note(c2) : Note(d2);
-        trompmidi = Note(g2);
-        completed = true;
-      };
-
-      button25.update();
-      if (button25.fallingEdge()) {
-        dronemidi = (gc_or_dg == 0) ? Note(c2) : Note(d2);
-        trompmidi = (gc_or_dg == 0) ? Note(c3) : Note(d3);
-        completed = true;
-      };
-
-      button26.update();
-      if (button26.fallingEdge()) {
-        dronemidi = (gc_or_dg == 0) ? Note(c2) : Note(d2);
-        trompmidi = Note(g4);
-        completed = true;
-      };
-
-      button27.update();
-      if (button27.fallingEdge()) {
-        dronemidi = Note(g2);
-        trompmidi = (gc_or_dg == 0) ? Note(c3) : Note(d3);
-        completed = true;
-      };
-
-      button28.update();
-      if (button28.fallingEdge()) {
-        dronemidi = Note(g2);
-        trompmidi = Note(g3);
-        completed = true;
-      };
-
-      button29.update();
-      if (button29.fallingEdge()) {
-        dronemidi = Note(g2);
-        trompmidi = (gc_or_dg == 0) ? Note(c4) : Note(d4);
-        completed = true;
-      };
-
-      button30.update();
-      if (button30.fallingEdge()) {
-        dronemidi = (gc_or_dg == 0) ? Note(c3) : Note(d3);
-        trompmidi = Note(g3);
-        completed = true;
-      };
-
-      button31.update(); // 8
-      if (button31.fallingEdge()) {
-        dronemidi = (gc_or_dg == 0) ? Note(c3) : Note(d3);
-        trompmidi = (gc_or_dg == 0) ? Note(c4) : Note(d4);
-        completed = true;
-      };
-
-      button32.update(); // 9
-      if (button32.fallingEdge()) {
-        dronemidi = Note(g3);
-        trompmidi = (gc_or_dg == 0) ? Note(c4) : Note(d4);
-        completed = true;
-      };
-
-      button33.update(); // 10
-      if (button33.fallingEdge()) {
-        dronemidi = Note(g3);
-        trompmidi = Note(g4);
-        completed = true;
-      };
-    };
-  };
-
-  // Function choose_capo_tuning() runt the capo selection.
-  // This optionally pushes the drone and tromp notes up a full step (+2 MIDI notes).
-  void choose_capo_tuning() {
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setCursor(0, 0);
-    display.print(
-      " " + base_str + ", " + NoteNum[channel2midi] + "/" + NoteNum[channel1midi] + " Chanters \n"
-      "  " + NoteNum[dronemidi] + "/" + NoteNum[trompmidi] + " Drone/Tromp  \n"
-      "      Use Capo?      \n"
-      "                     \n"
-      "  1. No              \n"
-      "  2. +1 Whole Step   \n"
-      "                     \n"
-      "                     \n"
-    );
-    display.display();
-    delay(1000); // I'm not sure what we're waiting for but John did it so I'm doing it for now
-
-    bool completed = false;
-    string base_str;
-
-    while(!completed) {
-      // Button24 is button #1 and they count up from there
-      button24.update();
-      if(button24.fallingEdge()) {
-        // +0, nothing to do here...
-        completed = true;
-      };
-
-      button25.update();
-      if(button25.fallingEdge()) {
-        // Up whole step
-        dronemidi = dronemidi + 2
-        trompmidi = trompmidi + 2
-        complete = true;
-      };
-    };
-  };
-
-  // Function summary_tuning() prints a summary of all these selections and prompts the user to
-  // accept them or not.
-  void summary_tuning() {
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setCursor(0, 0);
-    display.print(
-      "      SUMMARY:       \n"
-      " " + base_str + ", " + NoteNum[channel2midi] + "/" + NoteNum[channel1midi] + " Chanters \n"
-      "  " + NoteNum[dronemidi] + "/" + NoteNum[trompmidi] + " Drone/Tromp  \n"
-      "                     \n"
-      "      Accept?        \n"
-      "                     \n"
-      "    1. Continue      \n"
-      "    2. Start Over    \n"
-    );
-    display.display();
-    delay(1000); // I'm not sure what we're waiting for but John did it so I'm doing it for now
-
-    bool completed = false;
-    string base_str;
-
-    while(!completed) {
-      // Button24 is button #1 and they count up from there
-      button24.update();
-      if(button24.fallingEdge()) {
-        finished_tuning = true;
-        completed = true;
-      };
-
-      button25.update();
-      if(button25.fallingEdge()) {
-        complete = true;
-      };
-    };
-  };
-
   // MAIN FUNCTION LOGIC
   while (!finished_tuning) {
     choose_base_tuning();
@@ -10693,6 +10687,8 @@ void tunings() {
     buzzrootkey = trompmidi;
     summary_tuning();
   };
+
+  finished_tuning = false; // For if/when it's called again.
 
   // set the buzz to match the tromp.
   // TODO: In the future I want to set a low limit for this because the buzz starts to break up.
