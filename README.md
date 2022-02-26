@@ -19,4 +19,4 @@ The goal is to replicate the two-string drone combinations that can be done with
 
 Future plans are exploring using two additional channels to support a third or perhaps fourth droning string as well, essentially making it a six "string" gurdy.
 
-DIGIGURDY OWNERS: If you wish to use this code, I have a digigurdy with the SSD1306 128x64 display (the "white OLED").  Slight changes are needed to use the other SH1106 display that I understand some digigurdies have been made with.
+DIGIGURDY OWNERS: If you wish to use this code, I have a digigurdy with the SSD1306 128x64 display (the "white OLED").  Slight changes are needed to use the other SH1106 display that I understand some digigurdies have been made with.  I haven't yet modified any of the places where these changes are needed, so if you're familar with the changes necessary from the original digigurdy code, that will work here, too.
