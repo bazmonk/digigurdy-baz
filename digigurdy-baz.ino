@@ -5764,15 +5764,14 @@ void setup() {
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
-  display.println("  Digi [Nerdy] Gurdy");
+  display.println("    DigiGurdy-Baz    ");
   display.println(" ");
-  // display.setTextSize(1);
-  display.println("     Basil Lalli");
-  display.println("      SH1106_T25");
-  display.println("Code117 5th Tuning");
+  display.println("     Basil Lalli     ");
+  display.println("     John Dingley    ");
+  display.println("     Version 0.1     ");
   display.println(" includes SerialMIDI");
-  display.println("   Blue OLED screen");
-  display.println("    EEPROM 22/02/22");
+  display.println("  White OLED screen");
+  display.println(" ");
 
   display.display();
   delay(4000);
@@ -10394,7 +10393,8 @@ string NoteNum[] = {
 // these global variables.  These are int values that correspond to MIDI note numbers.  A table of
 // them can be found here: https://studiocode.dev/resources/midi-middle-c/
 //
-// NOTE: note numbers are not standard.  In this case we are using a middle C4 (note 60).
+// NOTE: MIDI note numbers are _not_ standard.  In this case we are using a middle C4 (C4 = note 60).
+//
 // VARIABLES MODIFIED:
 //  chan1midi - high chanter
 //  chan2midi - low chanter
@@ -10402,299 +10402,308 @@ string NoteNum[] = {
 //  dronemidi - drone (low)
 void tunings() {
 
-};
+  int gc_or_dg; // 0 = G/C tuning, 1 = D/G tuning
+  bool finished_tuning = false;
 
-void tunings() {
+  // Function choose_base_tuning() runs the first screen: G/C or D/G tuning.
+  // This part just determines the gc_or_dg variable.
+  void choose_base_tuning() {
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setCursor(0, 0);
+    display.print(
+      " Choose Base Tuning: \n"
+      "  (Use bottom keys)  \n"
+      "                     \n"
+      "       1. G/C        \n"
+      "                     \n"
+      "       2. D/G        \n"
+      "                     \n"
+      "                     \n"
+    );
+    display.display();
+    delay(1000); // I'm not sure what we're waiting for but John did it so I'm doing it for now
 
-  //  if (debug == 1){
-  // Serial.print("choosekey at start of select new tunings before MIDI reset =
-  // "); Serial.println(choosekey);
-  //               }
+    bool completed = false;
+    string base_str;
 
-  // text display
-  display.clearDisplay();
-  display.setTextSize(2);
-  display.setCursor(0, 0);
-  display.println(" ");
-  display.println(" TUNINGS");
-  display.display();
-  delay(2000);
+    while(!completed) {
+      // Button24 is button #1 and they count up from there
+      button24.update();
+      if(button24.fallingEdge()) {
+        gc_or_dg = 0;
+        completed = true;
+      };
 
-  // Choose  between 5 broad tuning options
-  clearallMIDI();
+      button25.update();
+      if(button25.fallingEdge()) {
+        gc_or_dg = 1;
+        complete = true;
+      };
+    };
+  };
 
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setCursor(0, 0);
-  display.println(" SELECT YOUR TUNING:");
-  display.println("Use lower keys 1 - 5");
-  display.println(" ");
+  // Function choose_chanter_tuning() runs the chanter selection screen.
+  // This sets chan1midi and chan2midi
+  void choose_chanter_tuning() {
 
-  // display.display();
-  // delay(3000);
+    if (gc_or_dg == 0) {
+      base_str = "G/C";
+      chan1midi = Note(g4); // high chanter
+      chan2midi = Note(g3); // low chanter
+    } else {
+      base_str = "D/G";
+      chan1midi = Note(d4);
+      chan2midi = Note(d3);
+    };
 
-  // display.clearDisplay();
-  // display.setTextSize(1);
-  // display.setCursor(0,0);
-  display.println("1) G/C C Drones");
-  display.println("2) G/C G Drones");
-  display.println("3) D/G D Drones");
-  display.println("4) D/G G Drones");
-  display.println("5) G/C CG Drones");
-  display.display();
-  delay(1000);
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setCursor(0, 0);
+    display.print(
+      "         " + base_str + "         \n"
+      "  Select Chanters:   \n"
+      "                     \n"
+      "   1. Norm: " + NoteNum[chan2midi] + "/" + NoteNum[chan1midi] + "    \n"
+      "   2. Low:  " + NoteNum[chan2midi - 12] + "/" + NoteNum[chan1midi - 12] + "    \n"
+      "   3. High: " + NoteNum[chan2midi + 12] + "/" + NoteNum[chan1midi + 12] + "    \n"
+      "                     \n"
+      "                     \n"
+    );
+    display.display();
+    delay(1000); // I'm not sure what we're waiting for but John did it so I'm doing it for now
 
-  tonestatus =
-      0; // start them at root setting. Tone can go up to 1 or back to 0
-  octavestatus = 0; // start them at root setting. Octave can go down one to
-                    // become -1 or up one to become +1
+    // Poll for buttons 1-3 and adjust chanter tuning if necessary.
+    bool completed = false;
 
-  while (choosekey == 0) {
+    while(!completed) {
+      button24.update();
+      if (button24.fallingEdge()) {
+        completed = true;
+      };
 
-    button24.update(); // press button 1 to select G/C playing in C    g4 G3 C4
-                       // C2       C2 Drone and Octave Chanters
+      button25.update();
+      if (button25.fallingEdge()) {
+        chan1midi = chan1midi - 12;
+        chan2midi = chan2midi - 12;
+        completed = true;
+      };
 
-    if (button24.fallingEdge()) {
-      display.clearDisplay();
-      display.setTextSize(1);
-      display.setCursor(0, 0);
-      choosekey = 1;  // 1 represents G/Key of G tuning
-      chan1midi = 79; // G4
-      chan2midi = 67; // G3
-      trompmidi = 72; // C4
-      dronemidi = 48; // C2
-      display.println("G/C C Drones");
-      // display.println(" ");
-      display.print("Melody Chan 1:   ");
-      // display.println(chan1midi);
-      MIDInote = chan1midi;
-      putinthenote();
-      display.print("Melody Chan 2:   ");
-      // display.println(chan2midi);
-      MIDInote = chan2midi;
-      putinthenote();
-      display.print("Tromp  Chan 3:   ");
-      // display.println(trompmidi);
-      MIDInote = trompmidi;
-      putinthenote();
-      display.print("Drone  Chan 4:   ");
-      // display.println(dronemidi);
-      MIDInote = dronemidi;
-      putinthenote();
-      // display.println("Adjust tone/octaves");
-      // display.println("then");
-      display.println("Buzz/KeyClick Ch 5/6");
-      // display.println("Adjust/Set Octave");
-      display.println("(O) Key = continue");
-      display.display();
-      delay(2000);
+      button26.update();
+      if (button26.fallingEdge()) {
+        chan1midi = chan1midi + 12;
+        chan2midi = chan2midi + 12;
+        completed = true;
+      };
+    };
+  };
 
-      // microtweakthetunings();
-    }
+  // Function choose_drone_tuning() runs the drone/trompette selection.
+  // This sets dronemidi and trompmidi
+  void choose_drone_tuning() {
 
-    button25
-        .update(); // press button 2 to select G/C Playing in G     g4 G3 D4 G2
-                   // Octave Chanters, for Trad unison chanters just fade
-                   // channel 1 in synth. G drone same for trad and modern
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setCursor(0, 0);
+    if (gc_or_dg == 0) {
+      display.print(
+        " " + base_str + ", " + NoteNum[channel2midi] + "/" + NoteNum[channel1midi] + " Chanters \n"
+        " Select Drone/Tromp: \n"
+        " 1. C2/G2 | 6. G2/C4 \n"
+        " 2. C2/C3 | 7. C3/G3 \n"
+        " 3. C2/G4 | 8. C3/C4 \n"
+        " 4. G2/C3 | 9. G3/C4 \n"
+        " 5. G2/G3 |10. G3/G4 \n"
+        "                     \n"
+      );
+    } else {
+      display.print(
+        " " + base_str + ", " + NoteNum[channel2midi] + "/" + NoteNum[channel1midi] + " Chanters \n"
+        " Select Drone/Tromp: \n"
+        " 1. D2/G2 | 6. G2/D4 \n"
+        " 2. D2/D3 | 7. D3/G3 \n"
+        " 3. D2/G4 | 8. D3/D4 \n"
+        " 4. G2/D3 | 9. G3/D4 \n"
+        " 5. G2/G3 |10. G3/G4 \n"
+        "                     \n"
+      );
+    };
+    display.display();
+    delay(1000);
 
-    if (button25.fallingEdge()) {
-      display.clearDisplay();
-      display.setTextSize(1);
-      display.setCursor(0, 0);
-      choosekey = 2;  // 2 represents G/Key of C tuning
-      chan1midi = 79; // G4
-      chan2midi = 67; // G3
-      trompmidi = 67; // G3
-      dronemidi = 55; // G2
-      display.println("G/C G Drones");
-      // display.println(" ");
-      display.print("Melody Chan 1:   ");
-      // display.println(chan1midi);
-      MIDInote = chan1midi;
-      putinthenote();
-      display.print("Melody Chan 2:   ");
-      // display.println(chan2midi);
-      MIDInote = chan2midi;
-      putinthenote();
-      display.print("Tromp  Chan 3:   ");
-      // display.println(trompmidi);
-      MIDInote = trompmidi;
-      putinthenote();
-      display.print("Drone  Chan 4:   ");
-      // display.println(dronemidi);
-      MIDInote = dronemidi;
-      putinthenote();
-      // display.println("Adjust tone/octaves");
-      // display.println("then");
-      display.println("Buzz/KeyClick Ch 5/6");
-      display.println("Adjust/Set Octave");
-      display.println("(O) Key = continue");
-      display.display();
-      delay(2000);
+    // Poll for buttons 1-10 and adjust drone/trompette as per the above strings
+    bool completed = false;
 
-      // microtweakthetunings();
-    }
+    while(!completed) {
+      button24.update();
+      if (button24.fallingEdge()) {
+        dronemidi = (gc_or_dg == 0) ? Note(c2) : Note(d2);
+        trompmidi = Note(g2);
+        completed = true;
+      };
 
-    button26.update(); // press button 3 to select D/G Playing D or G       d5
-                       // D4 D4 D3 Identical for Modern and Trad
+      button25.update();
+      if (button25.fallingEdge()) {
+        dronemidi = (gc_or_dg == 0) ? Note(c2) : Note(d2);
+        trompmidi = (gc_or_dg == 0) ? Note(c3) : Note(d3);
+        completed = true;
+      };
 
-    if (button26.fallingEdge()) {
-      display.clearDisplay();
-      display.setTextSize(1);
-      display.setCursor(0, 0);
-      choosekey = 3;  // 3 represents D/Key of D tuning
-      chan1midi = 74; // D5
-      chan2midi = 62; // D4
-      trompmidi = 62; // D4
-      dronemidi = 50; // D3
-      display.println("D/G D Drones");
-      // display.println(" ");
-      display.print("Melody Chan 1:   ");
-      // display.println(chan1midi);
-      MIDInote = chan1midi;
-      putinthenote();
-      display.print("Melody Chan 2:   ");
-      // display.println(chan2midi);
-      MIDInote = chan2midi;
-      putinthenote();
-      display.print("Tromp  Chan 3:   ");
-      // display.println(trompmidi);
-      MIDInote = trompmidi;
-      putinthenote();
-      display.print("Drone  Chan 4:   ");
-      // display.println(dronemidi);
-      MIDInote = dronemidi;
-      putinthenote();
-      // display.println("Adjust tone/octaves");
-      // display.println("then");
-      display.println("Buzz/KeyClick Ch 5/6");
-      display.println("Adjust/Set Octave");
-      display.println("(O) Key = continue");
-      display.display();
-      delay(2000);
+      button26.update();
+      if (button26.fallingEdge()) {
+        dronemidi = (gc_or_dg == 0) ? Note(c2) : Note(d2);
+        trompmidi = Note(g4);
+        completed = true;
+      };
 
-      // microtweakthetunings();
-    }
+      button27.update();
+      if (button27.fallingEdge()) {
+        dronemidi = Note(g2);
+        trompmidi = (gc_or_dg == 0) ? Note(c3) : Note(d3);
+        completed = true;
+      };
 
-    button27.update(); // press button 4 to select D/G with G drone   d5 D4 D4
-                       // G2
-    if (button27.fallingEdge()) {
-      display.clearDisplay();
-      display.setTextSize(1);
-      display.setCursor(0, 0);
-      choosekey = 4;  // 4 represents D/Key of G tuning
-      chan1midi = 74; // D5
-      chan2midi = 62; // D4
-      trompmidi = 62; // D4
-      dronemidi = 43; // G2
-      display.println("D/G G Drones");
-      // display.println(" ");
-      display.print("Melody Chan 1:   ");
-      // display.println(chan1midi);
-      MIDInote = chan1midi;
-      putinthenote();
-      display.print("Melody Chan 2:   ");
-      // display.println(chan2midi);
-      MIDInote = chan2midi;
-      putinthenote();
-      display.print("Tromp  Chan 3:   ");
-      // display.println(trompmidi);
-      MIDInote = trompmidi;
-      putinthenote();
-      display.print("Drone  Chan 4:   ");
-      // display.println(dronemidi);
-      MIDInote = dronemidi;
-      putinthenote();
-      // display.println("Adjust tone/octaves");
-      // display.println("then");
-      display.println("Buzz/KeyClick Ch 5/6");
-      display.println("Adjust/Set Octave");
-      display.println("(O) Key = continue");
-      display.display();
-      delay(2000);
+      button28.update();
+      if (button28.fallingEdge()) {
+        dronemidi = Note(g2);
+        trompmidi = Note(g3);
+        completed = true;
+      };
 
-      // microtweakthetunings();
-    }
+      button29.update();
+      if (button29.fallingEdge()) {
+        dronemidi = Note(g2);
+        trompmidi = (gc_or_dg == 0) ? Note(c4) : Note(d4);
+        completed = true;
+      };
 
-    button28
-        .update(); // press button 5 to select G/C with CG drones   G4 G3  C5 G3
+      button30.update();
+      if (button30.fallingEdge()) {
+        dronemidi = (gc_or_dg == 0) ? Note(c3) : Note(d3);
+        trompmidi = Note(g3);
+        completed = true;
+      };
 
-    if (button28.fallingEdge()) {
-      display.clearDisplay();
-      display.setTextSize(1);
-      display.setCursor(0, 0);
-      choosekey = 5;  // G/C with CG drones
-      chan1midi = 67; // G4
-      chan2midi = 55; // G3
-      trompmidi = 72; // C5
-      dronemidi = 55; // G3
-      display.println("G/C C5-Tr G3-Dr");
-      // display.println(" ");
-      display.print("Melody Chan 1:   ");
-      // display.println(chan1midi);
-      MIDInote = chan1midi;
-      putinthenote();
-      display.print("Melody Chan 2:   ");
-      // display.println(chan2midi);
-      MIDInote = chan2midi;
-      putinthenote();
-      display.print("Tromp  Chan 3:   ");
-      // display.println(trompmidi);
-      MIDInote = trompmidi;
-      putinthenote();
-      display.print("Drone  Chan 4:   ");
-      // display.println(dronemidi);
-      MIDInote = dronemidi;
-      putinthenote();
-      display.println("Buzz/KeyClick Ch 5/6");
-      display.println("Adjust/Set Octave");
-      display.println("(O) Key = continue");
-      display.display();
-      delay(2000);
+      button31.update(); // 8
+      if (button31.fallingEdge()) {
+        dronemidi = (gc_or_dg == 0) ? Note(c3) : Note(d3);
+        trompmidi = (gc_or_dg == 0) ? Note(c4) : Note(d4);
+        completed = true;
+      };
 
-      // microtweakthetunings();
-    }
+      button32.update(); // 9
+      if (button32.fallingEdge()) {
+        dronemidi = Note(g3);
+        trompmidi = (gc_or_dg == 0) ? Note(c4) : Note(d4);
+        completed = true;
+      };
 
-  } // end of while choosekey = 0 loop
+      button33.update(); // 10
+      if (button33.fallingEdge()) {
+        dronemidi = Note(g3);
+        trompmidi = Note(g4);
+        completed = true;
+      };
+    };
+  };
 
-  microtweakthetunings();
+  // Function choose_capo_tuning() runt the capo selection.
+  // This optionally pushes the drone and tromp notes up a full step (+2 MIDI notes).
+  void choose_capo_tuning() {
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setCursor(0, 0);
+    display.print(
+      " " + base_str + ", " + NoteNum[channel2midi] + "/" + NoteNum[channel1midi] + " Chanters \n"
+      "  " + NoteNum[dronemidi] + "/" + NoteNum[trompmidi] + " Drone/Tromp  \n"
+      "      Use Capo?      \n"
+      "                     \n"
+      "  1. No              \n"
+      "  2. +1 Whole Step   \n"
+      "                     \n"
+      "                     \n"
+    );
+    display.display();
+    delay(1000); // I'm not sure what we're waiting for but John did it so I'm doing it for now
 
-  // Press light blue key to continue after you have set up your phone channels
-  // as above
-  waiting = 2;
-  while (waiting == 2) {
-    button20.update(); // press upper right blue key to continue
-    if (button20.fallingEdge()) {
-      waiting = 0;
-    }
-    delay(100);
-  }
+    bool completed = false;
+    string base_str;
 
-  buzzrootkey = trompmidi; // <<<<<<<<<<<<<<<<<<<<<<<<< Matthew Sz asked that
-                           // the buzz should be same tone as the trompette
-                           // string which does make sense actually
+    while(!completed) {
+      // Button24 is button #1 and they count up from there
+      button24.update();
+      if(button24.fallingEdge()) {
+        // +0, nothing to do here...
+        completed = true;
+      };
 
-  // Continuing on to next step
-  // if (debug == 1){
-  // Serial.print("choosekey at end of select new tunings = ");
-  // Serial.println(choosekey);
-  //                }
+      button25.update();
+      if(button25.fallingEdge()) {
+        // Up whole step
+        dronemidi = dronemidi + 2
+        trompmidi = trompmidi + 2
+        complete = true;
+      };
+    };
+  };
 
-  // XXXXXXXXXXXXXXXXXXXXXXXXXXXX  SAVE TO EEPROM THE NEW TUNING
-  // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  // Function summary_tuning() prints a summary of all these selections and prompts the user to
+  // accept them or not.
+  void summary_tuning() {
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setCursor(0, 0);
+    display.print(
+      "      SUMMARY:       \n"
+      " " + base_str + ", " + NoteNum[channel2midi] + "/" + NoteNum[channel1midi] + " Chanters \n"
+      "  " + NoteNum[dronemidi] + "/" + NoteNum[trompmidi] + " Drone/Tromp  \n"
+      "                     \n"
+      "      Accept?        \n"
+      "                     \n"
+      "    1. Continue      \n"
+      "    2. Start Over    \n"
+    );
+    display.display();
+    delay(1000); // I'm not sure what we're waiting for but John did it so I'm doing it for now
 
-  if (chan1midi < 0) {
-    chan1midi = 0;
-  }
-  if (chan2midi < 0) {
-    chan2midi = 0;
-  }
-  if (trompmidi < 0) {
-    trompmidi = 0;
-  }
-  if (dronemidi < 0) {
-    dronemidi = 0;
-  }
+    bool completed = false;
+    string base_str;
+
+    while(!completed) {
+      // Button24 is button #1 and they count up from there
+      button24.update();
+      if(button24.fallingEdge()) {
+        finished_tuning = true;
+        completed = true;
+      };
+
+      button25.update();
+      if(button25.fallingEdge()) {
+        complete = true;
+      };
+    };
+  };
+
+  // MAIN FUNCTION LOGIC
+  while (!finished_tuning) {
+    choose_base_tuning();
+    choose_chanter_tuning();
+    choose_drone_tuning();
+    choose_capo_tuning();
+    buzzrootkey = trompmidi;
+    summary_tuning();
+  };
+
+  // set the buzz to match the tromp.
+  // TODO: In the future I want to set a low limit for this because the buzz starts to break up.
+  buzzrootkey = trompmidi;
+
+  // I'm basically not using the octave or capo feature as written.
+  octavestatus = 0;
+  tonestatus = 0;
+
+  // I think if I just do this the save feature still works, but I'm not sure if I need to
+  // deal with choosekey...
   EEPROM.write(tuningaddress, choosekey);
   EEPROM.write(chan1midiaddress, chan1midi);
   EEPROM.write(chan2midiaddress, chan2midi);
@@ -10705,45 +10714,7 @@ void tunings() {
 
   clearallMIDI();
 
-} // End of void tunings
-
-void microtweakthetunings() {
-
-  // display.clearDisplay();
-  // display.setTextSize(1);
-  // display.setCursor(0,0);
-  // display.println("Adjust octave");
-  // display.println("and Capo buttons");
-  // display.display();
-  delay(1000);
-
-  // values to adjust are: chan1midi    chan2midi     trompmidi    dronemidi
-  // Capo moves the Trompette and drone strings up or down 2 steps i.e. 1 full
-  // tone  UP = Upper key 1(Pin2) plus Key 8(Pin18)  DOWN = Upper key 1(Pin2)
-  // plus Key 9(Pin19) OCTAVE moves ALL strings up or down a full octave     UP
-  // = Lower Key 1(Pin24) plus lower Key 13(Pin36)    DOWN = Lower key 1(Pin24)
-  // plus lower key 14(Pin37)
-
-  // set n = 0. While n = 0
-  // Look at all the capo and octave button combinations in sequenece and allow
-  // them to adjust the 4 channel midi values. PLus each cycle, look at the
-  // light blue key (Pin20) Display the new channel values on screen in real
-  // time Loop round indefiniteley until light blue key pressed when n now = 1
-  // so we break out of the loop. Save the new channel MIDI values before then
-  // end of the subroutine.
-  // delay(2000);
-  tweaktuning = 0;
-
-  while (tweaktuning == 0) {
-    // for (int x = 0; x < 255; x++) {
-
-    lookforanewtuning();
-
-  } // end of while tweaktuning == 0
-
-  tweaktuning = 0;
-  buzzrootkey = trompmidi; // Set the buzz pitch to match the trompette value
-} // end of void microtweakthetunings
+};
 
 void lookforanewtuning() {
 
