@@ -10695,6 +10695,7 @@ void tunings() {
   buzzrootkey = trompmidi;
 
   // I'm basically not using the octave or capo feature as written.
+  // TODO: Think up a way to utilize these buttons within this configuration scheme.
   octavestatus = 0;
   tonestatus = 0;
 
