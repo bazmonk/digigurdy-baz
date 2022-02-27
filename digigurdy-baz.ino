@@ -177,10 +177,7 @@ int recrank;
 // <-----------------------------------------------------------------------------------------------
 // Changed to this for our SH1106 driver screen
 
-Adafruit_SSD1306
-    display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET,
-            OLED_CS); //        <-------------------------------------------------------------------------------------------
-                      //        Comment this out as this is only used if you
+Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);                      //        Comment this out as this is only used if you
                       //        have an Adafruit 1.3 inch OLED STEMMA screen
 
 
