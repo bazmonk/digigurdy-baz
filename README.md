@@ -1,5 +1,5 @@
 # digigurdy-baz
-Digigurdy Teensy code with a new tuning setup
+Digigurdy Teensy code
 
 This is a personal fork of the digigurdy code (https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy).
 
@@ -13,11 +13,9 @@ This fork replaces that with:
 
 This provides 120 tuning options.  While some of the octave combinations may be rare on a real gurdy, they should all be "compatible" options that could concievably work.
 
-...Ok, some of them may be pretty strange.  But a volume knob should be able to go "too high" in order to guarantee it goes to "loud enough".  You may stick to just a few of the options, but the options you want should be in there :-)
-
 The goal is to replicate the two-string drone combinations that can be done with a 6-string Nerdy Gurdy, significantly expand the tuning options, and find a way to do it that doesn't overwhelm the user with options if they don't wish to be.  The basic, "standard" tunings should be easily available.
 
-Future plans are exploring using two additional channels to support a third or perhaps fourth droning string as well, essentially making it a six "string" gurdy.
+The longer goal of this project is to reorganize/rework the entire codebase for maintainability and flexibility.
 
 ## Installation
 
