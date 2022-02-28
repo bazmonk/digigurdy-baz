@@ -43,6 +43,10 @@
 // Right not not using the std namespace is just impacting strings.  That's ok...
 using namespace MIDI_NAMESPACE;
 
+// #################
+// CLASS DEFINITIONS
+// #################
+
 class HurdyGurdy {
   protected:
 
@@ -87,6 +91,33 @@ class GurdyButton {
     }
 };
 
+//class ToggleButton is for the arcade-style drone on/off button
+// It extends the GurdyButton class to keep track of being toggled.
+class ToggleButton: public GurdyButton {
+  private:
+    bool toggled;
+  public:
+    ToggleButton(int my_pin, bool start_toggled = false) : GurdyButton(my_pin) {
+      bounce_obj = new Bounce(my_pin, 5);
+      pinMode(my_pin, INPUT_PULLUP);
+      toggled = start_toggled;
+    };
+
+    // update() works a little differently and also checks the toggle status.
+    void update() {
+      bounce_obj->update();
+
+      // We'll only look at the downpress to register the event.
+      if(bounce_obj->fallingEdge()) {
+        toggled = !toggled;
+      };
+    };
+
+    bool toggleOn() {
+      return toggled;
+    };
+};
+
 // class KeyboxButton adds a note offset variable to the Button class.
 class KeyboxButton: public GurdyButton {
   private:
@@ -105,6 +136,7 @@ class KeyboxButton: public GurdyButton {
 
 };
 
+// GurdyString manages turning "strings" on and off and determining their note.
 class GurdyString {
   private:
     int open_note;
@@ -139,6 +171,11 @@ class GurdyString {
       usbMIDI.sendNoteOff(note_being_played, midi_volume, midi_channel);
       MIDI_obj->sendNoteOff(note_being_played, midi_volume, midi_channel);
     };
+
+};
+
+// class GurdyCrank controls the cranking mechanism.
+class GurdyCrank {
 
 };
 
@@ -206,21 +243,36 @@ MidiInterface<SerialMIDI<HardwareSerial>> *myMIDI = new MidiInterface<SerialMIDI
 
 // Just showing that it works.  Create a button object for pin 24 (this is the 1st bottom key)
 GurdyButton *mybutton;
-
+ToggleButton *bigbutton;
 // Create two strings
 GurdyString *mystring;
 GurdyString *mylowstring;
+GurdyString *mydrone;
 
 void setup() {
+  // Testing setup: initialize the button and peg it to "key 1".
+  // Initialize two strings a perfect fifth apart.
   mybutton = new GurdyButton(24);
+  bigbutton = new ToggleButton(39);
   mystring = new GurdyString(1, Note(g4), myMIDI);
   mylowstring = new GurdyString(2, Note(c4), myMIDI);
+  mydrone = new GurdyString(3, Note(g3), myMIDI);
 
   myMIDI->begin();
 };
 
 void loop() {
+
+  // Just for testing: make the note when the button is pressed.
   mybutton->update();
+  bigbutton->update();
+
+  if(bigbutton->toggleOn() && bigbutton->wasPressed()) {
+    mydrone->soundOn();
+  } else if (!(bigbutton->toggleOn()) && bigbutton->wasPressed()) {
+    mydrone->soundOff();
+  };
+
   if(mybutton->wasPressed()) {
     mystring->soundOn();
     mylowstring->soundOn();
