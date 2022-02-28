@@ -33,6 +33,12 @@
 #include "songs.h"
 
 class HurdyGurdy {
+  protected:
+
+  public:
+    HurdyGurdy(int pin_arr[]) {
+    };
+
 };
 
 //  Button objects abstract the physical buttons.
@@ -49,8 +55,9 @@ class Button {
       // Recommended from the Bounce webpage for "good" buttons.
       bounce_obj = Bounce(my_pin, 5);
 
-      // I think this has to do with the wiring and physical design.
-      // John Dingley did it... I'll do it, too.
+      // In John's code the non-keybox buttons weren't using Bounce.
+      // I'm taking a guess that INPUT_PULLUP is what I want to use here but I think so.
+      // Originally it was using DirectRead/Write and INPUT.
       pinMode(pin, INPUT_PULLUP);
     };
 
@@ -177,7 +184,17 @@ int pin_array[] = {-1, 2, 24, 3, 25, 26, 4, 27, 5, 28, 29, 6, 30,
 MIDI_CREATE_INSTANCE(HardwareSerial, Serial1, MIDI);
 
 void setup() {
+  Button mybutton = Button(24);
+  GurdyString mystring = GurdyString(1, Note(c4));
 };
 
 void loop() {
+  Button mybutton = Button(24);
+  mybutton.update();
+  if(mybutton.wasPressed()) {
+    mystring.soundOn();
+  };
+  if(mybutton.wasReleased()) {
+    mystring.soundOff();
+  };
 };
