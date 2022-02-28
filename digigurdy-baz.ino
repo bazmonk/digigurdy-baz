@@ -5,9 +5,17 @@
 //   https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy
 // REPOSITORY: https://github.com/bazmonk/digigurdy-baz
 
+// ##############
+// CONFIG SECTION
+// ##############
+
 // USERS!!! Uncomment one of these lines depending on what kind of OLED screen you have.
 #define WHITE_OLED
 //#define BLUE_OLED
+
+// ##################
+// END CONFIG SECTION
+// ##################
 
 #include <Adafruit_GFX.h>
 // https://www.pjrc.com/teensy/td_libs_Bounce.html
@@ -98,11 +106,11 @@ class KeyboxButton: public GurdyButton {
 };
 
 class GurdyString {
+  private:
     int open_note;
     int midi_channel;
     int midi_volume;
     int note_being_played;
-    bool note_playing;
     MidiInterface<SerialMIDI<HardwareSerial>> *MIDI_obj;
 
   public:
@@ -112,7 +120,6 @@ class GurdyString {
       midi_volume = my_vol;
       note_being_played = open_note;
       MIDI_obj = my_MIDI_obj;
-      note_playing = false;
     }
 
     // soundOn() sends sound on this string's channel at its notes
@@ -126,13 +133,11 @@ class GurdyString {
       note_being_played = open_note + my_offset;
       usbMIDI.sendNoteOn(note_being_played, midi_volume, midi_channel);
       MIDI_obj->sendNoteOn(note_being_played, midi_volume, midi_channel);
-      note_playing = true;
     };
 
     void soundOff() {
       usbMIDI.sendNoteOff(note_being_played, midi_volume, midi_channel);
       MIDI_obj->sendNoteOff(note_being_played, midi_volume, midi_channel);
-      note_playing = false;
     };
 
 };
@@ -143,9 +148,9 @@ class KeyClick {
 class Buzz {
 };
 
-//
+// ################
 // GLOBAL VARIABLES
-//
+// ################
 
 // enum Note maps absolute note names to MIDI note numbers (middle C4 = 60),
 // which range from 0 to 127.
@@ -210,9 +215,7 @@ void setup() {
   mybutton = new GurdyButton(24);
   mystring = new GurdyString(1, Note(g4), myMIDI);
   mylowstring = new GurdyString(2, Note(c4), myMIDI);
-  // Start up the MIDI connections (for using a MIDI cable on the digigurdy).
-  // Honestly I'm not sure why usbMIDI "Just Works" without having to do anything to it,
-  // surely it's part of the Arduino environment so I'll take it.
+
   myMIDI->begin();
 };
 
