@@ -1,21 +1,29 @@
 // Digigurdy-Baz
-// VERSION: v0.2
+// VERSION: v0.3
 // AUTHOR: Basil Lalli
-// DESC: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.
-//   See https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy
-// REPO: https://github.com/bazmonk/digigurdy-baz
+// DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
+//   https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy
+// REPOSITORY: https://github.com/bazmonk/digigurdy-baz
+
+// USERS!!! Uncomment one of these lines depending on what kind of OLED screen you have.
+#define WHITE_OLED
+//#define BLUE_OLED
 
 #include <Adafruit_GFX.h>
-// Note used in this version. This is used if you have an Adafruit OLED screen that requires the SSD1306 driver
-#include <Adafruit_SSD1306.h>
-// #include <Adafruit_SH1106.h>
-// Bounce library makes button change detection easy
-#include <Bounce.h>
+#include <Bounce.h>// Bounce library makes button change detection easy
 #include <SPI.h>
 #include <Wire.h>
 #include <EEPROM.h>
 #include <MIDI.h>
 #include <string>
+
+// The white OLED uses Adafruit SSD1306.  Blue uses SH1106.
+#ifdef WHITE_OLED
+  #include <Adafruit_SSD1306.h>
+#endif
+#ifdef BLUE_OLED
+  #include <Adafruit_SH1106.h>
+#endif
 
 #include "bitmaps.h"
 #include "songs.h"
@@ -172,12 +180,22 @@ int recrank;
 #define OLED_DC 11
 #define OLED_CS 12
 #define OLED_RESET 13
-// Adafruit_SH1106 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
+
+// Initiate the correct kind of display object based on OLED type
+#ifdef WHITE_OLED
+  Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
+#endif
+#ifdef BLUE_OLED
+  Adafruit_SH1106 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
+#endif
+
+
+//
 // //
 // <-----------------------------------------------------------------------------------------------
 // Changed to this for our SH1106 driver screen
 
-Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);                      //        Comment this out as this is only used if you
+                      //        Comment this out as this is only used if you
                       //        have an Adafruit 1.3 inch OLED STEMMA screen
 
 
@@ -318,7 +336,13 @@ void setup() {
   // XXXXXXXXXXXXXXXXXXXXXXXX
   //  by default, we'll generate the high voltage from the 3.3v line internally!
   //  (neat!)
-  display.begin(SSD1306_SWITCHCAPVCC);
+
+  #ifdef WHITE_OLED
+    display.begin(SSD1306_SWITCHCAPVCC);
+  #endif
+  #ifdef BLUE_OLED
+    display.begin(SH1106_SWITCHCAPVCC);
+  #endif
   // display.begin(SH1106_SWITCHCAPVCC);  //
   // <-------------------------------------------------------------------------------------------------------------------------------------------------------
   // Change this
@@ -506,7 +530,12 @@ void setup() {
   display.println("     John Dingley    ");
   display.println("     Version 0.2     ");
   display.println(" includes SerialMIDI");
-  display.println("  White OLED screen");
+  #ifdef WHITE_OLED
+    display.println("  White OLED screen");
+  #endif
+  #ifdef BLUE_OLED
+    display.println("   Blue OLED screen");
+  #endif
   display.println(" ");
 
   display.display();
