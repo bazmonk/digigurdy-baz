@@ -32,6 +32,9 @@
 #include "bitmaps.h"
 #include "songs.h"
 
+// Right not not using the std namespace is just impacting strings.  That's ok...
+using namespace MIDI_NAMESPACE;
+
 class HurdyGurdy {
   protected:
 
@@ -42,49 +45,49 @@ class HurdyGurdy {
 };
 
 //  Button objects abstract the physical buttons.
-class Button {
+class GurdyButton {
   protected:
-    Bounce bounce_obj;
+    Bounce* bounce_obj;
   public:
 
     // Button() accepts two integers:
     //   pin - the teensy pin that goes with this button
-    Button(int my_pin) {
+    GurdyButton(int my_pin) {
 
       // The 5 is 5ms wait for events to complete.
       // Recommended from the Bounce webpage for "good" buttons.
-      bounce_obj = Bounce(my_pin, 5);
+      bounce_obj = new Bounce(my_pin, 5);
 
       // In John's code the non-keybox buttons weren't using Bounce.
       // I'm taking a guess that INPUT_PULLUP is what I want to use here but I think so.
       // Originally it was using DirectRead/Write and INPUT.
-      pinMode(pin, INPUT_PULLUP);
+      pinMode(my_pin, INPUT_PULLUP);
     };
 
     // Bounce objects should only be update()-ed once per loop(),
     // so I'm not putting it in wasPressed()/wasReleased().
     void update() {
-      bounce_obj.update();
+      bounce_obj->update();
     };
 
     bool wasPressed() {
-      return bounce_obj.fallingEdge();
+      return bounce_obj->fallingEdge();
     }
 
     bool wasReleased() {
-      return bounce_obj.risingEdge();
+      return bounce_obj->risingEdge();
     }
 };
 
 // class KeyboxButton adds a note offset variable to the Button class.
-class KeyboxButton: public Button {
+class KeyboxButton: public GurdyButton {
   private:
     int note_offset;
 
   public:
-    KeyboxButton(int my_pin, int my_offset) {
-      bounce_obj = Bounce(my_pin, 5);
-      pinMode(ping, INPUT_PULLUP);
+    KeyboxButton(int my_pin, int my_offset) : GurdyButton(my_pin) {
+      bounce_obj = new Bounce(my_pin, 5);
+      pinMode(my_pin, INPUT_PULLUP);
       note_offset = my_offset;
     };
 
@@ -95,34 +98,40 @@ class KeyboxButton: public Button {
 };
 
 class GurdyString {
-  private:
     int open_note;
     int midi_channel;
     int midi_volume;
     int note_being_played;
     bool note_playing;
+    MidiInterface<SerialMIDI<HardwareSerial>> *MIDI_obj;
 
   public:
-    GurdyString(int my_channel, int my_note, int my_vol = 56) {
+    GurdyString(int my_channel, int my_note, midi::MidiInterface<midi::SerialMIDI<HardwareSerial>> *my_MIDI_obj, int my_vol = 56) {
       midi_channel = my_channel;
       open_note = my_note;
       midi_volume = my_vol;
       note_being_played = open_note;
+      MIDI_obj = my_MIDI_obj;
       note_playing = false;
     }
 
     // soundOn() sends sound on this string's channel at its notes
     // optionally with an additional offset (e.g. a key being pressed)
+    //
+    // I do not know why I can just access usbMIDI here, but even when
+    // creating MIDI_obj globally, I could not access MIDI_obj the same way.
+    // Bringing in a pointer and working with MIDI_obj in this manner is
+    // because of that.
     void soundOn(int my_offset = 0) {
       note_being_played = open_note + my_offset;
       usbMIDI.sendNoteOn(note_being_played, midi_volume, midi_channel);
-      MIDI.sendNoteOn(note_being_played, midi_volume, midi_channel);
+      MIDI_obj->sendNoteOn(note_being_played, midi_volume, midi_channel);
       note_playing = true;
     };
 
     void soundOff() {
       usbMIDI.sendNoteOff(note_being_played, midi_volume, midi_channel);
-      MIDI.sendNoteOff(note_being_played, midi_volume, midi_channel);
+      MIDI_obj->sendNoteOff(note_being_played, midi_volume, midi_channel);
       note_playing = false;
     };
 
@@ -156,7 +165,7 @@ enum Note {
 
 // string array NoteNum is the reverse of the above Note enum.  It maps MIDI note numbers to
 // screen-friendly note names.
-string NoteNum[] = {
+std::string NoteNum[] = {
   "C-1", "C-1#", "D-1", "D-1#", "E-1", "F-1", "F-1#", "G-1", "G-1#", "A-1", "A-1#", "B-1",
   "C0", "C0#", "D0", "D0#", "E0", "F0", "F0#", "G0", "G0#", "A0", "A0#", "B0",
   "C1", "C1#", "D1", "D1#", "E1", "F1", "F1#", "G1", "G1#", "A1", "A1#", "B1",
@@ -178,23 +187,43 @@ int pin_array[] = {-1, 2, 24, 3, 25, 26, 4, 27, 5, 28, 29, 6, 30,
 
 // See https://www.pjrc.com/teensy/td_libs_MIDI.html
 //
-// Apparently we don't declare the MIDI object... this just makes it.
-// There is also a usbMIDI object that is just magically here as part of the
-// Teensy build environment.
-MIDI_CREATE_INSTANCE(HardwareSerial, Serial1, MIDI);
+// Create the MIDI instance here.
+// This used to be `MIDI_CREATE_INSTANCE(HardwareSerial, Serial1, MIDI);`, which would
+// create a MidiInterface object name "MIDI" for you.  Doing it this way gives me pointer access
+// to the object and lets me pass it to the GurdyString objects later.
+//
+// I am just doing what MIDI_CREATE_INSTANCE does behind the scenes, but not behind the scenes.
+
+// Create the serial interface object
+SerialMIDI<HardwareSerial> mySerialMIDI(Serial1);
+// Create a new MidiInterface object using that serial interface
+MidiInterface<SerialMIDI<HardwareSerial>> *myMIDI = new MidiInterface<SerialMIDI<HardwareSerial>>((SerialMIDI<HardwareSerial>&)mySerialMIDI);
+
+// Just showing that it works.  Create a button object for pin 24 (this is the 1st bottom key)
+GurdyButton *mybutton;
+
+// Create two strings
+GurdyString *mystring;
+GurdyString *mylowstring;
 
 void setup() {
-  Button mybutton = Button(24);
-  GurdyString mystring = GurdyString(1, Note(c4));
+  mybutton = new GurdyButton(24);
+  mystring = new GurdyString(1, Note(g4), myMIDI);
+  mylowstring = new GurdyString(2, Note(c4), myMIDI);
+  // Start up the MIDI connections (for using a MIDI cable on the digigurdy).
+  // Honestly I'm not sure why usbMIDI "Just Works" without having to do anything to it,
+  // surely it's part of the Arduino environment so I'll take it.
+  myMIDI->begin();
 };
 
 void loop() {
-  Button mybutton = Button(24);
-  mybutton.update();
-  if(mybutton.wasPressed()) {
-    mystring.soundOn();
+  mybutton->update();
+  if(mybutton->wasPressed()) {
+    mystring->soundOn();
+    mylowstring->soundOn();
   };
-  if(mybutton.wasReleased()) {
-    mystring.soundOff();
+  if(mybutton->wasReleased()) {
+    mystring->soundOff();
+    mylowstring->soundOff();
   };
 };
