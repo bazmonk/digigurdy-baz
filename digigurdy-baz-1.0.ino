@@ -107,9 +107,17 @@ class GurdyString {
     // soundOn() sends sound on this string's channel at its notes
     // optionally with an additional offset (e.g. a key being pressed)
     void soundOn(int my_offset = 0) {
-        usbMIDI.sendNoteOn(open_note + my_offset, midi_volume, midi_channel);
-        MIDI.sendNoteOn(open_note + my_offset, midi_volume, midi_channel);
-        note_playing = true;
+      note_being_played = open_note + my_offset;
+      usbMIDI.sendNoteOn(note_being_played, midi_volume, midi_channel);
+      MIDI.sendNoteOn(note_being_played, midi_volume, midi_channel);
+      note_playing = true;
+    };
+
+    void soundOff() {
+      usbMIDI.sendNoteOff(note_being_played, midi_volume, midi_channel);
+      MIDI.sendNoteOff(note_being_played, midi_volume, midi_channel);
+      note_playing = false;
+    };
 
 };
 
@@ -159,7 +167,7 @@ string NoteNum[] = {
 // the note offset, and the value is the corresponding teensy pin.
 // Modifying this adds extra keys.
 int pin_array[] = {-1, 2, 24, 3, 25, 26, 4, 27, 5, 28, 29, 6, 30,
-                   7, 31, 8, 32, 33, 18, 34, 19, 35, 20, 36, 37};
+                   7, 31, 8, 32, 33, 18, 34, 19, 35, 36, 20, 37};
 
 // See https://www.pjrc.com/teensy/td_libs_MIDI.html
 //
