@@ -1,5 +1,9 @@
-// XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  SONG LIST FOR DEMO MODE
-// XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Each block of 4
+// songs.h are the demo songs used by digigurdy-baz.
+//
+// This file should be in the same directory/folder as the main code when you
+// attempt to compile it and upload it to your digigurdy.
+
+// Each block of 4
 // characters represents a note. The first 2 digits are the MIDI code for the
 // note, e.g. G4 would be 67.  NOTE: Silence is represented by 00 The next 2
 // digits represent how long the note or silent pause sounds for on a scale of 1

@@ -1,5 +1,7 @@
-// Define my own bitmaps for the notes which will be displayed on the OLED
-// screen along with their position on staves
+// bitmaps.h are the various images and logos used by digigurdy-baz.
+//
+// This file should be in the same directory/folder as the main code when you
+// attempt to compile it and upload it to your digigurdy.
 
 // Main group for G/C tuning
 #define LOGO17_GLCD_HEIGHT 64 // G4
