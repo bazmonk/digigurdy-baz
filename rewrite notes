@@ -1,0 +1,79 @@
+HurdyGurdy class
+  initialization
+    midi setup stuff
+    create buttons based off map
+    create strings off map
+    create crank
+
+  button-pin map
+
+  display object
+  Draw-screen method
+  Draw bitmap wrapper
+
+  button/keyboxbutton object for each pin
+
+  crank object
+
+  string objects
+  keyclick object
+  buzz object
+
+  tuning routine
+
+Button class
+
+  Bounce object
+  draw logo
+
+  pinMode setup
+
+Crank Class
+
+  stddev initialization thing
+
+KeyboxButton subclass
+  child of Button
+
+  offset from open string
+
+  default note?
+  playNote method?
+
+Keyclick Class
+
+buzz Class
+
+string Class
+  base note
+
+
+Setup FUNCTION
+
+initialize HG object
+hg.tuning()
+hg.listen()
+
+
+
+HG object contains strings and buttons
+  HG object determines how buttons have changed (highest being pressed)
+    HG object remembers buttons between loop iterations!
+  HG object polls crank object and arcade button to determine if we're making a sound
+  HG object tells string objects to either turn off or that a button change has happened
+  HG object triggers keyclick sound if necessary.
+  HG object polls crank object to determine if we're buzzing.
+  HG object tells buzz object to buzz if necessary.
+  HG object checks for tuning menu request.
+  HG object draws the playing note bitmap on-screen.
+
+String object knows if it is playing a note or not.
+  String object knows what note offset it was last using or is using (but this isn't what tracks it, the HG object does that)
+  String object knows what its open note and midi channel
+  String object can be told to turn on with an offset, or turn off (it should know what to turn off)
+
+Buzz object
+  knows its channel
+  knows its note
+  buzzOn() - turns it on or stays on if already on
+  buzzOff() - guess what it does!
