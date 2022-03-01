@@ -174,6 +174,9 @@ class GurdyString {
     int midi_volume;        // 0-127, I'm using 56 everywhere right now
     int note_being_played;  // The note being sounded (base note + key offset)
                             // This is necessary to turn off notes before turning on new ones.
+
+    // This is a pointer to the MIDI object that powers the phsyical MIDI ports on the gurdy.
+    // usbMIDI shows up with Arduino library magic somehow and we don't need this for it.
     MidiInterface<SerialMIDI<HardwareSerial>> *MIDI_obj;
 
   public:
@@ -188,7 +191,7 @@ class GurdyString {
     // soundOn() sends sound on this string's channel at its notes
     // optionally with an additional offset (e.g. a key being pressed)
     //
-    // I do not know why I can just access usbMIDI here, but even when
+    // I DO NOT KNOW why I can just access usbMIDI here, but even when
     // creating MIDI_obj globally, I could not access MIDI_obj the same way.
     // Bringing in a pointer and working with MIDI_obj in this manner is
     // because of that.
@@ -207,6 +210,61 @@ class GurdyString {
 
 // class GurdyCrank controls the cranking mechanism.
 class GurdyCrank {
+  private:
+    int voltage_pin;
+    static const int num_samples = 500;  // This number is from the original code
+    int samples[num_samples];
+    int sample_sum;
+    float sample_mean;
+    float squared_sum;
+    float deviations;
+
+  public:
+    GurdyCrank(int v_pin) {
+      voltage_pin = v_pin;
+    }
+
+    // Crank detection - this comes from John's code.  We sample the voltage
+    // of the crank's voltage pin 500 times really quick (100/s for 5s).
+    // With that, we calculate the standard deviation of the results.
+    //
+    // My understanding is this: if the motor is connected and at rest, it
+    // will give a consistent very-low voltage.  If the pin is not connected
+    // to anything, its voltage will wander around.  If the results are less than
+    // 10 stDev from the mean, we consdier it detected.
+    void detect() {
+
+      sample_sum = 0;
+      sample_mean = 0;
+      squared_sum = 0;
+      deviations = 0;
+
+      // Serial.println("Detecting...");
+
+      // Read the crank 500 times real quick.
+      for (int i = 0; i < num_samples; i++) {
+        samples[i] = analogRead(voltage_pin);
+        sample_sum += samples[i];
+
+        delay(10);  // Why? Because John did and it worked.
+      };
+
+      // Get the average voltage
+      sample_mean = sample_sum / float(num_samples);
+
+      // We need the sum of the square of the difference of each value now.
+      for (int i = 0; i < num_samples; i++) {
+        squared_sum += pow((sample_mean - float(samples[i])), 2);
+      };
+
+      deviations = sqrt(squared_sum / float(num_samples));
+    };
+
+    bool isDetected() {
+      // Serial.print("deviations: ");
+      // Serial.println(deviations);
+      return (deviations < 10);
+    };
 };
 
 class Buzz {
@@ -328,8 +386,9 @@ MidiInterface<SerialMIDI<HardwareSerial>> *myMIDI = new MidiInterface<SerialMIDI
 // Declare the "keybox" and buttons.
 HurdyGurdy *mygurdy;
 ToggleButton *bigbutton;
+GurdyCrank *mycrank;
 
-// Note that there aren't special objects for melody, drone, even the keyclick.
+// Note that there aren't special classes for melody, drone, even the keyclick.
 // They are differentiated in the main loop():
 // * A melody string is one that changes with the keybox offset.
 // * A drone/trompette is one that doesn't change.
@@ -348,7 +407,16 @@ int myoffset;
 // Here we establish how the "gurdy" is setup, what strings to use, and we also
 // start the MIDI communication.
 void setup() {
+
+  //Serial.begin(38400); // For debugging
+  //delay(5000);
+  //Serial.println("Hello.");
+
   myMIDI->begin();
+
+  mycrank = new GurdyCrank(A1);
+  mycrank->detect();
+  bool maybe = mycrank->isDetected();
 
   mygurdy = new HurdyGurdy(pin_array, num_keys);
   bigbutton = new ToggleButton(39);
@@ -395,6 +463,6 @@ void loop() {
   } else if (!(bigbutton->toggleOn()) && bigbutton->wasPressed()) {
     mystring->soundOff();
     mylowstring->soundOff();
-    mykeyclick->soundOff();  // Not sure if this is necessary...
+    mykeyclick->soundOff();  // Not sure if this is necessary... but it feels right.
   };
 };
