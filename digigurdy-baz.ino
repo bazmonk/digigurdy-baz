@@ -111,7 +111,10 @@ class GurdyButton {
     };
 };
 
-// class ToggleButton is for the arcade-style drone on/off button
+// class ToggleButton adds a state toggle to the GurdyButton class
+//   This class is meant for buttons where:
+//   * Pressing and releasing once activates it.
+//   * Pressing and releasing again deactivates it.
 class ToggleButton: public GurdyButton {
   private:
     bool toggled;
@@ -137,7 +140,7 @@ class ToggleButton: public GurdyButton {
     };
 };
 
-// class KeyboxButton adds a note offset variable to the Button class.
+// class KeyboxButton adds a note offset variable to the GurdyButton class.
 //   This class is meant for use with the keybox keys, where:
 //   * Button type is press-on, release-off
 //   * Button has an offset that it raises notes to on a string.
@@ -161,10 +164,11 @@ class KeyboxButton: public GurdyButton {
 // GurdyString manages turning "strings" on and off and determining their note.
 class GurdyString {
   private:
-    int open_note;
-    int midi_channel;
-    int midi_volume;
-    int note_being_played;
+    int open_note;          // This string's base note
+    int midi_channel;       // This string's MIDI channel (1-8)
+    int midi_volume;        // 0-127, I'm using 56 everywhere right now
+    int note_being_played;  // The note being sounded (base note + key offset)
+                            // This is necessary to turn off notes before turning on new ones.
     MidiInterface<SerialMIDI<HardwareSerial>> *MIDI_obj;
 
   public:
@@ -206,9 +210,9 @@ class Buzz {
 class HurdyGurdy {
   private:
     KeyboxButton* keybox[num_keys];
-    int keybox_size;
-    int max_offset;
-    int prev_offset;
+    int keybox_size;         // How many keys are in the keybox
+    int max_offset;          // The currest highest key being pressed
+    int prev_offset;         // The highest key from last loop() cycle
     bool higher_key_pressed;
     bool lower_key_pressed;
 
@@ -274,6 +278,8 @@ class HurdyGurdy {
 
 // enum Note maps absolute note names to MIDI note numbers (middle C4 = 60),
 // which range from 0 to 127.
+//
+// This lets us specify MIDI notes by their name instead of having to refer to a table.
 enum Note {
   c_1, c_1s, d_1, d_1s, e_1, f_1, f_1s, g_1, g_1s, a_1, a_1s, b_1,
   c0, c0s, d0, d0s, e0, f0, f0s, g0, g0s, a0, a0s, b0,
@@ -290,6 +296,8 @@ enum Note {
 
 // string array NoteNum is the reverse of the above Note enum.  It maps MIDI note numbers to
 // screen-friendly note names.
+//
+// This lets us recall string names for printing on the screen without having to refer to a table.
 std::string NoteNum[] = {
   "C-1", "C-1#", "D-1", "D-1#", "E-1", "F-1", "F-1#", "G-1", "G-1#", "A-1", "A-1#", "B-1",
   "C0", "C0#", "D0", "D0#", "E0", "F0", "F0#", "G0", "G0#", "A0", "A0#", "B0",
@@ -309,21 +317,31 @@ SerialMIDI<HardwareSerial> mySerialMIDI(Serial1);
 // Create a new MidiInterface object using that serial interface
 MidiInterface<SerialMIDI<HardwareSerial>> *myMIDI = new MidiInterface<SerialMIDI<HardwareSerial>>((SerialMIDI<HardwareSerial>&)mySerialMIDI);
 
-// Just showing that it works.  Create a button object for pin 24 (this is the 1st bottom key)
+// Declare the "keybox" and buttons.
 HurdyGurdy *mygurdy;
 ToggleButton *bigbutton;
-// Create two strings
+
+// Note that there aren't special objects for melody, drone, even the keyclick.
+// They are differentiated in the main loop():
+// * A melody string is one that changes with the keybox offset.
+// * A drone/trompette is one that doesn't change.
+// * The keyclick "string" is just a drone that comes on and off at particular times.
+// * The buzz "string" is also just a drone that comes on/off at other particular times.
 GurdyString *mystring;
 GurdyString *mylowstring;
 GurdyString *mykeyclick;
 
+// The offset is given when we update the buttons each cycle.
+// Buttons should only be updated once per cycle.  So we need this in the main loop()
+// to refer to it several times.
 int myoffset;
 
+// Teensy and Arduino units start by running setup() once after powering up.
+// Here we establish how the "gurdy" is setup, what strings to use, and we also
+// start the MIDI communication.
 void setup() {
   myMIDI->begin();
 
-  // Testing setup: initialize the button and peg it to "key 1".
-  // Initialize two strings a perfect fifth apart.
   mygurdy = new HurdyGurdy(pin_array, num_keys);
   bigbutton = new ToggleButton(39);
   mystring = new GurdyString(1, Note(g4), myMIDI);
@@ -331,23 +349,30 @@ void setup() {
   mykeyclick = new GurdyString(6, Note(b5), myMIDI);
 };
 
+// The loop() function is repeatedly run by the Teensy unit after setup() completes.
+// This is the main logic of the program and defines how the strings, keys, click, buzz,
+// and buttons acutally behave during play.
 void loop() {
 
-  // Update the keys and toggle
+  // Update the keys, buttons, crank status...
   myoffset = mygurdy->getMaxOffset();
 
   bigbutton->update();
 
-  // If the drone state is toggled on
+  // NOTE:
+  // We don't actually do anything if nothing changed this cycle.  Strings stay on/off automatically,
+  // and the click sound goes away because of the sound in the soundfont, not the length of the
+  // MIDI note itself.  We just turn that on and off like the other strings.
+
+  // If the big button is toggled on or the crank is active (i.e., if we're making noise):
   if (bigbutton->toggleOn()) {
 
-    // If it came on this cycle, turn on the strings, no click even if a key is already pressed.
+    // Turn on the strings without a click if we just started cranking or hit the big button.
     if (bigbutton->wasPressed()) {
       mystring->soundOn(myoffset);
       mylowstring->soundOn(myoffset);
 
-    // If it didn't come on this cycle but a higher key is pressed, turn the old one off
-    // and turn the new one on, and make a click.
+    // Turn off the previous notes and turn on the new one with a click if new key this cycle.
     } else if (mygurdy->higherKeyPressed() || mygurdy->lowerKeyPressed()) {
       mystring->soundOff();
       mylowstring->soundOff();
