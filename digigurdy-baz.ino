@@ -219,9 +219,29 @@ class GurdyCrank {
     float squared_sum;
     float deviations;
 
+    static const int crank_interval = 100;  // I.e. we check every 100 loop()s
+    int crank_counter;
+    int crank_voltage;
+
+    static const int max_crank = 1500;
+    int crank_num;
+    static const int v_threshold = 25;
+    int decay;
+    bool currently_on;
+    bool came_on;
+    bool turned_off;
+
   public:
     GurdyCrank(int v_pin) {
       voltage_pin = v_pin;
+      pinMode(voltage_pin, INPUT);
+      crank_counter = 0;
+      crank_voltage = 0;
+      crank_num = 0;
+      decay = 0;
+      currently_on = false;
+      came_on = false;
+      turned_off = false;
     }
 
     // Crank detection - this comes from John's code.  We sample the voltage
@@ -232,6 +252,8 @@ class GurdyCrank {
     // will give a consistent very-low voltage.  If the pin is not connected
     // to anything, its voltage will wander around.  If the results are less than
     // 10 stDev from the mean, we consdier it detected.
+    //
+    // Moving the crank during the detection *does* throw it off.  Don't do that.
     void detect() {
 
       sample_sum = 0;
@@ -257,6 +279,7 @@ class GurdyCrank {
         squared_sum += pow((sample_mean - float(samples[i])), 2);
       };
 
+      // The square root of the average of *that* is the stardard devitaion.
       deviations = sqrt(squared_sum / float(num_samples));
     };
 
@@ -264,6 +287,71 @@ class GurdyCrank {
       // Serial.print("deviations: ");
       // Serial.println(deviations);
       return (deviations < 10);
+    };
+
+    // This runs every loop()
+    void lookForCranking() {
+
+      turned_off = false;
+
+      crank_counter += 1;
+      // Once every crank_interval checks, sample the crank.
+      if (crank_counter == crank_interval) {
+
+        Serial.print("crank_num is ");
+        Serial.println(crank_num);
+
+        crank_voltage = analogRead(voltage_pin);
+        crank_counter = 0;
+      };
+
+      // Every cycle, check if voltage is over the decay_threshold
+      if (crank_voltage > v_threshold) {
+        crank_num += 500;
+      } else {
+        crank_num -= 1;
+      }
+
+      // crank_num maxes out at max_crank
+      if (crank_num > max_crank) {
+        crank_num = max_crank;
+      };
+
+      if (crank_num < 0) {
+        crank_num = 0;
+      }
+
+      if (crank_num > 50) {
+        came_on = true;
+      } else {
+        currently_on = false;
+        turned_off = true;
+      };
+    };
+
+    bool wasEngaged() {
+      if (came_on && !currently_on) {
+        came_on = false;
+        currently_on = true;
+        return true;
+      } else if (came_on && currently_on) {
+        came_on = false;
+        return false;
+      } else {
+        return false;
+      };
+    };
+
+    bool currentlyOn() {
+      Serial.print("currently_on ");
+      Serial.println(currently_on);
+      return currently_on;
+    };
+
+    bool wasDisengaged() {
+      Serial.print("was_disengaged ");
+      Serial.println(turned_off);
+      return turned_off;
     };
 };
 
@@ -408,15 +496,14 @@ int myoffset;
 // start the MIDI communication.
 void setup() {
 
-  //Serial.begin(38400); // For debugging
-  //delay(5000);
-  //Serial.println("Hello.");
+  Serial.begin(38400); // For debugging
+  delay(5000);
+  Serial.println("Hello.");
 
   myMIDI->begin();
 
   mycrank = new GurdyCrank(A1);
   mycrank->detect();
-  bool maybe = mycrank->isDetected();
 
   mygurdy = new HurdyGurdy(pin_array, num_keys);
   bigbutton = new ToggleButton(39);
@@ -435,16 +522,18 @@ void loop() {
 
   bigbutton->update();
 
+  mycrank->lookForCranking();
+
   // NOTE:
   // We don't actually do anything if nothing changed this cycle.  Strings stay on/off automatically,
   // and the click sound goes away because of the sound in the soundfont, not the length of the
   // MIDI note itself.  We just turn that on and off like the other strings.
 
   // If the big button is toggled on or the crank is active (i.e., if we're making noise):
-  if (bigbutton->toggleOn()) {
+  if (bigbutton->toggleOn() || mycrank->currentlyOn()) {
 
     // Turn on the strings without a click if we just started cranking or hit the big button.
-    if (bigbutton->wasPressed()) {
+    if (bigbutton->wasPressed() || mycrank->wasEngaged()) {
       mystring->soundOn(myoffset);
       mylowstring->soundOn(myoffset);
 
@@ -459,10 +548,22 @@ void loop() {
       mykeyclick->soundOn();
     };
 
-  // If the toggle is now off and we just turned it off this loop cycle, turn the sound off.
-  } else if (!(bigbutton->toggleOn()) && bigbutton->wasPressed()) {
+  // If the toggle came off and the crank is off, turn off sound.
+  } else if (!bigbutton->toggleOn() && bigbutton->wasPressed() && !mycrank->currentlyOn()) {
     mystring->soundOff();
     mylowstring->soundOff();
     mykeyclick->soundOff();  // Not sure if this is necessary... but it feels right.
+
+  // If the crank stops and the toggle was off, turn off sound.
+  } else if (mycrank->wasDisengaged() && !bigbutton->toggleOn()) {
+    mystring->soundOff();
+    mylowstring->soundOff();
+    mykeyclick->soundOff();
   };
+
+  // Apparently we need to do this to discard incoming data.
+  while (myMIDI->read()) {
+  }
+  while (usbMIDI.read()) {
+  }
 };
