@@ -13,14 +13,18 @@
 #define WHITE_OLED
 //#define BLUE_OLED
 
-// Eventually I'll move this to a header, but the array index here represents
-// the note offset, and the value is the corresponding teensy pin.
-// Modifying this adds extra keys.
-
-// NOTE: There's no key that produces 0 offset, so the first element is bogus.
-// It gets skipped entirely.
+// Eventually I'll move this to a header, but the pin_array[] index here represents
+// the MIDI note offset, and the value is the corresponding teensy pin.
+// This defines which physical keys are part of the "keybox" and what order they're in.
+//
+// NOTE: There's no key that produces 0 offset (an "open" string),
+// so the first element is bogus.  It gets skipped entirely.
 int pin_array[] = {-1, 2, 24, 3, 25, 26, 4, 27, 5, 28, 29, 6, 30,
                    7, 31, 8, 32, 33, 18, 34, 19, 35, 36, 20, 37};
+
+// This is literally just the size of the above array minus one.  I need this as a const to
+// declare the KeyboxButton array later on... or I just don't know enough C++ to know how to
+// *not* need it ;-)
 const int num_keys = 24;
 
 // ##################
@@ -162,6 +166,7 @@ class KeyboxButton: public GurdyButton {
 };
 
 // GurdyString manages turning "strings" on and off and determining their note.
+// It abstracts the interactions with the MIDI layer.
 class GurdyString {
   private:
     int open_note;          // This string's base note
@@ -207,6 +212,9 @@ class GurdyCrank {
 class Buzz {
 };
 
+// class HurdyGurdy is basically a virtual keybox for buttons that control
+// notes.  It manages updating and detecting the button actions and determines
+// ultimately which note the "keybox" is producing.
 class HurdyGurdy {
   private:
     KeyboxButton* keybox[num_keys];
