@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v0.3
+// VERSION: v0.5
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
 //   https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy
@@ -19,7 +19,7 @@
 
 // NOTE: There's no key that produces 0 offset, so the first element is bogus.
 // It gets skipped entirely.
-const int pin_array[] = {-1, 2, 24, 3, 25, 26, 4, 27, 5, 28, 29, 6, 30,
+int pin_array[] = {-1, 2, 24, 3, 25, 26, 4, 27, 5, 28, 29, 6, 30,
                    7, 31, 8, 32, 33, 18, 34, 19, 35, 36, 20, 37};
 const int num_keys = 24;
 
@@ -198,10 +198,6 @@ class GurdyString {
 
 // class GurdyCrank controls the cranking mechanism.
 class GurdyCrank {
-
-};
-
-class KeyClick {
 };
 
 class Buzz {
@@ -220,11 +216,10 @@ class HurdyGurdy {
     HurdyGurdy(int pin_arr[], int key_size) {
       keybox_size = key_size;
       max_offset = 0;
+
+      // Run through the array from the top of this file and create all the keyboxbutton
+      // objects
       for(int x = 1; x < key_size + 1; x++) {
-        Serial.print("making keybox object, pin ");
-        Serial.print(pin_arr[x]);
-        Serial.print(", offset ");
-        Serial.println(x);
         keybox[x-1] = new KeyboxButton(pin_arr[x], x);
       };
     };
@@ -309,15 +304,6 @@ std::string NoteNum[] = {
   "C9", "C9#", "D9", "D9#", "E9", "F9", "F9#", "G9"
 };
 
-// See https://www.pjrc.com/teensy/td_libs_MIDI.html
-//
-// Create the MIDI instance here.
-// This used to be `MIDI_CREATE_INSTANCE(HardwareSerial, Serial1, MIDI);`, which would
-// create a MidiInterface object name "MIDI" for you.  Doing it this way gives me pointer access
-// to the object and lets me pass it to the GurdyString objects later.
-//
-// I am just doing what MIDI_CREATE_INSTANCE does behind the scenes, but not behind the scenes.
-
 // Create the serial interface object
 SerialMIDI<HardwareSerial> mySerialMIDI(Serial1);
 // Create a new MidiInterface object using that serial interface
@@ -329,16 +315,12 @@ ToggleButton *bigbutton;
 // Create two strings
 GurdyString *mystring;
 GurdyString *mylowstring;
+GurdyString *mykeyclick;
 
 int myoffset;
 
 void setup() {
   myMIDI->begin();
-
-  delay(5000);
-
-  Serial.begin(9600);
-  Serial.println("Debug output Initialized");
 
   // Testing setup: initialize the button and peg it to "key 1".
   // Initialize two strings a perfect fifth apart.
@@ -346,6 +328,7 @@ void setup() {
   bigbutton = new ToggleButton(39);
   mystring = new GurdyString(1, Note(g4), myMIDI);
   mylowstring = new GurdyString(2, Note(c4), myMIDI);
+  mykeyclick = new GurdyString(6, Note(b5), myMIDI);
 };
 
 void loop() {
@@ -358,32 +341,27 @@ void loop() {
   // If the drone state is toggled on
   if (bigbutton->toggleOn()) {
 
-    // If it came on this cycle, turn on the strings
+    // If it came on this cycle, turn on the strings, no click even if a key is already pressed.
     if (bigbutton->wasPressed()) {
       mystring->soundOn(myoffset);
       mylowstring->soundOn(myoffset);
 
     // If it didn't come on this cycle but a higher key is pressed, turn the old one off
-    // and turn the new one on.
-    } else if (mygurdy->higherKeyPressed()) {
+    // and turn the new one on, and make a click.
+    } else if (mygurdy->higherKeyPressed() || mygurdy->lowerKeyPressed()) {
       mystring->soundOff();
       mylowstring->soundOff();
+      mykeyclick->soundOff();
 
       mystring->soundOn(myoffset);
       mylowstring->soundOn(myoffset);
-
-      // A CLICK WOULD GO HERE
-    } else if (mygurdy->lowerKeyPressed()) {
-      mystring->soundOff();
-      mylowstring->soundOff();
-
-      mystring->soundOn(myoffset);
-      mylowstring->soundOn(myoffset);
+      mykeyclick->soundOn();
     };
 
   // If the toggle is now off and we just turned it off this loop cycle, turn the sound off.
   } else if (!(bigbutton->toggleOn()) && bigbutton->wasPressed()) {
     mystring->soundOff();
     mylowstring->soundOff();
+    mykeyclick->soundOff();  // Not sure if this is necessary...
   };
 };
