@@ -13,6 +13,16 @@
 #define WHITE_OLED
 //#define BLUE_OLED
 
+// Eventually I'll move this to a header, but the array index here represents
+// the note offset, and the value is the corresponding teensy pin.
+// Modifying this adds extra keys.
+
+// NOTE: There's no key that produces 0 offset, so the first element is bogus.
+// It gets skipped entirely.
+const int pin_array[] = {-1, 2, 24, 3, 25, 26, 4, 27, 5, 28, 29, 6, 30,
+                   7, 31, 8, 32, 33, 18, 34, 19, 35, 36, 20, 37};
+const int num_keys = 24;
+
 // ##################
 // END CONFIG SECTION
 // ##################
@@ -47,23 +57,16 @@ using namespace MIDI_NAMESPACE;
 // CLASS DEFINITIONS
 // #################
 
-class HurdyGurdy {
-  protected:
-
-  public:
-    HurdyGurdy(int pin_arr[]) {
-    };
-
-};
-
-//  Button objects abstract the physical buttons.
+// Button objects abstract the physical buttons.
+//   This class is for generic buttons like the octave/capo ones, which are
+//   press-on, release-off but otherwise generic in purpose.
 class GurdyButton {
   protected:
     Bounce* bounce_obj;
+    bool being_pressed;
   public:
 
-    // Button() accepts two integers:
-    //   pin - the teensy pin that goes with this button
+    // my_pin corresponds to the physical Teensy pin.
     GurdyButton(int my_pin) {
 
       // The 5 is 5ms wait for events to complete.
@@ -74,25 +77,41 @@ class GurdyButton {
       // I'm taking a guess that INPUT_PULLUP is what I want to use here but I think so.
       // Originally it was using DirectRead/Write and INPUT.
       pinMode(my_pin, INPUT_PULLUP);
+
+      being_pressed = false;
     };
 
     // Bounce objects should only be update()-ed once per loop(),
     // so I'm not putting it in wasPressed()/wasReleased().
     void update() {
+
       bounce_obj->update();
+
+      // If button was pressed or released this cycle, record that.
+      if (bounce_obj->fallingEdge()) {
+        being_pressed = true;
+      } else if (bounce_obj->risingEdge()) {
+        being_pressed = false;
+      };
     };
 
+    // This returns true if the button is being pressed.
+    bool beingPressed() {
+      return being_pressed;
+    };
+
+    // This returns true ONLY if the button was pressed this particular loop cycle.
     bool wasPressed() {
       return bounce_obj->fallingEdge();
-    }
+    };
 
+    // This returns true ONLY if the button was released this particular loop cycle.
     bool wasReleased() {
       return bounce_obj->risingEdge();
-    }
+    };
 };
 
-//class ToggleButton is for the arcade-style drone on/off button
-// It extends the GurdyButton class to keep track of being toggled.
+// class ToggleButton is for the arcade-style drone on/off button
 class ToggleButton: public GurdyButton {
   private:
     bool toggled;
@@ -107,7 +126,7 @@ class ToggleButton: public GurdyButton {
     void update() {
       bounce_obj->update();
 
-      // We'll only look at the downpress to register the event.
+      // We'll only look at the downpress to register the toggle.
       if(bounce_obj->fallingEdge()) {
         toggled = !toggled;
       };
@@ -119,6 +138,9 @@ class ToggleButton: public GurdyButton {
 };
 
 // class KeyboxButton adds a note offset variable to the Button class.
+//   This class is meant for use with the keybox keys, where:
+//   * Button type is press-on, release-off
+//   * Button has an offset that it raises notes to on a string.
 class KeyboxButton: public GurdyButton {
   private:
     int note_offset;
@@ -132,7 +154,7 @@ class KeyboxButton: public GurdyButton {
 
     int getOffset() {
       return note_offset;
-    }
+    };
 
 };
 
@@ -152,7 +174,7 @@ class GurdyString {
       midi_volume = my_vol;
       note_being_played = open_note;
       MIDI_obj = my_MIDI_obj;
-    }
+    };
 
     // soundOn() sends sound on this string's channel at its notes
     // optionally with an additional offset (e.g. a key being pressed)
@@ -183,6 +205,72 @@ class KeyClick {
 };
 
 class Buzz {
+};
+
+class HurdyGurdy {
+  private:
+    KeyboxButton* keybox[num_keys];
+    int keybox_size;
+    int max_offset;
+    int prev_offset;
+    bool higher_key_pressed;
+    bool lower_key_pressed;
+
+  public:
+    HurdyGurdy(int pin_arr[], int key_size) {
+      keybox_size = key_size;
+      max_offset = 0;
+      for(int x = 1; x < key_size + 1; x++) {
+        Serial.print("making keybox object, pin ");
+        Serial.print(pin_arr[x]);
+        Serial.print(", offset ");
+        Serial.println(x);
+        keybox[x-1] = new KeyboxButton(pin_arr[x], x);
+      };
+    };
+
+    // This method both updates all the keys, and returns the highest offset/notes
+    // being pressed this cycle.
+    int getMaxOffset() {
+
+      higher_key_pressed = false;
+      lower_key_pressed = false;
+
+      // Save the last highest key
+      prev_offset = max_offset;
+      max_offset = 0;
+
+      // Look at each key in order
+      for(int x = 0; x < keybox_size; x++) {
+        // Update the key
+        keybox[x]->update();
+
+        // if the key is being pressed, record that key's offset.  Array is in order,
+        // so at the end we should have the max_offset.
+        if (keybox[x]->beingPressed()) {
+          max_offset = keybox[x]->getOffset();
+        };
+      };
+
+      if (max_offset > prev_offset) {
+        higher_key_pressed = true;
+      };
+
+      if (max_offset < prev_offset) {
+        lower_key_pressed = true;
+      };
+
+      return max_offset;
+    };
+
+    bool higherKeyPressed() {
+      return higher_key_pressed;
+    };
+
+    bool lowerKeyPressed() {
+      return lower_key_pressed;
+    };
+
 };
 
 // ################
@@ -221,12 +309,6 @@ std::string NoteNum[] = {
   "C9", "C9#", "D9", "D9#", "E9", "F9", "F9#", "G9"
 };
 
-// Eventually I'll move this to a header, but the array index here represents
-// the note offset, and the value is the corresponding teensy pin.
-// Modifying this adds extra keys.
-int pin_array[] = {-1, 2, 24, 3, 25, 26, 4, 27, 5, 28, 29, 6, 30,
-                   7, 31, 8, 32, 33, 18, 34, 19, 35, 36, 20, 37};
-
 // See https://www.pjrc.com/teensy/td_libs_MIDI.html
 //
 // Create the MIDI instance here.
@@ -242,42 +324,65 @@ SerialMIDI<HardwareSerial> mySerialMIDI(Serial1);
 MidiInterface<SerialMIDI<HardwareSerial>> *myMIDI = new MidiInterface<SerialMIDI<HardwareSerial>>((SerialMIDI<HardwareSerial>&)mySerialMIDI);
 
 // Just showing that it works.  Create a button object for pin 24 (this is the 1st bottom key)
-GurdyButton *mybutton;
+HurdyGurdy *mygurdy;
 ToggleButton *bigbutton;
 // Create two strings
 GurdyString *mystring;
 GurdyString *mylowstring;
-GurdyString *mydrone;
+
+int myoffset;
 
 void setup() {
+  myMIDI->begin();
+
+  delay(5000);
+
+  Serial.begin(9600);
+  Serial.println("Debug output Initialized");
+
   // Testing setup: initialize the button and peg it to "key 1".
   // Initialize two strings a perfect fifth apart.
-  mybutton = new GurdyButton(24);
+  mygurdy = new HurdyGurdy(pin_array, num_keys);
   bigbutton = new ToggleButton(39);
   mystring = new GurdyString(1, Note(g4), myMIDI);
   mylowstring = new GurdyString(2, Note(c4), myMIDI);
-  mydrone = new GurdyString(3, Note(g3), myMIDI);
-
-  myMIDI->begin();
 };
 
 void loop() {
 
-  // Just for testing: make the note when the button is pressed.
-  mybutton->update();
+  // Update the keys and toggle
+  myoffset = mygurdy->getMaxOffset();
+
   bigbutton->update();
 
-  if(bigbutton->toggleOn() && bigbutton->wasPressed()) {
-    mydrone->soundOn();
-  } else if (!(bigbutton->toggleOn()) && bigbutton->wasPressed()) {
-    mydrone->soundOff();
-  };
+  // If the drone state is toggled on
+  if (bigbutton->toggleOn()) {
 
-  if(mybutton->wasPressed()) {
-    mystring->soundOn();
-    mylowstring->soundOn();
-  };
-  if(mybutton->wasReleased()) {
+    // If it came on this cycle, turn on the strings
+    if (bigbutton->wasPressed()) {
+      mystring->soundOn(myoffset);
+      mylowstring->soundOn(myoffset);
+
+    // If it didn't come on this cycle but a higher key is pressed, turn the old one off
+    // and turn the new one on.
+    } else if (mygurdy->higherKeyPressed()) {
+      mystring->soundOff();
+      mylowstring->soundOff();
+
+      mystring->soundOn(myoffset);
+      mylowstring->soundOn(myoffset);
+
+      // A CLICK WOULD GO HERE
+    } else if (mygurdy->lowerKeyPressed()) {
+      mystring->soundOff();
+      mylowstring->soundOff();
+
+      mystring->soundOn(myoffset);
+      mylowstring->soundOn(myoffset);
+    };
+
+  // If the toggle is now off and we just turned it off this loop cycle, turn the sound off.
+  } else if (!(bigbutton->toggleOn()) && bigbutton->wasPressed()) {
     mystring->soundOff();
     mylowstring->soundOff();
   };
