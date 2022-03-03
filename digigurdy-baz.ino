@@ -223,25 +223,34 @@ class GurdyCrank {
     int crank_counter;
     int crank_voltage;
 
-    static const int max_crank = 1500;
-    int crank_num;
+    // The original code uses a technique where a counter is incremented by a
+    // large amount up to a max amount when voltage is detected.  When voltage
+    // isn't detected, the counter decays more slowly (about a 5th as quickly).
+    // This "smooths" over momentary fluctuations in the analog voltage from
+    // the crank.  I'm using the same approach here.  To keep things straight,
+    // I'm calling this smoothed value the "spin" of the crank.
+    static const int max_spin = 3000;
+    static const int spin_weight = 500;
+    static const int spin_threshold = 50; // spin over 50 makes sound.
+    int spin;
+    bool started_spinning;
+    bool stopped_spinning;
+    bool is_spinning;
     static const int v_threshold = 25;
-    int decay;
-    bool currently_on;
-    bool came_on;
-    bool turned_off;
 
   public:
+
+    // v_pin is the voltage pin of the crank.  This is A1 on a normal didigurdy.
     GurdyCrank(int v_pin) {
+
       voltage_pin = v_pin;
       pinMode(voltage_pin, INPUT);
       crank_counter = 0;
       crank_voltage = 0;
-      crank_num = 0;
-      decay = 0;
-      currently_on = false;
-      came_on = false;
-      turned_off = false;
+      spin = 0;
+      started_spinning = false;
+      stopped_spinning = false;
+      is_spinning = false;
     }
 
     // Crank detection - this comes from John's code.  We sample the voltage
@@ -289,69 +298,75 @@ class GurdyCrank {
       return (deviations < 10);
     };
 
-    // This runs every loop()
-    void lookForCranking() {
+    // This is meant to be run every loop().
+    void update() {
 
-      turned_off = false;
-
+      // Every 100 loops() (I haven't measured this, but this is several times
+      // per second), we update the crank_voltage.
       crank_counter += 1;
-      // Once every crank_interval checks, sample the crank.
       if (crank_counter == crank_interval) {
-
-        Serial.print("crank_num is ");
-        Serial.println(crank_num);
-
-        crank_voltage = analogRead(voltage_pin);
         crank_counter = 0;
+        crank_voltage = analogRead(voltage_pin);
       };
 
-      // Every cycle, check if voltage is over the decay_threshold
+      // Based on that voltage, we either bump up the spin by the spin_weight,
+      // or we let it decay based on the voltage.
       if (crank_voltage > v_threshold) {
-        crank_num += 500;
+        spin += spin_weight;
+        if (spin > max_spin) {
+          spin = max_spin;
+        };
       } else {
-        crank_num -= 1;
-      }
-
-      // crank_num maxes out at max_crank
-      if (crank_num > max_crank) {
-        crank_num = max_crank;
+        spin -= 1;
+        if (spin < 0) {
+          spin = 0;
+        };
       };
 
-      if (crank_num < 0) {
-        crank_num = 0;
-      }
+      // The crank is considered spinning if the spin is over spin_threshold.
+      if (spin > spin_threshold) {
 
-      if (crank_num > 50) {
-        came_on = true;
+        // If we weren't spinning before this, we just started.
+        if (!is_spinning) {
+          started_spinning = true;
+        };
+
+        // If we were already spinning and started_spinning last cycle,
+        // we didn't just start spinning anymore.
+        if (started_spinning && is_spinning) {
+          started_spinning = false;
+        };
+
+        // Now that we checked, we can update this...
+        is_spinning = true;
+
       } else {
-        currently_on = false;
-        turned_off = true;
+
+        // If we were spinning before, we just stopped.
+        if (is_spinning) {
+          stopped_spinning = true;
+        };
+
+        // If we stopped spinning last cycle, we didn't just stop
+        // anymore.
+        if (stopped_spinning && !is_spinning) {
+          stopped_spinning = false;
+        };
+
+        is_spinning = false;
       };
     };
 
-    bool wasEngaged() {
-      if (came_on && !currently_on) {
-        came_on = false;
-        currently_on = true;
-        return true;
-      } else if (came_on && currently_on) {
-        came_on = false;
-        return false;
-      } else {
-        return false;
-      };
+    bool startedSpinning() {
+      return started_spinning;
     };
 
-    bool currentlyOn() {
-      Serial.print("currently_on ");
-      Serial.println(currently_on);
-      return currently_on;
+    bool stoppedSpinning() {
+      return stopped_spinning;
     };
 
-    bool wasDisengaged() {
-      Serial.print("was_disengaged ");
-      Serial.println(turned_off);
-      return turned_off;
+    bool isSpinning() {
+      return is_spinning;
     };
 };
 
@@ -508,7 +523,7 @@ void setup() {
   mygurdy = new HurdyGurdy(pin_array, num_keys);
   bigbutton = new ToggleButton(39);
   mystring = new GurdyString(1, Note(g4), myMIDI);
-  mylowstring = new GurdyString(2, Note(c4), myMIDI);
+  mylowstring = new GurdyString(2, Note(g3), myMIDI);
   mykeyclick = new GurdyString(6, Note(b5), myMIDI);
 };
 
@@ -522,7 +537,7 @@ void loop() {
 
   bigbutton->update();
 
-  mycrank->lookForCranking();
+  mycrank->update();
 
   // NOTE:
   // We don't actually do anything if nothing changed this cycle.  Strings stay on/off automatically,
@@ -530,10 +545,16 @@ void loop() {
   // MIDI note itself.  We just turn that on and off like the other strings.
 
   // If the big button is toggled on or the crank is active (i.e., if we're making noise):
-  if (bigbutton->toggleOn() || mycrank->currentlyOn()) {
+  if (bigbutton->toggleOn() || mycrank->isSpinning()) {
 
-    // Turn on the strings without a click if we just started cranking or hit the big button.
-    if (bigbutton->wasPressed() || mycrank->wasEngaged()) {
+    // Turn on the strings without a click if:
+    // * We just hit the button and we weren't cranking, OR
+    // * We just started cranking and we hadn't hit the button.
+    if (bigbutton->wasPressed() && !mycrank->isSpinning()) {
+      mystring->soundOn(myoffset);
+      mylowstring->soundOn(myoffset);
+
+    } else if (mycrank->startedSpinning() && !bigbutton->toggleOn()) {
       mystring->soundOn(myoffset);
       mylowstring->soundOn(myoffset);
 
@@ -549,13 +570,13 @@ void loop() {
     };
 
   // If the toggle came off and the crank is off, turn off sound.
-  } else if (!bigbutton->toggleOn() && bigbutton->wasPressed() && !mycrank->currentlyOn()) {
+  } else if (bigbutton->wasReleased() && !mycrank->isSpinning()) {
     mystring->soundOff();
     mylowstring->soundOff();
     mykeyclick->soundOff();  // Not sure if this is necessary... but it feels right.
 
   // If the crank stops and the toggle was off, turn off sound.
-  } else if (mycrank->wasDisengaged() && !bigbutton->toggleOn()) {
+  } else if (mycrank->stoppedSpinning() && !bigbutton->toggleOn()) {
     mystring->soundOff();
     mylowstring->soundOff();
     mykeyclick->soundOff();
