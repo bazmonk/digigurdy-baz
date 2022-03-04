@@ -208,7 +208,41 @@ class GurdyString {
 
 };
 
-// class GurdyCrank controls the cranking mechanism.
+// BuzzKnob manages the potentiometer knob that adjusts the buzzing threshold.
+// The GurdyCrank class below uses it to determine when buzzing happens.
+class BuzzKnob {
+  private:
+    int voltage_pin;
+    static const int poll_interval = 20000; // so it doesn't change too often
+    int poll_counter;
+    int knob_voltage;
+
+  public:
+    BuzzKnob(int v_pin) {
+      voltage_pin = v_pin;
+      pinMode(voltage_pin, INPUT);
+      poll_counter = 0;
+      knob_voltage = 0;
+    };
+
+    // This should be run every loop() during play.
+    // Reads the knob voltage every poll_interval cycles.
+    void update() {
+      poll_counter += 1;
+      if (poll_counter == poll_interval) {
+        poll_counter = 0;
+        knob_voltage = analogRead(voltage_pin);
+      };
+    };
+
+    // Returns an adjusted voltage value suitible
+    // for comparing with the crank's.
+    float getVoltage() {
+      return (float)(knob_voltage / 3);
+    };
+};
+
+// class GurdyCrank controls the cranking mechanism, including the buzz triggers.
 class GurdyCrank {
   private:
     int voltage_pin;
@@ -238,10 +272,17 @@ class GurdyCrank {
     bool is_spinning;
     static const int v_threshold = 25;
 
+    BuzzKnob* myKnob;
+    bool started_buzzing;
+    bool stopped_buzzing;
+    bool is_buzzing;
+
   public:
 
     // v_pin is the voltage pin of the crank.  This is A1 on a normal didigurdy.
-    GurdyCrank(int v_pin) {
+    GurdyCrank(int v_pin, int buzz_pin) {
+
+      myKnob = new BuzzKnob(buzz_pin);
 
       voltage_pin = v_pin;
       pinMode(voltage_pin, INPUT);
@@ -251,7 +292,11 @@ class GurdyCrank {
       started_spinning = false;
       stopped_spinning = false;
       is_spinning = false;
-    }
+
+      started_buzzing = false;
+      stopped_buzzing = false;
+      is_buzzing = false;
+    };
 
     // Crank detection - this comes from John's code.  We sample the voltage
     // of the crank's voltage pin 500 times really quick (100/s for 5s).
@@ -298,8 +343,46 @@ class GurdyCrank {
       return (deviations < 10);
     };
 
+    void refreshBuzz() {
+      if (crank_voltage > myKnob->getVoltage()) {
+
+        // If we weren't buzzing before this, we just started.
+        if (!is_buzzing) {
+          started_buzzing = true;
+        };
+
+        // If we were already buzzing and started_buzzing last cycle,
+        // we didn't just start buzzing anymore.
+        if (started_buzzing && is_buzzing) {
+          started_buzzing = false;
+        };
+
+        // Now that we checked, we can update this...
+        is_buzzing = true;
+
+      } else {
+
+        // If we were buzzing before, we just stopped.
+        if (is_buzzing) {
+          stopped_buzzing = true;
+        };
+
+        // If we stopped buzzing last cycle, we didn't just stop
+        // anymore.
+        if (stopped_buzzing && !is_buzzing) {
+          stopped_buzzing = false;
+        };
+
+        is_buzzing = false;
+      };
+    };
+
     // This is meant to be run every loop().
     void update() {
+
+      // Update the knob first.
+      myKnob->update();
+      refreshBuzz();
 
       // Every 100 loops() (I haven't measured this, but this is several times
       // per second), we update the crank_voltage.
@@ -368,9 +451,14 @@ class GurdyCrank {
     bool isSpinning() {
       return is_spinning;
     };
-};
 
-class Buzz {
+    bool startedBuzzing() {
+      return started_buzzing;
+    };
+
+    bool stoppedBuzzing() {
+      return stopped_buzzing;
+    };
 };
 
 // class HurdyGurdy is basically a virtual keybox for buttons that control
@@ -502,6 +590,7 @@ GurdyString *mylowstring;
 GurdyString *mykeyclick;
 GurdyString *mytromp;
 GurdyString *mydrone;
+GurdyString *mybuzz;
 
 // The offset is given when we update the buttons each cycle.
 // Buttons should only be updated once per cycle.  So we need this in the main loop()
@@ -519,7 +608,7 @@ void setup() {
 
   myMIDI->begin();
 
-  mycrank = new GurdyCrank(A1);
+  mycrank = new GurdyCrank(A1, A2);
   mycrank->detect();
 
   mygurdy = new HurdyGurdy(pin_array, num_keys);
@@ -529,6 +618,7 @@ void setup() {
   mytromp = new GurdyString(3, Note(c3), myMIDI);
   mydrone = new GurdyString(4, Note(c2), myMIDI);
   mykeyclick = new GurdyString(6, Note(b5), myMIDI);
+  mybuzz = new GurdyString(5,Note(c3), myMIDI);
 };
 
 // The loop() function is repeatedly run by the Teensy unit after setup() completes.
@@ -578,6 +668,15 @@ void loop() {
       mykeyclick->soundOn();
     };
 
+    // Whenever we're playing, check for buzz.
+    if (mycrank->startedBuzzing()) {
+      mybuzz->soundOn();
+    };
+
+    if (mycrank->stoppedBuzzing()) {
+      mybuzz->soundOff();
+    };
+
   // If the toggle came off and the crank is off, turn off sound.
   } else if (bigbutton->wasReleased() && !mycrank->isSpinning()) {
     mystring->soundOff();
@@ -585,6 +684,7 @@ void loop() {
     mykeyclick->soundOff();  // Not sure if this is necessary... but it feels right.
     mytromp->soundOff();
     mydrone->soundOff();
+    mybuzz->soundOff();
 
   // If the crank stops and the toggle was off, turn off sound.
   } else if (mycrank->stoppedSpinning() && !bigbutton->toggleOn()) {
@@ -593,6 +693,7 @@ void loop() {
     mykeyclick->soundOff();
     mytromp->soundOff();
     mydrone->soundOff();
+    mybuzz->soundOff();
   };
 
   // Apparently we need to do this to discard incoming data.
