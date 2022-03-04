@@ -592,6 +592,12 @@ GurdyString *mytromp;
 GurdyString *mydrone;
 GurdyString *mybuzz;
 
+GurdyButton *capup;
+GurdyButton *capdown;
+
+const int max_capos = 12;
+int capo_offset;
+
 // The offset is given when we update the buttons each cycle.
 // Buttons should only be updated once per cycle.  So we need this in the main loop()
 // to refer to it several times.
@@ -619,6 +625,10 @@ void setup() {
   mydrone = new GurdyString(4, Note(c2), myMIDI);
   mykeyclick = new GurdyString(6, Note(b5), myMIDI);
   mybuzz = new GurdyString(5,Note(c3), myMIDI);
+
+  capup = new GurdyButton(21);
+  capdown = new GurdyButton(22);
+  capo_offset = 0;
 };
 
 // The loop() function is repeatedly run by the Teensy unit after setup() completes.
@@ -626,12 +636,21 @@ void setup() {
 // and buttons acutally behave during play.
 void loop() {
 
-  // Update the keys, buttons, crank status...
+  // Update the keys, buttons, crank status (including the buzz knob)
   myoffset = mygurdy->getMaxOffset();
-
   bigbutton->update();
-
   mycrank->update();
+  capup->update();
+  capdown->update();
+
+  // As long as we're in playing mode--acutally playing or not--
+  // check for a capo shift.
+  if (capup->wasPressed() && (capo_offset < max_capos)) {
+    capo_offset += 1;
+  };
+  if (capdown->wasPressed() && (max_capos + capo_offset > 0)) {
+    capo_offset -= 1;
+  };
 
   // NOTE:
   // We don't actually do anything if nothing changed this cycle.  Strings stay on/off automatically,
@@ -645,16 +664,16 @@ void loop() {
     // * We just hit the button and we weren't cranking, OR
     // * We just started cranking and we hadn't hit the button.
     if (bigbutton->wasPressed() && !mycrank->isSpinning()) {
-      mystring->soundOn(myoffset);
-      mylowstring->soundOn(myoffset);
-      mytromp->soundOn();
-      mydrone->soundOn();
+      mystring->soundOn(myoffset + capo_offset);
+      mylowstring->soundOn(myoffset + capo_offset);
+      mytromp->soundOn(capo_offset);
+      mydrone->soundOn(capo_offset);
 
     } else if (mycrank->startedSpinning() && !bigbutton->toggleOn()) {
-      mystring->soundOn(myoffset);
-      mylowstring->soundOn(myoffset);
-      mytromp->soundOn();
-      mydrone->soundOn();
+      mystring->soundOn(myoffset + capo_offset);
+      mylowstring->soundOn(myoffset + capo_offset);
+      mytromp->soundOn(capo_offset);
+      mydrone->soundOn(capo_offset);
 
     // Turn off the previous notes and turn on the new one with a click if new key this cycle.
     // NOTE: I'm not touching the drone/trompette.  Just leave it on if it's a key change.
@@ -663,14 +682,14 @@ void loop() {
       mylowstring->soundOff();
       mykeyclick->soundOff();
 
-      mystring->soundOn(myoffset);
-      mylowstring->soundOn(myoffset);
-      mykeyclick->soundOn();
+      mystring->soundOn(myoffset + capo_offset);
+      mylowstring->soundOn(myoffset + capo_offset);
+      mykeyclick->soundOn(capo_offset);
     };
 
     // Whenever we're playing, check for buzz.
     if (mycrank->startedBuzzing()) {
-      mybuzz->soundOn();
+      mybuzz->soundOn(capo_offset);
     };
 
     if (mycrank->stoppedBuzzing()) {
