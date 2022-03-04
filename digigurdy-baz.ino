@@ -500,6 +500,8 @@ GurdyCrank *mycrank;
 GurdyString *mystring;
 GurdyString *mylowstring;
 GurdyString *mykeyclick;
+GurdyString *mytromp;
+GurdyString *mydrone;
 
 // The offset is given when we update the buttons each cycle.
 // Buttons should only be updated once per cycle.  So we need this in the main loop()
@@ -524,6 +526,8 @@ void setup() {
   bigbutton = new ToggleButton(39);
   mystring = new GurdyString(1, Note(g4), myMIDI);
   mylowstring = new GurdyString(2, Note(g3), myMIDI);
+  mytromp = new GurdyString(3, Note(c3), myMIDI);
+  mydrone = new GurdyString(4, Note(c2), myMIDI);
   mykeyclick = new GurdyString(6, Note(b5), myMIDI);
 };
 
@@ -553,12 +557,17 @@ void loop() {
     if (bigbutton->wasPressed() && !mycrank->isSpinning()) {
       mystring->soundOn(myoffset);
       mylowstring->soundOn(myoffset);
+      mytromp->soundOn();
+      mydrone->soundOn();
 
     } else if (mycrank->startedSpinning() && !bigbutton->toggleOn()) {
       mystring->soundOn(myoffset);
       mylowstring->soundOn(myoffset);
+      mytromp->soundOn();
+      mydrone->soundOn();
 
     // Turn off the previous notes and turn on the new one with a click if new key this cycle.
+    // NOTE: I'm not touching the drone/trompette.  Just leave it on if it's a key change.
     } else if (mygurdy->higherKeyPressed() || mygurdy->lowerKeyPressed()) {
       mystring->soundOff();
       mylowstring->soundOff();
@@ -574,12 +583,16 @@ void loop() {
     mystring->soundOff();
     mylowstring->soundOff();
     mykeyclick->soundOff();  // Not sure if this is necessary... but it feels right.
+    mytromp->soundOff();
+    mydrone->soundOff();
 
   // If the crank stops and the toggle was off, turn off sound.
   } else if (mycrank->stoppedSpinning() && !bigbutton->toggleOn()) {
     mystring->soundOff();
     mylowstring->soundOff();
     mykeyclick->soundOff();
+    mytromp->soundOff();
+    mydrone->soundOff();
   };
 
   // Apparently we need to do this to discard incoming data.
