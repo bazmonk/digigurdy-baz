@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v0.5
+// VERSION: v0.7
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
 //   https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy
@@ -608,17 +608,24 @@ int myoffset;
 // start the MIDI communication.
 void setup() {
 
-  Serial.begin(38400); // For debugging
-  delay(5000);
-  Serial.println("Hello.");
+  // // Un-comment to print yourself debugging messages to the Teensyduino
+  // // serial console.
+  // Serial.begin(38400);
+  // delay(5000);
+  // Serial.println("Hello.");
 
   myMIDI->begin();
 
   mycrank = new GurdyCrank(A1, A2);
   mycrank->detect();
 
+  // The keybox arrangement is decided by pin_array, which is up in the CONFIG SECTION
+  // of this file.  Make adjustments there.
   mygurdy = new HurdyGurdy(pin_array, num_keys);
   bigbutton = new ToggleButton(39);
+
+  // Which channel is which doesn't really matter, but I'm sticking with
+  // John's channels so his videos on setting it up with a tablet/phone still work.
   mystring = new GurdyString(1, Note(g4), myMIDI);
   mylowstring = new GurdyString(2, Note(g3), myMIDI);
   mytromp = new GurdyString(3, Note(c3), myMIDI);
@@ -626,8 +633,8 @@ void setup() {
   mykeyclick = new GurdyString(6, Note(b5), myMIDI);
   mybuzz = new GurdyString(5,Note(c3), myMIDI);
 
-  capup = new GurdyButton(21);
-  capdown = new GurdyButton(22);
+  capup = new GurdyButton(21);   // A.k.a. the button formerly known as octave-up
+  capdown = new GurdyButton(22); // A.k.a. the button formerly known as octave-down
   capo_offset = 0;
 };
 
@@ -636,8 +643,8 @@ void setup() {
 // and buttons acutally behave during play.
 void loop() {
 
-  // Update the keys, buttons, crank status (including the buzz knob)
-  myoffset = mygurdy->getMaxOffset();
+  // Update the keys, buttons, and crank status (which includes the buzz knob)
+  myoffset = mygurdy->getMaxOffset();  // This covers the keybox buttons.
   bigbutton->update();
   mycrank->update();
   capup->update();
