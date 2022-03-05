@@ -50,11 +50,18 @@ const int num_keys = 24;
   #include <Adafruit_SH1106.h>
 #endif
 
+// These are the Teensy pins wired up for the OLED.
+#define OLED_MOSI 9
+#define OLED_CLK 10
+#define OLED_DC 11
+#define OLED_CS 12
+#define OLED_RESET 13
+
 // These are found in the digigurdy-baz repository
 #include "bitmaps.h"
 #include "songs.h"
 
-// Right not not using the std namespace is just impacting strings.  That's ok...
+// Right now not using the std namespace is just impacting strings.  That's ok...
 using namespace MIDI_NAMESPACE;
 
 // #################
@@ -572,7 +579,7 @@ std::string NoteNum[] = {
 // Create the serial interface object
 SerialMIDI<HardwareSerial> mySerialMIDI(Serial1);
 // Create a new MidiInterface object using that serial interface
-MidiInterface<SerialMIDI<HardwareSerial>> *myMIDI = new MidiInterface<SerialMIDI<HardwareSerial>>((SerialMIDI<HardwareSerial>&)mySerialMIDI);
+MidiInterface<SerialMIDI<HardwareSerial>> *myMIDI;
 
 // Declare the "keybox" and buttons.
 HurdyGurdy *mygurdy;
@@ -608,12 +615,25 @@ int myoffset;
 // start the MIDI communication.
 void setup() {
 
+  // Initiate the correct kind of display object based on OLED type
+  #ifdef WHITE_OLED
+    Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
+    display.begin(SSD1306_SWITCHCAPVCC);
+  #endif
+  #ifdef BLUE_OLED
+    Adafruit_SH1106 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
+    display.begin(SH1106_SWITCHCAPVCC);
+  #endif
+
+  display.display();
+
   // // Un-comment to print yourself debugging messages to the Teensyduino
   // // serial console.
   // Serial.begin(38400);
   // delay(5000);
   // Serial.println("Hello.");
 
+  myMIDI = new MidiInterface<SerialMIDI<HardwareSerial>>((SerialMIDI<HardwareSerial>&)mySerialMIDI);
   myMIDI->begin();
 
   mycrank = new GurdyCrank(A1, A2);
