@@ -238,7 +238,8 @@ class GurdyString {
 class BuzzKnob {
   private:
     int voltage_pin;
-    static const int poll_interval = 20000; // so it doesn't change too often
+    // loop() runs about 20,000x per sec, so this is checking for knob changes about every 1.5s.
+    static const int poll_interval = 30000;
     int poll_counter;
     int knob_voltage;
 
@@ -735,7 +736,7 @@ void setup() {
   // // Un-comment to print yourself debugging messages to the Teensyduino
   // // serial console.
   // Serial.begin(38400);
-  // delay(5000);
+  // delay(3000);
   // Serial.println("Hello.");
 
   myMIDI = new MidiInterface<SerialMIDI<HardwareSerial>>((SerialMIDI<HardwareSerial>&)mySerialMIDI);
