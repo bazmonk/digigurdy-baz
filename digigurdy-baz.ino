@@ -610,20 +610,36 @@ std::string NoteNum[] = {
   "C9", "C9#", "D9", "D9#", "E9", "F9", "F9#", "G9"
 };
 
-void printDisplay(int mel1, int mel2, int drone, int tromp, int tpose, int offset) {
+// This is a version of the above but with flats listed as well.
+std::string LongNoteNum[] = {
+  "  C-1  ", "C-1#D-1b", "  D-1  ", "D-1#/E-1b", "  E-1  ", "  F-1  ", "F-1#/G-1b", "  G-1  ", "G-1#/A-1b", "  A-1  ", "A-1#/B-1b", "  B-1  ",
+  "  C0   ", "C0#/D0b", "  D0   ", "D0#/E0b", "  E0   ", "  F0   ", "F0#/G0b", "  G0   ", "G0#/A0b", "  A0   ", "A0#/B0b", "  B0   ",
+  "  C1   ", "C1#/D1b", "  D1   ", "D1#/E1b", "  E1   ", "  F1   ", "F1#/G1b", "  G1   ", "G1#/A1b", "  A1   ", "A1#/B1b", "  B1   ",
+  "  C2   ", "C2#/D2b", "  D2   ", "D2#/E2b", "  E2   ", "  F2   ", "F2#/G2b", "  G2   ", "G2#/A2b", "  A2   ", "A2#/B2b", "  B2   ",
+  "  C3   ", "C3#/D3b", "  D3   ", "D3#/E3b", "  E3   ", "  F3   ", "F3#/G3b", "  G3   ", "G3#/A3b", "  A3   ", "A3#/B3b", "  B3   ",
+  "  C4   ", "C4#/D4b", "  D4   ", "D4#/E4b", "  E4   ", "  F4   ", "F4#/G4b", "  G4   ", "G4#/A4b", "  A4   ", "A4#/B4b", "  B4   ",
+  "  C5   ", "C5#/D5b", "  D5   ", "D5#/E5b", "  E5   ", "  F5   ", "F5#/G5b", "  G5   ", "G5#/A5b", "  A5   ", "A5#/B5b", "  B5   ",
+  "  C6   ", "C6#/D6b", "  D6   ", "D6#/E6b", "  E6   ", "  F6   ", "F6#/G6b", "  G6   ", "G6#/A6b", "  A6   ", "A6#/B6b", "  B6   ",
+  "  C7   ", "C7#/D7b", "  D7   ", "D7#/E7b", "  E7   ", "  F7   ", "F7#/G7b", "  G7   ", "G7#/A7b", "  A7   ", "A7#/B7b", "  B7   ",
+  "  C8   ", "C8#/D8b", "  D8   ", "D8#/E8b", "  E8   ", "  F8   ", "F8#/G8b", "  G8   ", "G8#/A8b", "  A8   ", "A8#/B8b", "  B8   ",
+  "  C9   ", "C9#/D9b", "  D9   ", "D9#/E9b", "  E9   ", "  F9   ", "F9#/G9b", "  G9   "
+};
 
-  std::string cap_str = "";
+void printDisplay(int mel1, int mel2, int drone, int tromp, int tpose, int cap, int offset) {
+
+  // This whole thing could be written more clearly...
+
   std::string disp_str0 = "";
   std::string disp_str = "";
   std::string disp_str2 = "";
 
-  disp_str0 = "  Transpose: ";
+  disp_str0 = " Tpose: ";
   disp_str = "\n"
-             "  Hi Melody: " + NoteNum[mel1 + tpose] + "\n"
-             " Low Melody: " + NoteNum[mel2 + tpose] + "\n"
-             "      Drone: " + NoteNum[drone + tpose] + "\n"
-             "  Trompette: " + NoteNum[tromp + tpose] + "\n\n";
-  disp_str2 = "    " + NoteNum[mel1 + tpose + offset] + "\n";
+             "  Hi Melody: " + LongNoteNum[mel1 + tpose] + "\n"
+             " Low Melody: " + LongNoteNum[mel2 + tpose] + "\n"
+             "      Drone: " + LongNoteNum[drone + tpose + cap] + "\n"
+             "  Trompette: " + LongNoteNum[tromp + tpose + cap] + "\n\n";
+  disp_str2 = "  " + LongNoteNum[mel1 + tpose + offset] + "\n";
 
   display.clearDisplay();
   display.setTextSize(1);
@@ -638,11 +654,16 @@ void printDisplay(int mel1, int mel2, int drone, int tromp, int tpose, int offse
   if (tpose > 0) { display.print("+"); };
   display.print(tpose);
 
+  display.print("  Capo: ");
+
+  if (cap > 0) { display.print("+"); };
+  display.print(cap);
+
   display.print(disp_str.c_str());
   display.setTextSize(2);
   display.print(disp_str2.c_str());
   display.display();
-}
+};
 
 // ##################
 // GLOBAL SETUP STUFF
@@ -674,13 +695,23 @@ GurdyString *mybuzz;
 GurdyButton *tpose_up;
 GurdyButton *tpose_down;
 
+// This defines the +/- one octave transpose range.
 const int max_tpose = 12;
 int tpose_offset;
+
+GurdyButton *capo;
+
+// This defines the 0, +2, +4 capo range.
+const int max_capo = 4;
+int capo_offset;
 
 // The offset is given when we update the buttons each cycle.
 // Buttons should only be updated once per cycle.  So we need this in the main loop()
 // to refer to it several times.
 int myoffset;
+
+void tuning() {
+};
 
 // Teensy and Arduino units start by running setup() once after powering up.
 // Here we establish how the "gurdy" is setup, what strings to use, and we also
@@ -764,7 +795,10 @@ void setup() {
   tpose_down = new GurdyButton(22); // A.k.a. the button formerly known as octave-down
   tpose_offset = 0;
 
-  printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, 0);
+  capo = new GurdyButton(23); // The capo button
+  capo_offset = 0;
+
+  printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0);
 };
 
 // The loop() function is repeatedly run by the Teensy unit after setup() completes.
@@ -778,6 +812,32 @@ void loop() {
   mycrank->update();
   tpose_up->update();
   tpose_down->update();
+  capo->update();
+
+  // Check for a capo shift.
+  if (capo->wasPressed()) {
+
+    capo_offset += 2;
+
+    if (capo_offset > max_capo ) {
+      capo_offset = 0;
+    };
+
+    if (mycrank->isSpinning() || bigbutton->toggleOn()) {
+      mytromp->soundOff();
+      mydrone->soundOff();
+      mystring->soundOff();
+      mylowstring->soundOff();
+      mykeyclick->soundOff();
+
+      mystring->soundOn(myoffset + tpose_offset);
+      mylowstring->soundOn(myoffset + tpose_offset);
+      mykeyclick->soundOn(tpose_offset);
+      mytromp->soundOn(tpose_offset + capo_offset);
+      mydrone->soundOn(tpose_offset + capo_offset);
+    };
+    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset);
+  };
 
   // As long as we're in playing mode--acutally playing or not--
   // check for a tpose shift.
@@ -794,10 +854,10 @@ void loop() {
       mystring->soundOn(myoffset + tpose_offset);
       mylowstring->soundOn(myoffset + tpose_offset);
       mykeyclick->soundOn(tpose_offset);
-      mytromp->soundOn(tpose_offset);
-      mydrone->soundOn(tpose_offset);
+      mytromp->soundOn(tpose_offset + capo_offset);
+      mydrone->soundOn(tpose_offset + capo_offset);
     };
-    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, myoffset);
+    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset);
   };
   if (tpose_down->wasPressed() && (max_tpose + tpose_offset > 0)) {
     tpose_offset -= 1;
@@ -812,10 +872,10 @@ void loop() {
       mystring->soundOn(myoffset + tpose_offset);
       mylowstring->soundOn(myoffset + tpose_offset);
       mykeyclick->soundOn(tpose_offset);
-      mytromp->soundOn(tpose_offset);
-      mydrone->soundOn(tpose_offset);
+      mytromp->soundOn(tpose_offset + capo_offset);
+      mydrone->soundOn(tpose_offset + capo_offset);
     };
-    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, myoffset);
+    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset);
   };
 
   // NOTE:
@@ -832,16 +892,16 @@ void loop() {
     if (bigbutton->wasPressed() && !mycrank->isSpinning()) {
       mystring->soundOn(myoffset + tpose_offset);
       mylowstring->soundOn(myoffset + tpose_offset);
-      mytromp->soundOn(tpose_offset);
-      mydrone->soundOn(tpose_offset);
-      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, myoffset);
+      mytromp->soundOn(tpose_offset + capo_offset);
+      mydrone->soundOn(tpose_offset + capo_offset);
+      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset);
 
     } else if (mycrank->startedSpinning() && !bigbutton->toggleOn()) {
       mystring->soundOn(myoffset + tpose_offset);
       mylowstring->soundOn(myoffset + tpose_offset);
-      mytromp->soundOn(tpose_offset);
-      mydrone->soundOn(tpose_offset);
-      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, myoffset);
+      mytromp->soundOn(tpose_offset + capo_offset);
+      mydrone->soundOn(tpose_offset + capo_offset);
+      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset);
 
     // Turn off the previous notes and turn on the new one with a click if new key this cycle.
     // NOTE: I'm not touching the drone/trompette.  Just leave it on if it's a key change.
@@ -853,7 +913,7 @@ void loop() {
       mystring->soundOn(myoffset + tpose_offset);
       mylowstring->soundOn(myoffset + tpose_offset);
       mykeyclick->soundOn(tpose_offset);
-      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, myoffset);
+      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset);
     };
 
     // Whenever we're playing, check for buzz.
@@ -873,7 +933,7 @@ void loop() {
     mytromp->soundOff();
     mydrone->soundOff();
     mybuzz->soundOff();
-    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, myoffset);
+    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset);
 
   // If the crank stops and the toggle was off, turn off sound.
   } else if (mycrank->stoppedSpinning() && !bigbutton->toggleOn()) {
@@ -883,7 +943,7 @@ void loop() {
     mytromp->soundOff();
     mydrone->soundOff();
     mybuzz->soundOff();
-    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, myoffset);
+    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset);
   };
 
   // Apparently we need to do this to discard incoming data.
