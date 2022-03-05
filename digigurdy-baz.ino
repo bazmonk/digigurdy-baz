@@ -593,12 +593,12 @@ void printDisplay(int mel1, int mel2, int drone, int tromp, int capo, int offset
   std::string disp_str = "";
   std::string disp_str2 = "";
 
-  disp_str0 = "   Current Capo: ";
+  disp_str0 = " Curr. Capo: ";
   disp_str = "\n"
-             " Melody,Drone,Tromp: \n"
-             "  " + NoteNum[mel1 + capo] + "/" + NoteNum[mel2 + capo] + ", " +
-             NoteNum[drone + capo] + ", " + NoteNum[tromp + capo] + "\n"
-             "                     \n";
+             "  Hi Melody: " + NoteNum[mel1 + capo] + "\n"
+             " Low Melody: " + NoteNum[mel2 + capo] + "\n"
+             "      Drone: " + NoteNum[drone + capo] + "\n"
+             "  Trompette: " + NoteNum[tromp + capo] + "\n\n";
   disp_str2 = "    " + NoteNum[mel1 + capo + offset] + "\n";
 
   display.clearDisplay();
@@ -607,8 +607,13 @@ void printDisplay(int mel1, int mel2, int drone, int tromp, int capo, int offset
   display.setCursor(0, 0);
 
   display.print(disp_str0.c_str());
+
+  // This is because the version of gcc Teensy uses has a bug with std::to_string(int)...
+  // I need to print the capo separately here because the display object will aceept it if it's not
+  // concatenated with a string.
   if (capo > 0) { display.print("+"); };
   display.print(capo);
+
   display.print(disp_str.c_str());
   display.setTextSize(2);
   display.print(disp_str2.c_str());
@@ -753,9 +758,39 @@ void loop() {
   // check for a capo shift.
   if (capup->wasPressed() && (capo_offset < max_capos)) {
     capo_offset += 1;
+
+    if (mycrank->isSpinning() || bigbutton->toggleOn()) {
+      mytromp->soundOff();
+      mydrone->soundOff();
+      mystring->soundOff();
+      mylowstring->soundOff();
+      mykeyclick->soundOff();
+
+      mystring->soundOn(myoffset + capo_offset);
+      mylowstring->soundOn(myoffset + capo_offset);
+      mykeyclick->soundOn(capo_offset);
+      mytromp->soundOn(capo_offset);
+      mydrone->soundOn(capo_offset);
+    };
+    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), capo_offset, myoffset);
   };
   if (capdown->wasPressed() && (max_capos + capo_offset > 0)) {
     capo_offset -= 1;
+
+    if (mycrank->isSpinning() || bigbutton->toggleOn()) {
+      mytromp->soundOff();
+      mydrone->soundOff();
+      mystring->soundOff();
+      mylowstring->soundOff();
+      mykeyclick->soundOff();
+
+      mystring->soundOn(myoffset + capo_offset);
+      mylowstring->soundOn(myoffset + capo_offset);
+      mykeyclick->soundOn(capo_offset);
+      mytromp->soundOn(capo_offset);
+      mydrone->soundOn(capo_offset);
+    };
+    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), capo_offset, myoffset);
   };
 
   // NOTE:
