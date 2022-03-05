@@ -13,6 +13,9 @@
 #define WHITE_OLED
 //#define BLUE_OLED
 
+#define SCREEN_WIDTH 128 // OLED display width, in pixels
+#define SCREEN_HEIGHT 64
+
 // Eventually I'll move this to a header, but the pin_array[] index here represents
 // the MIDI note offset, and the value is the corresponding teensy pin.
 // This defines which physical keys are part of the "keybox" and what order they're in.
@@ -41,6 +44,7 @@ const int num_keys = 24;
 // https://www.pjrc.com/teensy/td_libs_MIDI.html
 #include <MIDI.h>
 #include <string>
+#include <sstream>
 
 // The white OLED uses Adafruit SSD1306.  Blue uses SH1106.
 #ifdef WHITE_OLED
@@ -56,6 +60,14 @@ const int num_keys = 24;
 #define OLED_DC 11
 #define OLED_CS 12
 #define OLED_RESET 13
+
+// Initiate the correct kind of display object based on OLED type
+#ifdef WHITE_OLED
+  Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
+#endif
+#ifdef BLUE_OLED
+  Adafruit_SH1106 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
+#endif
 
 // These are found in the digigurdy-baz repository
 #include "bitmaps.h"
@@ -213,6 +225,9 @@ class GurdyString {
       MIDI_obj->sendNoteOff(note_being_played, midi_volume, midi_channel);
     };
 
+    int getOpenNote() {
+      return open_note;
+    };
 };
 
 // BuzzKnob manages the potentiometer knob that adjusts the buzzing threshold.
@@ -536,10 +551,6 @@ class HurdyGurdy {
 
 };
 
-// ################
-// GLOBAL VARIABLES
-// ################
-
 // enum Note maps absolute note names to MIDI note numbers (middle C4 = 60),
 // which range from 0 to 127.
 //
@@ -575,6 +586,42 @@ std::string NoteNum[] = {
   "C8", "C8#", "D8", "D8#", "E8", "F8", "F8#", "G8", "G8#", "A8", "A8#", "B8",
   "C9", "C9#", "D9", "D9#", "E9", "F9", "F9#", "G9"
 };
+
+void printDisplay(int mel1, int mel2, int drone, int tromp, int capo, int offset) {
+
+  std::string cap_str = "";
+  std::string disp_str = "";
+  std::string disp_str2 = "";
+  std::stringstream ss;
+
+  ss << capo;
+  ss >> cap_str;
+
+  if (capo > 0) {
+    cap_str = "+" + cap_str;
+  };
+
+  disp_str = "   Current Capo: " + cap_str + "\n"
+             " Melody,Drone,Tromp: \n"
+             "  " + NoteNum[mel1 + capo] + "/" + NoteNum[mel2 + capo] + ", " +
+             NoteNum[drone + capo] + ", " + NoteNum[tromp + capo] + "\n"
+             "                     \n";
+  disp_str2 = "    " + NoteNum[mel1 + capo + offset] + "\n";
+
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+
+  display.print(disp_str.c_str());
+  display.setTextSize(2);
+  display.print(disp_str2.c_str());
+  display.display();
+}
+
+// ##################
+// GLOBAL SETUP STUFF
+// ##################
 
 // Create the serial interface object
 SerialMIDI<HardwareSerial> mySerialMIDI(Serial1);
@@ -615,16 +662,50 @@ int myoffset;
 // start the MIDI communication.
 void setup() {
 
-  // Initiate the correct kind of display object based on OLED type
   #ifdef WHITE_OLED
-    Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
     display.begin(SSD1306_SWITCHCAPVCC);
   #endif
   #ifdef BLUE_OLED
-    Adafruit_SH1106 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
     display.begin(SH1106_SWITCHCAPVCC);
   #endif
+  // The Adafruit default logo.  Let it ride a sec or two.
+  display.display();
+  delay(2000);
 
+  // Clear the buffer.
+  display.clearDisplay();
+
+  // Intro animated sequence
+  // display.clearDisplay();
+  display.drawBitmap(0, 0, logo47_glcd_bmp, 128, 64, 1);
+  display.display();
+  delay(2000);
+  display.clearDisplay();
+  display.drawBitmap(0, 0, logo48_glcd_bmp, 128, 64, 1);
+  display.display();
+  delay(200);
+  display.clearDisplay();
+  display.drawBitmap(0, 0, logo49_glcd_bmp, 128, 64, 1);
+  display.display();
+  delay(200);
+  display.clearDisplay();
+  display.drawBitmap(0, 0, logo50_glcd_bmp, 128, 64, 1);
+  display.display();
+  delay(200);
+  display.clearDisplay();
+  display.drawBitmap(0, 0, logo51_glcd_bmp, 128, 64, 1);
+  display.display();
+  delay(200);
+  display.clearDisplay();
+  display.drawBitmap(0, 0, logo52_glcd_bmp, 128, 64, 1);
+  display.display();
+  delay(200);
+  display.clearDisplay();
+  display.drawBitmap(0, 0, logo53_glcd_bmp, 128, 64, 1);
+  display.display();
+  delay(200);
+  display.clearDisplay();
+  display.drawBitmap(0, 0, logo54_glcd_bmp, 128, 64, 1);
   display.display();
 
   // // Un-comment to print yourself debugging messages to the Teensyduino
@@ -656,6 +737,8 @@ void setup() {
   capup = new GurdyButton(21);   // A.k.a. the button formerly known as octave-up
   capdown = new GurdyButton(22); // A.k.a. the button formerly known as octave-down
   capo_offset = 0;
+
+  printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), capo_offset, 0);
 };
 
 // The loop() function is repeatedly run by the Teensy unit after setup() completes.
@@ -695,12 +778,14 @@ void loop() {
       mylowstring->soundOn(myoffset + capo_offset);
       mytromp->soundOn(capo_offset);
       mydrone->soundOn(capo_offset);
+      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), capo_offset, myoffset);
 
     } else if (mycrank->startedSpinning() && !bigbutton->toggleOn()) {
       mystring->soundOn(myoffset + capo_offset);
       mylowstring->soundOn(myoffset + capo_offset);
       mytromp->soundOn(capo_offset);
       mydrone->soundOn(capo_offset);
+      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), capo_offset, myoffset);
 
     // Turn off the previous notes and turn on the new one with a click if new key this cycle.
     // NOTE: I'm not touching the drone/trompette.  Just leave it on if it's a key change.
@@ -712,6 +797,7 @@ void loop() {
       mystring->soundOn(myoffset + capo_offset);
       mylowstring->soundOn(myoffset + capo_offset);
       mykeyclick->soundOn(capo_offset);
+      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), capo_offset, myoffset);
     };
 
     // Whenever we're playing, check for buzz.
@@ -731,6 +817,7 @@ void loop() {
     mytromp->soundOff();
     mydrone->soundOff();
     mybuzz->soundOff();
+    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), capo_offset, myoffset);
 
   // If the crank stops and the toggle was off, turn off sound.
   } else if (mycrank->stoppedSpinning() && !bigbutton->toggleOn()) {
@@ -740,6 +827,7 @@ void loop() {
     mytromp->soundOff();
     mydrone->soundOff();
     mybuzz->soundOff();
+    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), capo_offset, myoffset);
   };
 
   // Apparently we need to do this to discard incoming data.
