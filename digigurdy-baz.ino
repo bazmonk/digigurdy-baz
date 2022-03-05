@@ -366,6 +366,8 @@ class GurdyCrank {
 
     void refreshBuzz() {
       if (isDetected()) {
+        // Buzzing happens if the crank generates more voltage than the
+        // adjusted voltage from the knob.
         if (crank_voltage > myKnob->getVoltage()) {
 
           // If we weren't buzzing before this, we just started.
@@ -395,8 +397,12 @@ class GurdyCrank {
             stopped_buzzing = false;
           };
 
+          // Now that we're done checking if we *were* buzzing, we can set this.
           is_buzzing = false;
         };
+
+      // If the crank isn't *connected*, the pin will report phantom buzzing,
+      // so if the crank isn't *detected*, don't buzz at all:
       } else {
         started_buzzing = false;
         is_buzzing = false;
@@ -465,6 +471,8 @@ class GurdyCrank {
 
           is_spinning = false;
         };
+
+      // If the crank wasn't detected, it acts like a crank that never gets spun.
       } else {
         is_spinning = false;
         started_spinning = false;
