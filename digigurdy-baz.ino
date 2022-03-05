@@ -365,99 +365,110 @@ class GurdyCrank {
     };
 
     void refreshBuzz() {
-      if (crank_voltage > myKnob->getVoltage()) {
+      if (isDetected()) {
+        if (crank_voltage > myKnob->getVoltage()) {
 
-        // If we weren't buzzing before this, we just started.
-        if (!is_buzzing) {
-          started_buzzing = true;
+          // If we weren't buzzing before this, we just started.
+          if (!is_buzzing) {
+            started_buzzing = true;
+          };
+
+          // If we were already buzzing and started_buzzing last cycle,
+          // we didn't just start buzzing anymore.
+          if (started_buzzing && is_buzzing) {
+            started_buzzing = false;
+          };
+
+          // Now that we checked, we can update this...
+          is_buzzing = true;
+
+        } else {
+
+          // If we were buzzing before, we just stopped.
+          if (is_buzzing) {
+            stopped_buzzing = true;
+          };
+
+          // If we stopped buzzing last cycle, we didn't just stop
+          // anymore.
+          if (stopped_buzzing && !is_buzzing) {
+            stopped_buzzing = false;
+          };
+
+          is_buzzing = false;
         };
-
-        // If we were already buzzing and started_buzzing last cycle,
-        // we didn't just start buzzing anymore.
-        if (started_buzzing && is_buzzing) {
-          started_buzzing = false;
-        };
-
-        // Now that we checked, we can update this...
-        is_buzzing = true;
-
       } else {
-
-        // If we were buzzing before, we just stopped.
-        if (is_buzzing) {
-          stopped_buzzing = true;
-        };
-
-        // If we stopped buzzing last cycle, we didn't just stop
-        // anymore.
-        if (stopped_buzzing && !is_buzzing) {
-          stopped_buzzing = false;
-        };
-
+        started_buzzing = false;
         is_buzzing = false;
+        stopped_buzzing = false;
       };
     };
 
     // This is meant to be run every loop().
     void update() {
+      if (isDetected()) {
+        // Update the knob first.
+        myKnob->update();
+        refreshBuzz();
 
-      // Update the knob first.
-      myKnob->update();
-      refreshBuzz();
+        // Every 100 loops() (I haven't measured this, but this is several times
+        // per second), we update the crank_voltage.
+        crank_counter += 1;
+        if (crank_counter == crank_interval) {
+          crank_counter = 0;
+          crank_voltage = analogRead(voltage_pin);
+        };
 
-      // Every 100 loops() (I haven't measured this, but this is several times
-      // per second), we update the crank_voltage.
-      crank_counter += 1;
-      if (crank_counter == crank_interval) {
-        crank_counter = 0;
-        crank_voltage = analogRead(voltage_pin);
-      };
+        // Based on that voltage, we either bump up the spin by the spin_weight,
+        // or we let it decay based on the voltage.
+        if (crank_voltage > v_threshold) {
+          spin += spin_weight;
+          if (spin > max_spin) {
+            spin = max_spin;
+          };
+        } else {
+          spin -= 1;
+          if (spin < 0) {
+            spin = 0;
+          };
+        };
 
-      // Based on that voltage, we either bump up the spin by the spin_weight,
-      // or we let it decay based on the voltage.
-      if (crank_voltage > v_threshold) {
-        spin += spin_weight;
-        if (spin > max_spin) {
-          spin = max_spin;
+        // The crank is considered spinning if the spin is over spin_threshold.
+        if (spin > spin_threshold) {
+
+          // If we weren't spinning before this, we just started.
+          if (!is_spinning) {
+            started_spinning = true;
+          };
+
+          // If we were already spinning and started_spinning last cycle,
+          // we didn't just start spinning anymore.
+          if (started_spinning && is_spinning) {
+            started_spinning = false;
+          };
+
+          // Now that we checked, we can update this...
+          is_spinning = true;
+
+        } else {
+
+          // If we were spinning before, we just stopped.
+          if (is_spinning) {
+            stopped_spinning = true;
+          };
+
+          // If we stopped spinning last cycle, we didn't just stop
+          // anymore.
+          if (stopped_spinning && !is_spinning) {
+            stopped_spinning = false;
+          };
+
+          is_spinning = false;
         };
       } else {
-        spin -= 1;
-        if (spin < 0) {
-          spin = 0;
-        };
-      };
-
-      // The crank is considered spinning if the spin is over spin_threshold.
-      if (spin > spin_threshold) {
-
-        // If we weren't spinning before this, we just started.
-        if (!is_spinning) {
-          started_spinning = true;
-        };
-
-        // If we were already spinning and started_spinning last cycle,
-        // we didn't just start spinning anymore.
-        if (started_spinning && is_spinning) {
-          started_spinning = false;
-        };
-
-        // Now that we checked, we can update this...
-        is_spinning = true;
-
-      } else {
-
-        // If we were spinning before, we just stopped.
-        if (is_spinning) {
-          stopped_spinning = true;
-        };
-
-        // If we stopped spinning last cycle, we didn't just stop
-        // anymore.
-        if (stopped_spinning && !is_spinning) {
-          stopped_spinning = false;
-        };
-
         is_spinning = false;
+        started_spinning = false;
+        stopped_spinning = false;
       };
     };
 
