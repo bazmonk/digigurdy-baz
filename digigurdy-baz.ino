@@ -44,7 +44,6 @@ const int num_keys = 24;
 // https://www.pjrc.com/teensy/td_libs_MIDI.html
 #include <MIDI.h>
 #include <string>
-#include <sstream>
 
 // The white OLED uses Adafruit SSD1306.  Blue uses SH1106.
 #ifdef WHITE_OLED
@@ -590,18 +589,12 @@ std::string NoteNum[] = {
 void printDisplay(int mel1, int mel2, int drone, int tromp, int capo, int offset) {
 
   std::string cap_str = "";
+  std::string disp_str0 = "";
   std::string disp_str = "";
   std::string disp_str2 = "";
-  std::stringstream ss;
 
-  ss << capo;
-  ss >> cap_str;
-
-  if (capo > 0) {
-    cap_str = "+" + cap_str;
-  };
-
-  disp_str = "   Current Capo: " + cap_str + "\n"
+  disp_str0 = "   Current Capo: ";
+  disp_str = "\n"
              " Melody,Drone,Tromp: \n"
              "  " + NoteNum[mel1 + capo] + "/" + NoteNum[mel2 + capo] + ", " +
              NoteNum[drone + capo] + ", " + NoteNum[tromp + capo] + "\n"
@@ -613,6 +606,9 @@ void printDisplay(int mel1, int mel2, int drone, int tromp, int capo, int offset
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
 
+  display.print(disp_str0.c_str());
+  if (capo > 0) { display.print("+"); };
+  display.print(capo);
   display.print(disp_str.c_str());
   display.setTextSize(2);
   display.print(disp_str2.c_str());
