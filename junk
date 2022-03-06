@@ -44,7 +44,7 @@
 #######################
 
 #######################
-# TUNING:             #
+#     TUNING MENU     #
 #                     #
 # Choose Base Tuning: #
 #                     #
@@ -55,25 +55,58 @@
 #######################
 
 #######################
-# TUNING:             #
+#         G/C         #
+# Choose High Melody: #
 #                     #
-# Choose Base Tuning: #
+# 1) G4 **  2) C4     #
+# 3) G3     4) C3     #
 #                     #
-#       1) G/C        #
-#                     #
-#       2) D/G        #
-#                     #
+#  "X") Default (**)  #
+#  "O") Go Back       #
 #######################
 
 #######################
-# TUNING:             #
+# High Melody:   G4   #
+# Choose Low Melody:  #
 #                     #
-# Choose Base Tuning: #
+# 1) G3 **  2) C3     #
+# 3) G2     4) C2     #
 #                     #
-#       1) G/C        #
+#  "X") Default (**)  #
+#  "O") Go Back       #
+#######################
+
+#######################
+# Hi/Lo Melody: G4/G3 #
+#    Choose Drone:    #
+#  1) C3 **   2) G3   #
+#  3) C2      4) G2   #
+#  5) C4      6) G4   #
 #                     #
-#       2) D/G        #
+#  "X") Default (**)  #
+#  "O") Go Back       #
+#######################
+
+#######################
+# Hi/Lo Melody: G4/G3 #
+# Drone: C3           #
+#  Choose Trompette:  #
+#  1) G3 **   2) C3   #
+#  3) G2      4) C2   #
+#  5) G4      6) C4   #
+#  "X") Default (**)  #
+#  "O") Go Back       #
+#######################
+
+#######################
+#      SUMMARY:       #
+#  High Melody:   G4  #
+#   Low Melody:   G3  #
+#        Drone:   C3  #
+#    Trompette:   G3  #
 #                     #
+#  "X") Save & Go     #
+#  "O") Start Over    #
 #######################
 
 #######################

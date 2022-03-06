@@ -289,7 +289,7 @@ class GurdyCrank {
     // the crank.  I'm using the same approach here.  To keep things straight,
     // I'm calling this smoothed value the "spin" of the crank.
     static const int max_spin = 3000;
-    static const int spin_weight = 500;
+    static const int spin_weight = 800;
     static const int spin_threshold = 50; // spin over 50 makes sound.
     int spin;
     bool started_spinning;
@@ -301,6 +301,9 @@ class GurdyCrank {
     bool started_buzzing;
     bool stopped_buzzing;
     bool is_buzzing;
+    // This is how many cycles to "smooth" the buzz.  About 20,000 cycles in one second.
+    int buzz_smoothing = 1500;
+    int buzz_countdown;
 
   public:
 
@@ -321,6 +324,7 @@ class GurdyCrank {
       started_buzzing = false;
       stopped_buzzing = false;
       is_buzzing = false;
+      buzz_countdown = buzz_smoothing;
     };
 
     // Crank detection - this comes from John's code.  We sample the voltage
@@ -371,8 +375,17 @@ class GurdyCrank {
     void refreshBuzz() {
       if (isDetected()) {
         // Buzzing happens if the crank generates more voltage than the
-        // adjusted voltage from the knob.
+        // adjusted voltage from the knob.  But this is too jittery.
+        //
+        // Instead, whenever we generate enough voltage, we top off this countdown.
+        // Buzzing happens as long as this is countdown is positive, smoothing over the jitter.
         if (crank_voltage > myKnob->getVoltage()) {
+          buzz_countdown = buzz_smoothing;
+        } else if (buzz_countdown > 0) {
+          buzz_countdown -= 1;
+        };
+
+        if (buzz_countdown > 0) {
 
           // If we weren't buzzing before this, we just started.
           if (!is_buzzing) {
@@ -437,7 +450,7 @@ class GurdyCrank {
             spin = max_spin;
           };
         } else {
-          spin -= 1;
+          spin -= 2;
           if (spin < 0) {
             spin = 0;
           };
@@ -777,8 +790,8 @@ void setup() {
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
   display.println("DigiGurdy");
-  display.setTextSize(1):
-  display.println("By Basil Lalli,"):
+  display.setTextSize(1);
+  display.println("By Basil Lalli,");
   display.println("Concept By J. Dingley");
   display.println("5 Mar 2022, Ver. 0.8 ");
   display.println("                     ");
@@ -974,16 +987,22 @@ void tuning_drone() {
 
   if (gc_or_dg) {
     base_note = Note(g4);
+    choice1 = base_note - 31;
+    choice2 = base_note - 24;
+    choice3 = base_note - 19;
+    choice4 = base_note - 12;
+    choice5 = base_note - 7;
+    choice6 = base_note;
+
   } else {
     base_note = Note(d4);
+    choice1 = base_note - 19;
+    choice2 = base_note - 24;
+    choice3 = base_note - 7;
+    choice4 = base_note - 12;
+    choice5 = base_note + 5;
+    choice6 = base_note;
   };
-
-  choice1 = base_note - 31;
-  choice2 = base_note - 24;
-  choice3 = base_note - 19;
-  choice4 = base_note - 12;
-  choice5 = base_note - 7;
-  choice6 = base_note;
 
   display.clearDisplay();
   display.setTextSize(1);
@@ -1108,8 +1127,19 @@ void tuning_tromp() {
       mytromp->setOpenNote(choice6);
       done = true;
     };
-  };
+
+    // I think the buzz sounds best between D3 and D4, so this pops
+    // the buzz tone up and down octaves until it lands there.
+    int buzz_note = mytromp->getOpenNote();
+    while (buzz_note > Note(d4)) {
+      buzz_note -= 12;
     };
+    while (buzz_note < Note(d3)) {
+      buzz_note += 12;
+    };
+    mybuzz->setOpenNote(buzz_note);
+  };
+};
 
 void tuning() {
 
@@ -1131,7 +1161,7 @@ void tuning() {
   display.display();
 
   // Give the user a chance to figure out it's happening...
-  delay(1500);
+  delay(1000);
 
   bool done = false;
   while (!done) {
@@ -1325,7 +1355,7 @@ void loop() {
 
     // Whenever we're playing, check for buzz.
     if (mycrank->startedBuzzing()) {
-      mybuzz->soundOn(tpose_offset);
+      mybuzz->soundOn(tpose_offset + capo_offset);
     };
 
     if (mycrank->stoppedBuzzing()) {
