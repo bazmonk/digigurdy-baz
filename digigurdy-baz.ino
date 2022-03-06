@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v0.8
+// VERSION: v0.9
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
 //   https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy
@@ -609,32 +609,32 @@ enum Note {
 //
 // This lets us recall string names for printing on the screen without having to refer to a table.
 std::string NoteNum[] = {
-  "C-1", "C-1#", "D-1", "D-1#", "E-1", "F-1", "F-1#", "G-1", "G-1#", "A-1", "A-1#", "B-1",
-  "C0", "C0#", "D0", "D0#", "E0", "F0", "F0#", "G0", "G0#", "A0", "A0#", "B0",
-  "C1", "C1#", "D1", "D1#", "E1", "F1", "F1#", "G1", "G1#", "A1", "A1#", "B1",
-  "C2", "C2#", "D2", "D2#", "E2", "F2", "F2#", "G2", "G2#", "A2", "A2#", "B2",
-  "C3", "C3#", "D3", "D3#", "E3", "F3", "F3#", "G3", "G3#", "A3", "A3#", "B3",
-  "C4", "C4#", "D4", "D4#", "E4", "F4", "F4#", "G4", "G4#", "A4", "A4#", "B4",
-  "C5", "C5#", "D5", "D5#", "E5", "F5", "F5#", "G5", "G5#", "A5", "A5#", "B5",
-  "C6", "C6#", "D6", "D6#", "E6", "F6", "F6#", "G6", "G6#", "A6", "A6#", "B6",
-  "C7", "C7#", "D7", "D7#", "E7", "F7", "F7#", "G7", "G7#", "A7", "A7#", "B7",
-  "C8", "C8#", "D8", "D8#", "E8", "F8", "F8#", "G8", "G8#", "A8", "A8#", "B8",
-  "C9", "C9#", "D9", "D9#", "E9", "F9", "F9#", "G9"
+  "C-1", "C#-1", "D-1", "D#-1", "E-1", "F-1", "#F-1", "G-1", "G#-1", "A-1", "#A-1", "B-1",
+  "C0", "C#0", "D0", "D#0", "E0", "F0", "F#0", "G0", "G#0", "A0", "A#0", "B0",
+  "C1", "C#1", "D1", "D#1", "E1", "F1", "F#1", "G1", "G#1", "A1", "A#1", "B1",
+  "C2", "C#2", "D2", "D#2", "E2", "F2", "F#2", "G2", "G#2", "A2", "A#2", "B2",
+  "C3", "C#3", "D3", "D#3", "E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3",
+  "C4", "C#4", "D4", "D#4", "E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4",
+  "C5", "C#5", "D5", "D#5", "E5", "F5", "F#5", "G5", "G#5", "A5", "A#5", "B5",
+  "C6", "C#6", "D6", "D#6", "E6", "F6", "F#6", "G6", "G#6", "A6", "A#6", "B6",
+  "C7", "C#7", "D7", "D#7", "E7", "F7", "F#7", "G7", "G#7", "A7", "A#7", "B7",
+  "C8", "C#8", "D8", "D#8", "E8", "F8", "F#8", "G8", "G#8", "A8", "A#8", "B8",
+  "C9", "C#9", "D9", "D#9", "E9", "F9", "F#9", "G9"
 };
 
 // This is a version of the above but with flats listed as well.
 std::string LongNoteNum[] = {
-  "  C-1  ", "C-1#D-1b", "  D-1  ", "D-1#/E-1b", "  E-1  ", "  F-1  ", "F-1#/G-1b", "  G-1  ", "G-1#/A-1b", "  A-1  ", "A-1#/B-1b", "  B-1  ",
-  "  C0   ", "C0#/D0b", "  D0   ", "D0#/E0b", "  E0   ", "  F0   ", "F0#/G0b", "  G0   ", "G0#/A0b", "  A0   ", "A0#/B0b", "  B0   ",
-  "  C1   ", "C1#/D1b", "  D1   ", "D1#/E1b", "  E1   ", "  F1   ", "F1#/G1b", "  G1   ", "G1#/A1b", "  A1   ", "A1#/B1b", "  B1   ",
-  "  C2   ", "C2#/D2b", "  D2   ", "D2#/E2b", "  E2   ", "  F2   ", "F2#/G2b", "  G2   ", "G2#/A2b", "  A2   ", "A2#/B2b", "  B2   ",
-  "  C3   ", "C3#/D3b", "  D3   ", "D3#/E3b", "  E3   ", "  F3   ", "F3#/G3b", "  G3   ", "G3#/A3b", "  A3   ", "A3#/B3b", "  B3   ",
-  "  C4   ", "C4#/D4b", "  D4   ", "D4#/E4b", "  E4   ", "  F4   ", "F4#/G4b", "  G4   ", "G4#/A4b", "  A4   ", "A4#/B4b", "  B4   ",
-  "  C5   ", "C5#/D5b", "  D5   ", "D5#/E5b", "  E5   ", "  F5   ", "F5#/G5b", "  G5   ", "G5#/A5b", "  A5   ", "A5#/B5b", "  B5   ",
-  "  C6   ", "C6#/D6b", "  D6   ", "D6#/E6b", "  E6   ", "  F6   ", "F6#/G6b", "  G6   ", "G6#/A6b", "  A6   ", "A6#/B6b", "  B6   ",
-  "  C7   ", "C7#/D7b", "  D7   ", "D7#/E7b", "  E7   ", "  F7   ", "F7#/G7b", "  G7   ", "G7#/A7b", "  A7   ", "A7#/B7b", "  B7   ",
-  "  C8   ", "C8#/D8b", "  D8   ", "D8#/E8b", "  E8   ", "  F8   ", "F8#/G8b", "  G8   ", "G8#/A8b", "  A8   ", "A8#/B8b", "  B8   ",
-  "  C9   ", "C9#/D9b", "  D9   ", "D9#/E9b", "  E9   ", "  F9   ", "F9#/G9b", "  G9   "
+  "  C-1  ", "C#-1/Db-1", "  D-1  ", "D#-1/Eb-1", "  E-1  ", "  F-1  ", "F#-1/Gb-1", "  G-1  ", "G#-1/Ab-1", "  A-1  ", "A#-1/Bb-1", "  B-1  ",
+  "  C0   ", "C#0/Db0", "  D0   ", "D#0/Eb0", "  E0   ", "  F0   ", "F#0/Gb0", "  G0   ", "G#0/Ab0", "  A0   ", "A#0/Bb0", "  B0   ",
+  "  C1   ", "C#1/Db1", "  D1   ", "D#1/Eb1", "  E1   ", "  F1   ", "F#1/Gb1", "  G1   ", "G#1/Ab1", "  A1   ", "A#1/Bb1", "  B1   ",
+  "  C2   ", "C#2/Db2", "  D2   ", "D#2/Eb2", "  E2   ", "  F2   ", "F#2/Gb2", "  G2   ", "G#2/Ab2", "  A2   ", "A#2/Bb2", "  B2   ",
+  "  C3   ", "C#3/Db3", "  D3   ", "D#3/Eb3", "  E3   ", "  F3   ", "F#3/Gb3", "  G3   ", "G#3/Ab3", "  A3   ", "A#3/Bb3", "  B3   ",
+  "  C4   ", "C#4/Db4", "  D4   ", "D#4/Eb4", "  E4   ", "  F4   ", "F#4/Gb4", "  G4   ", "G#4/Ab4", "  A4   ", "A#4/Bb4", "  B4   ",
+  "  C5   ", "C#5/Db5", "  D5   ", "D#5/Eb5", "  E5   ", "  F5   ", "F#5/Gb5", "  G5   ", "G#5/Ab5", "  A5   ", "A#5/Bb5", "  B5   ",
+  "  C6   ", "C#6/Db6", "  D6   ", "D#6/Eb6", "  E6   ", "  F6   ", "F#6/Gb6", "  G6   ", "G#6/Ab6", "  A6   ", "A#6/Bb6", "  B6   ",
+  "  C7   ", "C#7/Db7", "  D7   ", "D#7/Eb7", "  E7   ", "  F7   ", "F#7/Gb7", "  G7   ", "G#7/Ab7", "  A7   ", "A#7/Bb7", "  B7   ",
+  "  C8   ", "C#8/Db8", "  D8   ", "D#8/Eb8", "  E8   ", "  F8   ", "F#8/Gb8", "  G8   ", "G#8/Ab8", "  A8   ", "A#8/Bb8", "  B8   ",
+  "  C9   ", "C#9/Db9", "  D9   ", "D#9/Eb9", "  E9   ", "  F9   ", "F#9/Gb9", "  G9   "
 };
 
 void printDisplay(int mel1, int mel2, int drone, int tromp, int tpose, int cap, int offset) {
@@ -734,6 +734,15 @@ int myoffset;
 // true = G/C tuning, false = D/G.  For the menus.
 bool gc_or_dg;
 
+const int eeprom_hi_mel = 1;
+const int eeprom_lo_mel = 2;
+const int eeprom_drone = 3;
+const int eeprom_tromp = 4;
+const int eeprom_tpose = 5;
+const int eeprom_capo = 6;
+const int eeprom_buzz = 7;
+
+
 // Teensy and Arduino units start by running setup() once after powering up.
 // Here we establish how the "gurdy" is setup, what strings to use, and we also
 // start the MIDI communication.
@@ -791,13 +800,13 @@ void setup() {
   display.setCursor(0, 0);
   display.println("DigiGurdy");
   display.setTextSize(1);
-  display.println("By Basil Lalli,");
+  display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("5 Mar 2022, Ver. 0.8 ");
+  display.println("5 Mar 2022, Ver. 0.9 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
-  delay(3000);
+  delay(2000);
 
   // // Un-comment to print yourself debugging messages to the Teensyduino
   // // serial console.
@@ -846,6 +855,26 @@ void setup() {
   capo_offset = 0;
 
   printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0);
+};
+
+void load_saved_tunings() {
+  mystring->setOpenNote(EEPROM.read(eeprom_hi_mel));
+  mylowstring->setOpenNote(EEPROM.read(eeprom_lo_mel));
+  mydrone->setOpenNote(EEPROM.read(eeprom_drone));
+  mytromp->setOpenNote(EEPROM.read(eeprom_tromp));
+  mybuzz->setOpenNote(EEPROM.read(eeprom_buzz));
+  tpose_offset = EEPROM.read(eeprom_tpose);
+  capo_offset = EEPROM.read(eeprom_capo);
+};
+
+void save_tunings() {
+  EEPROM.write(eeprom_hi_mel, mystring->getOpenNote());
+  EEPROM.write(eeprom_lo_mel, mylowstring->getOpenNote());
+  EEPROM.write(eeprom_drone, mydrone->getOpenNote());
+  EEPROM.write(eeprom_tromp, mytromp->getOpenNote());
+  EEPROM.write(eeprom_buzz, mybuzz->getOpenNote());
+  EEPROM.write(eeprom_tpose, tpose_offset);
+  EEPROM.write(eeprom_capo, capo_offset);
 };
 
 void tuning_hi_melody() {
@@ -1147,15 +1176,14 @@ void tuning() {
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
-  std::string disp_str = "\n"
+  std::string disp_str = ""
   "     TUNING MENU     \n"
-  "                     \n"
-  " Choose Base Tuning: \n"
-  "                     \n"
+  " Choose Base Tuning  \n"
+  "    or Load/Save:    \n"
   "       1) G/C        \n"
-  "                     \n"
   "       2) D/G        \n"
-  "                     \n";
+  " 3) Load Last Saved  \n"
+  " 4) Save Current     \n";
 
   display.print(disp_str.c_str());
   display.display();
@@ -1169,6 +1197,8 @@ void tuning() {
     // Check the 1 and 2 buttons
     my1Button->update();
     my2Button->update();
+    my3Button->update();
+    my4Button->update();
 
     if (my1Button->wasPressed()) {
       gc_or_dg = true;
@@ -1177,6 +1207,31 @@ void tuning() {
     } else if (my2Button->wasPressed()) {
       gc_or_dg = false;
       done = true;
+    } else if (my3Button->wasPressed()) {
+      load_saved_tunings();
+
+      // Crank On! for half a sec.
+      display.clearDisplay();
+      display.drawBitmap(0, 0, logo55_glcd_bmp, 128, 64, 1);
+      display.display();
+      delay(750);
+      return; // Bail out of this with the saved settings.
+
+    } else if (my4Button->wasPressed()) {
+      display.clearDisplay();
+      display.setTextSize(2);
+      display.setTextColor(WHITE);
+      display.setCursor(0, 0);
+      display.println("\nSAVING...");
+      display.display();
+      save_tunings();
+
+      // Crank On! for half a sec.
+      display.clearDisplay();
+      display.drawBitmap(0, 0, logo55_glcd_bmp, 128, 64, 1);
+      display.display();
+      delay(750);
+      return;
     };
   };
 
@@ -1211,6 +1266,7 @@ void tuning() {
     myBackButton->update();
 
     if (myOkButton->wasPressed()) {
+      save_tunings();
       done = true;
 
     } else if (myBackButton->wasPressed()) {
@@ -1219,6 +1275,11 @@ void tuning() {
     };
   };
 
+  // Crank On! for half a sec.
+  display.clearDisplay();
+  display.drawBitmap(0, 0, logo55_glcd_bmp, 128, 64, 1);
+  display.display();
+  delay(750);
 };
 
 bool first_loop = true;
@@ -1229,6 +1290,7 @@ bool first_loop = true;
 void loop() {
 
   if (first_loop) {
+    load_saved_tunings();
     tuning();
     printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0);
     first_loop = false;
