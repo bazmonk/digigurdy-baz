@@ -649,8 +649,8 @@ void printDisplay(int mel1, int mel2, int drone, int tromp, int tpose, int cap, 
   disp_str = "\n"
              "  Hi Melody: " + LongNoteNum[mel1 + tpose] + "\n"
              " Low Melody: " + LongNoteNum[mel2 + tpose] + "\n"
-             "      Drone: " + LongNoteNum[drone + tpose + cap] + "\n"
-             "  Trompette: " + LongNoteNum[tromp + tpose + cap] + "\n\n";
+             "  Trompette: " + LongNoteNum[tromp + tpose + cap] + "\n"
+             "      Drone: " + LongNoteNum[drone + tpose + cap] + "\n\n";
   disp_str2 = "  " + LongNoteNum[mel1 + tpose + offset] + "\n";
 
   display.clearDisplay();
