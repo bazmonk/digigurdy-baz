@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v0.7
+// VERSION: v0.8
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
 //   https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy
@@ -70,7 +70,6 @@ const int num_keys = 24;
 
 // These are found in the digigurdy-baz repository
 #include "bitmaps.h"
-#include "songs.h"
 
 // Right now not using the std namespace is just impacting strings.  That's ok...
 using namespace MIDI_NAMESPACE;
@@ -511,7 +510,6 @@ class GurdyCrank {
 // ultimately which note the "keybox" is producing.
 class HurdyGurdy {
   private:
-    KeyboxButton* keybox[num_keys];
     int keybox_size;         // How many keys are in the keybox
     int max_offset;          // The currest highest key being pressed
     int prev_offset;         // The highest key from last loop() cycle
@@ -519,6 +517,7 @@ class HurdyGurdy {
     bool lower_key_pressed;
 
   public:
+    KeyboxButton* keybox[num_keys];
     HurdyGurdy(int pin_arr[], int key_size) {
       keybox_size = key_size;
       max_offset = 0;
@@ -679,6 +678,15 @@ HurdyGurdy *mygurdy;
 ToggleButton *bigbutton;
 GurdyCrank *mycrank;
 
+KeyboxButton *myOkButton;
+KeyboxButton *myBackButton;
+KeyboxButton *my1Button;
+KeyboxButton *my2Button;
+KeyboxButton *my3Button;
+KeyboxButton *my4Button;
+KeyboxButton *my5Button;
+KeyboxButton *my6Button;
+
 // Note that there aren't special classes for melody, drone, even the keyclick.
 // They are differentiated in the main loop():
 // * A melody string is one that changes with the keybox offset.
@@ -710,8 +718,8 @@ int capo_offset;
 // to refer to it several times.
 int myoffset;
 
-void tuning() {
-};
+// true = G/C tuning, false = D/G.  For the menus.
+bool gc_or_dg;
 
 // Teensy and Arduino units start by running setup() once after powering up.
 // Here we establish how the "gurdy" is setup, what strings to use, and we also
@@ -764,6 +772,20 @@ void setup() {
   display.drawBitmap(0, 0, logo54_glcd_bmp, 128, 64, 1);
   display.display();
 
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  display.println("DigiGurdy");
+  display.setTextSize(1):
+  display.println("By Basil Lalli,"):
+  display.println("Concept By J. Dingley");
+  display.println("5 Mar 2022, Ver. 0.8 ");
+  display.println("                     ");
+  display.println("  shorturl.at/tuDY1  ");
+  display.display();
+  delay(3000);
+
   // // Un-comment to print yourself debugging messages to the Teensyduino
   // // serial console.
   // Serial.begin(38400);
@@ -780,6 +802,18 @@ void setup() {
   // of this file.  Make adjustments there.
   mygurdy = new HurdyGurdy(pin_array, num_keys);
   bigbutton = new ToggleButton(39);
+
+  // Grab the keys we use for menu nav out of the keybox:
+  myBackButton = mygurdy->keybox[0];
+  myOkButton = mygurdy->keybox[num_keys - 2];
+
+  // 1-6 keys are the first six bottom keys of the keybox
+  my1Button = mygurdy->keybox[1];
+  my2Button = mygurdy->keybox[3];
+  my3Button = mygurdy->keybox[4];
+  my4Button = mygurdy->keybox[6];
+  my5Button = mygurdy->keybox[8];
+  my6Button = mygurdy->keybox[9];
 
   // Which channel is which doesn't really matter, but I'm sticking with
   // John's channels so his videos on setting it up with a tablet/phone still work.
@@ -801,10 +835,374 @@ void setup() {
   printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0);
 };
 
+void tuning_hi_melody() {
+
+  int base_note;
+  int choice1;
+  int choice2;
+  int choice3;
+  int choice4;
+
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+
+  std::string disp_str = "         ";
+  if (gc_or_dg) {
+    base_note = Note(g4);
+    disp_str = disp_str + "G/C         \n";
+  } else {
+    base_note = Note(d4);
+    disp_str = disp_str + "D/G         \n";
+  };
+
+  choice1 = base_note + 12;
+  choice2 = base_note + 17;
+  choice3 = base_note;
+  choice4 = base_note + 5;
+
+  disp_str = disp_str + \
+  " Choose High Melody: \n"
+  "                     \n"
+  " 1) " + NoteNum[choice1] + " **  2) " + NoteNum[choice2] + "     \n"
+  " 3) " + NoteNum[choice3] + "     4) " + NoteNum[choice4] + "     \n"
+  "                     \n"
+  "  'O') Default (**)  \n"
+  "                     \n";
+
+  display.print(disp_str.c_str());
+  display.display();
+
+  bool done = false;
+
+  while (!done) {
+
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    my4Button->update();
+    myOkButton->update();
+
+    if (my1Button->wasPressed() || myOkButton->wasPressed()) {
+      mystring->setOpenNote(choice1);
+      done = true;
+    } else if (my2Button->wasPressed()) {
+      mystring->setOpenNote(choice2);
+      done = true;
+    } else if (my3Button->wasPressed()) {
+      mystring->setOpenNote(choice3);
+      done = true;
+    } else if (my4Button->wasPressed()) {
+      mystring->setOpenNote(choice4);
+      done = true;
+    };
+  };
+};
+
+void tuning_low_melody() {
+
+  int base_note;
+  int choice1;
+  int choice2;
+  int choice3;
+  int choice4;
+
+  if (gc_or_dg) {
+    base_note = Note(g4);
+  } else {
+    base_note = Note(d4);
+  };
+
+  choice1 = base_note;
+  choice2 = base_note - 7;
+  choice3 = base_note - 12;
+  choice4 = base_note - 19;
+
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+
+  std::string disp_str = " High Melody:   " + NoteNum[mystring->getOpenNote()] + "   \n"
+  " Choose Low Melody:  \n"
+  "                     \n"
+  " 1) " + NoteNum[choice1] + " **  2) " + NoteNum[choice2] + "     \n"
+  " 3) " + NoteNum[choice3] + "     4) " + NoteNum[choice4] + "     \n"
+  "                     \n"
+  "  'O') Default (**)  \n"
+  "                     \n";
+
+  display.print(disp_str.c_str());
+  display.display();
+
+  bool done = false;
+
+  while (!done) {
+
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    my4Button->update();
+    myOkButton->update();
+
+    if (my1Button->wasPressed() || myOkButton->wasPressed()) {
+      mylowstring->setOpenNote(choice1);
+      done = true;
+    } else if (my2Button->wasPressed()) {
+      mylowstring->setOpenNote(choice2);
+      done = true;
+    } else if (my3Button->wasPressed()) {
+      mylowstring->setOpenNote(choice3);
+      done = true;
+    } else if (my4Button->wasPressed()) {
+      mylowstring->setOpenNote(choice4);
+      done = true;
+    };
+  };
+};
+
+void tuning_drone() {
+
+  int base_note;
+  int choice1;
+  int choice2;
+  int choice3;
+  int choice4;
+  int choice5;
+  int choice6;
+
+  if (gc_or_dg) {
+    base_note = Note(g4);
+  } else {
+    base_note = Note(d4);
+  };
+
+  choice1 = base_note - 31;
+  choice2 = base_note - 24;
+  choice3 = base_note - 19;
+  choice4 = base_note - 12;
+  choice5 = base_note - 7;
+  choice6 = base_note;
+
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+
+  std::string disp_str = " Hi/Lo Melody: " + NoteNum[mystring->getOpenNote()] + "/" + NoteNum[mylowstring->getOpenNote()] + " \n"
+  "    Choose Drone:    \n"
+  " 1) " + NoteNum[choice1] + "     2) " + NoteNum[choice2] + "     \n"
+  " 3) " + NoteNum[choice3] + " **  4) " + NoteNum[choice4] + "     \n"
+  " 5) " + NoteNum[choice5] + "     6) " + NoteNum[choice6] + "     \n"
+  "                     \n"
+  "  'O') Default (**)  \n"
+  "                     \n";
+
+  display.print(disp_str.c_str());
+  display.display();
+
+  bool done = false;
+
+  while (!done) {
+
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    my4Button->update();
+    my5Button->update();
+    my6Button->update();
+    myOkButton->update();
+
+    if (my1Button->wasPressed()) {
+      mydrone->setOpenNote(choice1);
+      done = true;
+    } else if (my2Button->wasPressed()) {
+      mydrone->setOpenNote(choice2);
+      done = true;
+    } else if (my3Button->wasPressed() || myOkButton->wasPressed()) {
+      mydrone->setOpenNote(choice3);
+      done = true;
+    } else if (my4Button->wasPressed()) {
+      mydrone->setOpenNote(choice4);
+      done = true;
+    } else if (my5Button->wasPressed()) {
+      mydrone->setOpenNote(choice5);
+      done = true;
+    } else if (my6Button->wasPressed()) {
+      mydrone->setOpenNote(choice6);
+      done = true;
+    };
+  };
+};
+
+void tuning_tromp() {
+
+  int base_note;
+  int choice1;
+  int choice2;
+  int choice3;
+  int choice4;
+  int choice5;
+  int choice6;
+
+  if (gc_or_dg) {
+    base_note = Note(g4);
+  } else {
+    base_note = Note(d4);
+  };
+
+  choice1 = base_note + 5;
+  choice2 = base_note + 12;
+  choice3 = base_note - 7;
+  choice4 = base_note;
+  choice5 = base_note - 19;
+  choice6 = base_note - 12;
+
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+
+  std::string disp_str = " Hi/Lo Melody: " + NoteNum[mystring->getOpenNote()] + "/" + NoteNum[mylowstring->getOpenNote()] + " \n"
+  " Drone: " + NoteNum[mydrone->getOpenNote()] + "           \n"
+  "  Choose Trompette:  \n"
+  " 1) " + NoteNum[choice1] + " **  2) " + NoteNum[choice2] + "     \n"
+  " 3) " + NoteNum[choice3] + "     4) " + NoteNum[choice4] + "     \n"
+  " 5) " + NoteNum[choice5] + "     6) " + NoteNum[choice6] + "     \n"
+  "                     \n"
+  "                     \n"
+  "  'O') Default (**)  \n";
+
+  display.print(disp_str.c_str());
+  display.display();
+
+  bool done = false;
+
+  while (!done) {
+
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    my4Button->update();
+    my5Button->update();
+    my6Button->update();
+    myOkButton->update();
+
+    if (my1Button->wasPressed() || myOkButton->wasPressed()) {
+      mytromp->setOpenNote(choice1);
+      done = true;
+    } else if (my2Button->wasPressed()) {
+      mytromp->setOpenNote(choice2);
+      done = true;
+    } else if (my3Button->wasPressed()) {
+      mytromp->setOpenNote(choice3);
+      done = true;
+    } else if (my4Button->wasPressed()) {
+      mytromp->setOpenNote(choice4);
+      done = true;
+    } else if (my5Button->wasPressed()) {
+      mytromp->setOpenNote(choice5);
+      done = true;
+    } else if (my6Button->wasPressed()) {
+      mytromp->setOpenNote(choice6);
+      done = true;
+    };
+  };
+    };
+
+void tuning() {
+
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  std::string disp_str = "\n"
+  "     TUNING MENU     \n"
+  "                     \n"
+  " Choose Base Tuning: \n"
+  "                     \n"
+  "       1) G/C        \n"
+  "                     \n"
+  "       2) D/G        \n"
+  "                     \n";
+
+  display.print(disp_str.c_str());
+  display.display();
+
+  // Give the user a chance to figure out it's happening...
+  delay(1500);
+
+  bool done = false;
+  while (!done) {
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+
+    if (my1Button->wasPressed()) {
+      gc_or_dg = true;
+      done = true;
+
+    } else if (my2Button->wasPressed()) {
+      gc_or_dg = false;
+      done = true;
+    };
+  };
+
+  tuning_hi_melody();
+  tuning_low_melody();
+  tuning_drone();
+  tuning_tromp();
+
+  // SUMMARY
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  disp_str = ""
+  "      SUMMARY:       \n"
+  "  High Melody:   " + NoteNum[mystring->getOpenNote()] + "  \n"
+  "   Low Melody:   " + NoteNum[mylowstring->getOpenNote()] + "  \n"
+  "        Drone:   " + NoteNum[mydrone->getOpenNote()] + "  \n"
+  "    Trompette:   " + NoteNum[mytromp->getOpenNote()] + "  \n"
+  "                     \n"
+  "  'O') Save & Go     \n"
+  "  'X') Start Over    \n";
+
+  display.print(disp_str.c_str());
+  display.display();
+
+  done = false;
+  while (!done) {
+
+    // Check the 1 and 2 buttons
+    myOkButton->update();
+    myBackButton->update();
+
+    if (myOkButton->wasPressed()) {
+      done = true;
+
+    } else if (myBackButton->wasPressed()) {
+      tuning();
+      done = true;
+    };
+  };
+
+};
+
+bool first_loop = true;
+
 // The loop() function is repeatedly run by the Teensy unit after setup() completes.
 // This is the main logic of the program and defines how the strings, keys, click, buzz,
 // and buttons acutally behave during play.
 void loop() {
+
+  if (first_loop) {
+    tuning();
+    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0);
+    first_loop = false;
+  };
 
   // Update the keys, buttons, and crank status (which includes the buzz knob)
   myoffset = mygurdy->getMaxOffset();  // This covers the keybox buttons.
@@ -813,6 +1211,15 @@ void loop() {
   tpose_up->update();
   tpose_down->update();
   capo->update();
+
+  myOkButton->update();
+  myBackButton->update();
+
+  // If the "X" and "O" buttons are both down, trigger the tuning menu
+  if (myOkButton->beingPressed() && myBackButton->beingPressed()) {
+    tuning();
+    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0);
+  };
 
   // Check for a capo shift.
   if (capo->wasPressed()) {
