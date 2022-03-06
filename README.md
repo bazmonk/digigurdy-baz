@@ -50,7 +50,7 @@ It should automatically restart and be ready-to-go!
 
 ## Operation, Setup, and Play
 
-The keys for navigating the menus work just like John Dingley's code.  The bottom row represent number choices 1-6 starting from the left.  THe "OK" or X button is the top right, and the "Back" or O button is the top left:
+The keys for navigating the menus work just like John Dingley's code.  The bottom row represent number choices 1-6 starting from the left.  The "OK" or X button is the top right, and the "Back" or O button is the top left:
 
 ![keybox pic](https://raw.githubusercontent.com/wiki/bazmonk/digigurdy-baz/keys.jpeg)
 
