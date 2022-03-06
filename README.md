@@ -88,7 +88,9 @@ If there's something particular about it that annoys you, feel free to open an i
 
 ## I found a bug.  
 
-Please open an issue (top of the page here) and describe it for me.  Big bonus points (I'll make a credits screen for you all) if you can reproduce it and tell me how so I can fix it.  Git issues here generate emails for me so it's the preferred way to document them (versus facebook or some other method).
+Please open an issue (top of the page here) and describe it for me.  If it's a build problem, I'd like to see the output of Teensyduino (from the bottom panel) when it fails.  
+
+Big bonus points (I'll make a credits screen for you all) if you can reproduce it and tell me how so I can fix it.  Git issues here generate emails for me so it's the preferred way to document them (versus facebook or some other method).
 
 ## I want it to do something it doesn't do.
 
