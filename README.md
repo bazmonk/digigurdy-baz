@@ -3,7 +3,7 @@ Digigurdy Teensy code
 
 This is a rewrite of the digigurdy code (https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy).
 
-The code has been significantly streamlined (20% the size of the original source code), and there are several new features:
+The code has been significantly streamlined (20% the size of the original source code, compiles to only 25% the teensy3.5's capacity), and there are several new features:
 
 * A re-worked tuning menu, allowing a choice of G/C or D/G tuning, each with a selection (one each, four total) of:
   * 4 high chanterelles (unison and fifths)
