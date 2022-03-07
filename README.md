@@ -58,7 +58,7 @@ The closest thing to a "standard" recommendation for a synth is bs-16i, a MIDI a
 
 #### Soundfonts
 
-In addition to a synthesizer, it needs samples of hurdy gurdy sounds to work with.  I've hosted the soundfont file that comes with DigiGurdies here as well for your downloading convenience.  Big credit to the MIDIgurdy project which created most of these sounds and were kind enough to release them open-source for our mutual benefit.
+In addition to a synthesizer, it needs samples of hurdy gurdy sounds to work with.  I've hosted the soundfont file that comes with DigiGurdies here as well for your downloading convenience.  **Big shout-out to the MIDIgurdy project** which created most of these sounds and were kind enough to release them open-source for our mutual benefit.
 
 https://github.com/bazmonk/digigurdy-baz/blob/main/soundfonts/vienna-alto-mod11.sf2
 
