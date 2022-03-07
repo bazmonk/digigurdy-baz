@@ -48,6 +48,20 @@ With that in place, you should be able to open the `digigurdy-baz.ino` file in T
 
 It should automatically restart and be ready-to-go!
 
+### Connecting to a Synthesizer
+
+The DigiGurdy is just a MIDI controller in a hurdy-gurdy-like shape.  It gives out *instructions* on how to make notes, but it has to be connected to a synthsizer to actually *interpret* those into music.
+
+DigiGurdy supports both SerialMIDI over USB, and a powered, standard MIDI-out jack, which can be used with a Bluetooth MIDI transmitter, for example.  Both are ready upon startup with no extra setup necessary on the controller end.
+
+The closest thing to a "standard" recommendation for a synth is bs-16i, a MIDI app for iOS.  It works great, it can be connected into Garageband or other apps in your workflow, etc.  If you go with this option, there's a couple presets in this repository for you to try.
+
+#### Soundfonts
+
+In addition to a synthesizer, it needs samples of hurdy gurdy sounds to work with.  I've hosted the soundfont file that comes with DigiGurdies here as well for your downloading convenience.  Big credit to the MIDIgurdy project which created most of these sounds and were kind enough to release them open-source for our mutual benefit.
+
+https://github.com/bazmonk/digigurdy-baz/blob/main/soundfonts/vienna-alto-mod11.sf2
+
 ## Operation, Setup, and Play
 
 The keys for navigating the menus work just like John Dingley's code.  The bottom row represent number choices 1-6 starting from the left.  The "OK" or O button is the top right, and the "Back" or X button is the top left:
