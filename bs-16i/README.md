@@ -1,0 +1,6 @@
+These are "Scenes"--their term for presets--for the bs-16i iOS app that is often used for the DigiGurdy.
+
+In your iCloud storage, or somewehre in your Files is a `bs-16i` folder, and in it is a `Scenes` folder.  Put these there and they should show up.
+
+* The "Equal" Scene is just a basic setup I use for D/G gurdy playing.
+* The "Microtuned" one uses MIDI channel scale tuning to purposely tune the strings up to 10 cents off from each other, and the notes on the chanters themselves also vary 0-2 cents from each other.  This is to mimic the natural overtones you'd hear on a real hurdy gurdy that isn't digitally in perfect tune.  Try it!
