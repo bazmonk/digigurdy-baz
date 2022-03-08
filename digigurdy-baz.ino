@@ -754,9 +754,6 @@ void setup() {
   #ifdef BLUE_OLED
     display.begin(SH1106_SWITCHCAPVCC);
   #endif
-  // The Adafruit default logo.  Let it ride a sec or two.
-  display.display();
-  delay(2000);
 
   // Clear the buffer.
   display.clearDisplay();
@@ -765,31 +762,31 @@ void setup() {
   // display.clearDisplay();
   display.drawBitmap(0, 0, logo47_glcd_bmp, 128, 64, 1);
   display.display();
-  delay(1500);
+  delay(1000);
   display.clearDisplay();
   display.drawBitmap(0, 0, logo48_glcd_bmp, 128, 64, 1);
   display.display();
-  delay(150);
+  delay(130);
   display.clearDisplay();
   display.drawBitmap(0, 0, logo49_glcd_bmp, 128, 64, 1);
   display.display();
-  delay(150);
+  delay(130);
   display.clearDisplay();
   display.drawBitmap(0, 0, logo50_glcd_bmp, 128, 64, 1);
   display.display();
-  delay(150);
+  delay(130);
   display.clearDisplay();
   display.drawBitmap(0, 0, logo51_glcd_bmp, 128, 64, 1);
   display.display();
-  delay(150);
+  delay(130);
   display.clearDisplay();
   display.drawBitmap(0, 0, logo52_glcd_bmp, 128, 64, 1);
   display.display();
-  delay(150);
+  delay(130);
   display.clearDisplay();
   display.drawBitmap(0, 0, logo53_glcd_bmp, 128, 64, 1);
   display.display();
-  delay(150);
+  delay(130);
   display.clearDisplay();
   display.drawBitmap(0, 0, logo54_glcd_bmp, 128, 64, 1);
   display.display();
@@ -798,15 +795,16 @@ void setup() {
   display.setTextSize(2);
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
-  display.println("DigiGurdy");
+  display.println(" DigiGurdy");
   display.setTextSize(1);
+  display.println(" ------------------- ");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("5 Mar 2022, Ver.0.9.2 ");
+  display.println("8 Mar 2022, Ver.0.9.5");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
-  delay(2000);
+  delay(750);
 
   // // Un-comment to print yourself debugging messages to the Teensyduino
   // // serial console.
@@ -819,6 +817,24 @@ void setup() {
 
   mycrank = new GurdyCrank(A1, A2);
   mycrank->detect();
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  display.println(" DigiGurdy");
+  display.setTextSize(1);
+  display.println(" ------------------- ");
+  display.setTextSize(2);
+  display.println("   Crank  ");
+
+  if (mycrank->isDetected()) {
+    display.println(" Detected ");
+  } else {
+    display.println("   Absent ");
+  };
+
+  display.display();
+  delay(1000);
 
   // The keybox arrangement is decided by pin_array, which is up in the CONFIG SECTION
   // of this file.  Make adjustments there.
@@ -1244,9 +1260,6 @@ bool view_slot_screen(int slot_num) {
 
   display.display();
 
-  // Give the user a chance to figure out it's happening...
-  delay(1000);
-
   bool done = false;
   while (!done) {
 
@@ -1330,9 +1343,6 @@ void load_preset_screen() {
   display.print(disp_str.c_str());
   display.display();
 
-  // Give the user a chance to figure out it's happening...
-  delay(1000);
-
   bool done = false;
   while (!done) {
 
@@ -1381,7 +1391,7 @@ void welcome_screen() {
   display.display();
 
   // Give the user a chance to figure out it's happening...
-  delay(1000);
+  delay(500);
 
   bool done = false;
   while (!done) {
@@ -1555,6 +1565,15 @@ void loop() {
 
   // If the "X" and "O" buttons are both down, trigger the tuning menu
   if (myOkButton->beingPressed() && myBackButton->beingPressed()) {
+
+    // Turn off the sound :-)
+    mystring->soundOff();
+    mylowstring->soundOff();
+    mykeyclick->soundOff();  // Not sure if this is necessary... but it feels right.
+    mytromp->soundOff();
+    mydrone->soundOff();
+    mybuzz->soundOff();
+    
     tuning();
     printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0);
   };
