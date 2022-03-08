@@ -122,6 +122,7 @@ std::string LongNoteNum[] = {
 // These are found in the digigurdy-baz repository
 #include "bitmaps.h"       // Pretty pictures
 #include "eeprom_values.h" // Save-slot memory addresses
+#include "default_tunings.h" // Preset tunings.
 
 // Right now not using the std namespace is just impacting strings.  That's ok...
 using namespace MIDI_NAMESPACE;
@@ -857,9 +858,25 @@ void setup() {
 
   capo = new GurdyButton(23); // The capo button
   capo_offset = 0;
-
-  printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0);
 };
+
+// load_preset_tunings accepts an int between 1-4 and sets the appropriate preset.
+// See the default_tunings.h file to modify what the presets actually are.
+void load_preset_tunings(int preset) {
+  int tunings[];
+  if (preset == 1) { tunings = PRESET1; };
+  if (preset == 2) { tunings = PRESET2; };
+  if (preset == 3) { tunings = PRESET3; };
+  if (preset == 4) { tunings = PRESET4; };
+
+  mystring->setOpenNote(tunings[0]);
+  mylowstring->setOpenNote(tunings[1);
+  mydrone->setOpenNote(tunings[2]);
+  mytromp->setOpenNote(tunings[3]);
+  mybuzz->setOpenNote(tunings[4]);
+  tpose_offset = tunings[5];
+  capo_offset = tunings[6];
+}
 
 // load_saved_tunings requires one argument: the "save slot" which
 // should be one of the EEPROM_SLOT[1-4] values in eeprom_values.h.
