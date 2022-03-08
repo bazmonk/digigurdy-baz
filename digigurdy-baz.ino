@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v0.91
+// VERSION: v0.9.2
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
 //   https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy
@@ -12,9 +12,6 @@
 // USERS!!! Uncomment one of these lines depending on what kind of OLED screen you have.
 #define WHITE_OLED
 //#define BLUE_OLED
-
-#define SCREEN_WIDTH 128 // OLED display width, in pixels
-#define SCREEN_HEIGHT 64
 
 // Eventually I'll move this to a header, but the pin_array[] index here represents
 // the MIDI note offset, and the value is the corresponding teensy pin.
@@ -45,6 +42,9 @@ const int num_keys = 24;
 #include <MIDI.h>
 #include <string>
 
+#define SCREEN_WIDTH 128 // OLED display width, in pixels
+#define SCREEN_HEIGHT 64
+
 // The white OLED uses Adafruit SSD1306.  Blue uses SH1106.
 #ifdef WHITE_OLED
   #include <Adafruit_SSD1306.h>
@@ -69,7 +69,8 @@ const int num_keys = 24;
 #endif
 
 // These are found in the digigurdy-baz repository
-#include "bitmaps.h"
+#include "bitmaps.h"       // Pretty pictures
+#include "eeprom_values.h" // Save-slot memory addresses
 
 // Right now not using the std namespace is just impacting strings.  That's ok...
 using namespace MIDI_NAMESPACE;
@@ -734,15 +735,6 @@ int myoffset;
 // true = G/C tuning, false = D/G.  For the menus.
 bool gc_or_dg;
 
-const int eeprom_hi_mel = 1;
-const int eeprom_lo_mel = 2;
-const int eeprom_drone = 3;
-const int eeprom_tromp = 4;
-const int eeprom_tpose = 5;
-const int eeprom_capo = 6;
-const int eeprom_buzz = 7;
-
-
 // Teensy and Arduino units start by running setup() once after powering up.
 // Here we establish how the "gurdy" is setup, what strings to use, and we also
 // start the MIDI communication.
@@ -802,7 +794,7 @@ void setup() {
   display.setTextSize(1);
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("5 Mar 2022, Ver.0.91 ");
+  display.println("5 Mar 2022, Ver.0.9.2 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -857,24 +849,36 @@ void setup() {
   printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0);
 };
 
-void load_saved_tunings() {
-  mystring->setOpenNote(EEPROM.read(eeprom_hi_mel));
-  mylowstring->setOpenNote(EEPROM.read(eeprom_lo_mel));
-  mydrone->setOpenNote(EEPROM.read(eeprom_drone));
-  mytromp->setOpenNote(EEPROM.read(eeprom_tromp));
-  mybuzz->setOpenNote(EEPROM.read(eeprom_buzz));
-  tpose_offset = EEPROM.read(eeprom_tpose);
-  capo_offset = EEPROM.read(eeprom_capo);
+// load_saved_tunings requires one argument: the "save slot" which
+// should be one of the EEPROM_SLOT[1-4] values in eeprom_values.h.
+void load_saved_tunings(int slot) {
+  byte value;
+  value = EEPROM.read(slot + EEPROM_HI_MEL);
+  mystring->setOpenNote(int(value));
+  value = EEPROM.read(slot + EEPROM_LO_MEL);
+  mylowstring->setOpenNote(int(value));
+  value = EEPROM.read(slot + EEPROM_DRONE);
+  mydrone->setOpenNote(int(value));
+  value = EEPROM.read(slot + EEPROM_TROMP);
+  mytromp->setOpenNote(int(value));
+  value = EEPROM.read(slot + EEPROM_BUZZ);
+  mybuzz->setOpenNote(int(value));
+  value = EEPROM.read(slot + EEPROM_TPOSE);
+  tpose_offset = int(value);
+  value = EEPROM.read(slot + EEPROM_CAPO);
+  capo_offset = int(value);
 };
 
-void save_tunings() {
-  EEPROM.write(eeprom_hi_mel, mystring->getOpenNote());
-  EEPROM.write(eeprom_lo_mel, mylowstring->getOpenNote());
-  EEPROM.write(eeprom_drone, mydrone->getOpenNote());
-  EEPROM.write(eeprom_tromp, mytromp->getOpenNote());
-  EEPROM.write(eeprom_buzz, mybuzz->getOpenNote());
-  EEPROM.write(eeprom_tpose, tpose_offset);
-  EEPROM.write(eeprom_capo, capo_offset);
+// save_tunings accepts one argument, which should be one of the
+// EEPROM_SLOT[1-4] values defined in eeprom_values.h.
+void save_tunings(int slot) {
+  EEPROM.write(slot + EEPROM_HI_MEL, byte(mystring->getOpenNote()));
+  EEPROM.write(slot + EEPROM_LO_MEL, byte(mylowstring->getOpenNote()));
+  EEPROM.write(slot + EEPROM_DRONE, byte(mydrone->getOpenNote()));
+  EEPROM.write(slot + EEPROM_TROMP, byte(mytromp->getOpenNote()));
+  EEPROM.write(slot + EEPROM_BUZZ, byte(mybuzz->getOpenNote()));
+  EEPROM.write(slot + EEPROM_TPOSE, byte(tpose_offset));
+  EEPROM.write(slot + EEPROM_CAPO, byte(capo_offset));
 };
 
 void tuning_hi_melody() {
@@ -1208,7 +1212,7 @@ void tuning() {
       gc_or_dg = false;
       done = true;
     } else if (my3Button->wasPressed()) {
-      load_saved_tunings();
+      load_saved_tunings(1);
 
       // Crank On! for half a sec.
       display.clearDisplay();
@@ -1224,7 +1228,7 @@ void tuning() {
       display.setCursor(0, 0);
       display.println("\nSAVING...");
       display.display();
-      save_tunings();
+      save_tunings(1);
 
       // Crank On! for half a sec.
       display.clearDisplay();
@@ -1266,7 +1270,7 @@ void tuning() {
     myBackButton->update();
 
     if (myOkButton->wasPressed()) {
-      save_tunings();
+      save_tunings(1);
       done = true;
 
     } else if (myBackButton->wasPressed()) {
@@ -1290,7 +1294,7 @@ bool first_loop = true;
 void loop() {
 
   if (first_loop) {
-    load_saved_tunings();
+    load_saved_tunings(1);
     tuning();
     printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0);
     first_loop = false;

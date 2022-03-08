@@ -165,3 +165,29 @@
 #                     #
 #                     #
 #######################
+
+1. Welcome Screen
+    * Load Preset
+    * Load Saved Tuning
+    * Create New Tuning
+    * Other Options
+
+1a. Load Preset
+
+1b. Load Saved Tuning
+
+1c. Create New Tuning
+    * Existing Tuning menu
+
+1d. Other Options
+    * Clear EEPROM
+
+
+2. In-play "Pause" Screen
+    * Load Preset
+    * Load Saved
+    * New Turning
+    * Drones on/off
+    O - Return to play
+
+
