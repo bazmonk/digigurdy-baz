@@ -863,14 +863,14 @@ void setup() {
 // load_preset_tunings accepts an int between 1-4 and sets the appropriate preset.
 // See the default_tunings.h file to modify what the presets actually are.
 void load_preset_tunings(int preset) {
-  int tunings[];
+  const int *tunings;
   if (preset == 1) { tunings = PRESET1; };
   if (preset == 2) { tunings = PRESET2; };
   if (preset == 3) { tunings = PRESET3; };
   if (preset == 4) { tunings = PRESET4; };
 
   mystring->setOpenNote(tunings[0]);
-  mylowstring->setOpenNote(tunings[1);
+  mylowstring->setOpenNote(tunings[1]);
   mydrone->setOpenNote(tunings[2]);
   mytromp->setOpenNote(tunings[3]);
   mybuzz->setOpenNote(tunings[4]);
@@ -1203,6 +1203,216 @@ void tuning_tromp() {
   };
 };
 
+// This screen is for viewing a save slot's settings.
+// It returns true if the user wants to use it, false
+// otherwise.
+// Accepts integer slot: the save slot number.
+bool view_slot_screen(int slot_num) {
+  int slot;
+  if (slot_num == 1) { slot = EEPROM_SLOT1; };
+  if (slot_num == 2) { slot = EEPROM_SLOT2; };
+  if (slot_num == 3) { slot = EEPROM_SLOT3; };
+  if (slot_num == 4) { slot = EEPROM_SLOT4; };
+
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  display.print(" -Saved Slot Tuning- \n");
+  display.print(" Hi Melody: ");
+  display.print(EEPROM.read(slot + EEPROM_HI_MEL));
+  display.print("  \n");
+  display.print(" Lo Melody: ");
+  display.print(EEPROM.read(slot + EEPROM_LO_MEL));
+  display.print("  \n");
+  display.print(" Drone:     ");
+  display.print(EEPROM.read(slot + EEPROM_DRONE));
+  display.print("  \n");
+  display.print(" Trompette: ");
+  display.print(EEPROM.read(slot + EEPROM_TROMP));
+  display.print("  \n");
+  display.print(" Tpose: ");
+  if (EEPROM.read(slot + EEPROM_TPOSE) > 0) { display.print("+"); };
+  display.print(EEPROM.read(slot + EEPROM_TPOSE));
+  display.print("  Capo: ");
+  if (EEPROM.read(slot + EEPROM_CAPO) > 0) { display.print("+"); };
+  display.print(EEPROM.read(slot + EEPROM_CAPO));
+  display.print("\n");
+  display.print(" Use?  'O' or 1) Yes \n");
+  display.print("       'X' or 2) No  \n");
+
+  display.display();
+
+  // Give the user a chance to figure out it's happening...
+  delay(1000);
+
+  bool done = false;
+  while (!done) {
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    myOkButton->update();
+    myBackButton->update();
+
+    if (my1Button->wasPressed() || myOkButton->wasPressed()) {
+      load_saved_tunings(slot);
+      return true;
+
+    } else if (my2Button->wasPressed() || myBackButton->wasPressed()) {
+      return false;
+    };
+  };
+  return false;
+};
+
+// This screen asks the user to select a save slot for
+// preview and optionally choosing.
+void load_saved_screen() {
+  bool done = false;
+  while (!done) {
+
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 0);
+    std::string disp_str = ""
+    " --Load Saved Slot-- \n"
+    "                     \n"
+    " Select for Preview: \n"
+    "                     \n"
+    "     1) Slot 1       \n"
+    "     2) Slot 2       \n"
+    "     3) Slot 3       \n"
+    "     4) Slot 4       \n";
+
+    display.print(disp_str.c_str());
+    display.display();
+
+    // Give the user a chance to figure out it's happening...
+    delay(1000);
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    my4Button->update();
+
+    if (my1Button->wasPressed()) {
+      if (view_slot_screen(1)) { done = true; };
+
+    } else if (my2Button->wasPressed()) {
+      if (view_slot_screen(2)) { done = true; };
+
+    } else if (my3Button->wasPressed()) {
+      if (view_slot_screen(3)) { done = true; };
+
+    } else if (my4Button->wasPressed()) {
+      if (view_slot_screen(4)) { done = true; };
+    };
+  };
+};
+
+// This screen lets the user choose a preset.
+void load_preset_screen() {
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  std::string disp_str = ""
+  " ---Load A Preset--- \n"
+  " Select a Preset:    \n"
+  "                     \n"
+  " 1) G/C, C Drones    \n"
+  " 2) G/C, G Drones    \n"
+  " 3) D/G, D Drones    \n"
+  " 4) D/G, G Drones    \n"
+  "                     \n";
+
+  display.print(disp_str.c_str());
+  display.display();
+
+  // Give the user a chance to figure out it's happening...
+  delay(1000);
+
+  bool done = false;
+  while (!done) {
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    my4Button->update();
+
+    if (my1Button->wasPressed()) {
+      load_preset_tunings(1);
+      done = true;
+
+    } else if (my2Button->wasPressed()) {
+      load_preset_tunings(2);
+      done = true;
+
+    } else if (my3Button->wasPressed()) {
+      load_preset_tunings(3);
+      done = true;
+
+    } else if (my4Button->wasPressed()) {
+      load_preset_tunings(4);
+      done = true;
+    };
+  };
+};
+
+// This is the first screen after the credits n' stuff.
+void welcome_screen() {
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  std::string disp_str = ""
+  " -----DigiGurdy----- \n"
+  " Select an Option:   \n"
+  "                     \n"
+  " 1) Load Preset      \n"
+  " 2) Load Save Slot   \n"
+  " 3) New Tuning Setup \n"
+  " 4) Other Options    \n"
+  "                     \n";
+
+  display.print(disp_str.c_str());
+  display.display();
+
+  // Give the user a chance to figure out it's happening...
+  delay(1000);
+
+  bool done = false;
+  while (!done) {
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    my4Button->update();
+
+    if (my1Button->wasPressed()) {
+      load_preset_screen();
+      done = true;
+
+    } else if (my2Button->wasPressed()) {
+      load_saved_screen();
+      done = true;
+
+    } else if (my3Button->wasPressed()) {
+      //tuning_screen();
+      done = true;
+
+    } else if (my4Button->wasPressed()) {
+      //options_screen();
+      done = true;
+    };
+  };
+};
+
 void tuning() {
 
   display.clearDisplay();
@@ -1323,8 +1533,13 @@ bool first_loop = true;
 void loop() {
 
   if (first_loop) {
-    load_saved_tunings(1);
-    tuning();
+    welcome_screen();
+    // Crank On! for half a sec.
+    display.clearDisplay();
+    display.drawBitmap(0, 0, logo55_glcd_bmp, 128, 64, 1);
+    display.display();
+    delay(750);
+
     printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0);
     first_loop = false;
   };
