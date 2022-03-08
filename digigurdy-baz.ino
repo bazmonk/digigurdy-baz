@@ -69,7 +69,8 @@ const int num_keys = 24;
 #endif
 
 // These are found in the digigurdy-baz repository
-#include "bitmaps.h"
+#include "bitmaps.h"       // Pretty pictures
+#include "eeprom_values.h" // Save-slot memory addresses
 
 // Right now not using the std namespace is just impacting strings.  That's ok...
 using namespace MIDI_NAMESPACE;
@@ -733,15 +734,6 @@ int myoffset;
 
 // true = G/C tuning, false = D/G.  For the menus.
 bool gc_or_dg;
-
-const int eeprom_hi_mel = 1;
-const int eeprom_lo_mel = 2;
-const int eeprom_drone = 3;
-const int eeprom_tromp = 4;
-const int eeprom_tpose = 5;
-const int eeprom_capo = 6;
-const int eeprom_buzz = 7;
-
 
 // Teensy and Arduino units start by running setup() once after powering up.
 // Here we establish how the "gurdy" is setup, what strings to use, and we also
