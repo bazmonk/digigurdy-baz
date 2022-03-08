@@ -231,6 +231,11 @@ class GurdyString {
     void setOpenNote(int new_note) {
       open_note = new_note;
     };
+
+    // MIDI volume is an integer between 0 (off) and 127 (full volume).
+    void setVolume(int vol) {
+      midi_volume = vol;
+    };
 };
 
 // BuzzKnob manages the potentiometer knob that adjusts the buzzing threshold.
@@ -692,6 +697,9 @@ HurdyGurdy *mygurdy;
 ToggleButton *bigbutton;
 GurdyCrank *mycrank;
 
+// As musical keys, these are referred to in the mygurdy object above.
+// This declaration of them is specifically for their use as navigational
+// buttons in the menu screens.  ok = O, back = X.
 KeyboxButton *myOkButton;
 KeyboxButton *myBackButton;
 KeyboxButton *my1Button;
@@ -716,12 +724,11 @@ GurdyString *mybuzz;
 
 GurdyButton *tpose_up;
 GurdyButton *tpose_down;
+GurdyButton *capo;
 
 // This defines the +/- one octave transpose range.
 const int max_tpose = 12;
 int tpose_offset;
-
-GurdyButton *capo;
 
 // This defines the 0, +2, +4 capo range.
 const int max_capo = 4;
