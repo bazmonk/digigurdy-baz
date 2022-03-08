@@ -883,31 +883,32 @@ void load_preset_tunings(int preset) {
 void load_saved_tunings(int slot) {
   byte value;
   value = EEPROM.read(slot + EEPROM_HI_MEL);
-  mystring->setOpenNote(int(value));
+  mystring->setOpenNote(value);
   value = EEPROM.read(slot + EEPROM_LO_MEL);
-  mylowstring->setOpenNote(int(value));
+  mylowstring->setOpenNote(value);
   value = EEPROM.read(slot + EEPROM_DRONE);
-  mydrone->setOpenNote(int(value));
+  mydrone->setOpenNote(value);
   value = EEPROM.read(slot + EEPROM_TROMP);
-  mytromp->setOpenNote(int(value));
+  mytromp->setOpenNote(value);
   value = EEPROM.read(slot + EEPROM_BUZZ);
-  mybuzz->setOpenNote(int(value));
+  mybuzz->setOpenNote(value);
   value = EEPROM.read(slot + EEPROM_TPOSE);
-  tpose_offset = int(value);
+  tpose_offset = value;
   value = EEPROM.read(slot + EEPROM_CAPO);
-  capo_offset = int(value);
+  capo_offset = value;
 };
 
 // save_tunings accepts one argument, which should be one of the
 // EEPROM_SLOT[1-4] values defined in eeprom_values.h.
 void save_tunings(int slot) {
-  EEPROM.write(slot + EEPROM_HI_MEL, byte(mystring->getOpenNote()));
-  EEPROM.write(slot + EEPROM_LO_MEL, byte(mylowstring->getOpenNote()));
-  EEPROM.write(slot + EEPROM_DRONE, byte(mydrone->getOpenNote()));
-  EEPROM.write(slot + EEPROM_TROMP, byte(mytromp->getOpenNote()));
-  EEPROM.write(slot + EEPROM_BUZZ, byte(mybuzz->getOpenNote()));
-  EEPROM.write(slot + EEPROM_TPOSE, byte(tpose_offset));
-  EEPROM.write(slot + EEPROM_CAPO, byte(capo_offset));
+
+  EEPROM.write(slot + EEPROM_HI_MEL, mystring->getOpenNote());
+  EEPROM.write(slot + EEPROM_LO_MEL, mylowstring->getOpenNote());
+  EEPROM.write(slot + EEPROM_DRONE, mydrone->getOpenNote());
+  EEPROM.write(slot + EEPROM_TROMP, mytromp->getOpenNote());
+  EEPROM.write(slot + EEPROM_BUZZ, mybuzz->getOpenNote());
+  EEPROM.write(slot + EEPROM_TPOSE, tpose_offset);
+  EEPROM.write(slot + EEPROM_CAPO, capo_offset);
 };
 
 void tuning_hi_melody() {
@@ -1220,16 +1221,16 @@ bool view_slot_screen(int slot_num) {
   display.setCursor(0, 0);
   display.print(" -Saved Slot Tuning- \n");
   display.print(" Hi Melody: ");
-  display.print(EEPROM.read(slot + EEPROM_HI_MEL));
+  display.print(LongNoteNum[EEPROM.read(slot + EEPROM_HI_MEL)].c_str());
   display.print("  \n");
   display.print(" Lo Melody: ");
-  display.print(EEPROM.read(slot + EEPROM_LO_MEL));
+  display.print(LongNoteNum[EEPROM.read(slot + EEPROM_LO_MEL)].c_str());
   display.print("  \n");
   display.print(" Drone:     ");
-  display.print(EEPROM.read(slot + EEPROM_DRONE));
+  display.print(LongNoteNum[EEPROM.read(slot + EEPROM_DRONE)].c_str());
   display.print("  \n");
   display.print(" Trompette: ");
-  display.print(EEPROM.read(slot + EEPROM_TROMP));
+  display.print(LongNoteNum[EEPROM.read(slot + EEPROM_TROMP)].c_str());
   display.print("  \n");
   display.print(" Tpose: ");
   if (EEPROM.read(slot + EEPROM_TPOSE) > 0) { display.print("+"); };
@@ -1269,29 +1270,26 @@ bool view_slot_screen(int slot_num) {
 // This screen asks the user to select a save slot for
 // preview and optionally choosing.
 void load_saved_screen() {
+
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  std::string disp_str = ""
+  " --Load Saved Slot-- \n"
+  "                     \n"
+  " Select for Preview: \n"
+  "                     \n"
+  "     1) Slot 1       \n"
+  "     2) Slot 2       \n"
+  "     3) Slot 3       \n"
+  "     4) Slot 4       \n";
+
+  display.print(disp_str.c_str());
+  display.display();
+
   bool done = false;
   while (!done) {
-
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 0);
-    std::string disp_str = ""
-    " --Load Saved Slot-- \n"
-    "                     \n"
-    " Select for Preview: \n"
-    "                     \n"
-    "     1) Slot 1       \n"
-    "     2) Slot 2       \n"
-    "     3) Slot 3       \n"
-    "     4) Slot 4       \n";
-
-    display.print(disp_str.c_str());
-    display.display();
-
-    // Give the user a chance to figure out it's happening...
-    delay(1000);
-
     // Check the 1 and 2 buttons
     my1Button->update();
     my2Button->update();
@@ -1451,7 +1449,7 @@ void tuning() {
       gc_or_dg = false;
       done = true;
     } else if (my3Button->wasPressed()) {
-      load_saved_tunings(1);
+      load_saved_tunings(EEPROM_SLOT1);
 
       // Crank On! for half a sec.
       display.clearDisplay();
@@ -1467,7 +1465,7 @@ void tuning() {
       display.setCursor(0, 0);
       display.println("\nSAVING...");
       display.display();
-      save_tunings(1);
+      save_tunings(EEPROM_SLOT1);
 
       // Crank On! for half a sec.
       display.clearDisplay();
@@ -1509,7 +1507,7 @@ void tuning() {
     myBackButton->update();
 
     if (myOkButton->wasPressed()) {
-      save_tunings(1);
+      save_tunings(EEPROM_SLOT1);
       done = true;
 
     } else if (myBackButton->wasPressed()) {
