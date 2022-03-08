@@ -16,10 +16,10 @@ static const int EEPROM_SLOT4 = 60;
 
 // These define what the values are within the "slots".  You'd add this to one of the
 // SLOTs above to get the actual address in EEPROM.
-const int EEPROM_HI_MEL = 0;
-const int EEPROM_LO_MEL = 1;
-const int EEPROM_DRONE = 2;
-const int EEPROM_TROMP = 3;
-const int EEPROM_TPOSE = 4;
-const int EEPROM_CAPO = 5;
-const int EEPROM_BUZZ = 6;
+static const int EEPROM_HI_MEL = 0;
+static const int EEPROM_LO_MEL = 1;
+static const int EEPROM_DRONE = 2;
+static const int EEPROM_TROMP = 3;
+static const int EEPROM_TPOSE = 4;
+static const int EEPROM_CAPO = 5;
+static const int EEPROM_BUZZ = 6;
