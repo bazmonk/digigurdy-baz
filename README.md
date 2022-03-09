@@ -1,6 +1,6 @@
 # digigurdy-baz
 
-**NEW!  Check out version 0.9.5!**
+**NEW!  Check out version 0.9.6!**
 
 This is a rewrite of the digigurdy code (https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy).
 
@@ -18,6 +18,7 @@ The code has been significantly streamlined (20% the size of the original source
 * 4 _save slots_ for saving your favorite tunings! **(NEW!)**
 * Built-in EEPROM clearing feature for first-time installation **(NEW!)**
 * **On-Screen-Display** showing current string tunings, transpose and capo settings, as well as a read-out of the current note being played on the keybox.
+* Muting of both or either the drone/trompette strings directly from the pause menu **(NEW!)**
 
 ## Installation
 
@@ -103,9 +104,12 @@ The third "extra" button toggles between a whole-note or two-whole-note capo on 
 
 ### Re-Tuning, Saving
 
-At any time during play, pressing the X and O (top left and right keys) at the same time brings up the Tuning Menu.  This is a lot like the Startup Menu, except here you have an option to save your current tuning instead of the startup options.
+At any time during play, pressing the X and O (top left and right keys) at the same time brings up the Pause Menu.  This is a lot like the Startup Menu, except here you have an option to save your current tuning instead of the startup options.
 
-There are four save slots available to you.  They preserve the tunings and capo/transpose settings.  
+There are four save slots available to you.  They preserve the tunings and capo/transpose settings.
+
+Hitting the 'O' button in the Pause Menu toggles through muting options on the drone and trompette strings.  Your current mute settings will be reflected on the main screen.
+  * Drone/trompette mute settings are not part of the save settings and must be set every play session.
 
 ## I tried it and I don't like it.  Now what?
 
