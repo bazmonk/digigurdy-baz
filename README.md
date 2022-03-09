@@ -1,5 +1,6 @@
 # digigurdy-baz
-Digigurdy Teensy code
+
+**NEW!  Check out version 0.9.5!**
 
 This is a rewrite of the digigurdy code (https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy).
 
@@ -13,7 +14,9 @@ The code has been significantly streamlined (20% the size of the original source
 * The capo button allows **on-the-fly** toggling of 1 or 2 whole-note capos on the drone/trompette strings.
 * Two transpose buttons allow **on-the-fly** transposing of all strings up *or* down one octave in half-steps (12 up, 12 down)!
   * Every tuning can be played in *any key* within an octave of it.
-* Easy-to-access save/load of all string, transpose and capo settings.
+* 4 pre-loaded default presets (matching John Dingley's orignal presets) **(NEW!)**
+* 4 _save slots_ for saving your favorite tunings! **(NEW!)**
+* Built-in EEPROM clearing feature for first-time installation **(NEW!)**
 * **On-Screen-Display** showing current string tunings, transpose and capo settings, as well as a read-out of the current note being played on the keybox.
 
 ## Installation
@@ -48,6 +51,14 @@ With that in place, you should be able to open the `digigurdy-baz.ino` file in T
 
 It should automatically restart and be ready-to-go!
 
+### Clear EEPROM for first-time installations
+
+Testing has already shown that strange side-effects occur when the EEPROM (your digigurdy's memory) is filled with other stuff.  The start-up screen includes an `Other Options` selection, and inside is an option to clear your EEPROM.
+
+First-time users of this codebase should do this before continuing.  It only needs to be done once.
+
+Regular users can utilize it to effectively clear their save slots, since that's all that's saved there.
+
 ### Connecting to a Synthesizer
 
 The DigiGurdy is just a MIDI controller in a hurdy-gurdy-like shape.  It gives out *instructions* on how to make notes, but it has to be connected to a synthsizer to actually *interpret* those into music.
@@ -74,9 +85,9 @@ After showing the Adafruit logo (represent!) and a title screen, crank detection
 
 * **DO NOT TURN THE CRANK DURING CRANK DETECTION!**  It's ok if you do, but you may fool the digigurdy into thinking there is no crank installed (yes, that does sound backwards, but it's the truth).  If you do this accidentally, just unpower and power back up the digigurdy.  It'll forgive you and forget it ever even happened.
 
-From there, you will be shown the Tuning Menu.  There's quick options here to immediately load the last tuning you used and get straight to playing, or options to choose a new tuning.  
+From there, you will be shown the Startup Menu.  There's options here to load one of the included presets, load a tuning you've saved before, set up a new tuning, and other startup options.
 
-(If you're a little overwhelmed with all the string options, each selection screen has a "default" selection that you can quickly choose with the 'O' button (just mash it to fly through the whole tuning menu if you want).  That will at least give you somewhere to start, and you can experiment from there.)
+**New Users**: the four preset options are for you!  Each one is a reasonable combination, and they're good starting points while you experiment with making others.
 
 ### Play
 
@@ -88,11 +99,9 @@ The third "extra" button toggles between a whole-note or two-whole-note capo on 
 
 ### Re-Tuning, Saving
 
-At any time during play, pressing the X and O (top left and right keys) at the same time brings up the Tuning Menu again.  
+At any time during play, pressing the X and O (top left and right keys) at the same time brings up the Tuning Menu.  This is a lot like the Startup Menu, except here you have an option to save your current tuning instead of the startup options.
 
-**If you want to save your transpose/capo settings for later, do this real quick and hit 4) to save them.**  Since you likely applied these after going through the tuning menu before, they need to be saved after you choose them if you want to load them up again after restarting your gurdy.
-
-(For those curious, the EEPROM memory on teensy units are only rated to last "at least 100,000 writes", so I didn't implement a periodic auto-save feature out of an abundance of caution to preserve your unit's memory.  If you want auto-saving and you don't mind burning out your bytes--you do have a few thousand spare bytes--let me know and I'll make it auto-saving.)
+There are four save slots available to you.  They preserve the tunings and capo/transpose settings.  
 
 ## I tried it and I don't like it.  Now what?
 
