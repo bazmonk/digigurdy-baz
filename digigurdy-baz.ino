@@ -106,7 +106,7 @@ std::string NoteNum[] = {
 
 // This is a version of the above but with flats listed as well.
 std::string LongNoteNum[] = {
-  "  C-1  ", "C#-1/Db-1", "  D-1  ", "D#-1/Eb-1", "  E-1  ", "  F-1  ", "F#-1/Gb-1", "  G-1  ", "G#-1/Ab-1", "  A-1  ", "A#-1/Bb-1", "  B-1  ",
+  " EMPTY ", "C#-1/Db-1", "  D-1  ", "D#-1/Eb-1", "  E-1  ", "  F-1  ", "F#-1/Gb-1", "  G-1  ", "G#-1/Ab-1", "  A-1  ", "A#-1/Bb-1", "  B-1  ",
   "  C0   ", "C#0/Db0", "  D0   ", "D#0/Eb0", "  E0   ", "  F0   ", "F#0/Gb0", "  G0   ", "G#0/Ab0", "  A0   ", "A#0/Bb0", "  B0   ",
   "  C1   ", "C#1/Db1", "  D1   ", "D#1/Eb1", "  E1   ", "  F1   ", "F#1/Gb1", "  G1   ", "G#1/Ab1", "  A1   ", "A#1/Bb1", "  B1   ",
   "  C2   ", "C#2/Db2", "  D2   ", "D#2/Eb2", "  E2   ", "  F2   ", "F#2/Gb2", "  G2   ", "G#2/Ab2", "  A2   ", "A#2/Bb2", "  B2   ",
@@ -1446,26 +1446,6 @@ void options_screen() {
 // This is the first screen after the credits n' stuff.
 void welcome_screen() {
 
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setCursor(0, 0);
-  std::string disp_str = ""
-  " -----DigiGurdy----- \n"
-  " Select an Option:   \n"
-  "                     \n"
-  " 1) Load Preset      \n"
-  " 2) Load Save Slot   \n"
-  " 3) New Tuning Setup \n"
-  " 4) Other Options    \n"
-  "                     \n";
-
-  display.print(disp_str.c_str());
-  display.display();
-
-  // Give the user a chance to figure out it's happening...
-  delay(500);
-
   bool done = false;
   while (!done) {
 
@@ -1509,8 +1489,6 @@ void welcome_screen() {
       options_screen();
       // Not done = true here, we'd want to get prompted again.
     };
-
-    delay(250);
   };
 };
 
