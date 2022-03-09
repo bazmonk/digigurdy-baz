@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v0.9.5
+// VERSION: v0.9.6
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
 //   https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy
@@ -292,6 +292,10 @@ class GurdyString {
     // MIDI volume is an integer between 0 (off) and 127 (full volume).
     void setVolume(int vol) {
       midi_volume = vol;
+    };
+
+    int getVolume() {
+      return midi_volume;
     };
 };
 
@@ -649,7 +653,7 @@ class HurdyGurdy {
 
 };
 
-void printDisplay(int mel1, int mel2, int drone, int tromp, int tpose, int cap, int offset) {
+void printDisplay(int mel1, int mel2, int drone, int tromp, int tpose, int cap, int offset, int drone_vol, int tromp_vol) {
 
   // This whole thing could be written more clearly...
 
@@ -660,9 +664,17 @@ void printDisplay(int mel1, int mel2, int drone, int tromp, int tpose, int cap, 
   disp_str0 = " Tpose: ";
   disp_str = "\n"
              "  Hi Melody: " + LongNoteNum[mel1 + tpose] + "\n"
-             " Low Melody: " + LongNoteNum[mel2 + tpose] + "\n"
-             "  Trompette: " + LongNoteNum[tromp + tpose + cap] + "\n"
-             "      Drone: " + LongNoteNum[drone + tpose + cap] + "\n\n";
+             " Low Melody: " + LongNoteNum[mel2 + tpose] + "\n";
+  if (tromp_vol > 0) {
+    disp_str = disp_str + "  Trompette: " + LongNoteNum[tromp + tpose + cap] + "\n";
+  } else {
+    disp_str = disp_str + "  Trompette:   MUTE \n";
+  };
+  if (drone_vol > 0) {
+    disp_str = disp_str + "      Drone: " + LongNoteNum[drone + tpose + cap] + "\n\n";
+  } else {
+    disp_str = disp_str + "      Drone:   MUTE \n";
+  };
   disp_str2 = "  " + LongNoteNum[mel1 + tpose + offset] + "\n";
 
   display.clearDisplay();
@@ -748,6 +760,13 @@ int myoffset;
 // true = G/C tuning, false = D/G.  For the menus.
 bool gc_or_dg;
 
+// this tracks the drone/trompette mute status.  Starts all-on.
+// 0 = all on
+// 1 = all off
+// 2 = drone on, tromp off
+// 3 = drone off, tromp on
+int drone_mode = 0;
+
 // Teensy and Arduino units start by running setup() once after powering up.
 // Here we establish how the "gurdy" is setup, what strings to use, and we also
 // start the MIDI communication.
@@ -805,7 +824,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("8 Mar 2022, Ver.0.9.5");
+  display.println("8 Mar 2022, Ver.0.9.6");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -1651,12 +1670,21 @@ void pause_screen() {
     std::string disp_str = ""
     " ----Pause  Menu---- \n"
     " Select an Option:   \n"
-    "                     \n"
     " 1) Load Preset      \n"
     " 2) Load Save Slot   \n"
     " 3) Save This Tuning \n"
     " 4) New Tuning Setup \n"
     " X or 5) Go Back     \n";
+
+    if (drone_mode == 0) {
+      disp_str = disp_str + "O) Drone:On ,Trmp:On \n";
+    } else if (drone_mode == 1) {
+      disp_str = disp_str + "O) Drone:Off,Trmp:Off\n";
+    } else if (drone_mode == 2) {
+      disp_str = disp_str + "O) Drone:On, Trmp:Off\n";
+    } else if (drone_mode == 3) {
+      disp_str = disp_str + "O) Drone:Off,Trmp:On \n";
+    };
 
     display.print(disp_str.c_str());
     display.display();
@@ -1668,6 +1696,7 @@ void pause_screen() {
     my4Button->update();
     my5Button->update();
     myBackButton->update();
+    myOkButton->update();
 
     if (my1Button->wasPressed()) {
       load_preset_screen();
@@ -1688,6 +1717,24 @@ void pause_screen() {
 
     } else if (my5Button->wasPressed() || myBackButton->wasPressed()) {
       done = true;
+    } else if (myOkButton->wasPressed()) {
+      if (drone_mode == 0) {
+        drone_mode = 1; // 1 == both off
+        mydrone->setVolume(0);
+        mytromp->setVolume(0);
+      } else if (drone_mode == 1) {
+        drone_mode = 2; // 2 == drone on, tromp off
+        mydrone->setVolume(56);
+        mytromp->setVolume(0);
+      } else if (drone_mode == 2) {
+        drone_mode = 3; // 3 == drone off, tromp on
+        mydrone->setVolume(0);
+        mytromp->setVolume(56);
+      } else if (drone_mode == 3) {
+        drone_mode = 0; // 0 == both on
+        mydrone->setVolume(56);
+        mytromp->setVolume(56);
+      };
     };
   };
 
@@ -1713,7 +1760,7 @@ void loop() {
     display.display();
     delay(750);
 
-    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0);
+    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0, mydrone->getVolume(), mytromp->getVolume());
     first_loop = false;
   };
 
@@ -1743,7 +1790,7 @@ void loop() {
     bigbutton->setToggle(false);
 
     pause_screen();
-    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0);
+    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0, mydrone->getVolume(), mytromp->getVolume());
   };
 
   // Check for a capo shift.
@@ -1768,7 +1815,7 @@ void loop() {
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
     };
-    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset);
+    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
   };
 
   // As long as we're in playing mode--acutally playing or not--
@@ -1789,7 +1836,7 @@ void loop() {
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
     };
-    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset);
+    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
   };
   if (tpose_down->wasPressed() && (max_tpose + tpose_offset > 0)) {
     tpose_offset -= 1;
@@ -1807,7 +1854,7 @@ void loop() {
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
     };
-    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset);
+    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
   };
 
   // NOTE:
@@ -1826,14 +1873,14 @@ void loop() {
       mylowstring->soundOn(myoffset + tpose_offset);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
-      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset);
+      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
 
     } else if (mycrank->startedSpinning() && !bigbutton->toggleOn()) {
       mystring->soundOn(myoffset + tpose_offset);
       mylowstring->soundOn(myoffset + tpose_offset);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
-      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset);
+      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
 
     // Turn off the previous notes and turn on the new one with a click if new key this cycle.
     // NOTE: I'm not touching the drone/trompette.  Just leave it on if it's a key change.
@@ -1845,7 +1892,7 @@ void loop() {
       mystring->soundOn(myoffset + tpose_offset);
       mylowstring->soundOn(myoffset + tpose_offset);
       mykeyclick->soundOn(tpose_offset);
-      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset);
+      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
     };
 
     // Whenever we're playing, check for buzz.
@@ -1865,7 +1912,7 @@ void loop() {
     mytromp->soundOff();
     mydrone->soundOff();
     mybuzz->soundOff();
-    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset);
+    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
 
   // If the crank stops and the toggle was off, turn off sound.
   } else if (mycrank->stoppedSpinning() && !bigbutton->toggleOn()) {
@@ -1875,7 +1922,7 @@ void loop() {
     mytromp->soundOff();
     mydrone->soundOff();
     mybuzz->soundOff();
-    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset);
+    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
   };
 
   // Apparently we need to do this to discard incoming data.
