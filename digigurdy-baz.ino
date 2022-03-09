@@ -1625,6 +1625,7 @@ void save_tuning_screen() {
   display.display();
 
   bool done = false;
+  int slot = 0;
   while (!done) {
 
     // Check the 1 and 2 buttons
@@ -1636,25 +1637,41 @@ void save_tuning_screen() {
 
     if (my1Button->wasPressed()) {
       save_tunings(EEPROM_SLOT1);
+      slot = 1;
       done = true;
 
     } else if (my2Button->wasPressed()) {
       save_tunings(EEPROM_SLOT2);
+      slot = 2;
       done = true;
 
     } else if (my3Button->wasPressed()) {
       save_tunings(EEPROM_SLOT3);
+      slot = 3;
       done = true;
 
     } else if (my4Button->wasPressed()) {
       save_tunings(EEPROM_SLOT4);
+      slot = 4;
       done = true;
 
     } else if (myBackButton->wasPressed()) {
       // Just return.
-      done = true;
+      return;
     };
   };
+
+  // Display a confirmation message
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setTextColor(WHITE);
+  display.setCursor(0,0);
+  display.print("\n  Slot ");
+  display.print(slot);
+  display.print("\n  Saved!");
+  display.display();
+  delay(500);
+  
 };
 
 // This is the screen that X+O gets you.
