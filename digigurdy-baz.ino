@@ -880,6 +880,18 @@ void setup() {
   capo_offset = 0;
 };
 
+// ##############
+// MENU FUNCTIONS
+// ##############
+//
+// Functions here drive the main behavior of the digigurdy.
+//
+// First-time hackers of this code: the loop() at the end of this is the main()
+// of ardruino/teensy programs.  It runs in an endless loop.  The welcome_screen()
+// is the first screen that comes after startup if you're trying to track down the flow.
+// The pause_screen() is what comes up when X+O is pressed.  The rest of the functions/screens
+// get called from them.  Hope that helps you find the part you care about!
+
 // load_preset_tunings accepts an int between 1-4 and sets the appropriate preset.
 // See the default_tunings.h file to modify what the presets actually are.
 void load_preset_tunings(int preset) {
