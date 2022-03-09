@@ -75,6 +75,10 @@ https://github.com/bazmonk/digigurdy-baz/blob/main/soundfonts/vienna-alto-mod11.
 
 ## Operation, Setup, and Play
 
+Here's a quick video explaining the controls:
+
+https://www.youtube.com/watch?v=yC0skMH7qog
+
 The keys for navigating the menus work just like John Dingley's code.  The bottom row represent number choices 1-6 starting from the left.  The "OK" or O button is the top right, and the "Back" or X button is the top left:
 
 ![keybox pic](https://raw.githubusercontent.com/wiki/bazmonk/digigurdy-baz/keys.jpeg)
