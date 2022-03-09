@@ -1651,23 +1651,6 @@ void save_tuning_screen() {
 // This is the screen that X+O gets you.
 void pause_screen() {
 
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setCursor(0, 0);
-  std::string disp_str = ""
-  " ----Pause  Menu---- \n"
-  " Select an Option:   \n"
-  "                     \n"
-  " 1) Load Preset      \n"
-  " 2) Load Save Slot   \n"
-  " 3) Save this Tuning \n"
-  " 4) New Tuning Setup \n"
-  " X or 5) Go Back     \n";
-
-  display.print(disp_str.c_str());
-  display.display();
-
   bool done = false;
   while (!done) {
 
@@ -1681,7 +1664,7 @@ void pause_screen() {
     "                     \n"
     " 1) Load Preset      \n"
     " 2) Load Save Slot   \n"
-    " 3) Save this Tuning \n"
+    " 3) Save This Tuning \n"
     " 4) New Tuning Setup \n"
     " X or 5) Go Back     \n";
 
