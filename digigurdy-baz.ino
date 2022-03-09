@@ -797,7 +797,7 @@ void setup() {
   display.setCursor(0, 0);
   display.println(" DigiGurdy");
   display.setTextSize(1);
-  display.println(" ------------------- ");
+  display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
   display.println("8 Mar 2022, Ver.0.9.5");
@@ -925,6 +925,13 @@ void save_tunings(int slot) {
   EEPROM.write(slot + EEPROM_BUZZ, mybuzz->getOpenNote());
   EEPROM.write(slot + EEPROM_TPOSE, tpose_offset);
   EEPROM.write(slot + EEPROM_CAPO, capo_offset);
+};
+
+// This clears the EEPROM and overwrites it all with zeroes
+void clear_eeprom() {
+  // Not much to say here... write 0 everywhere:
+  for (int i = 0 ; i < EEPROM.length() ; i++ )
+    EEPROM.write(i, 0);
 };
 
 void tuning_hi_melody() {
@@ -1284,25 +1291,26 @@ bool view_slot_screen(int slot_num) {
 // preview and optionally choosing.
 void load_saved_screen() {
 
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setCursor(0, 0);
-  std::string disp_str = ""
-  " --Load Saved Slot-- \n"
-  "                     \n"
-  " Select for Preview: \n"
-  "                     \n"
-  "     1) Slot 1       \n"
-  "     2) Slot 2       \n"
-  "     3) Slot 3       \n"
-  "     4) Slot 4       \n";
-
-  display.print(disp_str.c_str());
-  display.display();
-
   bool done = false;
   while (!done) {
+
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 0);
+    std::string disp_str = ""
+    " --Load Saved Slot-- \n"
+    "                     \n"
+    " Select for Preview: \n"
+    "                     \n"
+    "     1) Slot 1       \n"
+    "     2) Slot 2       \n"
+    "     3) Slot 3       \n"
+    "     4) Slot 4       \n";
+
+    display.print(disp_str.c_str());
+    display.display();
+
     // Check the 1 and 2 buttons
     my1Button->update();
     my2Button->update();
@@ -1371,6 +1379,60 @@ void load_preset_screen() {
   };
 };
 
+// This screen is for other setup options.  Currently, that's
+// just an option to clear the EEPROM.
+void options_screen() {
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  std::string disp_str = ""
+  " ------Options------ \n"
+  " Select an Option:   \n"
+  "                     \n"
+  " O) Clear EEPROM     \n"
+  "                     \n"
+  " X) Go Back          \n"
+  "                     \n"
+  "                     \n";
+
+  display.print(disp_str.c_str());
+  display.display();
+
+  // Give the user a chance to figure out it's happening...
+  delay(500);
+
+  bool done = false;
+  while (!done) {
+
+    // Check the 1 and 2 buttons
+    myOkButton->update();
+    myBackButton->update();
+
+    if (myOkButton->wasPressed()) {
+
+      clear_eeprom();
+
+      display.clearDisplay();
+      display.setTextSize(2);
+      display.setTextColor(WHITE);
+      display.setCursor(0, 0);
+      std::string disp_str = ""
+      "  EEPROM  \n"
+      "  \n"
+      "  CLEARED \n";
+
+      display.print(disp_str.c_str());
+      display.display();
+      delay(750);
+      done = true;
+
+    } else if (myBackButton->wasPressed()) {
+      done = true;
+    };
+  };
+};
+
 // This is the first screen after the credits n' stuff.
 void welcome_screen() {
   display.clearDisplay();
@@ -1396,6 +1458,23 @@ void welcome_screen() {
   bool done = false;
   while (!done) {
 
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 0);
+    std::string disp_str = ""
+    " -----DigiGurdy----- \n"
+    " Select an Option:   \n"
+    "                     \n"
+    " 1) Load Preset      \n"
+    " 2) Load Save Slot   \n"
+    " 3) New Tuning Setup \n"
+    " 4) Other Options    \n"
+    "                     \n";
+
+    display.print(disp_str.c_str());
+    display.display();
+
     // Check the 1 and 2 buttons
     my1Button->update();
     my2Button->update();
@@ -1411,13 +1490,15 @@ void welcome_screen() {
       done = true;
 
     } else if (my3Button->wasPressed()) {
-      //tuning_screen();
+      tuning();
       done = true;
 
     } else if (my4Button->wasPressed()) {
-      //options_screen();
-      done = true;
+      options_screen();
+      // Not done = true here, we'd want to get prompted again.
     };
+
+    delay(250);
   };
 };
 
@@ -1428,13 +1509,14 @@ void tuning() {
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
   std::string disp_str = ""
-  "     TUNING MENU     \n"
-  " Choose Base Tuning  \n"
-  "    or Load/Save:    \n"
+  " ----Tuning Menu---- \n"
+  "                     \n"
+  " Choose Base Tuning: \n"
+  "                     \n"
   "       1) G/C        \n"
+  "                     \n"
   "       2) D/G        \n"
-  " 3) Load Last Saved  \n"
-  " 4) Save Current     \n";
+  "                     \n";
 
   display.print(disp_str.c_str());
   display.display();
@@ -1448,8 +1530,6 @@ void tuning() {
     // Check the 1 and 2 buttons
     my1Button->update();
     my2Button->update();
-    my3Button->update();
-    my4Button->update();
 
     if (my1Button->wasPressed()) {
       gc_or_dg = true;
@@ -1458,31 +1538,6 @@ void tuning() {
     } else if (my2Button->wasPressed()) {
       gc_or_dg = false;
       done = true;
-    } else if (my3Button->wasPressed()) {
-      load_saved_tunings(EEPROM_SLOT1);
-
-      // Crank On! for half a sec.
-      display.clearDisplay();
-      display.drawBitmap(0, 0, logo55_glcd_bmp, 128, 64, 1);
-      display.display();
-      delay(750);
-      return; // Bail out of this with the saved settings.
-
-    } else if (my4Button->wasPressed()) {
-      display.clearDisplay();
-      display.setTextSize(2);
-      display.setTextColor(WHITE);
-      display.setCursor(0, 0);
-      display.println("\nSAVING...");
-      display.display();
-      save_tunings(EEPROM_SLOT1);
-
-      // Crank On! for half a sec.
-      display.clearDisplay();
-      display.drawBitmap(0, 0, logo55_glcd_bmp, 128, 64, 1);
-      display.display();
-      delay(750);
-      return;
     };
   };
 
@@ -1497,14 +1552,14 @@ void tuning() {
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
   disp_str = ""
-  "      SUMMARY:       \n"
+  " -----Summary:------ \n"
   "  High Melody:   " + NoteNum[mystring->getOpenNote()] + "  \n"
   "   Low Melody:   " + NoteNum[mylowstring->getOpenNote()] + "  \n"
   "        Drone:   " + NoteNum[mydrone->getOpenNote()] + "  \n"
   "    Trompette:   " + NoteNum[mytromp->getOpenNote()] + "  \n"
   "                     \n"
-  "  'O') Save & Go     \n"
-  "  'X') Start Over    \n";
+  "'O' or 1) Continue   \n"
+  "'X' or 2) Start Over \n";
 
   display.print(disp_str.c_str());
   display.display();
@@ -1513,14 +1568,15 @@ void tuning() {
   while (!done) {
 
     // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
     myOkButton->update();
     myBackButton->update();
 
-    if (myOkButton->wasPressed()) {
-      save_tunings(EEPROM_SLOT1);
+    if (myOkButton->wasPressed() || my1Button->wasPressed()) {
       done = true;
 
-    } else if (myBackButton->wasPressed()) {
+    } else if (myBackButton->wasPressed() || my2Button->wasPressed()) {
       tuning();
       done = true;
     };
@@ -1531,6 +1587,105 @@ void tuning() {
   display.drawBitmap(0, 0, logo55_glcd_bmp, 128, 64, 1);
   display.display();
   delay(750);
+};
+
+// This is the screen for saving to a save slot
+void save_tuning_screen() {
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  std::string disp_str = ""
+  " ----Save Tuning---- \n"
+  " Choose a Save Slot: \n"
+  "                     \n"
+  "      1) Slot 1      \n"
+  "      2) Slot 2      \n"
+  "      3) Slot 3      \n"
+  "      4) Slot 4      \n"
+  "      X) Go Back     \n";
+
+  display.print(disp_str.c_str());
+  display.display();
+
+  bool done = false;
+  while (!done) {
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    my4Button->update();
+    myBackButton->update();
+
+    if (my1Button->wasPressed()) {
+      save_tunings(EEPROM_SLOT1);
+      done = true;
+
+    } else if (my2Button->wasPressed()) {
+      save_tunings(EEPROM_SLOT2);
+      done = true;
+
+    } else if (my3Button->wasPressed()) {
+      save_tunings(EEPROM_SLOT3);
+      done = true;
+
+    } else if (my4Button->wasPressed()) {
+      save_tunings(EEPROM_SLOT4);
+      done = true;
+
+    } else if (myBackButton->wasPressed()) {
+      // Just return.
+      done = true;
+    };
+  };
+};
+
+// This is the screen that X+O gets you.
+void pause_screen() {
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  std::string disp_str = ""
+  " ----Pause  Menu---- \n"
+  " Select an Option:   \n"
+  "                     \n"
+  " 1) Load Preset      \n"
+  " 2) Load Save Slot   \n"
+  " 3) Save this Tuning \n"
+  " 4) New Tuning Setup \n"
+  "                     \n";
+
+  display.print(disp_str.c_str());
+  display.display();
+
+  bool done = false;
+  while (!done) {
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    my4Button->update();
+
+    if (my1Button->wasPressed()) {
+      load_preset_screen();
+      done = true;
+
+    } else if (my2Button->wasPressed()) {
+      load_saved_screen();
+      done = true;
+
+    } else if (my3Button->wasPressed()) {
+      save_tuning_screen();
+      done = true;
+
+    } else if (my4Button->wasPressed()) {
+      tuning();
+      done = true;
+    };
+  };
 };
 
 bool first_loop = true;
@@ -1573,8 +1728,8 @@ void loop() {
     mytromp->soundOff();
     mydrone->soundOff();
     mybuzz->soundOff();
-    
-    tuning();
+
+    pause_screen();
     printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0);
   };
 
