@@ -68,9 +68,61 @@ const int num_keys = 24;
   Adafruit_SH1106 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
 #endif
 
+// enum Note maps absolute note names to MIDI note numbers (middle C4 = 60),
+// which range from 0 to 127.
+//
+// This lets us specify MIDI notes by their name instead of having to refer to a table.
+enum Note {
+  c_1, c_1s, d_1, d_1s, e_1, f_1, f_1s, g_1, g_1s, a_1, a_1s, b_1,
+  c0, c0s, d0, d0s, e0, f0, f0s, g0, g0s, a0, a0s, b0,
+  c1, c1s, d1, d1s, e1, f1, f1s, g1, g1s, a1, a1s, b1,
+  c2, c2s, d2, d2s, e2, f2, f2s, g2, g2s, a2, a2s, b2,
+  c3, c3s, d3, d3s, e3, f3, f3s, g3, g3s, a3, a3s, b3,
+  c4, c4s, d4, d4s, e4, f4, f4s, g4, g4s, a4, a4s, b4,
+  c5, c5s, d5, d5s, e5, f5, f5s, g5, g5s, a5, a5s, b5,
+  c6, c6s, d6, d6s, e6, f6, f6s, g6, g6s, a6, a6s, b6,
+  c7, c7s, d7, d7s, e7, f7, f7s, g7, g7s, a7, a7s, b7,
+  c8, c8s, d8, d8s, e8, f8, f8s, g8, g8s, a8, a8s, b8,
+  c9, c9s, d9, d9s, e9, f9, f9s, g9
+};
+
+// string array NoteNum is the reverse of the above Note enum.  It maps MIDI note numbers to
+// screen-friendly note names.
+//
+// This lets us recall string names for printing on the screen without having to refer to a table.
+std::string NoteNum[] = {
+  "C-1", "C#-1", "D-1", "D#-1", "E-1", "F-1", "#F-1", "G-1", "G#-1", "A-1", "#A-1", "B-1",
+  "C0", "C#0", "D0", "D#0", "E0", "F0", "F#0", "G0", "G#0", "A0", "A#0", "B0",
+  "C1", "C#1", "D1", "D#1", "E1", "F1", "F#1", "G1", "G#1", "A1", "A#1", "B1",
+  "C2", "C#2", "D2", "D#2", "E2", "F2", "F#2", "G2", "G#2", "A2", "A#2", "B2",
+  "C3", "C#3", "D3", "D#3", "E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3",
+  "C4", "C#4", "D4", "D#4", "E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4",
+  "C5", "C#5", "D5", "D#5", "E5", "F5", "F#5", "G5", "G#5", "A5", "A#5", "B5",
+  "C6", "C#6", "D6", "D#6", "E6", "F6", "F#6", "G6", "G#6", "A6", "A#6", "B6",
+  "C7", "C#7", "D7", "D#7", "E7", "F7", "F#7", "G7", "G#7", "A7", "A#7", "B7",
+  "C8", "C#8", "D8", "D#8", "E8", "F8", "F#8", "G8", "G#8", "A8", "A#8", "B8",
+  "C9", "C#9", "D9", "D#9", "E9", "F9", "F#9", "G9"
+};
+
+// This is a version of the above but with flats listed as well.
+std::string LongNoteNum[] = {
+  "  C-1  ", "C#-1/Db-1", "  D-1  ", "D#-1/Eb-1", "  E-1  ", "  F-1  ", "F#-1/Gb-1", "  G-1  ", "G#-1/Ab-1", "  A-1  ", "A#-1/Bb-1", "  B-1  ",
+  "  C0   ", "C#0/Db0", "  D0   ", "D#0/Eb0", "  E0   ", "  F0   ", "F#0/Gb0", "  G0   ", "G#0/Ab0", "  A0   ", "A#0/Bb0", "  B0   ",
+  "  C1   ", "C#1/Db1", "  D1   ", "D#1/Eb1", "  E1   ", "  F1   ", "F#1/Gb1", "  G1   ", "G#1/Ab1", "  A1   ", "A#1/Bb1", "  B1   ",
+  "  C2   ", "C#2/Db2", "  D2   ", "D#2/Eb2", "  E2   ", "  F2   ", "F#2/Gb2", "  G2   ", "G#2/Ab2", "  A2   ", "A#2/Bb2", "  B2   ",
+  "  C3   ", "C#3/Db3", "  D3   ", "D#3/Eb3", "  E3   ", "  F3   ", "F#3/Gb3", "  G3   ", "G#3/Ab3", "  A3   ", "A#3/Bb3", "  B3   ",
+  "  C4   ", "C#4/Db4", "  D4   ", "D#4/Eb4", "  E4   ", "  F4   ", "F#4/Gb4", "  G4   ", "G#4/Ab4", "  A4   ", "A#4/Bb4", "  B4   ",
+  "  C5   ", "C#5/Db5", "  D5   ", "D#5/Eb5", "  E5   ", "  F5   ", "F#5/Gb5", "  G5   ", "G#5/Ab5", "  A5   ", "A#5/Bb5", "  B5   ",
+  "  C6   ", "C#6/Db6", "  D6   ", "D#6/Eb6", "  E6   ", "  F6   ", "F#6/Gb6", "  G6   ", "G#6/Ab6", "  A6   ", "A#6/Bb6", "  B6   ",
+  "  C7   ", "C#7/Db7", "  D7   ", "D#7/Eb7", "  E7   ", "  F7   ", "F#7/Gb7", "  G7   ", "G#7/Ab7", "  A7   ", "A#7/Bb7", "  B7   ",
+  "  C8   ", "C#8/Db8", "  D8   ", "D#8/Eb8", "  E8   ", "  F8   ", "F#8/Gb8", "  G8   ", "G#8/Ab8", "  A8   ", "A#8/Bb8", "  B8   ",
+  "  C9   ", "C#9/Db9", "  D9   ", "D#9/Eb9", "  E9   ", "  F9   ", "F#9/Gb9", "  G9   "
+};
+
 // These are found in the digigurdy-baz repository
 #include "bitmaps.h"       // Pretty pictures
 #include "eeprom_values.h" // Save-slot memory addresses
+#include "default_tunings.h" // Preset tunings.
 
 // Right now not using the std namespace is just impacting strings.  That's ok...
 using namespace MIDI_NAMESPACE;
@@ -160,6 +212,11 @@ class ToggleButton: public GurdyButton {
     bool toggleOn() {
       return toggled;
     };
+
+    // This is to forcibly turn the toggle off after a menu press.
+    void setToggle(bool new_toggle) {
+      toggled = new_toggle;
+    };
 };
 
 // class KeyboxButton adds a note offset variable to the GurdyButton class.
@@ -230,6 +287,11 @@ class GurdyString {
 
     void setOpenNote(int new_note) {
       open_note = new_note;
+    };
+
+    // MIDI volume is an integer between 0 (off) and 127 (full volume).
+    void setVolume(int vol) {
+      midi_volume = vol;
     };
 };
 
@@ -587,57 +649,6 @@ class HurdyGurdy {
 
 };
 
-// enum Note maps absolute note names to MIDI note numbers (middle C4 = 60),
-// which range from 0 to 127.
-//
-// This lets us specify MIDI notes by their name instead of having to refer to a table.
-enum Note {
-  c_1, c_1s, d_1, d_1s, e_1, f_1, f_1s, g_1, g_1s, a_1, a_1s, b_1,
-  c0, c0s, d0, d0s, e0, f0, f0s, g0, g0s, a0, a0s, b0,
-  c1, c1s, d1, d1s, e1, f1, f1s, g1, g1s, a1, a1s, b1,
-  c2, c2s, d2, d2s, e2, f2, f2s, g2, g2s, a2, a2s, b2,
-  c3, c3s, d3, d3s, e3, f3, f3s, g3, g3s, a3, a3s, b3,
-  c4, c4s, d4, d4s, e4, f4, f4s, g4, g4s, a4, a4s, b4,
-  c5, c5s, d5, d5s, e5, f5, f5s, g5, g5s, a5, a5s, b5,
-  c6, c6s, d6, d6s, e6, f6, f6s, g6, g6s, a6, a6s, b6,
-  c7, c7s, d7, d7s, e7, f7, f7s, g7, g7s, a7, a7s, b7,
-  c8, c8s, d8, d8s, e8, f8, f8s, g8, g8s, a8, a8s, b8,
-  c9, c9s, d9, d9s, e9, f9, f9s, g9
-};
-
-// string array NoteNum is the reverse of the above Note enum.  It maps MIDI note numbers to
-// screen-friendly note names.
-//
-// This lets us recall string names for printing on the screen without having to refer to a table.
-std::string NoteNum[] = {
-  "C-1", "C#-1", "D-1", "D#-1", "E-1", "F-1", "#F-1", "G-1", "G#-1", "A-1", "#A-1", "B-1",
-  "C0", "C#0", "D0", "D#0", "E0", "F0", "F#0", "G0", "G#0", "A0", "A#0", "B0",
-  "C1", "C#1", "D1", "D#1", "E1", "F1", "F#1", "G1", "G#1", "A1", "A#1", "B1",
-  "C2", "C#2", "D2", "D#2", "E2", "F2", "F#2", "G2", "G#2", "A2", "A#2", "B2",
-  "C3", "C#3", "D3", "D#3", "E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3",
-  "C4", "C#4", "D4", "D#4", "E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4",
-  "C5", "C#5", "D5", "D#5", "E5", "F5", "F#5", "G5", "G#5", "A5", "A#5", "B5",
-  "C6", "C#6", "D6", "D#6", "E6", "F6", "F#6", "G6", "G#6", "A6", "A#6", "B6",
-  "C7", "C#7", "D7", "D#7", "E7", "F7", "F#7", "G7", "G#7", "A7", "A#7", "B7",
-  "C8", "C#8", "D8", "D#8", "E8", "F8", "F#8", "G8", "G#8", "A8", "A#8", "B8",
-  "C9", "C#9", "D9", "D#9", "E9", "F9", "F#9", "G9"
-};
-
-// This is a version of the above but with flats listed as well.
-std::string LongNoteNum[] = {
-  "  C-1  ", "C#-1/Db-1", "  D-1  ", "D#-1/Eb-1", "  E-1  ", "  F-1  ", "F#-1/Gb-1", "  G-1  ", "G#-1/Ab-1", "  A-1  ", "A#-1/Bb-1", "  B-1  ",
-  "  C0   ", "C#0/Db0", "  D0   ", "D#0/Eb0", "  E0   ", "  F0   ", "F#0/Gb0", "  G0   ", "G#0/Ab0", "  A0   ", "A#0/Bb0", "  B0   ",
-  "  C1   ", "C#1/Db1", "  D1   ", "D#1/Eb1", "  E1   ", "  F1   ", "F#1/Gb1", "  G1   ", "G#1/Ab1", "  A1   ", "A#1/Bb1", "  B1   ",
-  "  C2   ", "C#2/Db2", "  D2   ", "D#2/Eb2", "  E2   ", "  F2   ", "F#2/Gb2", "  G2   ", "G#2/Ab2", "  A2   ", "A#2/Bb2", "  B2   ",
-  "  C3   ", "C#3/Db3", "  D3   ", "D#3/Eb3", "  E3   ", "  F3   ", "F#3/Gb3", "  G3   ", "G#3/Ab3", "  A3   ", "A#3/Bb3", "  B3   ",
-  "  C4   ", "C#4/Db4", "  D4   ", "D#4/Eb4", "  E4   ", "  F4   ", "F#4/Gb4", "  G4   ", "G#4/Ab4", "  A4   ", "A#4/Bb4", "  B4   ",
-  "  C5   ", "C#5/Db5", "  D5   ", "D#5/Eb5", "  E5   ", "  F5   ", "F#5/Gb5", "  G5   ", "G#5/Ab5", "  A5   ", "A#5/Bb5", "  B5   ",
-  "  C6   ", "C#6/Db6", "  D6   ", "D#6/Eb6", "  E6   ", "  F6   ", "F#6/Gb6", "  G6   ", "G#6/Ab6", "  A6   ", "A#6/Bb6", "  B6   ",
-  "  C7   ", "C#7/Db7", "  D7   ", "D#7/Eb7", "  E7   ", "  F7   ", "F#7/Gb7", "  G7   ", "G#7/Ab7", "  A7   ", "A#7/Bb7", "  B7   ",
-  "  C8   ", "C#8/Db8", "  D8   ", "D#8/Eb8", "  E8   ", "  F8   ", "F#8/Gb8", "  G8   ", "G#8/Ab8", "  A8   ", "A#8/Bb8", "  B8   ",
-  "  C9   ", "C#9/Db9", "  D9   ", "D#9/Eb9", "  E9   ", "  F9   ", "F#9/Gb9", "  G9   "
-};
-
 void printDisplay(int mel1, int mel2, int drone, int tromp, int tpose, int cap, int offset) {
 
   // This whole thing could be written more clearly...
@@ -692,6 +703,9 @@ HurdyGurdy *mygurdy;
 ToggleButton *bigbutton;
 GurdyCrank *mycrank;
 
+// As musical keys, these are referred to in the mygurdy object above.
+// This declaration of them is specifically for their use as navigational
+// buttons in the menu screens.  ok = O, back = X.
 KeyboxButton *myOkButton;
 KeyboxButton *myBackButton;
 KeyboxButton *my1Button;
@@ -716,12 +730,11 @@ GurdyString *mybuzz;
 
 GurdyButton *tpose_up;
 GurdyButton *tpose_down;
+GurdyButton *capo;
 
 // This defines the +/- one octave transpose range.
 const int max_tpose = 12;
 int tpose_offset;
-
-GurdyButton *capo;
 
 // This defines the 0, +2, +4 capo range.
 const int max_capo = 4;
@@ -746,9 +759,6 @@ void setup() {
   #ifdef BLUE_OLED
     display.begin(SH1106_SWITCHCAPVCC);
   #endif
-  // The Adafruit default logo.  Let it ride a sec or two.
-  display.display();
-  delay(2000);
 
   // Clear the buffer.
   display.clearDisplay();
@@ -757,31 +767,31 @@ void setup() {
   // display.clearDisplay();
   display.drawBitmap(0, 0, logo47_glcd_bmp, 128, 64, 1);
   display.display();
-  delay(1500);
+  delay(1000);
   display.clearDisplay();
   display.drawBitmap(0, 0, logo48_glcd_bmp, 128, 64, 1);
   display.display();
-  delay(150);
+  delay(130);
   display.clearDisplay();
   display.drawBitmap(0, 0, logo49_glcd_bmp, 128, 64, 1);
   display.display();
-  delay(150);
+  delay(130);
   display.clearDisplay();
   display.drawBitmap(0, 0, logo50_glcd_bmp, 128, 64, 1);
   display.display();
-  delay(150);
+  delay(130);
   display.clearDisplay();
   display.drawBitmap(0, 0, logo51_glcd_bmp, 128, 64, 1);
   display.display();
-  delay(150);
+  delay(130);
   display.clearDisplay();
   display.drawBitmap(0, 0, logo52_glcd_bmp, 128, 64, 1);
   display.display();
-  delay(150);
+  delay(130);
   display.clearDisplay();
   display.drawBitmap(0, 0, logo53_glcd_bmp, 128, 64, 1);
   display.display();
-  delay(150);
+  delay(130);
   display.clearDisplay();
   display.drawBitmap(0, 0, logo54_glcd_bmp, 128, 64, 1);
   display.display();
@@ -790,15 +800,15 @@ void setup() {
   display.setTextSize(2);
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
-  display.println("DigiGurdy");
+  display.println(" DigiGurdy");
   display.setTextSize(1);
+  display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("5 Mar 2022, Ver.0.9.2 ");
+  display.println("8 Mar 2022, Ver.0.9.5");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
-  delay(2000);
 
   // // Un-comment to print yourself debugging messages to the Teensyduino
   // // serial console.
@@ -811,6 +821,24 @@ void setup() {
 
   mycrank = new GurdyCrank(A1, A2);
   mycrank->detect();
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  display.println(" DigiGurdy");
+  display.setTextSize(1);
+  display.println(" --------------------");
+  display.setTextSize(2);
+  display.println("   Crank  ");
+
+  if (mycrank->isDetected()) {
+    display.println(" Detected ");
+  } else {
+    display.println("   Absent ");
+  };
+
+  display.display();
+  delay(1000);
 
   // The keybox arrangement is decided by pin_array, which is up in the CONFIG SECTION
   // of this file.  Make adjustments there.
@@ -831,6 +859,11 @@ void setup() {
 
   // Which channel is which doesn't really matter, but I'm sticking with
   // John's channels so his videos on setting it up with a tablet/phone still work.
+  //
+  // This starting tuning here is replaced immediately upon startup with either a
+  // preset, a saved tuning, or a created one.  The menu shouldn't let you actually
+  // end up with this, but I have to initialize them with something, so might as well
+  // be a working tuning.
   mystring = new GurdyString(1, Note(g4), myMIDI);
   mylowstring = new GurdyString(2, Note(g3), myMIDI);
   mytromp = new GurdyString(3, Note(c3), myMIDI);
@@ -845,40 +878,64 @@ void setup() {
 
   capo = new GurdyButton(23); // The capo button
   capo_offset = 0;
-
-  printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0);
 };
+
+// load_preset_tunings accepts an int between 1-4 and sets the appropriate preset.
+// See the default_tunings.h file to modify what the presets actually are.
+void load_preset_tunings(int preset) {
+  const int *tunings;
+  if (preset == 1) { tunings = PRESET1; };
+  if (preset == 2) { tunings = PRESET2; };
+  if (preset == 3) { tunings = PRESET3; };
+  if (preset == 4) { tunings = PRESET4; };
+
+  mystring->setOpenNote(tunings[0]);
+  mylowstring->setOpenNote(tunings[1]);
+  mydrone->setOpenNote(tunings[2]);
+  mytromp->setOpenNote(tunings[3]);
+  mybuzz->setOpenNote(tunings[4]);
+  tpose_offset = tunings[5];
+  capo_offset = tunings[6];
+}
 
 // load_saved_tunings requires one argument: the "save slot" which
 // should be one of the EEPROM_SLOT[1-4] values in eeprom_values.h.
 void load_saved_tunings(int slot) {
   byte value;
   value = EEPROM.read(slot + EEPROM_HI_MEL);
-  mystring->setOpenNote(int(value));
+  mystring->setOpenNote(value);
   value = EEPROM.read(slot + EEPROM_LO_MEL);
-  mylowstring->setOpenNote(int(value));
+  mylowstring->setOpenNote(value);
   value = EEPROM.read(slot + EEPROM_DRONE);
-  mydrone->setOpenNote(int(value));
+  mydrone->setOpenNote(value);
   value = EEPROM.read(slot + EEPROM_TROMP);
-  mytromp->setOpenNote(int(value));
+  mytromp->setOpenNote(value);
   value = EEPROM.read(slot + EEPROM_BUZZ);
-  mybuzz->setOpenNote(int(value));
+  mybuzz->setOpenNote(value);
   value = EEPROM.read(slot + EEPROM_TPOSE);
-  tpose_offset = int(value);
+  tpose_offset = value - 12;
   value = EEPROM.read(slot + EEPROM_CAPO);
-  capo_offset = int(value);
+  capo_offset = value;
 };
 
 // save_tunings accepts one argument, which should be one of the
 // EEPROM_SLOT[1-4] values defined in eeprom_values.h.
 void save_tunings(int slot) {
-  EEPROM.write(slot + EEPROM_HI_MEL, byte(mystring->getOpenNote()));
-  EEPROM.write(slot + EEPROM_LO_MEL, byte(mylowstring->getOpenNote()));
-  EEPROM.write(slot + EEPROM_DRONE, byte(mydrone->getOpenNote()));
-  EEPROM.write(slot + EEPROM_TROMP, byte(mytromp->getOpenNote()));
-  EEPROM.write(slot + EEPROM_BUZZ, byte(mybuzz->getOpenNote()));
-  EEPROM.write(slot + EEPROM_TPOSE, byte(tpose_offset));
-  EEPROM.write(slot + EEPROM_CAPO, byte(capo_offset));
+
+  EEPROM.write(slot + EEPROM_HI_MEL, mystring->getOpenNote());
+  EEPROM.write(slot + EEPROM_LO_MEL, mylowstring->getOpenNote());
+  EEPROM.write(slot + EEPROM_DRONE, mydrone->getOpenNote());
+  EEPROM.write(slot + EEPROM_TROMP, mytromp->getOpenNote());
+  EEPROM.write(slot + EEPROM_BUZZ, mybuzz->getOpenNote());
+  EEPROM.write(slot + EEPROM_TPOSE, tpose_offset + 12);
+  EEPROM.write(slot + EEPROM_CAPO, capo_offset);
+};
+
+// This clears the EEPROM and overwrites it all with zeroes
+void clear_eeprom() {
+  // Not much to say here... write 0 everywhere:
+  for (int i = 0 ; i < EEPROM.length() ; i++ )
+    EEPROM.write(i, 0);
 };
 
 void tuning_hi_melody() {
@@ -1174,6 +1231,289 @@ void tuning_tromp() {
   };
 };
 
+// This screen is for viewing a save slot's settings.
+// It returns true if the user wants to use it, false
+// otherwise.
+// Accepts integer slot: the save slot number.
+bool view_slot_screen(int slot_num) {
+  int slot;
+  if (slot_num == 1) { slot = EEPROM_SLOT1; };
+  if (slot_num == 2) { slot = EEPROM_SLOT2; };
+  if (slot_num == 3) { slot = EEPROM_SLOT3; };
+  if (slot_num == 4) { slot = EEPROM_SLOT4; };
+
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  display.print(" -Saved Slot Tuning- \n");
+  display.print(" Hi Melody: ");
+  display.print(LongNoteNum[EEPROM.read(slot + EEPROM_HI_MEL)].c_str());
+  display.print("  \n");
+  display.print(" Lo Melody: ");
+  display.print(LongNoteNum[EEPROM.read(slot + EEPROM_LO_MEL)].c_str());
+  display.print("  \n");
+  display.print(" Drone:     ");
+  display.print(LongNoteNum[EEPROM.read(slot + EEPROM_DRONE)].c_str());
+  display.print("  \n");
+  display.print(" Trompette: ");
+  display.print(LongNoteNum[EEPROM.read(slot + EEPROM_TROMP)].c_str());
+  display.print("  \n");
+  display.print(" Tpose: ");
+  if (EEPROM.read(slot + EEPROM_TPOSE) > 12) { display.print("+"); };
+  display.print((EEPROM.read(slot + EEPROM_TPOSE))-12);
+  display.print("  Capo: ");
+  if (EEPROM.read(slot + EEPROM_CAPO) > 0) { display.print("+"); };
+  display.print(EEPROM.read(slot + EEPROM_CAPO));
+  display.print("\n");
+  display.print(" Use?  'O' or 1) Yes \n");
+  display.print("       'X' or 2) No  \n");
+
+  display.display();
+
+  bool done = false;
+  while (!done) {
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    myOkButton->update();
+    myBackButton->update();
+
+    if (my1Button->wasPressed() || myOkButton->wasPressed()) {
+      load_saved_tunings(slot);
+      done = true;
+
+    } else if (my2Button->wasPressed() || myBackButton->wasPressed()) {
+      return false;
+    };
+  };
+  return true;
+};
+
+// This screen asks the user to select a save slot for
+// preview and optionally choosing.
+bool load_saved_screen() {
+
+  bool done = false;
+  while (!done) {
+
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 0);
+    std::string disp_str = ""
+    " --Load Saved Slot-- \n"
+    " Select for Preview: \n"
+    "                     \n"
+    "     1) Slot 1       \n"
+    "     2) Slot 2       \n"
+    "     3) Slot 3       \n"
+    "     4) Slot 4       \n"
+    "X or 5) Go Back      \n";
+
+    display.print(disp_str.c_str());
+    display.display();
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    my4Button->update();
+    my5Button->update();
+    myBackButton->update();
+
+    if (my1Button->wasPressed()) {
+      if (view_slot_screen(1)) { done = true; };
+
+    } else if (my2Button->wasPressed()) {
+      if (view_slot_screen(2)) { done = true; };
+
+    } else if (my3Button->wasPressed()) {
+      if (view_slot_screen(3)) { done = true; };
+
+    } else if (my4Button->wasPressed()) {
+      if (view_slot_screen(4)) { done = true; };
+
+    } else if (my5Button->wasPressed() || myBackButton->wasPressed()) {
+      return false;
+    };
+  };
+  return true;
+};
+
+// This screen lets the user choose a preset.
+void load_preset_screen() {
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  std::string disp_str = ""
+  " ---Load A Preset--- \n"
+  " Select a Preset:    \n"
+  "                     \n"
+  " 1) G/C, C Drones    \n"
+  " 2) G/C, G Drones    \n"
+  " 3) D/G, D Drones    \n"
+  " 4) D/G, G Drones    \n"
+  "                     \n";
+
+  display.print(disp_str.c_str());
+  display.display();
+
+  bool done = false;
+  while (!done) {
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    my4Button->update();
+
+    if (my1Button->wasPressed()) {
+      load_preset_tunings(1);
+      done = true;
+
+    } else if (my2Button->wasPressed()) {
+      load_preset_tunings(2);
+      done = true;
+
+    } else if (my3Button->wasPressed()) {
+      load_preset_tunings(3);
+      done = true;
+
+    } else if (my4Button->wasPressed()) {
+      load_preset_tunings(4);
+      done = true;
+    };
+  };
+};
+
+// This screen is for other setup options.  Currently, that's
+// just an option to clear the EEPROM.
+void options_screen() {
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  std::string disp_str = ""
+  " ------Options------ \n"
+  " Select an Option:   \n"
+  "                     \n"
+  " O) Clear EEPROM     \n"
+  "                     \n"
+  " X) Go Back          \n"
+  "                     \n"
+  "                     \n";
+
+  display.print(disp_str.c_str());
+  display.display();
+
+  // Give the user a chance to figure out it's happening...
+  delay(500);
+
+  bool done = false;
+  while (!done) {
+
+    // Check the 1 and 2 buttons
+    myOkButton->update();
+    myBackButton->update();
+
+    if (myOkButton->wasPressed()) {
+
+      clear_eeprom();
+
+      display.clearDisplay();
+      display.setTextSize(2);
+      display.setTextColor(WHITE);
+      display.setCursor(0, 0);
+      std::string disp_str = ""
+      "  EEPROM  \n"
+      "  \n"
+      "  CLEARED \n";
+
+      display.print(disp_str.c_str());
+      display.display();
+      delay(750);
+      done = true;
+
+    } else if (myBackButton->wasPressed()) {
+      done = true;
+    };
+  };
+};
+
+// This is the first screen after the credits n' stuff.
+void welcome_screen() {
+
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  std::string disp_str = ""
+  " -----DigiGurdy----- \n"
+  " Select an Option:   \n"
+  "                     \n"
+  " 1) Load Preset      \n"
+  " 2) Load Save Slot   \n"
+  " 3) New Tuning Setup \n"
+  " 4) Other Options    \n"
+  "                     \n";
+
+  display.print(disp_str.c_str());
+  display.display();
+
+  // Give the user a chance to figure out it's happening...
+  delay(500);
+
+  bool done = false;
+  while (!done) {
+
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 0);
+    std::string disp_str = ""
+    " -----DigiGurdy----- \n"
+    " Select an Option:   \n"
+    "                     \n"
+    " 1) Load Preset      \n"
+    " 2) Load Save Slot   \n"
+    " 3) New Tuning Setup \n"
+    " 4) Other Options    \n"
+    "                     \n";
+
+    display.print(disp_str.c_str());
+    display.display();
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    my4Button->update();
+
+    if (my1Button->wasPressed()) {
+      load_preset_screen();
+      done = true;
+
+    } else if (my2Button->wasPressed()) {
+      if (load_saved_screen()) {
+        done = true;
+      };
+
+    } else if (my3Button->wasPressed()) {
+      tuning();
+      done = true;
+
+    } else if (my4Button->wasPressed()) {
+      options_screen();
+      // Not done = true here, we'd want to get prompted again.
+    };
+
+    delay(250);
+  };
+};
+
 void tuning() {
 
   display.clearDisplay();
@@ -1181,13 +1521,14 @@ void tuning() {
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
   std::string disp_str = ""
-  "     TUNING MENU     \n"
-  " Choose Base Tuning  \n"
-  "    or Load/Save:    \n"
+  " ----Tuning Menu---- \n"
+  "                     \n"
+  " Choose Base Tuning: \n"
+  "                     \n"
   "       1) G/C        \n"
+  "                     \n"
   "       2) D/G        \n"
-  " 3) Load Last Saved  \n"
-  " 4) Save Current     \n";
+  "                     \n";
 
   display.print(disp_str.c_str());
   display.display();
@@ -1201,8 +1542,6 @@ void tuning() {
     // Check the 1 and 2 buttons
     my1Button->update();
     my2Button->update();
-    my3Button->update();
-    my4Button->update();
 
     if (my1Button->wasPressed()) {
       gc_or_dg = true;
@@ -1211,31 +1550,6 @@ void tuning() {
     } else if (my2Button->wasPressed()) {
       gc_or_dg = false;
       done = true;
-    } else if (my3Button->wasPressed()) {
-      load_saved_tunings(1);
-
-      // Crank On! for half a sec.
-      display.clearDisplay();
-      display.drawBitmap(0, 0, logo55_glcd_bmp, 128, 64, 1);
-      display.display();
-      delay(750);
-      return; // Bail out of this with the saved settings.
-
-    } else if (my4Button->wasPressed()) {
-      display.clearDisplay();
-      display.setTextSize(2);
-      display.setTextColor(WHITE);
-      display.setCursor(0, 0);
-      display.println("\nSAVING...");
-      display.display();
-      save_tunings(1);
-
-      // Crank On! for half a sec.
-      display.clearDisplay();
-      display.drawBitmap(0, 0, logo55_glcd_bmp, 128, 64, 1);
-      display.display();
-      delay(750);
-      return;
     };
   };
 
@@ -1250,14 +1564,14 @@ void tuning() {
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
   disp_str = ""
-  "      SUMMARY:       \n"
+  " -----Summary:------ \n"
   "  High Melody:   " + NoteNum[mystring->getOpenNote()] + "  \n"
   "   Low Melody:   " + NoteNum[mylowstring->getOpenNote()] + "  \n"
   "        Drone:   " + NoteNum[mydrone->getOpenNote()] + "  \n"
   "    Trompette:   " + NoteNum[mytromp->getOpenNote()] + "  \n"
   "                     \n"
-  "  'O') Save & Go     \n"
-  "  'X') Start Over    \n";
+  "'O' or 1) Continue   \n"
+  "'X' or 2) Start Over \n";
 
   display.print(disp_str.c_str());
   display.display();
@@ -1266,15 +1580,123 @@ void tuning() {
   while (!done) {
 
     // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
     myOkButton->update();
     myBackButton->update();
 
-    if (myOkButton->wasPressed()) {
-      save_tunings(1);
+    if (myOkButton->wasPressed() || my1Button->wasPressed()) {
+      done = true;
+
+    } else if (myBackButton->wasPressed() || my2Button->wasPressed()) {
+      tuning();
+      done = true;
+    };
+  };
+};
+
+// This is the screen for saving to a save slot
+void save_tuning_screen() {
+
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  std::string disp_str = ""
+  " ----Save Tuning---- \n"
+  " Choose a Save Slot: \n"
+  "                     \n"
+  "      1) Slot 1      \n"
+  "      2) Slot 2      \n"
+  "      3) Slot 3      \n"
+  "      4) Slot 4      \n"
+  "      X) Go Back     \n";
+
+  display.print(disp_str.c_str());
+  display.display();
+
+  bool done = false;
+  while (!done) {
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    my4Button->update();
+    myBackButton->update();
+
+    if (my1Button->wasPressed()) {
+      save_tunings(EEPROM_SLOT1);
+      done = true;
+
+    } else if (my2Button->wasPressed()) {
+      save_tunings(EEPROM_SLOT2);
+      done = true;
+
+    } else if (my3Button->wasPressed()) {
+      save_tunings(EEPROM_SLOT3);
+      done = true;
+
+    } else if (my4Button->wasPressed()) {
+      save_tunings(EEPROM_SLOT4);
       done = true;
 
     } else if (myBackButton->wasPressed()) {
+      // Just return.
+      done = true;
+    };
+  };
+};
+
+// This is the screen that X+O gets you.
+void pause_screen() {
+
+  bool done = false;
+  while (!done) {
+
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 0);
+    std::string disp_str = ""
+    " ----Pause  Menu---- \n"
+    " Select an Option:   \n"
+    "                     \n"
+    " 1) Load Preset      \n"
+    " 2) Load Save Slot   \n"
+    " 3) Save This Tuning \n"
+    " 4) New Tuning Setup \n"
+    " X or 5) Go Back     \n";
+
+    display.print(disp_str.c_str());
+    display.display();
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    my4Button->update();
+    my5Button->update();
+    myBackButton->update();
+
+    if (my1Button->wasPressed()) {
+      load_preset_screen();
+      done = true;
+
+    } else if (my2Button->wasPressed()) {
+      if (load_saved_screen()) {
+        done = true;
+      };
+
+    } else if (my3Button->wasPressed()) {
+      save_tuning_screen();
+      done = true;
+
+    } else if (my4Button->wasPressed()) {
       tuning();
+      done = true;
+
+    } else if (my5Button->wasPressed() || myBackButton->wasPressed()) {
       done = true;
     };
   };
@@ -1294,8 +1716,13 @@ bool first_loop = true;
 void loop() {
 
   if (first_loop) {
-    load_saved_tunings(1);
-    tuning();
+    welcome_screen();
+    // Crank On! for half a sec.
+    display.clearDisplay();
+    display.drawBitmap(0, 0, logo55_glcd_bmp, 128, 64, 1);
+    display.display();
+    delay(750);
+
     printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0);
     first_loop = false;
   };
@@ -1313,7 +1740,19 @@ void loop() {
 
   // If the "X" and "O" buttons are both down, trigger the tuning menu
   if (myOkButton->beingPressed() && myBackButton->beingPressed()) {
-    tuning();
+
+    // Turn off the sound :-)
+    mystring->soundOff();
+    mylowstring->soundOff();
+    mykeyclick->soundOff();  // Not sure if this is necessary... but it feels right.
+    mytromp->soundOff();
+    mydrone->soundOff();
+    mybuzz->soundOff();
+
+    // If I don't do this, it comes on afterwards.
+    bigbutton->setToggle(false);
+
+    pause_screen();
     printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0);
   };
 
