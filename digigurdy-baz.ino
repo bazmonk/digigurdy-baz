@@ -212,6 +212,11 @@ class ToggleButton: public GurdyButton {
     bool toggleOn() {
       return toggled;
     };
+
+    // This is to forcibly turn the toggle off after a menu press.
+    void setToggle(bool new_toggle) {
+      toggled = new_toggle;
+    };
 };
 
 // class KeyboxButton adds a note offset variable to the GurdyButton class.
@@ -804,7 +809,6 @@ void setup() {
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
-  delay(750);
 
   // // Un-comment to print yourself debugging messages to the Teensyduino
   // // serial console.
@@ -823,7 +827,7 @@ void setup() {
   display.setCursor(0, 0);
   display.println(" DigiGurdy");
   display.setTextSize(1);
-  display.println(" ------------------- ");
+  display.println(" --------------------");
   display.setTextSize(2);
   display.println("   Crank  ");
 
@@ -909,7 +913,7 @@ void load_saved_tunings(int slot) {
   value = EEPROM.read(slot + EEPROM_BUZZ);
   mybuzz->setOpenNote(value);
   value = EEPROM.read(slot + EEPROM_TPOSE);
-  tpose_offset = value;
+  tpose_offset = value - 12;
   value = EEPROM.read(slot + EEPROM_CAPO);
   capo_offset = value;
 };
@@ -923,7 +927,7 @@ void save_tunings(int slot) {
   EEPROM.write(slot + EEPROM_DRONE, mydrone->getOpenNote());
   EEPROM.write(slot + EEPROM_TROMP, mytromp->getOpenNote());
   EEPROM.write(slot + EEPROM_BUZZ, mybuzz->getOpenNote());
-  EEPROM.write(slot + EEPROM_TPOSE, tpose_offset);
+  EEPROM.write(slot + EEPROM_TPOSE, tpose_offset + 12);
   EEPROM.write(slot + EEPROM_CAPO, capo_offset);
 };
 
@@ -1256,8 +1260,8 @@ bool view_slot_screen(int slot_num) {
   display.print(LongNoteNum[EEPROM.read(slot + EEPROM_TROMP)].c_str());
   display.print("  \n");
   display.print(" Tpose: ");
-  if (EEPROM.read(slot + EEPROM_TPOSE) > 0) { display.print("+"); };
-  display.print(EEPROM.read(slot + EEPROM_TPOSE));
+  if (EEPROM.read(slot + EEPROM_TPOSE) > 12) { display.print("+"); };
+  display.print((EEPROM.read(slot + EEPROM_TPOSE))-12);
   display.print("  Capo: ");
   if (EEPROM.read(slot + EEPROM_CAPO) > 0) { display.print("+"); };
   display.print(EEPROM.read(slot + EEPROM_CAPO));
@@ -1278,18 +1282,18 @@ bool view_slot_screen(int slot_num) {
 
     if (my1Button->wasPressed() || myOkButton->wasPressed()) {
       load_saved_tunings(slot);
-      return true;
+      done = true;
 
     } else if (my2Button->wasPressed() || myBackButton->wasPressed()) {
       return false;
     };
   };
-  return false;
+  return true;
 };
 
 // This screen asks the user to select a save slot for
 // preview and optionally choosing.
-void load_saved_screen() {
+bool load_saved_screen() {
 
   bool done = false;
   while (!done) {
@@ -1300,13 +1304,13 @@ void load_saved_screen() {
     display.setCursor(0, 0);
     std::string disp_str = ""
     " --Load Saved Slot-- \n"
-    "                     \n"
     " Select for Preview: \n"
     "                     \n"
     "     1) Slot 1       \n"
     "     2) Slot 2       \n"
     "     3) Slot 3       \n"
-    "     4) Slot 4       \n";
+    "     4) Slot 4       \n"
+    "X or 5) Go Back      \n";
 
     display.print(disp_str.c_str());
     display.display();
@@ -1316,6 +1320,8 @@ void load_saved_screen() {
     my2Button->update();
     my3Button->update();
     my4Button->update();
+    my5Button->update();
+    myBackButton->update();
 
     if (my1Button->wasPressed()) {
       if (view_slot_screen(1)) { done = true; };
@@ -1328,8 +1334,12 @@ void load_saved_screen() {
 
     } else if (my4Button->wasPressed()) {
       if (view_slot_screen(4)) { done = true; };
+
+    } else if (my5Button->wasPressed() || myBackButton->wasPressed()) {
+      return false;
     };
   };
+  return true;
 };
 
 // This screen lets the user choose a preset.
@@ -1435,6 +1445,7 @@ void options_screen() {
 
 // This is the first screen after the credits n' stuff.
 void welcome_screen() {
+
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(WHITE);
@@ -1486,8 +1497,9 @@ void welcome_screen() {
       done = true;
 
     } else if (my2Button->wasPressed()) {
-      load_saved_screen();
-      done = true;
+      if (load_saved_screen()) {
+        done = true;
+      };
 
     } else if (my3Button->wasPressed()) {
       tuning();
@@ -1581,16 +1593,11 @@ void tuning() {
       done = true;
     };
   };
-
-  // Crank On! for half a sec.
-  display.clearDisplay();
-  display.drawBitmap(0, 0, logo55_glcd_bmp, 128, 64, 1);
-  display.display();
-  delay(750);
 };
 
 // This is the screen for saving to a save slot
 void save_tuning_screen() {
+
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(WHITE);
@@ -1643,6 +1650,7 @@ void save_tuning_screen() {
 
 // This is the screen that X+O gets you.
 void pause_screen() {
+
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(WHITE);
@@ -1655,7 +1663,7 @@ void pause_screen() {
   " 2) Load Save Slot   \n"
   " 3) Save this Tuning \n"
   " 4) New Tuning Setup \n"
-  "                     \n";
+  " X or 5) Go Back     \n";
 
   display.print(disp_str.c_str());
   display.display();
@@ -1663,19 +1671,39 @@ void pause_screen() {
   bool done = false;
   while (!done) {
 
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 0);
+    std::string disp_str = ""
+    " ----Pause  Menu---- \n"
+    " Select an Option:   \n"
+    "                     \n"
+    " 1) Load Preset      \n"
+    " 2) Load Save Slot   \n"
+    " 3) Save this Tuning \n"
+    " 4) New Tuning Setup \n"
+    " X or 5) Go Back     \n";
+
+    display.print(disp_str.c_str());
+    display.display();
+
     // Check the 1 and 2 buttons
     my1Button->update();
     my2Button->update();
     my3Button->update();
     my4Button->update();
+    my5Button->update();
+    myBackButton->update();
 
     if (my1Button->wasPressed()) {
       load_preset_screen();
       done = true;
 
     } else if (my2Button->wasPressed()) {
-      load_saved_screen();
-      done = true;
+      if (load_saved_screen()) {
+        done = true;
+      };
 
     } else if (my3Button->wasPressed()) {
       save_tuning_screen();
@@ -1684,8 +1712,17 @@ void pause_screen() {
     } else if (my4Button->wasPressed()) {
       tuning();
       done = true;
+
+    } else if (my5Button->wasPressed() || myBackButton->wasPressed()) {
+      done = true;
     };
   };
+
+  // Crank On! for half a sec.
+  display.clearDisplay();
+  display.drawBitmap(0, 0, logo55_glcd_bmp, 128, 64, 1);
+  display.display();
+  delay(750);
 };
 
 bool first_loop = true;
@@ -1728,6 +1765,9 @@ void loop() {
     mytromp->soundOff();
     mydrone->soundOff();
     mybuzz->soundOff();
+
+    // If I don't do this, it comes on afterwards.
+    bigbutton->setToggle(false);
 
     pause_screen();
     printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0);
