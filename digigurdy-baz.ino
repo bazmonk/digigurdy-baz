@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v0.9.6
+// VERSION: v0.9.7
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
 //   https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy
@@ -727,6 +727,12 @@ KeyboxButton *my4Button;
 KeyboxButton *my5Button;
 KeyboxButton *my6Button;
 
+// For legacy button-combo support:
+KeyboxButton *myAltTposeButton;
+KeyboxButton *myAltTposeUp;
+KeyboxButton *myAltTposeDown;
+KeyboxButton *myAltCapo;
+
 // Note that there aren't special classes for melody, drone, even the keyclick.
 // They are differentiated in the main loop():
 // * A melody string is one that changes with the keybox offset.
@@ -740,6 +746,7 @@ GurdyString *mytromp;
 GurdyString *mydrone;
 GurdyString *mybuzz;
 
+// These are the dedicated transpose/capo buttons
 GurdyButton *tpose_up;
 GurdyButton *tpose_down;
 GurdyButton *capo;
@@ -824,7 +831,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("8 Mar 2022, Ver.0.9.6");
+  display.println("8 Mar 2022, Ver.0.9.7");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -875,6 +882,11 @@ void setup() {
   my4Button = mygurdy->keybox[6];
   my5Button = mygurdy->keybox[8];
   my6Button = mygurdy->keybox[9];
+
+  // These are based off the keybox size so they should be at the end no matter how big it is.
+  myAltTposeUp = mygurdy->keybox[num_keys - 1];
+  myAltTposeDown = mygurdy->keybox[num_keys - 3];
+  myAltCapo = mygurdy->keybox[num_keys - 5];
 
   // Which channel is which doesn't really matter, but I'm sticking with
   // John's channels so his videos on setting it up with a tablet/phone still work.
@@ -1671,7 +1683,6 @@ void save_tuning_screen() {
   display.print("\n  Saved!");
   display.display();
   delay(500);
-  
 };
 
 // This is the screen that X+O gets you.
@@ -1807,11 +1818,13 @@ void loop() {
     bigbutton->setToggle(false);
 
     pause_screen();
-    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0, mydrone->getVolume(), mytromp->getVolume());
+    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
+                 tpose_offset, capo_offset, 0, mydrone->getVolume(), mytromp->getVolume());
   };
 
   // Check for a capo shift.
-  if (capo->wasPressed()) {
+  if (capo->wasPressed() ||
+      (myBackButton->beingPressed() && myAltCapo->wasPressed())) {
 
     capo_offset += 2;
 
@@ -1832,12 +1845,14 @@ void loop() {
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
     };
-    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
+    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
+                 tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
   };
 
   // As long as we're in playing mode--acutally playing or not--
   // check for a tpose shift.
-  if (tpose_up->wasPressed() && (tpose_offset < max_tpose)) {
+  if ((tpose_up->wasPressed() ||
+      (my1Button->beingPressed() && myAltTposeUp->wasPressed())) && (tpose_offset < max_tpose)) {
     tpose_offset += 1;
 
     if (mycrank->isSpinning() || bigbutton->toggleOn()) {
@@ -1853,9 +1868,11 @@ void loop() {
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
     };
-    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
+    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
+                 tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
   };
-  if (tpose_down->wasPressed() && (max_tpose + tpose_offset > 0)) {
+  if ((tpose_down->wasPressed() ||
+      (my1Button->beingPressed() && myAltTposeDown->wasPressed())) && (max_tpose + tpose_offset > 0)) {
     tpose_offset -= 1;
 
     if (mycrank->isSpinning() || bigbutton->toggleOn()) {
@@ -1871,7 +1888,8 @@ void loop() {
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
     };
-    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
+    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
+                 tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
   };
 
   // NOTE:
