@@ -791,35 +791,35 @@ void setup() {
 
   // Intro animated sequence
   // display.clearDisplay();
-  display.drawBitmap(0, 0, logo47_glcd_bmp, 128, 64, 1);
+  display.drawBitmap(0, 0, logos[0], 128, 64, 1);
   display.display();
   delay(1000);
   display.clearDisplay();
-  display.drawBitmap(0, 0, logo48_glcd_bmp, 128, 64, 1);
+  display.drawBitmap(0, 0, logos[1], 128, 64, 1);
   display.display();
   delay(130);
   display.clearDisplay();
-  display.drawBitmap(0, 0, logo49_glcd_bmp, 128, 64, 1);
+  display.drawBitmap(0, 0, logos[2], 128, 64, 1);
   display.display();
   delay(130);
   display.clearDisplay();
-  display.drawBitmap(0, 0, logo50_glcd_bmp, 128, 64, 1);
+  display.drawBitmap(0, 0, logos[3], 128, 64, 1);
   display.display();
   delay(130);
   display.clearDisplay();
-  display.drawBitmap(0, 0, logo51_glcd_bmp, 128, 64, 1);
+  display.drawBitmap(0, 0, logos[4], 128, 64, 1);
   display.display();
   delay(130);
   display.clearDisplay();
-  display.drawBitmap(0, 0, logo52_glcd_bmp, 128, 64, 1);
+  display.drawBitmap(0, 0, logos[5], 128, 64, 1);
   display.display();
   delay(130);
   display.clearDisplay();
-  display.drawBitmap(0, 0, logo53_glcd_bmp, 128, 64, 1);
+  display.drawBitmap(0, 0, logos[6], 128, 64, 1);
   display.display();
   delay(130);
   display.clearDisplay();
-  display.drawBitmap(0, 0, logo54_glcd_bmp, 128, 64, 1);
+  display.drawBitmap(0, 0, logos[7], 128, 64, 1);
   display.display();
 
   display.clearDisplay();
@@ -1768,7 +1768,7 @@ void pause_screen() {
 
   // Crank On! for half a sec.
   display.clearDisplay();
-  display.drawBitmap(0, 0, logo55_glcd_bmp, 128, 64, 1);
+  display.drawBitmap(0, 0, crank_on_logo, 128, 64, 1);
   display.display();
   delay(750);
 };
@@ -1784,7 +1784,7 @@ void loop() {
     welcome_screen();
     // Crank On! for half a sec.
     display.clearDisplay();
-    display.drawBitmap(0, 0, logo55_glcd_bmp, 128, 64, 1);
+    display.drawBitmap(0, 0, crank_on_logo, 128, 64, 1);
     display.display();
     delay(750);
 
