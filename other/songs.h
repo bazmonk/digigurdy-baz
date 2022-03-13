@@ -1,4 +1,7 @@
-// songs.h are the demo songs used by digigurdy-baz.
+// songs.h are the demo songs from the original digigurdy code.
+
+// I am not (yet?) using this.
+
 //
 // This file should be in the same directory/folder as the main code when you
 // attempt to compile it and upload it to your digigurdy.

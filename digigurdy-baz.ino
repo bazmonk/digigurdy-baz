@@ -124,6 +124,7 @@ std::string LongNoteNum[] = {
 #include "eeprom_values.h"   // Save-slot memory addresses
 #include "default_tunings.h" // Preset tunings.
 #include "note_bitmaps.h"    // Note (ABC) bitmaps
+#include "staff_bitmaps.h"   // Staff bitmaps
 
 // Right now not using the std namespace is just impacting strings.  That's ok...
 using namespace MIDI_NAMESPACE;
