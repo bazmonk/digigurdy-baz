@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v0.9.7
+// VERSION: v0.9.8
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
 //   https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy
@@ -120,9 +120,10 @@ std::string LongNoteNum[] = {
 };
 
 // These are found in the digigurdy-baz repository
-#include "bitmaps.h"       // Pretty pictures
-#include "eeprom_values.h" // Save-slot memory addresses
+#include "bitmaps.h"         // Pretty pictures
+#include "eeprom_values.h"   // Save-slot memory addresses
 #include "default_tunings.h" // Preset tunings.
+#include "note_bitmaps.h"    // Note (ABC) bitmaps
 
 // Right now not using the std namespace is just impacting strings.  That's ok...
 using namespace MIDI_NAMESPACE;
@@ -659,12 +660,11 @@ void printDisplay(int mel1, int mel2, int drone, int tromp, int tpose, int cap, 
 
   std::string disp_str0 = "";
   std::string disp_str = "";
-  std::string disp_str2 = "";
 
-  disp_str0 = " Tpose: ";
-  disp_str = "\n"
+  disp_str0 = "\n Tpose: ";
+  disp_str = "\n\n"
              "  Hi Melody: " + LongNoteNum[mel1 + tpose] + "\n"
-             " Low Melody: " + LongNoteNum[mel2 + tpose] + "\n";
+             " Low Melody: " + LongNoteNum[mel2 + tpose] + "\n\n";
   if (tromp_vol > 0) {
     disp_str = disp_str + "  Trompette: " + LongNoteNum[tromp + tpose + cap] + "\n";
   } else {
@@ -675,7 +675,6 @@ void printDisplay(int mel1, int mel2, int drone, int tromp, int tpose, int cap, 
   } else {
     disp_str = disp_str + "      Drone:   MUTE \n";
   };
-  disp_str2 = "  " + LongNoteNum[mel1 + tpose + offset] + "\n";
 
   display.clearDisplay();
   display.setTextSize(1);
@@ -696,9 +695,28 @@ void printDisplay(int mel1, int mel2, int drone, int tromp, int tpose, int cap, 
   display.print(cap);
 
   display.print(disp_str.c_str());
-  display.setTextSize(2);
-  display.print(disp_str2.c_str());
   display.display();
+};
+
+void draw_note(int note) {
+  int octave = (note / 12 ) - 1;
+  int note_pos = (note % 12);
+
+  display.clearDisplay();
+  display.drawXBitmap(32,0, letter[note_pos], 64, 64, 1);
+
+  // If we're making a regular note...
+  if (note_pos == 0 || note_pos == 2 || note_pos == 4 || note_pos == 5 ||
+      note_pos == 7 || note_pos == 9 || note_pos == 11) {
+
+    display.drawXBitmap(84,43, octave_num[octave], 14, 21, 1);
+  // If we're making a sharp/flat...
+  } else {
+    display.drawXBitmap(32,0, sharp_num[octave], 64, 64, 1);
+  };
+
+  display.display();
+
 };
 
 // ##################
@@ -791,35 +809,35 @@ void setup() {
 
   // Intro animated sequence
   // display.clearDisplay();
-  display.drawBitmap(0, 0, logo47_glcd_bmp, 128, 64, 1);
+  display.drawBitmap(0, 0, logos[0], 128, 64, 1);
   display.display();
   delay(1000);
   display.clearDisplay();
-  display.drawBitmap(0, 0, logo48_glcd_bmp, 128, 64, 1);
+  display.drawBitmap(0, 0, logos[1], 128, 64, 1);
   display.display();
   delay(130);
   display.clearDisplay();
-  display.drawBitmap(0, 0, logo49_glcd_bmp, 128, 64, 1);
+  display.drawBitmap(0, 0, logos[2], 128, 64, 1);
   display.display();
   delay(130);
   display.clearDisplay();
-  display.drawBitmap(0, 0, logo50_glcd_bmp, 128, 64, 1);
+  display.drawBitmap(0, 0, logos[3], 128, 64, 1);
   display.display();
   delay(130);
   display.clearDisplay();
-  display.drawBitmap(0, 0, logo51_glcd_bmp, 128, 64, 1);
+  display.drawBitmap(0, 0, logos[4], 128, 64, 1);
   display.display();
   delay(130);
   display.clearDisplay();
-  display.drawBitmap(0, 0, logo52_glcd_bmp, 128, 64, 1);
+  display.drawBitmap(0, 0, logos[5], 128, 64, 1);
   display.display();
   delay(130);
   display.clearDisplay();
-  display.drawBitmap(0, 0, logo53_glcd_bmp, 128, 64, 1);
+  display.drawBitmap(0, 0, logos[6], 128, 64, 1);
   display.display();
   delay(130);
   display.clearDisplay();
-  display.drawBitmap(0, 0, logo54_glcd_bmp, 128, 64, 1);
+  display.drawBitmap(0, 0, logos[7], 128, 64, 1);
   display.display();
 
   display.clearDisplay();
@@ -831,7 +849,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("8 Mar 2022, Ver.0.9.7");
+  display.println("8 Mar 2022, Ver.0.9.8");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -1334,6 +1352,65 @@ bool view_slot_screen(int slot_num) {
   return true;
 };
 
+// This screen previews a preset's settings.
+// Returns true if users wants to use it, false otherwise.
+// Accept integer preset_num: the preset number.
+bool view_preset_screen(int preset) {
+  const int *tunings;
+  if (preset == 1) { tunings = PRESET1; };
+  if (preset == 2) { tunings = PRESET2; };
+  if (preset == 3) { tunings = PRESET3; };
+  if (preset == 4) { tunings = PRESET4; };
+
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  display.print(" ---Preset Tuning--- \n");
+  display.print(" Hi Melody: ");
+  display.print(LongNoteNum[tunings[0]].c_str());
+  display.print("  \n");
+  display.print(" Lo Melody: ");
+  display.print(LongNoteNum[tunings[1]].c_str());
+  display.print("  \n");
+  display.print(" Drone:     ");
+  display.print(LongNoteNum[tunings[2]].c_str());
+  display.print("  \n");
+  display.print(" Trompette: ");
+  display.print(LongNoteNum[tunings[3]].c_str());
+  display.print("  \n");
+  display.print(" Tpose: ");
+  if (tunings[5] > 12) { display.print("+"); };
+  display.print(tunings[5]);
+  display.print("  Capo: ");
+  if (tunings[6] > 0) { display.print("+"); };
+  display.print(tunings[6]);
+  display.print("\n");
+  display.print(" Use?  'O' or 1) Yes \n");
+  display.print("       'X' or 2) No  \n");
+
+  display.display();
+
+  bool done = false;
+  while (!done) {
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    myOkButton->update();
+    myBackButton->update();
+
+    if (my1Button->wasPressed() || myOkButton->wasPressed()) {
+      load_preset_tunings(preset);
+      done = true;
+
+    } else if (my2Button->wasPressed() || myBackButton->wasPressed()) {
+      return false;
+    };
+  };
+  return true;
+};
+
 // This screen asks the user to select a save slot for
 // preview and optionally choosing.
 bool load_saved_screen() {
@@ -1386,50 +1463,51 @@ bool load_saved_screen() {
 };
 
 // This screen lets the user choose a preset.
-void load_preset_screen() {
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setCursor(0, 0);
-  std::string disp_str = ""
-  " ---Load A Preset--- \n"
-  " Select a Preset:    \n"
-  "                     \n"
-  " 1) G/C, C Drones    \n"
-  " 2) G/C, G Drones    \n"
-  " 3) D/G, D Drones    \n"
-  " 4) D/G, G Drones    \n"
-  "                     \n";
-
-  display.print(disp_str.c_str());
-  display.display();
+bool load_preset_screen() {
 
   bool done = false;
   while (!done) {
+
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 0);
+    std::string disp_str = ""
+    " ---Load A Preset--- \n"
+    " Select a Preset:    \n"
+    "                     \n"
+    " 1) G/C, C Drones    \n"
+    " 2) G/C, G Drones    \n"
+    " 3) D/G, D Drones    \n"
+    " 4) D/G, G Drones    \n"
+    " X or 5) Go Back     \n";
+
+    display.print(disp_str.c_str());
+    display.display();
 
     // Check the 1 and 2 buttons
     my1Button->update();
     my2Button->update();
     my3Button->update();
     my4Button->update();
+    my5Button->update();
+    myBackButton->update();
 
     if (my1Button->wasPressed()) {
-      load_preset_tunings(1);
-      done = true;
+      if (view_preset_screen(1)) {done = true;};
 
     } else if (my2Button->wasPressed()) {
-      load_preset_tunings(2);
-      done = true;
+      if (view_preset_screen(2)) {done = true;};
 
     } else if (my3Button->wasPressed()) {
-      load_preset_tunings(3);
-      done = true;
-
+      if (view_preset_screen(3)) {done = true;};
     } else if (my4Button->wasPressed()) {
-      load_preset_tunings(4);
-      done = true;
+      if (view_preset_screen(4)) {done = true;};
+    } else if (my5Button->wasPressed() || myBackButton->wasPressed()) {
+      return false;
     };
   };
+  return true;
 };
 
 // This screen is for other setup options.  Currently, that's
@@ -1516,17 +1594,13 @@ void welcome_screen() {
     my4Button->update();
 
     if (my1Button->wasPressed()) {
-      load_preset_screen();
-      done = true;
+      if (load_preset_screen()) {done = true;};
 
     } else if (my2Button->wasPressed()) {
-      if (load_saved_screen()) {
-        done = true;
-      };
+      if (load_saved_screen()) {done = true;};
 
     } else if (my3Button->wasPressed()) {
-      tuning();
-      done = true;
+      if (tuning()) {done = true;};
 
     } else if (my4Button->wasPressed()) {
       options_screen();
@@ -1535,34 +1609,33 @@ void welcome_screen() {
   };
 };
 
-void tuning() {
-
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setCursor(0, 0);
-  std::string disp_str = ""
-  " ----Tuning Menu---- \n"
-  "                     \n"
-  " Choose Base Tuning: \n"
-  "                     \n"
-  "       1) G/C        \n"
-  "                     \n"
-  "       2) D/G        \n"
-  "                     \n";
-
-  display.print(disp_str.c_str());
-  display.display();
-
-  // Give the user a chance to figure out it's happening...
-  delay(1000);
+bool tuning() {
 
   bool done = false;
   while (!done) {
 
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 0);
+    std::string disp_str = ""
+    " ----Tuning Menu---- \n"
+    "                     \n"
+    " Choose Base Tuning: \n"
+    "                     \n"
+    "       1) G/C        \n"
+    "       2) D/G        \n"
+    "   X or 3) Go Back   \n"
+    "                     \n";
+
+    display.print(disp_str.c_str());
+    display.display();
+
     // Check the 1 and 2 buttons
     my1Button->update();
     my2Button->update();
+    my3Button->update();
+    myBackButton->update();
 
     if (my1Button->wasPressed()) {
       gc_or_dg = true;
@@ -1571,6 +1644,8 @@ void tuning() {
     } else if (my2Button->wasPressed()) {
       gc_or_dg = false;
       done = true;
+    } else if (my3Button->wasPressed() || myBackButton->wasPressed()) {
+      return false;
     };
   };
 
@@ -1584,15 +1659,15 @@ void tuning() {
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
-  disp_str = ""
+  std::string disp_str = ""
   " -----Summary:------ \n"
   "  High Melody:   " + NoteNum[mystring->getOpenNote()] + "  \n"
   "   Low Melody:   " + NoteNum[mylowstring->getOpenNote()] + "  \n"
   "        Drone:   " + NoteNum[mydrone->getOpenNote()] + "  \n"
   "    Trompette:   " + NoteNum[mytromp->getOpenNote()] + "  \n"
   "                     \n"
-  "'O' or 1) Continue   \n"
-  "'X' or 2) Start Over \n";
+  "'O' or 1) Accept     \n"
+  "'X' or 2) Go Back    \n";
 
   display.print(disp_str.c_str());
   display.display();
@@ -1608,12 +1683,14 @@ void tuning() {
 
     if (myOkButton->wasPressed() || my1Button->wasPressed()) {
       done = true;
+      return true;
 
     } else if (myBackButton->wasPressed() || my2Button->wasPressed()) {
-      tuning();
+      return false;
       done = true;
     };
   };
+  return true;
 };
 
 // This is the screen for saving to a save slot
@@ -1697,11 +1774,10 @@ void pause_screen() {
     display.setCursor(0, 0);
     std::string disp_str = ""
     " ----Pause  Menu---- \n"
-    " Select an Option:   \n"
     " 1) Load Preset      \n"
     " 2) Load Save Slot   \n"
     " 3) Save This Tuning \n"
-    " 4) New Tuning Setup \n"
+    " 4) New Tuning Setup \n\n"
     " X or 5) Go Back     \n";
 
     if (drone_mode == 0) {
@@ -1740,8 +1816,7 @@ void pause_screen() {
       done = true;
 
     } else if (my4Button->wasPressed()) {
-      tuning();
-      done = true;
+      if (tuning()) {done = true;};
 
     } else if (my5Button->wasPressed() || myBackButton->wasPressed()) {
       done = true;
@@ -1768,7 +1843,7 @@ void pause_screen() {
 
   // Crank On! for half a sec.
   display.clearDisplay();
-  display.drawBitmap(0, 0, logo55_glcd_bmp, 128, 64, 1);
+  display.drawBitmap(0, 0, crank_on_logo, 128, 64, 1);
   display.display();
   delay(750);
 };
@@ -1784,7 +1859,7 @@ void loop() {
     welcome_screen();
     // Crank On! for half a sec.
     display.clearDisplay();
-    display.drawBitmap(0, 0, logo55_glcd_bmp, 128, 64, 1);
+    display.drawBitmap(0, 0, crank_on_logo, 128, 64, 1);
     display.display();
     delay(750);
 
@@ -1844,9 +1919,12 @@ void loop() {
       mykeyclick->soundOn(tpose_offset);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
-    };
-    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
+
+      draw_note(mystring->getOpenNote() + tpose_offset + myoffset);
+    } else {
+      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
                  tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
+    };
   };
 
   // As long as we're in playing mode--acutally playing or not--
@@ -1867,9 +1945,12 @@ void loop() {
       mykeyclick->soundOn(tpose_offset);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
+
+      draw_note(mystring->getOpenNote() + tpose_offset + myoffset);
+    } else {
+      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
+                   tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
     };
-    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
-                 tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
   };
   if ((tpose_down->wasPressed() ||
       (my1Button->beingPressed() && myAltTposeDown->wasPressed())) && (max_tpose + tpose_offset > 0)) {
@@ -1887,9 +1968,12 @@ void loop() {
       mykeyclick->soundOn(tpose_offset);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
+
+      draw_note(mystring->getOpenNote() + tpose_offset + myoffset);
+    } else {
+      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
+                   tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
     };
-    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
-                 tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
   };
 
   // NOTE:
@@ -1908,14 +1992,14 @@ void loop() {
       mylowstring->soundOn(myoffset + tpose_offset);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
-      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
+      draw_note(mystring->getOpenNote() + tpose_offset + myoffset);
 
     } else if (mycrank->startedSpinning() && !bigbutton->toggleOn()) {
       mystring->soundOn(myoffset + tpose_offset);
       mylowstring->soundOn(myoffset + tpose_offset);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
-      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
+      draw_note(mystring->getOpenNote() + tpose_offset + myoffset);
 
     // Turn off the previous notes and turn on the new one with a click if new key this cycle.
     // NOTE: I'm not touching the drone/trompette.  Just leave it on if it's a key change.
@@ -1927,7 +2011,7 @@ void loop() {
       mystring->soundOn(myoffset + tpose_offset);
       mylowstring->soundOn(myoffset + tpose_offset);
       mykeyclick->soundOn(tpose_offset);
-      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
+      draw_note(mystring->getOpenNote() + tpose_offset + myoffset);
     };
 
     // Whenever we're playing, check for buzz.
