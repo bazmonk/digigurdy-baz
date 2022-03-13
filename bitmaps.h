@@ -3,7 +3,7 @@
 // This file should be in the same directory/folder as the main code when you
 // attempt to compile it and upload it to your digigurdy.
 
-// This is the into animation
+// This is the intro animation
 static const unsigned char PROGMEM logos[8][1024] = {
       {
       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,

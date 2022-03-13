@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v0.9.7
+// VERSION: v0.9.8
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
 //   https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy
@@ -120,9 +120,10 @@ std::string LongNoteNum[] = {
 };
 
 // These are found in the digigurdy-baz repository
-#include "bitmaps.h"       // Pretty pictures
-#include "eeprom_values.h" // Save-slot memory addresses
+#include "bitmaps.h"         // Pretty pictures
+#include "eeprom_values.h"   // Save-slot memory addresses
 #include "default_tunings.h" // Preset tunings.
+#include "note_bitmaps.h"    // Note (ABC) bitmaps
 
 // Right now not using the std namespace is just impacting strings.  That's ok...
 using namespace MIDI_NAMESPACE;
@@ -659,12 +660,11 @@ void printDisplay(int mel1, int mel2, int drone, int tromp, int tpose, int cap, 
 
   std::string disp_str0 = "";
   std::string disp_str = "";
-  std::string disp_str2 = "";
 
-  disp_str0 = " Tpose: ";
-  disp_str = "\n"
+  disp_str0 = "\n Tpose: ";
+  disp_str = "\n\n"
              "  Hi Melody: " + LongNoteNum[mel1 + tpose] + "\n"
-             " Low Melody: " + LongNoteNum[mel2 + tpose] + "\n";
+             " Low Melody: " + LongNoteNum[mel2 + tpose] + "\n\n";
   if (tromp_vol > 0) {
     disp_str = disp_str + "  Trompette: " + LongNoteNum[tromp + tpose + cap] + "\n";
   } else {
@@ -675,7 +675,6 @@ void printDisplay(int mel1, int mel2, int drone, int tromp, int tpose, int cap, 
   } else {
     disp_str = disp_str + "      Drone:   MUTE \n";
   };
-  disp_str2 = "  " + LongNoteNum[mel1 + tpose + offset] + "\n";
 
   display.clearDisplay();
   display.setTextSize(1);
@@ -696,9 +695,28 @@ void printDisplay(int mel1, int mel2, int drone, int tromp, int tpose, int cap, 
   display.print(cap);
 
   display.print(disp_str.c_str());
-  display.setTextSize(2);
-  display.print(disp_str2.c_str());
   display.display();
+};
+
+void draw_note(int note) {
+  int octave = (note / 12 ) - 1;
+  int note_pos = (note % 12);
+
+  display.clearDisplay();
+  display.drawXBitmap(32,0, letter[note_pos], 64, 64, 1);
+
+  // If we're making a regular note...
+  if (note_pos == 0 || note_pos == 2 || note_pos == 4 || note_pos == 5 ||
+      note_pos == 7 || note_pos == 9 || note_pos == 11) {
+
+    display.drawXBitmap(84,43, octave_num[octave], 14, 21, 1);
+  // If we're making a sharp/flat...
+  } else {
+    display.drawXBitmap(32,0, sharp_num[octave], 64, 64, 1);
+  };
+
+  display.display();
+
 };
 
 // ##################
@@ -831,7 +849,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("8 Mar 2022, Ver.0.9.7");
+  display.println("8 Mar 2022, Ver.0.9.8");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -1844,9 +1862,12 @@ void loop() {
       mykeyclick->soundOn(tpose_offset);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
-    };
-    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
+
+      draw_note(mystring->getOpenNote() + tpose_offset + myoffset);
+    } else {
+      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
                  tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
+    };
   };
 
   // As long as we're in playing mode--acutally playing or not--
@@ -1867,9 +1888,12 @@ void loop() {
       mykeyclick->soundOn(tpose_offset);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
+
+      draw_note(mystring->getOpenNote() + tpose_offset + myoffset);
+    } else {
+      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
+                   tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
     };
-    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
-                 tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
   };
   if ((tpose_down->wasPressed() ||
       (my1Button->beingPressed() && myAltTposeDown->wasPressed())) && (max_tpose + tpose_offset > 0)) {
@@ -1887,9 +1911,12 @@ void loop() {
       mykeyclick->soundOn(tpose_offset);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
+
+      draw_note(mystring->getOpenNote() + tpose_offset + myoffset);
+    } else {
+      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
+                   tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
     };
-    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
-                 tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
   };
 
   // NOTE:
@@ -1908,14 +1935,14 @@ void loop() {
       mylowstring->soundOn(myoffset + tpose_offset);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
-      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
+      draw_note(mystring->getOpenNote() + tpose_offset + myoffset);
 
     } else if (mycrank->startedSpinning() && !bigbutton->toggleOn()) {
       mystring->soundOn(myoffset + tpose_offset);
       mylowstring->soundOn(myoffset + tpose_offset);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
-      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
+      draw_note(mystring->getOpenNote() + tpose_offset + myoffset);
 
     // Turn off the previous notes and turn on the new one with a click if new key this cycle.
     // NOTE: I'm not touching the drone/trompette.  Just leave it on if it's a key change.
@@ -1927,7 +1954,7 @@ void loop() {
       mystring->soundOn(myoffset + tpose_offset);
       mylowstring->soundOn(myoffset + tpose_offset);
       mykeyclick->soundOn(tpose_offset);
-      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
+      draw_note(mystring->getOpenNote() + tpose_offset + myoffset);
     };
 
     // Whenever we're playing, check for buzz.

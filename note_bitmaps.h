@@ -1,7 +1,7 @@
 // These are the bitmaps for producing the large notes on-screen.
 
 // These are the notes themselves.  0-12 is C - B chromatically.  They are 64x64
-static const unsigned char PROGMEM letter[7][512] = {
+static const unsigned char PROGMEM letter[12][512] = {
   // C
   {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff,
