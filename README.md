@@ -1,6 +1,6 @@
 # digigurdy-baz
 
-**NEW!  Check out version 0.9.6!**
+**NEW!  Check out version 0.9.8!**
 
 This is a rewrite of the digigurdy code (https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy).
 
@@ -14,11 +14,12 @@ The code has been significantly streamlined (20% the size of the original source
 * The capo button allows **on-the-fly** toggling of 1 or 2 whole-note capos on the drone/trompette strings.
 * Two transpose buttons allow **on-the-fly** transposing of all strings up *or* down one octave in half-steps (12 up, 12 down)!
   * Every tuning can be played in *any key* within an octave of it.
-* 4 pre-loaded default presets (matching John Dingley's orignal presets) **(NEW!)**
-* 4 _save slots_ for saving your favorite tunings! **(NEW!)**
-* Built-in EEPROM clearing feature for first-time installation **(NEW!)**
+* 4 pre-loaded default presets (matching John Dingley's orignal presets)
+* 4 _save slots_ for saving your favorite tunings!
+* Built-in EEPROM clearing feature for first-time installation
 * **On-Screen-Display** showing current string tunings, transpose and capo settings, as well as a read-out of the current note being played on the keybox.
-* Muting of both or either the drone/trompette strings directly from the pause menu **(NEW!)**
+  * While playing, a [big pretty bitmap](https://www.youtube.com/shorts/XOBMtSio8nA) note now displays instead of the full settings.  They still show up when not playing. **(NEW!)**
+* Muting of both or either the drone/trompette strings directly from the pause menu
 
 ## Installation
 
