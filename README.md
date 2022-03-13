@@ -1,6 +1,6 @@
 # digigurdy-baz
 
-**NEW!  Check out version 0.9.8!**
+**NEW!  Check out version 0.9.9!**
 
 This is a rewrite of the digigurdy code (https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy).
 
@@ -18,7 +18,7 @@ The code has been significantly streamlined (20% the size of the original source
 * 4 _save slots_ for saving your favorite tunings!
 * Built-in EEPROM clearing feature for first-time installation
 * **On-Screen-Display** showing current string tunings, transpose and capo settings, as well as a read-out of the current note being played on the keybox.
-  * While playing, a [big pretty bitmap](https://www.youtube.com/shorts/XOBMtSio8nA) note now displays instead of the full settings.  They still show up when not playing. **(NEW!)**
+  * While playing, a [big pretty bitmap note](https://www.youtube.com/shorts/XOBMtSio8nA) or [a note + staff](https://www.youtube.com/shorts/KD5NucKWTos) now displays instead of the full settings.  They still show up when not playing.  This is adjustable in the startup menu. **(NEW!)**
 * Muting of both or either the drone/trompette strings directly from the pause menu
 
 ## Installation
