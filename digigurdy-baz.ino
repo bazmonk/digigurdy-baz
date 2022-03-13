@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v0.9.8
+// VERSION: v0.9.9
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
 //   https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy
@@ -699,27 +699,100 @@ void printDisplay(int mel1, int mel2, int drone, int tromp, int tpose, int cap, 
   display.display();
 };
 
-void draw_note(int note) {
+void draw_note(int note, int x_offset) {
   int octave = (note / 12 ) - 1;
   int note_pos = (note % 12);
 
-  display.clearDisplay();
+  display.drawXBitmap(x_offset,0, letter[note_pos], 64, 64, 1);
 
-  // The big and split versions of the letters are in the same array, so just display it.
-  display.drawXBitmap(32,0, letter[note_pos], 64, 64, 1);
+  if (octave >=0) {
+    // If we're making a regular note...
+    if (note_pos == 0 || note_pos == 2 || note_pos == 4 || note_pos == 5 ||
+        note_pos == 7 || note_pos == 9 || note_pos == 11) {
 
-  // If we're making a regular note print a big number.
-  if (note_pos == 0 || note_pos == 2 || note_pos == 4 || note_pos == 5 ||
-      note_pos == 7 || note_pos == 9 || note_pos == 11) {
-
-    display.drawXBitmap(84,43, octave_num[octave], 14, 21, 1);
-  // If we're making a sharp/flat print the sharp/flat number image.
-  } else {
-    display.drawXBitmap(32,0, sharp_num[octave], 64, 64, 1);
+      display.drawXBitmap(x_offset + 52,43, octave_num[octave], 14, 21, 1);
+    // If we're making a sharp/flat...
+    } else {
+      display.drawXBitmap(x_offset,0, sharp_num[octave], 64, 64, 1);
+    };
   };
 
   display.display();
 
+};
+
+
+int play_screen_type = 0;
+
+static const int dot_pos[] = {
+  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+  -1, -1, -1, -1, 57, 53, 53, 49, 49, 45, 45, 41,
+  37, 37, 33, 33, 57, 53, 53, 49, 49, 45, 45, 41,
+  37, 37, 33, 33, 57, 53, 53, 57, 57, 53, 53, 49,
+  45, 45, 49, 49, 45, 41, 41, 37, 37, 33, 33, 29,
+  25, 25, 21, 21, 17, 13, 13,  9,  9,  5,  5,  1,
+   5,  5,  1,  1,  4,  0,  0, 24, 24, 20, 20, 16,
+  12, 12,  8,  8,  4,  0,  0, 24, 24, 20, 20, 16,
+  12, 12,  8,  8,  4,  0,  0, -1, -1, -1, -1, -1,
+  -1, -1, -1, -1, -1, -1, -1, -1
+};
+
+static const int staff_index[] = {
+  -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+  -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+  -1,-1,-1,-1, 6, 6, 6, 6, 6, 6, 6, 6,
+   6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+   6, 6, 6, 6, 6, 6, 6, 5, 5, 5, 5, 4,
+   4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+   3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2,
+   1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 0,-1,-1,-1,-1,-1,
+  -1,-1,-1,-1,-1,-1,-1,-1
+};
+
+static const int va_marker[] = {
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2,
+  2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1,
+  1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3,
+  3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4,
+  4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0
+};
+
+void draw_staff(int note, int x_offset) {
+  if (dot_pos[note] >= 0) {
+    display.drawXBitmap(x_offset,0, staffs[staff_index[note]], 64, 64, 1);
+
+    display.drawXBitmap(x_offset + 29, dot_pos[note], dot, 7, 7, 1);
+
+    if (va_marker[note] == 2) {
+      display.drawXBitmap(x_offset + 42, 36, va15, 20, 10, 1);
+    } else if (va_marker[note] == 1) {
+      display.drawXBitmap(x_offset + 42, 36, va8, 20, 10, 1);
+    } else if (va_marker[note] == 3) {
+      display.drawXBitmap(x_offset + 42, 10, va8, 20, 10, 1);
+    } else if (va_marker[note] == 4) {
+      display.drawXBitmap(x_offset + 42, 10, va15, 20, 10, 1);
+    }
+  };
+  display.display();
+};
+
+void draw_play_screen(int note) {
+  display.clearDisplay();
+  if (play_screen_type == 0) {
+    draw_note(note, 0);
+    draw_staff(note, 64);
+  } else {
+    draw_note(note, 32);
+  };
 };
 
 // ##################
@@ -852,7 +925,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("8 Mar 2022, Ver.0.9.8");
+  display.println("14 Mar 2022,   v0.9.9");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -930,6 +1003,7 @@ void setup() {
 
   capo = new GurdyButton(23); // The capo button
   capo_offset = 0;
+
 };
 
 // ##############
@@ -1513,37 +1587,108 @@ bool load_preset_screen() {
   return true;
 };
 
+// This screen lets you choose what kind of display you want.
+void playing_options_screen() {
+  bool done = false;
+  while (!done) {
+
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 0);
+    std::string disp_str = ""
+    " -Choose Play Screen-\n"
+    " Select an Option:   \n"
+    "                     \n"
+    " 1) Big Note + Staff \n"
+    "                     \n"
+    " 2) Big Note         \n"
+    "                     \n"
+    " X) Go Back          \n";
+
+    display.print(disp_str.c_str());
+    display.display();
+
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    myBackButton->update();
+
+    if (myOkButton->wasPressed()) {
+
+      play_screen_type = 0;
+      EEPROM.write(EEPROM_DISPLY_TYPE, 0);
+
+      display.clearDisplay();
+      display.setTextSize(2);
+      display.setTextColor(WHITE);
+      display.setCursor(0, 0);
+      std::string disp_str = ""
+      "  DISPLAY  \n"
+      "  \n"
+      "  SAVED \n";
+
+      display.print(disp_str.c_str());
+      display.display();
+      delay(750);
+      done = true;
+
+    } else if (my2Button->wasPressed()) {
+
+      play_screen_type = 1;
+      EEPROM.write(EEPROM_DISPLY_TYPE, 1);
+
+      display.clearDisplay();
+      display.setTextSize(2);
+      display.setTextColor(WHITE);
+      display.setCursor(0, 0);
+      std::string disp_str = ""
+      "  DISPLAY  \n"
+      "  \n"
+      "  SAVED \n";
+
+      display.print(disp_str.c_str());
+      display.display();
+      delay(750);
+      done = true;
+    } else if (myBackButton->wasPressed()) {
+      done = true;
+    };
+  };
+};
+
 // This screen is for other setup options.  Currently, that's
 // just an option to clear the EEPROM.
 void options_screen() {
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setCursor(0, 0);
-  std::string disp_str = ""
-  " ------Options------ \n"
-  " Select an Option:   \n"
-  "                     \n"
-  " O) Clear EEPROM     \n"
-  "                     \n"
-  " X) Go Back          \n"
-  "                     \n"
-  "                     \n";
-
-  display.print(disp_str.c_str());
-  display.display();
-
-  // Give the user a chance to figure out it's happening...
-  delay(500);
 
   bool done = false;
   while (!done) {
 
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 0);
+    std::string disp_str = ""
+    " ------Options------ \n"
+    " Select an Option:   \n"
+    "                     \n"
+    " 1) Clear EEPROM     \n"
+    "                     \n"
+    " 2) Playing Screen   \n"
+    "                     \n"
+    " X) Go Back          \n";
+
+    display.print(disp_str.c_str());
+    display.display();
+
+
     // Check the 1 and 2 buttons
-    myOkButton->update();
+    my1Button->update();
+    my2Button->update();
     myBackButton->update();
 
-    if (myOkButton->wasPressed()) {
+    if (my1Button->wasPressed()) {
 
       clear_eeprom();
 
@@ -1561,6 +1706,9 @@ void options_screen() {
       delay(750);
       done = true;
 
+    } else if (my2Button->wasPressed()) {
+      playing_options_screen();
+      done = true;
     } else if (myBackButton->wasPressed()) {
       done = true;
     };
@@ -1860,6 +2008,10 @@ void loop() {
 
   if (first_loop) {
     welcome_screen();
+
+    // This might have been reset above, so grab it now.
+    play_screen_type = EEPROM.read(EEPROM_DISPLY_TYPE);
+
     // Crank On! for half a sec.
     display.clearDisplay();
     display.drawBitmap(0, 0, crank_on_logo, 128, 64, 1);
@@ -1923,7 +2075,7 @@ void loop() {
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
 
-      draw_note(mystring->getOpenNote() + tpose_offset + myoffset);
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset);
     } else {
       printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
                  tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
@@ -1949,7 +2101,7 @@ void loop() {
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
 
-      draw_note(mystring->getOpenNote() + tpose_offset + myoffset);
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset);
     } else {
       printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
                    tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
@@ -1972,7 +2124,7 @@ void loop() {
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
 
-      draw_note(mystring->getOpenNote() + tpose_offset + myoffset);
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset);
     } else {
       printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
                    tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
@@ -1995,14 +2147,14 @@ void loop() {
       mylowstring->soundOn(myoffset + tpose_offset);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
-      draw_note(mystring->getOpenNote() + tpose_offset + myoffset);
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset);
 
     } else if (mycrank->startedSpinning() && !bigbutton->toggleOn()) {
       mystring->soundOn(myoffset + tpose_offset);
       mylowstring->soundOn(myoffset + tpose_offset);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
-      draw_note(mystring->getOpenNote() + tpose_offset + myoffset);
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset);
 
     // Turn off the previous notes and turn on the new one with a click if new key this cycle.
     // NOTE: I'm not touching the drone/trompette.  Just leave it on if it's a key change.
@@ -2014,7 +2166,7 @@ void loop() {
       mystring->soundOn(myoffset + tpose_offset);
       mylowstring->soundOn(myoffset + tpose_offset);
       mykeyclick->soundOn(tpose_offset);
-      draw_note(mystring->getOpenNote() + tpose_offset + myoffset);
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset);
     };
 
     // Whenever we're playing, check for buzz.
