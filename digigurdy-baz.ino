@@ -1352,6 +1352,65 @@ bool view_slot_screen(int slot_num) {
   return true;
 };
 
+// This screen previews a preset's settings.
+// Returns true if users wants to use it, false otherwise.
+// Accept integer preset_num: the preset number.
+bool view_preset_screen(int preset) {
+  const int *tunings;
+  if (preset == 1) { tunings = PRESET1; };
+  if (preset == 2) { tunings = PRESET2; };
+  if (preset == 3) { tunings = PRESET3; };
+  if (preset == 4) { tunings = PRESET4; };
+
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  display.print(" ---Preset Tuning--- \n");
+  display.print(" Hi Melody: ");
+  display.print(LongNoteNum[tunings[0]].c_str());
+  display.print("  \n");
+  display.print(" Lo Melody: ");
+  display.print(LongNoteNum[tunings[1]].c_str());
+  display.print("  \n");
+  display.print(" Drone:     ");
+  display.print(LongNoteNum[tunings[2]].c_str());
+  display.print("  \n");
+  display.print(" Trompette: ");
+  display.print(LongNoteNum[tunings[3]].c_str());
+  display.print("  \n");
+  display.print(" Tpose: ");
+  if (tunings[5] > 12) { display.print("+"); };
+  display.print(tunings[5]);
+  display.print("  Capo: ");
+  if (tunings[6] > 0) { display.print("+"); };
+  display.print(tunings[6]);
+  display.print("\n");
+  display.print(" Use?  'O' or 1) Yes \n");
+  display.print("       'X' or 2) No  \n");
+
+  display.display();
+
+  bool done = false;
+  while (!done) {
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    myOkButton->update();
+    myBackButton->update();
+
+    if (my1Button->wasPressed() || myOkButton->wasPressed()) {
+      load_preset_tunings(preset);
+      done = true;
+
+    } else if (my2Button->wasPressed() || myBackButton->wasPressed()) {
+      return false;
+    };
+  };
+  return true;
+};
+
 // This screen asks the user to select a save slot for
 // preview and optionally choosing.
 bool load_saved_screen() {
@@ -1404,50 +1463,51 @@ bool load_saved_screen() {
 };
 
 // This screen lets the user choose a preset.
-void load_preset_screen() {
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setCursor(0, 0);
-  std::string disp_str = ""
-  " ---Load A Preset--- \n"
-  " Select a Preset:    \n"
-  "                     \n"
-  " 1) G/C, C Drones    \n"
-  " 2) G/C, G Drones    \n"
-  " 3) D/G, D Drones    \n"
-  " 4) D/G, G Drones    \n"
-  "                     \n";
-
-  display.print(disp_str.c_str());
-  display.display();
+bool load_preset_screen() {
 
   bool done = false;
   while (!done) {
+
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 0);
+    std::string disp_str = ""
+    " ---Load A Preset--- \n"
+    " Select a Preset:    \n"
+    "                     \n"
+    " 1) G/C, C Drones    \n"
+    " 2) G/C, G Drones    \n"
+    " 3) D/G, D Drones    \n"
+    " 4) D/G, G Drones    \n"
+    " X or 5) Go Back     \n";
+
+    display.print(disp_str.c_str());
+    display.display();
 
     // Check the 1 and 2 buttons
     my1Button->update();
     my2Button->update();
     my3Button->update();
     my4Button->update();
+    my5Button->update();
+    myBackButton->update();
 
     if (my1Button->wasPressed()) {
-      load_preset_tunings(1);
-      done = true;
+      if (view_preset_screen(1)) {done = true;};
 
     } else if (my2Button->wasPressed()) {
-      load_preset_tunings(2);
-      done = true;
+      if (view_preset_screen(2)) {done = true;};
 
     } else if (my3Button->wasPressed()) {
-      load_preset_tunings(3);
-      done = true;
-
+      if (view_preset_screen(3)) {done = true;};
     } else if (my4Button->wasPressed()) {
-      load_preset_tunings(4);
-      done = true;
+      if (view_preset_screen(4)) {done = true;};
+    } else if (my5Button->wasPressed() || myBackButton->wasPressed()) {
+      return false;
     };
   };
+  return true;
 };
 
 // This screen is for other setup options.  Currently, that's
@@ -1534,17 +1594,13 @@ void welcome_screen() {
     my4Button->update();
 
     if (my1Button->wasPressed()) {
-      load_preset_screen();
-      done = true;
+      if (load_preset_screen()) {done = true;};
 
     } else if (my2Button->wasPressed()) {
-      if (load_saved_screen()) {
-        done = true;
-      };
+      if (load_saved_screen()) {done = true;};
 
     } else if (my3Button->wasPressed()) {
-      tuning();
-      done = true;
+      if (tuning()) {done = true;};
 
     } else if (my4Button->wasPressed()) {
       options_screen();
@@ -1553,34 +1609,33 @@ void welcome_screen() {
   };
 };
 
-void tuning() {
-
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setCursor(0, 0);
-  std::string disp_str = ""
-  " ----Tuning Menu---- \n"
-  "                     \n"
-  " Choose Base Tuning: \n"
-  "                     \n"
-  "       1) G/C        \n"
-  "                     \n"
-  "       2) D/G        \n"
-  "                     \n";
-
-  display.print(disp_str.c_str());
-  display.display();
-
-  // Give the user a chance to figure out it's happening...
-  delay(1000);
+bool tuning() {
 
   bool done = false;
   while (!done) {
 
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 0);
+    std::string disp_str = ""
+    " ----Tuning Menu---- \n"
+    "                     \n"
+    " Choose Base Tuning: \n"
+    "                     \n"
+    "       1) G/C        \n"
+    "       2) D/G        \n"
+    "   X or 3) Go Back   \n"
+    "                     \n";
+
+    display.print(disp_str.c_str());
+    display.display();
+
     // Check the 1 and 2 buttons
     my1Button->update();
     my2Button->update();
+    my3Button->update();
+    myBackButton->update();
 
     if (my1Button->wasPressed()) {
       gc_or_dg = true;
@@ -1589,6 +1644,8 @@ void tuning() {
     } else if (my2Button->wasPressed()) {
       gc_or_dg = false;
       done = true;
+    } else if (my3Button->wasPressed() || myBackButton->wasPressed()) {
+      return false;
     };
   };
 
@@ -1602,15 +1659,15 @@ void tuning() {
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
-  disp_str = ""
+  std::string disp_str = ""
   " -----Summary:------ \n"
   "  High Melody:   " + NoteNum[mystring->getOpenNote()] + "  \n"
   "   Low Melody:   " + NoteNum[mylowstring->getOpenNote()] + "  \n"
   "        Drone:   " + NoteNum[mydrone->getOpenNote()] + "  \n"
   "    Trompette:   " + NoteNum[mytromp->getOpenNote()] + "  \n"
   "                     \n"
-  "'O' or 1) Continue   \n"
-  "'X' or 2) Start Over \n";
+  "'O' or 1) Accept     \n"
+  "'X' or 2) Go Back    \n";
 
   display.print(disp_str.c_str());
   display.display();
@@ -1626,12 +1683,14 @@ void tuning() {
 
     if (myOkButton->wasPressed() || my1Button->wasPressed()) {
       done = true;
+      return true;
 
     } else if (myBackButton->wasPressed() || my2Button->wasPressed()) {
-      tuning();
+      return false;
       done = true;
     };
   };
+  return true;
 };
 
 // This is the screen for saving to a save slot
@@ -1715,11 +1774,10 @@ void pause_screen() {
     display.setCursor(0, 0);
     std::string disp_str = ""
     " ----Pause  Menu---- \n"
-    " Select an Option:   \n"
     " 1) Load Preset      \n"
     " 2) Load Save Slot   \n"
     " 3) Save This Tuning \n"
-    " 4) New Tuning Setup \n"
+    " 4) New Tuning Setup \n\n"
     " X or 5) Go Back     \n";
 
     if (drone_mode == 0) {
@@ -1758,8 +1816,7 @@ void pause_screen() {
       done = true;
 
     } else if (my4Button->wasPressed()) {
-      tuning();
-      done = true;
+      if (tuning()) {done = true;};
 
     } else if (my5Button->wasPressed() || myBackButton->wasPressed()) {
       done = true;
