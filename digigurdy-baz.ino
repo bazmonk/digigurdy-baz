@@ -703,14 +703,16 @@ void draw_note(int note) {
   int note_pos = (note % 12);
 
   display.clearDisplay();
+
+  // The big and split versions of the letters are in the same array, so just display it.
   display.drawXBitmap(32,0, letter[note_pos], 64, 64, 1);
 
-  // If we're making a regular note...
+  // If we're making a regular note print a big number.
   if (note_pos == 0 || note_pos == 2 || note_pos == 4 || note_pos == 5 ||
       note_pos == 7 || note_pos == 9 || note_pos == 11) {
 
     display.drawXBitmap(84,43, octave_num[octave], 14, 21, 1);
-  // If we're making a sharp/flat...
+  // If we're making a sharp/flat print the sharp/flat number image.
   } else {
     display.drawXBitmap(32,0, sharp_num[octave], 64, 64, 1);
   };
