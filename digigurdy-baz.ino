@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v0.9.9
+// VERSION: v0.9.91
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
 //   https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy
@@ -12,6 +12,17 @@
 // USERS!!! Uncomment one of these lines depending on what kind of OLED screen you have.
 #define WHITE_OLED
 //#define BLUE_OLED
+
+// USERS!!! Set the correct loop delay here for the Teensy unit you're using.  This is a
+// microsecond delay that paces the main loop() function.  It roughly depends on your CPU speed.
+//
+// Feel free to tweak this!  It's a tradeoff between responsiveness and propensity to get stuck.
+// +/- 5-10 might give you better performance.
+//
+// Teensy3.5 @ 120mHz ~ 15 microsec
+// Teensy4.1 @ 600mHz ~ 60 microsec
+// Teensy4.1 @ 150mHz ~ 12 microsec
+const int LOOP_DELAY = 15;
 
 // Eventually I'll move this to a header, but the pin_array[] index here represents
 // the MIDI note offset, and the value is the corresponding teensy pin.
@@ -358,7 +369,7 @@ class GurdyCrank {
     // the crank.  I'm using the same approach here.  To keep things straight,
     // I'm calling this smoothed value the "spin" of the crank.
     static const int max_spin = 3000;
-    static const int spin_weight = 800;
+    static const int spin_weight = 500;
     static const int spin_threshold = 50; // spin over 50 makes sound.
     int spin;
     bool started_spinning;
@@ -451,7 +462,7 @@ class GurdyCrank {
         if (crank_voltage > myKnob->getVoltage()) {
           buzz_countdown = buzz_smoothing;
         } else if (buzz_countdown > 0) {
-          buzz_countdown -= 1;
+          buzz_countdown -= 2;
         };
 
         if (buzz_countdown > 0) {
@@ -519,7 +530,7 @@ class GurdyCrank {
             spin = max_spin;
           };
         } else {
-          spin -= 2;
+          spin -= 5;
           if (spin < 0) {
             spin = 0;
           };
@@ -925,7 +936,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("14 Mar 2022,   v0.9.9");
+  display.println("14 Mar 2022,  v0.9.91");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -2005,6 +2016,14 @@ bool first_loop = true;
 // This is the main logic of the program and defines how the strings, keys, click, buzz,
 // and buttons acutally behave during play.
 void loop() {
+
+  // loop() actually runs too fast and gets ahead of hardware calls if it's allowed to run freely.
+  // This was noticeable in older versions when the crank got "stuck" and would not buzz and took
+  // oddly long to stop playing when the crank stopped moving.
+  //
+  // A microsecond delay here lets everything keep up with itself.  The exactly delay is set at
+  // the top in the config section.
+  delayMicroseconds(LOOP_DELAY);
 
   if (first_loop) {
     welcome_screen();
