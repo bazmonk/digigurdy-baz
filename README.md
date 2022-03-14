@@ -4,7 +4,7 @@
 
 This is a rewrite of the digigurdy code (https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy).
 
-The code has been significantly streamlined (20% the size of the original source code, compiles to only 25% the teensy3.5's capacity), and there are several new features:
+The code has been significantly streamlined (20% the size of the original source code, compiles to only 30% the teensy3.5's capacity), and there are several new features:
 
 * A re-worked tuning menu, allowing a choice of G/C or D/G tuning, each with a selection (one each, four total) of:
   * 4 high chanterelles (unison and fifths)
@@ -23,6 +23,7 @@ The code has been significantly streamlined (20% the size of the original source
 
 ## Installation
 
+### OLED Display
 Your digigurdy may have an SSD1306 display (the "white OLED"), or the SH1106 display (the "blue OLED").  This code needs to be compiled for the correct display.
 
 Near the very top of the code are two `#define` statements.  Uncomment the appropriate line to build for either display type.  The version on this repository is set to white (because that's the one I have).
@@ -41,17 +42,24 @@ For blue OLEDs:
 #define BLUE_OLED
 ```
 
+### Teensy4.1 Support
+Digigurdy-baz has preliminary Teensy4.1 support.  If you are using a Teensy4.1 unit, also near the top of the code is a `LOOP_DELAY` variable.  This variable needs to be adjusted for the faster processor.  I've included some suggestions in the comments for what the delay should be, but (CPU speed / 10) is a good starting point.
+
+### Compiling/Uploading
 After that, the steps are the same for the original digigurdy code.  You will need:
   * Teensyduino, the IDE and build environment for the electronics
   * The appropriate `Adafruit_[SSD1306 or SH1106]` library (see the whilte/blue display section above) for your gurdy installed within Teensyduino (`Sketch->Include Library->Manage Libraries...`).
+    * If it isn't already installed or doesn't install with the OLED library as a dependency, you also need the `Adafruit_GFX` general graphics library as well.
     * If you have the SH1106 "blue" OLED, you need the SH1106 libraries here: https://github.com/wonho-maker/Adafruit_SH1106. Other versions will not work.
-  * The main `digigurdy-baz.ino` file along with `bitmaps.h` in a directory/folder named `digigurdy-baz`.  Teensyduino will offer to make this folder and move the file around if you don't.  The easiest way to make sure everything is in the right place is to simply clone this repository from github to your computer.  The repo itself is named the correct way for Teensyduino, and you can easily pull new updates later on if you want.
+  * The main `digigurdy-baz.ino` file along with the header files in a directory/folder named `digigurdy-baz`.  Teensyduino will offer to make this folder and move the file around if you don't.  The easiest way to make sure everything is in the right place is to simply clone this repository from github to your computer.  The repo itself is named the correct way for Teensyduino, and you can easily pull new updates later on if you want.
 
 With that in place, you should be able to open the `digigurdy-baz.ino` file in Teensyduino, and compile/upload it to your digigurdy.  Make sure to select the correct port for it and that the other settings look like this after plugging your gurdy to your computer:
 
 ![teensyduino settings](https://raw.githubusercontent.com/wiki/bazmonk/digigurdy-baz/teensyduino.png)
 
-It should automatically restart and be ready-to-go!
+NOTE: Make sure in particular that the Teensy version is correct and that "USB Type" is "Serial + MIDI".  
+
+After uploading, it should automatically restart and be ready-to-go!
 
 ### Clear EEPROM for first-time installations
 
@@ -59,7 +67,7 @@ Testing has already shown that strange side-effects occur when the EEPROM (your 
 
 First-time users of this codebase should do this before continuing.  It only needs to be done once.
 
-Regular users can utilize it to effectively clear their save slots, since that's all that's saved there.
+Regular users can utilize it to effectively clear their save slots and reset the display style.
 
 ### Connecting to a Synthesizer
 
@@ -91,9 +99,12 @@ After showing the Adafruit logo (represent!) and a title screen, crank detection
 
 * **DO NOT TURN THE CRANK DURING CRANK DETECTION!**  It's ok if you do, but you may fool the digigurdy into thinking there is no crank installed (yes, that does sound backwards, but it's the truth).  If you do this accidentally, just unpower and power back up the digigurdy.  It'll forgive you and forget it ever even happened.
 
-From there, you will be shown the Startup Menu.  There's options here to load one of the included presets, load a tuning you've saved before, set up a new tuning, and other startup options.
+From there, you will be shown the Startup Menu.  There's options here to load one of the included presets, load a tuning you've saved before, set up a new tuning, and other options.
 
 **New Users**: the four preset options are for you!  Each one is a reasonable combination, and they're good starting points while you experiment with making others.
+
+#### Other Options
+The "Other Options" menu is only available at startup.  It allows you to clear your EEPROM, and choose whether you want playing notes to display as a large note letter, or a letter + staff/scale image.  Your display preference is persistent and doesn't need to be adjusted each time.
 
 ### Play
 
@@ -128,7 +139,7 @@ Big bonus points (I'll make a credits screen for you all) if you can reproduce i
 
 Feel free to open an issue.  I'll see what I can do.  This is all in my spare time so responsiveness is what it is, but I will see your issue pretty quick.
 
-Part of rewriting this was with maintainability and extendability in mind.  The code is well-formatted, I've abstracted the strings, MIDI interaction, buttons, keybox, crank, etc. into easy-to-use classes.  I put a lot of effort into using readable variables, commenting the crap out of the code, and not doing anything needlessly "clever"... a first-year programming student should be able to make sense of it.  
+Part of rewriting this was with maintainability and extendability in mind.  The code is well-formatted, I've abstracted the strings, MIDI interaction, buttons, keybox, crank, etc. into easy-to-use classes.  I put a lot of effort into using readable variables, commenting the crap out of the code, and not doing anything needlessly "clever"... I tried to make it easy for you to explore adding to it yourself. 
 
 I haven't really thought of how I'll handle a bunch of competing pull requests because I'm not expecting it, but feel free to clone the repo, make improvements, and submit a pull request.  I'm open to them.
 
