@@ -45,6 +45,13 @@ For blue OLEDs:
 ### Teensy4.1 Support
 Digigurdy-baz has preliminary Teensy4.1 support.  If you are using a Teensy4.1 unit, also near the top of the code is a `LOOP_DELAY` variable.  This variable needs to be adjusted for the faster processor.  I've included some suggestions in the comments for what the delay should be, but (CPU speed / 10) is a good starting point.
 
+```
+// Teensy3.5 @ 120mHz ~ 15 microsec
+// Teensy4.1 @ 600mHz ~ 60 microsec
+// Teensy4.1 @ 150mHz ~ 12 microsec
+const int LOOP_DELAY = 15;
+```
+
 ### Compiling/Uploading
 After that, the steps are the same for the original digigurdy code.  You will need:
   * Teensyduino, the IDE and build environment for the electronics
