@@ -96,9 +96,14 @@ Here's a quick video explaining the controls:
 
 https://www.youtube.com/watch?v=yC0skMH7qog
 
-The keys for navigating the menus work just like John Dingley's code.  The bottom row represent number choices 1-6 starting from the left.  The "OK" or O button is the top right, and the "Back" or X button is the top left:
+The keys for navigating the menus work much like John Dingley's code.  The bottom row represent number choices in menus, 1-6 starting from the left.  The "OK" or "O" button is the top right, and the "Back" or X button is the top left:
 
-![keybox pic](https://raw.githubusercontent.com/wiki/bazmonk/digigurdy-baz/keys.jpeg)
+![keybox pic](https://raw.githubusercontent.com/wiki/bazmonk/digigurdy-baz/keys-full.jpeg)
+
+During play, these are all the "hidden" keycombos:
+* "X" + "O" = Pause menu: save/load/change tuning, turn drones on/off
+* "X" + "Capo" = Toggle through capos (just like the button on newer ones)
+* "1" + Tpose Down or Tpose Up = Transpose up and down (just like the buttons on newer ones)
 
 ### Startup
 
