@@ -38,6 +38,23 @@ int pin_array[] = {-1, 2, 24, 3, 25, 26, 4, 27, 5, 28, 29, 6, 30,
 // *not* need it ;-)
 const int num_keys = 24;
 
+// These control which buttons on the keybox have the roles of the X, O, 1-6, etc. buttons.
+// Users with non-"standard" keyboxes (if there is such a thing!) may need to adjust these.
+//
+// These are array indexes, so if you count chromatically up your keybox and then subtract 1,
+// that is its index.
+const int BACK_INDEX = 0;
+const int OK_INDEX = num_keys - 2;
+const int BUTTON_1_INDEX = 1;
+const int BUTTON_2_INDEX = 3;
+const int BUTTON_3_INDEX = 4;
+const int BUTTON_4_INDEX = 6;
+const int BUTTON_5_INDEX = 8;
+const int BUTTON_6_INDEX = 9;
+const int TPOSE_UP_INDEX = num_keys - 1;
+const int TPOSE_DN_INDEX = num_keys - 3;
+const int CAPO_INDEX = num_keys - 5;
+
 // ##################
 // END CONFIG SECTION
 // ##################
@@ -976,22 +993,20 @@ void setup() {
   mygurdy = new HurdyGurdy(pin_array, num_keys);
   bigbutton = new ToggleButton(39);
 
-  // Grab the keys we use for menu nav out of the keybox:
-  myBackButton = mygurdy->keybox[0];
-  myOkButton = mygurdy->keybox[num_keys - 2];
+  // These indices are defined in the CONFIG SECTION
+  myBackButton = mygurdy->keybox[BACK_INDEX];
+  myOkButton = mygurdy->keybox[OK_INDEX];
 
-  // 1-6 keys are the first six bottom keys of the keybox
-  my1Button = mygurdy->keybox[1];
-  my2Button = mygurdy->keybox[3];
-  my3Button = mygurdy->keybox[4];
-  my4Button = mygurdy->keybox[6];
-  my5Button = mygurdy->keybox[8];
-  my6Button = mygurdy->keybox[9];
+  my1Button = mygurdy->keybox[BUTTON_1_INDEX];
+  my2Button = mygurdy->keybox[BUTTON_2_INDEX];
+  my3Button = mygurdy->keybox[BUTTON_3_INDEX];
+  my4Button = mygurdy->keybox[BUTTON_4_INDEX];
+  my5Button = mygurdy->keybox[BUTTON_5_INDEX];
+  my6Button = mygurdy->keybox[BUTTON_6_INDEX];
 
-  // These are based off the keybox size so they should be at the end no matter how big it is.
-  myAltTposeUp = mygurdy->keybox[num_keys - 1];
-  myAltTposeDown = mygurdy->keybox[num_keys - 3];
-  myAltCapo = mygurdy->keybox[num_keys - 5];
+  myAltTposeUp = mygurdy->keybox[TPOSE_UP_INDEX];
+  myAltTposeDown = mygurdy->keybox[TPOSE_DN_INDEX];
+  myAltCapo = mygurdy->keybox[CAPO_INDEX];
 
   // Which channel is which doesn't really matter, but I'm sticking with
   // John's channels so his videos on setting it up with a tablet/phone still work.
