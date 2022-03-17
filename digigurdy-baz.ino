@@ -26,7 +26,7 @@ const int LOOP_DELAY = 15;
 
 // CRANK VARIABLES:
 // These are variables that affect the behavior of the crank.  Feel free to adjust these to work
-// fest with your motor.  I only have the one on my personal digigurdy, so beyond what works well on
+// best with your motor.  I only have the one on my personal digigurdy, so beyond what works well on
 // mine, it's a bit of a guessing game what works best with yours.
 
 // This affects how often the crank voltage is checked.  Higher intervals will play more smoothly
