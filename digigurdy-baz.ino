@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v0.9.91
+// VERSION: v0.9.92
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
 //   https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy
@@ -24,6 +24,35 @@
 // Teensy4.1 @ 150mHz ~ 12 microsec
 const int LOOP_DELAY = 15;
 
+// CRANK VARIABLES:
+// These are variables that affect the behavior of the crank.  Feel free to adjust these to work
+// fest with your motor.  I only have the one on my personal digigurdy, so beyond what works well on
+// mine, it's a bit of a guessing game what works best with yours.
+
+// This affects how often the crank voltage is checked.  Higher intervals will play more smoothly
+// at slow cranking speeds, but will cause a latency in the responsiveness when you start/stop.
+const int CRANK_INTERVAL = 100;
+
+// The crank uses an internal "spin" counter to make it continue to play through the inconsistent
+// raw voltage the crank produces.  Each high voltage read increases the counter by SPIN_WEIGHT,
+// up to MAX_SPIN.  While low voltage is being read, spin decreases by SPIN_DECAY.  While spin is
+// greater than SPIN_THRESHOLD, it makes sound.
+const int MAX_SPIN = 3000;
+const int SPIN_WEIGHT = 500;
+const int SPIN_DECAY = 5;
+const int SPIN_THRESHOLD = 50;
+
+// This is the high voltage mark.  John D. originally recommended 15-25 for this amount.
+// Lower amounts are more responsive but too low and you'll start to get "phantom" cranking from the
+// randomly-fluctuating voltage from the crank even when not spinning.
+const int V_THRESHOLD = 25;
+
+// Buzzing works sort of the same way except the buzz counter jumps immediately to the
+// BUZZ_SMOOTHING value and then begins to decay by BUZZ_DECAY.
+const int BUZZ_SMOOTHING = 1500;
+const int BUZZ_DECAY = 2;
+
+// KEYBOX VARIABLES:
 // Eventually I'll move this to a header, but the pin_array[] index here represents
 // the MIDI note offset, and the value is the corresponding teensy pin.
 // This defines which physical keys are part of the "keybox" and what order they're in.
@@ -306,9 +335,17 @@ class GurdyString {
       MIDI_obj->sendNoteOn(note_being_played, midi_volume, midi_channel);
     };
 
+    // soundOff gracefully turns off the playing note on the string.
     void soundOff() {
       usbMIDI.sendNoteOff(note_being_played, midi_volume, midi_channel);
       MIDI_obj->sendNoteOff(note_being_played, midi_volume, midi_channel);
+    };
+
+    // soundKill is a nuclear version of soundOff() that kills sound on the channel.
+    // It does not need to know the not being played.
+    void soundKill() {
+      usbMIDI.sendControlChange(123, 0, midi_channel);
+      MIDI_obj->sendControlChange(123, 0, midi_channel);
     };
 
     int getOpenNote() {
@@ -375,7 +412,7 @@ class GurdyCrank {
     float squared_sum;
     float deviations;
 
-    static const int crank_interval = 100;  // I.e. we check every 100 loop()s
+    static const int crank_interval = CRANK_INTERVAL;
     int crank_counter;
     int crank_voltage;
 
@@ -385,21 +422,23 @@ class GurdyCrank {
     // This "smooths" over momentary fluctuations in the analog voltage from
     // the crank.  I'm using the same approach here.  To keep things straight,
     // I'm calling this smoothed value the "spin" of the crank.
-    static const int max_spin = 3000;
-    static const int spin_weight = 500;
-    static const int spin_threshold = 50; // spin over 50 makes sound.
+    static const int max_spin = MAX_SPIN;
+    static const int spin_weight = SPIN_WEIGHT;
+    static const int spin_decay = SPIN_DECAY;
+    static const int spin_threshold = SPIN_THRESHOLD;
     int spin;
     bool started_spinning;
     bool stopped_spinning;
     bool is_spinning;
-    static const int v_threshold = 25;
+    static const int v_threshold = V_THRESHOLD;
 
     BuzzKnob* myKnob;
     bool started_buzzing;
     bool stopped_buzzing;
     bool is_buzzing;
     // This is how many cycles to "smooth" the buzz.  About 20,000 cycles in one second.
-    int buzz_smoothing = 1500;
+    int buzz_smoothing = BUZZ_SMOOTHING;
+    int buzz_decay = BUZZ_DECAY;
     int buzz_countdown;
 
   public:
@@ -479,7 +518,7 @@ class GurdyCrank {
         if (crank_voltage > myKnob->getVoltage()) {
           buzz_countdown = buzz_smoothing;
         } else if (buzz_countdown > 0) {
-          buzz_countdown -= 2;
+          buzz_countdown -= buzz_decay;
         };
 
         if (buzz_countdown > 0) {
@@ -547,7 +586,7 @@ class GurdyCrank {
             spin = max_spin;
           };
         } else {
-          spin -= 5;
+          spin -= spin_decay;
           if (spin < 0) {
             spin = 0;
           };
@@ -953,7 +992,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("14 Mar 2022,  v0.9.91");
+  display.println("14 Mar 2022,  v0.9.92");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -2220,6 +2259,16 @@ void loop() {
     mytromp->soundOff();
     mydrone->soundOff();
     mybuzz->soundOff();
+
+    // Send a CC 123 (all notes off) to be sure.  This causes turning off sound via the big
+    // button to basically be a MIDI kill button.
+    mystring->soundKill();
+    mylowstring->soundKill();
+    mykeyclick->soundKill();
+    mytromp->soundKill();
+    mydrone->soundKill();
+    mybuzz->soundKill();
+
     printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
 
   // If the crank stops and the toggle was off, turn off sound.
