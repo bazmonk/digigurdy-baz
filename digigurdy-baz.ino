@@ -91,8 +91,6 @@ const int CAPO_INDEX = num_keys - 5;
 #include <Adafruit_GFX.h>
 // https://www.pjrc.com/teensy/td_libs_Bounce.html
 #include <Bounce.h>
-#include <SPI.h>
-#include <Wire.h>
 #include <EEPROM.h>
 // https://www.pjrc.com/teensy/td_midi.html
 // https://www.pjrc.com/teensy/td_libs_MIDI.html
