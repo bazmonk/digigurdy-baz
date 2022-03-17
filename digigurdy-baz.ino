@@ -342,7 +342,7 @@ class GurdyString {
     };
 
     // soundKill is a nuclear version of soundOff() that kills sound on the channel.
-    // It does not need to know the not being played.
+    // It does not need to know the note being played as it kills all of them.
     void soundKill() {
       usbMIDI.sendControlChange(123, 0, midi_channel);
       MIDI_obj->sendControlChange(123, 0, midi_channel);
