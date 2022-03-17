@@ -335,9 +335,17 @@ class GurdyString {
       MIDI_obj->sendNoteOn(note_being_played, midi_volume, midi_channel);
     };
 
+    // soundOff gracefully turns off the playing note on the string.
     void soundOff() {
       usbMIDI.sendNoteOff(note_being_played, midi_volume, midi_channel);
       MIDI_obj->sendNoteOff(note_being_played, midi_volume, midi_channel);
+    };
+
+    // soundKill is a nuclear version of soundOff() that kills sound on the channel.
+    // It does not need to know the not being played.
+    void soundKill() {
+      usbMIDI.sendControlChange(123, 0, midi_channel);
+      MIDI_obj->sendControlChange(123, 0, midi_channel);
     };
 
     int getOpenNote() {
@@ -2251,6 +2259,16 @@ void loop() {
     mytromp->soundOff();
     mydrone->soundOff();
     mybuzz->soundOff();
+
+    // Send a CC 123 (all notes off) to be sure.  This causes turning off sound via the big
+    // button to basically be a MIDI kill button.
+    mystring->soundKill();
+    mylowstring->soundKill();
+    mykeyclick->soundKill();
+    mytromp->soundKill();
+    mydrone->soundKill();
+    mybuzz->soundKill();
+
     printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
 
   // If the crank stops and the toggle was off, turn off sound.
