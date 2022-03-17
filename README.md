@@ -1,6 +1,6 @@
 # digigurdy-baz
 
-**NEW!  Check out version 0.9.91!** (improved crank/buzz behavior!)
+**NEW!  Check out version 0.9.92!** (big button acts as MIDI kill button, created user variables for tweaking behavior in code)
 
 This is a rewrite of the digigurdy code (https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy).
 
