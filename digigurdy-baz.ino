@@ -96,6 +96,7 @@ const int CAPO_INDEX = num_keys - 5;
 // https://www.pjrc.com/teensy/td_libs_MIDI.html
 #include <MIDI.h>
 #include <string>
+#include <ADC.h>
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64
@@ -439,15 +440,19 @@ class GurdyCrank {
     int buzz_decay = BUZZ_DECAY;
     int buzz_countdown;
 
+    ADC* myadc;
+
   public:
 
     // v_pin is the voltage pin of the crank.  This is A1 on a normal didigurdy.
-    GurdyCrank(int v_pin, int buzz_pin) {
+    GurdyCrank(int v_pin, int buzz_pin, ADC* adc_obj) {
 
       myKnob = new BuzzKnob(buzz_pin);
 
+      myadc = adc_obj;
       voltage_pin = v_pin;
       pinMode(voltage_pin, INPUT);
+      myadc->adc0->startContinuous(v_pin);
       crank_counter = 0;
       crank_voltage = 0;
       spin = 0;
@@ -573,7 +578,7 @@ class GurdyCrank {
         crank_counter += 1;
         if (crank_counter == crank_interval) {
           crank_counter = 0;
-          crank_voltage = analogRead(voltage_pin);
+          crank_voltage = myadc->adc0->analogReadContinuous();
         };
 
         // Based on that voltage, we either bump up the spin by the spin_weight,
@@ -869,6 +874,9 @@ SerialMIDI<HardwareSerial> mySerialMIDI(Serial1);
 // Create a new MidiInterface object using that serial interface
 MidiInterface<SerialMIDI<HardwareSerial>> *myMIDI;
 
+// This is for the crank
+ADC* adc;
+
 // Declare the "keybox" and buttons.
 HurdyGurdy *mygurdy;
 ToggleButton *bigbutton;
@@ -1004,7 +1012,7 @@ void setup() {
   myMIDI = new MidiInterface<SerialMIDI<HardwareSerial>>((SerialMIDI<HardwareSerial>&)mySerialMIDI);
   myMIDI->begin();
 
-  mycrank = new GurdyCrank(A1, A2);
+  mycrank = new GurdyCrank(A1, A2, adc);
   mycrank->detect();
   display.clearDisplay();
   display.setTextSize(2);
