@@ -22,7 +22,7 @@
 // Teensy3.5 @ 120mHz ~ 15 microsec
 // Teensy4.1 @ 600mHz ~ 60 microsec
 // Teensy4.1 @ 150mHz ~ 12 microsec
-const int LOOP_DELAY = 15;
+//const int LOOP_DELAY = 15;
 
 // CRANK VARIABLES:
 // These are variables that affect the behavior of the crank.  Feel free to adjust these to work
@@ -31,21 +31,21 @@ const int LOOP_DELAY = 15;
 
 // This affects how often the crank voltage is checked.  Higher intervals will play more smoothly
 // at slow cranking speeds, but will cause a latency in the responsiveness when you start/stop.
-const int CRANK_INTERVAL = 100;
+const int CRANK_INTERVAL = 1;
 
 // The crank uses an internal "spin" counter to make it continue to play through the inconsistent
 // raw voltage the crank produces.  Each high voltage read increases the counter by SPIN_WEIGHT,
 // up to MAX_SPIN.  While low voltage is being read, spin decreases by SPIN_DECAY.  While spin is
 // greater than SPIN_THRESHOLD, it makes sound.
-const int MAX_SPIN = 3000;
-const int SPIN_WEIGHT = 500;
-const int SPIN_DECAY = 5;
-const int SPIN_THRESHOLD = 50;
+const int MAX_SPIN = 60;
+const int SPIN_WEIGHT = 30;
+const int SPIN_DECAY = 4;
+const int SPIN_THRESHOLD = 10;
 
 // This is the high voltage mark.  John D. originally recommended 15-25 for this amount.
 // Lower amounts are more responsive but too low and you'll start to get "phantom" cranking from the
 // randomly-fluctuating voltage from the crank even when not spinning.
-const int V_THRESHOLD = 25;
+const int V_THRESHOLD = 10;
 
 // Buzzing works sort of the same way except the buzz counter jumps immediately to the
 // BUZZ_SMOOTHING value and then begins to decay by BUZZ_DECAY.
@@ -425,6 +425,8 @@ class GurdyCrank {
     static const int spin_weight = SPIN_WEIGHT;
     static const int spin_decay = SPIN_DECAY;
     static const int spin_threshold = SPIN_THRESHOLD;
+    static const int spin_samples = 100000;
+    long int sample_total;
     int spin;
     bool started_spinning;
     bool stopped_spinning;
@@ -452,7 +454,7 @@ class GurdyCrank {
       myadc = adc_obj;
       voltage_pin = v_pin;
       pinMode(voltage_pin, INPUT);
-      myadc->adc0->startContinuous(v_pin);
+
       crank_counter = 0;
       crank_voltage = 0;
       spin = 0;
@@ -464,6 +466,11 @@ class GurdyCrank {
       stopped_buzzing = false;
       is_buzzing = false;
       buzz_countdown = buzz_smoothing;
+    };
+
+    void beginPolling() {
+      myadc->adc0->setConversionSpeed(ADC_CONVERSION_SPEED::VERY_LOW_SPEED);
+      myadc->adc0->startContinuous(voltage_pin);
     };
 
     // Crank detection - this comes from John's code.  We sample the voltage
@@ -487,7 +494,7 @@ class GurdyCrank {
 
       // Read the crank 500 times real quick.
       for (int i = 0; i < num_samples; i++) {
-        samples[i] = analogRead(voltage_pin);
+        samples[i] = myadc->adc0->analogReadContinuous();
         sample_sum += samples[i];
 
         delay(10);  // Why? Because John did and it worked.
@@ -573,13 +580,24 @@ class GurdyCrank {
         myKnob->update();
         refreshBuzz();
 
-        // Every 100 loops() (I haven't measured this, but this is several times
-        // per second), we update the crank_voltage.
-        crank_counter += 1;
-        if (crank_counter == crank_interval) {
-          crank_counter = 0;
-          crank_voltage = myadc->adc0->analogReadContinuous();
+        for (int x = 0; x < spin_samples; x++) {
+          sample_total += myadc->adc0->analogReadContinuous();
         };
+
+        crank_voltage = sample_total / spin_samples;
+        sample_total = 0;
+        Serial.print("crank voltage: ");
+        Serial.println(crank_voltage);
+
+        // // Every 100 loops() (I haven't measured this, but this is several times
+        // // per second), we update the crank_voltage.
+        // crank_counter += 1;
+        // if (crank_counter == crank_interval) {
+        //   crank_counter = 0;
+        //   crank_voltage = myadc->adc0->analogReadContinuous();
+        //   Serial.print("crank voltage: ");
+        //   Serial.println(crank_voltage);
+        // };
 
         // Based on that voltage, we either bump up the spin by the spin_weight,
         // or we let it decay based on the voltage.
@@ -1005,13 +1023,14 @@ void setup() {
 
   // // Un-comment to print yourself debugging messages to the Teensyduino
   // // serial console.
-  // Serial.begin(38400);
-  // delay(3000);
-  // Serial.println("Hello.");
+  Serial.begin(38400);
+  delay(3000);
+  Serial.println("Hello.");
 
   myMIDI = new MidiInterface<SerialMIDI<HardwareSerial>>((SerialMIDI<HardwareSerial>&)mySerialMIDI);
   myMIDI->begin();
 
+  adc = new ADC();
   mycrank = new GurdyCrank(A1, A2, adc);
   mycrank->detect();
   display.clearDisplay();
@@ -1029,6 +1048,8 @@ void setup() {
   } else {
     display.println("   Absent ");
   };
+
+  mycrank->beginPolling();
 
   display.display();
   delay(1000);
@@ -2083,7 +2104,7 @@ void loop() {
   //
   // A microsecond delay here lets everything keep up with itself.  The exactly delay is set at
   // the top in the config section.
-  delayMicroseconds(LOOP_DELAY);
+  //delayMicroseconds(LOOP_DELAY);
 
   if (first_loop) {
     welcome_screen();
