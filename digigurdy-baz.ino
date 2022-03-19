@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v0.9.92
+// VERSION: v1.0
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
 //   https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy
@@ -990,7 +990,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("14 Mar 2022,  v0.9.92");
+  display.println("18 Mar 2022,  v1.0.0 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
