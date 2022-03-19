@@ -37,10 +37,10 @@ const int CRANK_INTERVAL = 1;
 // raw voltage the crank produces.  Each high voltage read increases the counter by SPIN_WEIGHT,
 // up to MAX_SPIN.  While low voltage is being read, spin decreases by SPIN_DECAY.  While spin is
 // greater than SPIN_THRESHOLD, it makes sound.
-const int MAX_SPIN = 60;
-const int SPIN_WEIGHT = 30;
-const int SPIN_DECAY = 4;
-const int SPIN_THRESHOLD = 10;
+const int MAX_SPIN = 10;
+const int SPIN_WEIGHT = 5;
+const int SPIN_DECAY = 1;
+const int SPIN_THRESHOLD = 2;
 
 // This is the high voltage mark.  John D. originally recommended 15-25 for this amount.
 // Lower amounts are more responsive but too low and you'll start to get "phantom" cranking from the
@@ -49,8 +49,8 @@ const int V_THRESHOLD = 10;
 
 // Buzzing works sort of the same way except the buzz counter jumps immediately to the
 // BUZZ_SMOOTHING value and then begins to decay by BUZZ_DECAY.
-const int BUZZ_SMOOTHING = 1500;
-const int BUZZ_DECAY = 2;
+const int BUZZ_SMOOTHING = 20;
+const int BUZZ_DECAY = 1;
 
 // KEYBOX VARIABLES:
 // Eventually I'll move this to a header, but the pin_array[] index here represents
@@ -371,14 +371,17 @@ class BuzzKnob {
   private:
     int voltage_pin;
     // loop() runs about 20,000x per sec, so this is checking for knob changes about every 1.5s.
-    static const int poll_interval = 30000;
+    static const int poll_interval = 100;
     int poll_counter;
     int knob_voltage;
+    ADC* myadc;
 
   public:
-    BuzzKnob(int v_pin) {
+    BuzzKnob(int v_pin, ADC* adc_obj) {
+      myadc = adc_obj;
       voltage_pin = v_pin;
       pinMode(voltage_pin, INPUT);
+      myadc->adc1->startContinuous(voltage_pin);
       poll_counter = 0;
       knob_voltage = 0;
     };
@@ -389,7 +392,7 @@ class BuzzKnob {
       poll_counter += 1;
       if (poll_counter == poll_interval) {
         poll_counter = 0;
-        knob_voltage = analogRead(voltage_pin);
+        knob_voltage = myadc->adc1->analogReadContinuous();
       };
     };
 
@@ -425,7 +428,7 @@ class GurdyCrank {
     static const int spin_weight = SPIN_WEIGHT;
     static const int spin_decay = SPIN_DECAY;
     static const int spin_threshold = SPIN_THRESHOLD;
-    static const int spin_samples = 100000;
+    static const int spin_samples = 50000;
     long int sample_total;
     int spin;
     bool started_spinning;
@@ -449,7 +452,7 @@ class GurdyCrank {
     // v_pin is the voltage pin of the crank.  This is A1 on a normal didigurdy.
     GurdyCrank(int v_pin, int buzz_pin, ADC* adc_obj) {
 
-      myKnob = new BuzzKnob(buzz_pin);
+      myKnob = new BuzzKnob(buzz_pin, adc_obj);
 
       myadc = adc_obj;
       voltage_pin = v_pin;
@@ -470,6 +473,7 @@ class GurdyCrank {
 
     void beginPolling() {
       myadc->adc0->setConversionSpeed(ADC_CONVERSION_SPEED::VERY_LOW_SPEED);
+      myadc->adc0->setSamplingSpeed(ADC_SAMPLING_SPEED::VERY_LOW_SPEED);
       myadc->adc0->startContinuous(voltage_pin);
     };
 
@@ -583,11 +587,10 @@ class GurdyCrank {
         for (int x = 0; x < spin_samples; x++) {
           sample_total += myadc->adc0->analogReadContinuous();
         };
+        //delayMicroseconds(5);
 
         crank_voltage = sample_total / spin_samples;
         sample_total = 0;
-        Serial.print("crank voltage: ");
-        Serial.println(crank_voltage);
 
         // // Every 100 loops() (I haven't measured this, but this is several times
         // // per second), we update the crank_voltage.
@@ -2093,6 +2096,9 @@ void pause_screen() {
 
 bool first_loop = true;
 
+int test_count = 0;
+int start_time = millis();
+
 // The loop() function is repeatedly run by the Teensy unit after setup() completes.
 // This is the main logic of the program and defines how the strings, keys, click, buzz,
 // and buttons acutally behave during play.
@@ -2314,4 +2320,14 @@ void loop() {
   }
   while (usbMIDI.read()) {
   }
+
+  test_count +=1;
+  if (test_count > 100) {
+    test_count = 0;
+    Serial.print("100 loop()s took: ");
+    Serial.print(millis() - start_time);
+    Serial.print("ms\n");
+    start_time = millis();
+  }
+
 };
