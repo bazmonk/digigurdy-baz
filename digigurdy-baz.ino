@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v0.9.92
+// VERSION: v1.1.0 (testing)
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
 //   https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy
@@ -13,49 +13,59 @@
 #define WHITE_OLED
 //#define BLUE_OLED
 
-// USERS!!! Set the correct loop delay here for the Teensy unit you're using.  This is a
-// microsecond delay that paces the main loop() function.  It roughly depends on your CPU speed.
-//
-// Feel free to tweak this!  It's a tradeoff between responsiveness and propensity to get stuck.
-// +/- 5-10 might give you better performance.
-//
-// Teensy3.5 @ 120mHz ~ 15 microsec
-// Teensy4.1 @ 600mHz ~ 60 microsec
-// Teensy4.1 @ 150mHz ~ 12 microsec
-//const int LOOP_DELAY = 15;
+// Cranking and buzz behavior:
 
-// CRANK VARIABLES:
-// These are variables that affect the behavior of the crank.  Feel free to adjust these to work
-// best with your motor.  I only have the one on my personal digigurdy, so beyond what works well on
-// mine, it's a bit of a guessing game what works best with yours.
+// We're doing continuous reading of the cranks now, so reads are nearly instantaneous.  To smooth
+// out the voltage so our readings don't wander on their own, we're taking several thousand
+// very fast readings and averaging them to get our "reading" in the code.  This is how many readings
+// we average.
+//
+// This number basically determines how quickly the whole thing runs as well.  Lower samples will
+// sound jittery but will raise the overall responsiveness of everything.  Higher samples eliminate
+// jitter but above 10,000 you'll start to really notice the responsiveness go down.
+//
+// If you're using a Teensy4.1 or other faster CPU, you'll want to raise this by approximately
+// the same ratio (my CPU is 120mHz, so for a 4.1 @600mHz you'd want it closer to 12,000).  That
+// should make the rest of the variables behave about the same.
+const int SPIN_SAMPLES = 4000;
 
-// This affects how often the crank voltage is checked.  Higher intervals will play more smoothly
-// at slow cranking speeds, but will cause a latency in the responsiveness when you start/stop.
-const int CRANK_INTERVAL = 1;
+// This is the high voltage mark.  It determines how easily the crank makes the drones start.
+// With my crank, I can go as low as 3, but it gets ridiculously sensitive (bumping into your gurdy
+// agitates the crank enough to register).  It doesn't need to be very high, though, unless you want
+// you crank to have a "minmum speed limit" before it starts sounding.
+const int V_THRESHOLD = 8;
+
+// (the equivalent of V_THRESHOLD for buzzing is what the knob does, so there's no variable for it).
 
 // The crank uses an internal "spin" counter to make it continue to play through the inconsistent
 // raw voltage the crank produces.  Each high voltage read increases the counter by SPIN_WEIGHT,
 // up to MAX_SPIN.  While low voltage is being read, spin decreases by SPIN_DECAY.  While spin is
 // greater than SPIN_THRESHOLD, it makes sound.
+//
+// A larger MAX_SPIN versus the SPIN_DECAY make the cranking more consistent at very low speeds,
+// at the expense of responding quickly when you stop cranking.  A higher SPIN_WEIGHT influences
+// how quickly the crank kicks on when you start spinning, and should be at least a few times larger
+// than the SPIN_DECAY.  SPIN_THRESHOLD influences how quickly the noise cuts off after you stop
+// spinning.
 const int MAX_SPIN = 15;
 const int SPIN_WEIGHT = 15;
 const int SPIN_DECAY = 1;
 const int SPIN_THRESHOLD = 2;
 
-// This is the high voltage mark.  John D. originally recommended 15-25 for this amount.
-// Lower amounts are more responsive but too low and you'll start to get "phantom" cranking from the
-// randomly-fluctuating voltage from the crank even when not spinning.
-const int V_THRESHOLD = 8;
-
 // Buzzing works sort of the same way except the buzz counter jumps immediately to the
-// BUZZ_SMOOTHING value and then begins to decay by BUZZ_DECAY.
+// BUZZ_SMOOTHING value and then begins to decay by BUZZ_DECAY.  Any positive "buzz"
+// value makes a buzz.
+//
+// Larger BUZZ_SMOOTHING values make the buzz stay on more consistently once you've triggered it,
+// but make it harder to make separate coups rapidly.  Adjust this to find the sweet spot between
+// how easy you want it to buzz and how quickly/consistently you can work a crank.  Players much
+// better than me may want a smaller value.
 const int BUZZ_SMOOTHING = 25;
 const int BUZZ_DECAY = 1;
 
 // KEYBOX VARIABLES:
-// Eventually I'll move this to a header, but the pin_array[] index here represents
-// the MIDI note offset, and the value is the corresponding teensy pin.
-// This defines which physical keys are part of the "keybox" and what order they're in.
+// The pin_array[] index here represents the MIDI note offset, and the value is the corresponding
+// teensy pin.  This defines which physical keys are part of the "keybox" and what order they're in.
 //
 // NOTE: There's no key that produces 0 offset (an "open" string),
 // so the first element is bogus.  It gets skipped entirely.
@@ -370,7 +380,8 @@ class GurdyString {
 class BuzzKnob {
   private:
     int voltage_pin;
-    // loop() runs about 20,000x per sec, so this is checking for knob changes about every 1.5s.
+    // We only update the knob 100x less often than the crank.  This still comes out to a couple
+    // times a second.
     static const int poll_interval = 100;
     int poll_counter;
     int knob_voltage;
@@ -414,8 +425,6 @@ class GurdyCrank {
     float squared_sum;
     float deviations;
 
-    static const int crank_interval = CRANK_INTERVAL;
-    int crank_counter;
     int crank_voltage;
 
     // The original code uses a technique where a counter is incremented by a
@@ -428,7 +437,7 @@ class GurdyCrank {
     static const int spin_weight = SPIN_WEIGHT;
     static const int spin_decay = SPIN_DECAY;
     static const int spin_threshold = SPIN_THRESHOLD;
-    static const int spin_samples = 4000;
+    static const int spin_samples = SPIN_SAMPLES;
     long int sample_total;
     int spin;
     bool started_spinning;
@@ -458,7 +467,6 @@ class GurdyCrank {
       voltage_pin = v_pin;
       pinMode(voltage_pin, INPUT);
 
-      crank_counter = 0;
       crank_voltage = 0;
       spin = 0;
       started_spinning = false;
@@ -524,11 +532,13 @@ class GurdyCrank {
 
     void refreshBuzz() {
       if (isDetected()) {
+
         // Buzzing happens if the crank generates more voltage than the
-        // adjusted voltage from the knob.  But this is too jittery.
-        //
-        // Instead, whenever we generate enough voltage, we top off this countdown.
-        // Buzzing happens as long as this is countdown is positive, smoothing over the jitter.
+        // adjusted voltage from the knob.  But this is too jittery.  Instead, we take many rapid
+        // readings, average that, and then use that.  Even smooth, the motors most digigurdies use
+        // are indexed and don't generate consistent voltage.  So we employ two weighted counters
+        // that increase rapidly if voltage is high and then decrese more slowly, and use *those*
+        // to actually determine whether or not to make cranking/buzzing sound.
         if (crank_voltage > myKnob->getVoltage()) {
           buzz_countdown = buzz_smoothing;
         } else if (buzz_countdown > 0) {
@@ -584,26 +594,17 @@ class GurdyCrank {
         myKnob->update();
         refreshBuzz();
 
+        // Poll the crank voltage a few thousand times real quick...
         for (int x = 0; x < spin_samples; x++) {
           sample_total += myadc->adc0->analogReadContinuous();
         };
-        //delayMicroseconds(5);
 
+        // The voltage reading we're using is the average of those.
         crank_voltage = sample_total / spin_samples;
         sample_total = 0;
 
-        // // Every 100 loops() (I haven't measured this, but this is several times
-        // // per second), we update the crank_voltage.
-        // crank_counter += 1;
-        // if (crank_counter == crank_interval) {
-        //   crank_counter = 0;
-        //   crank_voltage = myadc->adc0->analogReadContinuous();
-        //   Serial.print("crank voltage: ");
-        //   Serial.println(crank_voltage);
-        // };
-
         // Based on that voltage, we either bump up the spin by the spin_weight,
-        // or we let it decay based on the voltage.
+        // or we let it decay.
         if (crank_voltage > v_threshold) {
           spin += spin_weight;
           if (spin > max_spin) {
@@ -1019,7 +1020,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("14 Mar 2022,  v0.9.92");
+  display.println("14 Mar 2022,  v1.1.0 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
