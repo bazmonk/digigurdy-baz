@@ -1,6 +1,13 @@
 # digigurdy-baz
 
-**NEW!  Check out version 1.0!** (first "stable" release... check out the "testing" branch for the latest development from now on!)
+**NEW!  Check out version 1.1.0!** (first "test" release... check out the "testing" branch for the latest development from now on!)
+* More responsive continuous analog reading
+  * crank responsiveness improved
+  * crank detection much faster
+  * Need for artifical delays in code eliminated
+  * Stability improved (no phantom cranking, no "stuck" cranking).
+
+## About
 
 This is a rewrite of the digigurdy code (https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy).
 
