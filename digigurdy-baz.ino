@@ -37,19 +37,19 @@ const int CRANK_INTERVAL = 1;
 // raw voltage the crank produces.  Each high voltage read increases the counter by SPIN_WEIGHT,
 // up to MAX_SPIN.  While low voltage is being read, spin decreases by SPIN_DECAY.  While spin is
 // greater than SPIN_THRESHOLD, it makes sound.
-const int MAX_SPIN = 10;
-const int SPIN_WEIGHT = 5;
+const int MAX_SPIN = 15;
+const int SPIN_WEIGHT = 15;
 const int SPIN_DECAY = 1;
 const int SPIN_THRESHOLD = 2;
 
 // This is the high voltage mark.  John D. originally recommended 15-25 for this amount.
 // Lower amounts are more responsive but too low and you'll start to get "phantom" cranking from the
 // randomly-fluctuating voltage from the crank even when not spinning.
-const int V_THRESHOLD = 10;
+const int V_THRESHOLD = 8;
 
 // Buzzing works sort of the same way except the buzz counter jumps immediately to the
 // BUZZ_SMOOTHING value and then begins to decay by BUZZ_DECAY.
-const int BUZZ_SMOOTHING = 20;
+const int BUZZ_SMOOTHING = 25;
 const int BUZZ_DECAY = 1;
 
 // KEYBOX VARIABLES:
@@ -428,7 +428,7 @@ class GurdyCrank {
     static const int spin_weight = SPIN_WEIGHT;
     static const int spin_decay = SPIN_DECAY;
     static const int spin_threshold = SPIN_THRESHOLD;
-    static const int spin_samples = 50000;
+    static const int spin_samples = 4000;
     long int sample_total;
     int spin;
     bool started_spinning;
