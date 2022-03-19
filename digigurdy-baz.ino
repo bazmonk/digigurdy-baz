@@ -502,14 +502,11 @@ class GurdyCrank {
       squared_sum = 0;
       deviations = 0;
 
-      // Serial.println("Detecting...");
-
       // Read the crank 500 times real quick.
       for (int i = 0; i < num_samples; i++) {
         samples[i] = myadc->adc0->analogReadContinuous();
         sample_sum += samples[i];
-
-        delay(10);  // Why? Because John did and it worked.
+        delay(1);
       };
 
       // Get the average voltage
@@ -525,8 +522,6 @@ class GurdyCrank {
     };
 
     bool isDetected() {
-      // Serial.print("deviations: ");
-      // Serial.println(deviations);
       return (deviations < 10);
     };
 
@@ -1024,18 +1019,20 @@ void setup() {
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
+  delay(1000);
 
   // // Un-comment to print yourself debugging messages to the Teensyduino
   // // serial console.
-  Serial.begin(38400);
-  delay(3000);
-  Serial.println("Hello.");
+  // Serial.begin(38400);
+  // delay(1000);
+  // Serial.println("Hello.");
 
   myMIDI = new MidiInterface<SerialMIDI<HardwareSerial>>((SerialMIDI<HardwareSerial>&)mySerialMIDI);
   myMIDI->begin();
 
   adc = new ADC();
   mycrank = new GurdyCrank(A1, A2, adc);
+  mycrank->beginPolling();
   mycrank->detect();
   display.clearDisplay();
   display.setTextSize(2);
@@ -1052,8 +1049,6 @@ void setup() {
   } else {
     display.println("   Absent ");
   };
-
-  mycrank->beginPolling();
 
   display.display();
   delay(1000);
@@ -2097,9 +2092,6 @@ void pause_screen() {
 
 bool first_loop = true;
 
-int test_count = 0;
-int start_time = millis();
-
 // The loop() function is repeatedly run by the Teensy unit after setup() completes.
 // This is the main logic of the program and defines how the strings, keys, click, buzz,
 // and buttons acutally behave during play.
@@ -2318,17 +2310,7 @@ void loop() {
 
   // Apparently we need to do this to discard incoming data.
   while (myMIDI->read()) {
-  }
+  };
   while (usbMIDI.read()) {
-  }
-
-  test_count +=1;
-  if (test_count > 100) {
-    test_count = 0;
-    Serial.print("100 loop()s took: ");
-    Serial.print(millis() - start_time);
-    Serial.print("ms\n");
-    start_time = millis();
-  }
-
+  };
 };
