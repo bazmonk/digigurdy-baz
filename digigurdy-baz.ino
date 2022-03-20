@@ -35,7 +35,7 @@ const int MELODY_VIBRATO = 0;
 //
 // Teensy3.5 @120mHz = 4000
 // Teensy4.1 @600mHz = 11000
-const int SPIN_SAMPLES = 11000;
+const int SPIN_SAMPLES = 4000;
 
 // This is the high voltage mark.  It determines how easily the crank makes the drones start.
 // With my crank, I can go as low as 3, but it gets ridiculously sensitive (bumping into your gurdy
