@@ -25,10 +25,12 @@
 // sound jittery but will raise the overall responsiveness of everything.  Higher samples eliminate
 // jitter but above 10,000 you'll start to really notice the responsiveness go down.
 //
-// If you're using a Teensy4.1 or other faster CPU, you'll want to raise this by approximately
-// the same ratio (my CPU is 120mHz, so for a 4.1 @600mHz you'd want it closer to 12,000).  That
-// should make the rest of the variables behave about the same.
-const int SPIN_SAMPLES = 4000;
+// I like to make it so that loops run at about 2.5kHz, making the other values below
+// "feel" the same, and this works out to around:
+//
+// Teensy3.5 @120mHz = 4000
+// Teensy4.1 @600mHz = 11000
+const int SPIN_SAMPLES = 11000;
 
 // This is the high voltage mark.  It determines how easily the crank makes the drones start.
 // With my crank, I can go as low as 3, but it gets ridiculously sensitive (bumping into your gurdy
@@ -61,7 +63,7 @@ const int SPIN_THRESHOLD = 2;
 // but make it harder to make separate coups rapidly.  Adjust this to find the sweet spot between
 // how easy you want it to buzz and how quickly/consistently you can work a crank.  Players much
 // better than me may want a smaller value.
-const int BUZZ_SMOOTHING = 25;
+const int BUZZ_SMOOTHING = 30;
 const int BUZZ_DECAY = 1;
 
 // KEYBOX VARIABLES:
@@ -324,7 +326,7 @@ class GurdyString {
     MidiInterface<SerialMIDI<HardwareSerial>> *MIDI_obj;
 
   public:
-    GurdyString(int my_channel, int my_note, midi::MidiInterface<midi::SerialMIDI<HardwareSerial>> *my_MIDI_obj, int my_vol = 56) {
+    GurdyString(int my_channel, int my_note, midi::MidiInterface<midi::SerialMIDI<HardwareSerial>> *my_MIDI_obj, int my_vol = 70) {
       midi_channel = my_channel;
       open_note = my_note;
       midi_volume = my_vol;
@@ -2093,6 +2095,9 @@ void pause_screen() {
 
 bool first_loop = true;
 
+int test_count = 0;
+int start_time = millis();
+
 // The loop() function is repeatedly run by the Teensy unit after setup() completes.
 // This is the main logic of the program and defines how the strings, keys, click, buzz,
 // and buttons acutally behave during play.
@@ -2314,4 +2319,13 @@ void loop() {
   };
   while (usbMIDI.read()) {
   };
+
+  test_count +=1;
+  if (test_count > 100) {
+    test_count = 0;
+    Serial.print("100 loop()s took: ");
+    Serial.print(millis() - start_time);
+    Serial.print("ms\n");
+    start_time = millis();
+  }
 };
