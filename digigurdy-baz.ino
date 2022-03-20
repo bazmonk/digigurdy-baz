@@ -341,10 +341,17 @@ class GurdyString {
     // creating MIDI_obj globally, I could not access MIDI_obj the same way.
     // Bringing in a pointer and working with MIDI_obj in this manner is
     // because of that.
-    void soundOn(int my_offset = 0) {
+    void soundOn(int my_offset = 0, int my_modulation = 0) {
       note_being_played = open_note + my_offset;
       usbMIDI.sendNoteOn(note_being_played, midi_volume, midi_channel);
       MIDI_obj->sendNoteOn(note_being_played, midi_volume, midi_channel);
+
+      // If modulation isn't zero, send that as a MIDI CC for this channel
+      // This is meant to be configured to create a gentle vibrato.
+      if (my_modulation > 0) {
+        usbMIDI.sendControlChange(1, my_modulation, midi_channel);
+        MIDI_obj->sendControlChange(1, my_modulation, midi_channel);
+      }
     };
 
     // soundOff gracefully turns off the playing note on the string.
@@ -2174,7 +2181,7 @@ void loop() {
       mylowstring->soundOff();
       mykeyclick->soundOff();
 
-      mystring->soundOn(myoffset + tpose_offset);
+      mystring->soundOn(myoffset + tpose_offset, 16);
       mylowstring->soundOn(myoffset + tpose_offset);
       mykeyclick->soundOn(tpose_offset);
       mytromp->soundOn(tpose_offset + capo_offset);
@@ -2200,7 +2207,7 @@ void loop() {
       mylowstring->soundOff();
       mykeyclick->soundOff();
 
-      mystring->soundOn(myoffset + tpose_offset);
+      mystring->soundOn(myoffset + tpose_offset, 16);
       mylowstring->soundOn(myoffset + tpose_offset);
       mykeyclick->soundOn(tpose_offset);
       mytromp->soundOn(tpose_offset + capo_offset);
@@ -2223,7 +2230,7 @@ void loop() {
       mylowstring->soundOff();
       mykeyclick->soundOff();
 
-      mystring->soundOn(myoffset + tpose_offset);
+      mystring->soundOn(myoffset + tpose_offset, 16);
       mylowstring->soundOn(myoffset + tpose_offset);
       mykeyclick->soundOn(tpose_offset);
       mytromp->soundOn(tpose_offset + capo_offset);
@@ -2248,14 +2255,14 @@ void loop() {
     // * We just hit the button and we weren't cranking, OR
     // * We just started cranking and we hadn't hit the button.
     if (bigbutton->wasPressed() && !mycrank->isSpinning()) {
-      mystring->soundOn(myoffset + tpose_offset);
+      mystring->soundOn(myoffset + tpose_offset, 16);
       mylowstring->soundOn(myoffset + tpose_offset);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
       draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset);
 
     } else if (mycrank->startedSpinning() && !bigbutton->toggleOn()) {
-      mystring->soundOn(myoffset + tpose_offset);
+      mystring->soundOn(myoffset + tpose_offset, 16);
       mylowstring->soundOn(myoffset + tpose_offset);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
@@ -2268,7 +2275,7 @@ void loop() {
       mylowstring->soundOff();
       mykeyclick->soundOff();
 
-      mystring->soundOn(myoffset + tpose_offset);
+      mystring->soundOn(myoffset + tpose_offset, 16);
       mylowstring->soundOn(myoffset + tpose_offset);
       mykeyclick->soundOn(tpose_offset);
       draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset);
