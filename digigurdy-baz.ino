@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v1.1.0 (testing)
+// VERSION: v1.1.5 (testing)
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
@@ -13,6 +13,11 @@
 // USERS!!! Uncomment one of these lines depending on what kind of OLED screen you have.
 #define WHITE_OLED
 //#define BLUE_OLED
+
+// VIBRATO: I use a long-delay, very slow vibrato on the melody strings.  This variable controls how
+// much vibrato (how much modulation like with a physical mod wheel on a MIDI keyboard) to send.
+// Setting it to 0 sends no modulation.  Max is 127.  I use 16...
+const int MELODY_VIBRATO = 0;
 
 // Cranking and buzz behavior:
 
@@ -1025,7 +1030,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("18 Mar 2022,  v1.1.0 ");
+  display.println("18 Mar 2022,  v1.1.5 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -2181,8 +2186,8 @@ void loop() {
       mylowstring->soundOff();
       mykeyclick->soundOff();
 
-      mystring->soundOn(myoffset + tpose_offset, 16);
-      mylowstring->soundOn(myoffset + tpose_offset);
+      mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
+      mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
       mykeyclick->soundOn(tpose_offset);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
@@ -2207,8 +2212,8 @@ void loop() {
       mylowstring->soundOff();
       mykeyclick->soundOff();
 
-      mystring->soundOn(myoffset + tpose_offset, 16);
-      mylowstring->soundOn(myoffset + tpose_offset);
+      mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
+      mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
       mykeyclick->soundOn(tpose_offset);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
@@ -2230,8 +2235,8 @@ void loop() {
       mylowstring->soundOff();
       mykeyclick->soundOff();
 
-      mystring->soundOn(myoffset + tpose_offset, 16);
-      mylowstring->soundOn(myoffset + tpose_offset);
+      mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
+      mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
       mykeyclick->soundOn(tpose_offset);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
@@ -2255,15 +2260,15 @@ void loop() {
     // * We just hit the button and we weren't cranking, OR
     // * We just started cranking and we hadn't hit the button.
     if (bigbutton->wasPressed() && !mycrank->isSpinning()) {
-      mystring->soundOn(myoffset + tpose_offset, 16);
-      mylowstring->soundOn(myoffset + tpose_offset);
+      mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
+      mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
       draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset);
 
     } else if (mycrank->startedSpinning() && !bigbutton->toggleOn()) {
-      mystring->soundOn(myoffset + tpose_offset, 16);
-      mylowstring->soundOn(myoffset + tpose_offset);
+      mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
+      mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
       draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset);
@@ -2275,8 +2280,8 @@ void loop() {
       mylowstring->soundOff();
       mykeyclick->soundOff();
 
-      mystring->soundOn(myoffset + tpose_offset, 16);
-      mylowstring->soundOn(myoffset + tpose_offset);
+      mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
+      mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
       mykeyclick->soundOn(tpose_offset);
       draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset);
     };
