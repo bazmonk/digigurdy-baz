@@ -1,11 +1,10 @@
 # digigurdy-baz
 
-**NEW!  Check out version 1.1.0!** (first "test" release... check out the "testing" branch for the latest development from now on!)
-* More responsive continuous analog reading
-  * crank responsiveness improved
-  * crank detection much faster
-  * Need for artifical delays in code eliminated
-  * Stability improved (no phantom cranking, no "stuck" cranking).
+**NEW!  Check out version 1.1.5!** (adds vibrato parameter in the code)
+* Set this if you want the melody strings to send any modulation (usually used as vibrato).
+  * Setting it to zero disables the feature (I'll leave it this way in the repository).
+* Added a new bs-16i "Scene" profile that uses this feature.
+* https://www.youtube.com/watch?v=lreQdIwvJE4 - Example of using `MELODY_VIBRATO = 16`
 
 ## About
 
@@ -50,14 +49,15 @@ For blue OLEDs:
 ```
 
 ### Teensy4.1 Support
-Digigurdy-baz has preliminary Teensy4.1 support.  If you are using a Teensy4.1 unit, also near the top of the code is a `LOOP_DELAY` variable.  This variable needs to be adjusted for the faster processor.  I've included some suggestions in the comments for what the delay should be, but (CPU speed / 10) is a good starting point.
+Digigurdy-baz has preliminary Teensy4.1 support.  The `SPIN_SAMPLES` variable should be adjusted so that each cycle of the code takes about as long.  These are the values I use, which both give about 100 cycles in 40ms.  This isn't a magic number, but it's what I settled on during testing and base the rest of the timing off of.  The crank/buzz should behave about the same by adjusting this to match:
 
 ```
-// Teensy3.5 @ 120mHz ~ 15 microsec
-// Teensy4.1 @ 600mHz ~ 60 microsec
-// Teensy4.1 @ 150mHz ~ 12 microsec
-const int LOOP_DELAY = 15;
+// Teensy3.5 @120mHz = 4000
+// Teensy4.1 @600mHz = 11000
+const int SPIN_SAMPLES = 11000;
 ```
+
+The `testing` branch of the code has Serial Monitoring turned on and prints each 100 loops with how long it's taking.  If you hook up your digigurdy to your computer and view the serial monitor inside the Teensyduino program, you can use this to gauge what `SPIN_SAMPLES` should be in other situations.
 
 ### Compiling/Uploading
 After that, the steps are the same for the original digigurdy code.  You will need:
