@@ -1,6 +1,13 @@
 # digigurdy-baz
 
-**NEW!  Check out version 1.1.5!** (adds vibrato parameter in the code)
+**Check out version 1.2.0! (NEW)**
+
+* Ability to remove/attach crank during play.
+* Tuninig preset names are easily-adjustable with the tuning itself.
+
+Other "testing" branch changes since v1.0:
+
+* A re-worked analog polling mechanism giving better crank performance
 * Set this if you want the melody strings to send any modulation (usually used as vibrato).
   * Setting it to zero disables the feature (I'll leave it this way in the repository).
 * Added a new bs-16i "Scene" profile that uses this feature.
