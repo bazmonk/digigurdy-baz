@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v1.1.5 (testing)
+// VERSION: v1.2.0 (testing)
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
@@ -1030,7 +1030,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("18 Mar 2022,  v1.1.5 ");
+  display.println("26 Mar 2022,  v1.2.0 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -1659,10 +1659,10 @@ bool load_preset_screen() {
     " ---Load A Preset--- \n"
     " Select a Preset:    \n"
     "                     \n"
-    " 1) G/C, C Drones    \n"
-    " 2) G/C, G Drones    \n"
-    " 3) D/G, D Drones    \n"
-    " 4) D/G, G Drones    \n"
+    " 1) " + PRESET1_NAME + "\n"
+    " 2) " + PRESET2_NAME + "\n"
+    " 3) " + PRESET3_NAME + "\n"
+    " 4) " + PRESET4_NAME + "\n"
     " X or 5) Go Back     \n";
 
     display.print(disp_str.c_str());
@@ -1950,6 +1950,51 @@ bool tuning() {
   return true;
 };
 
+// This screen prompts which kind of tuning to load.
+bool load_tuning_screen() {
+
+  bool done = false;
+  while (!done) {
+
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 0);
+    std::string disp_str = ""
+    " ----Load Tuning---- \n"
+    "                     \n"
+    " 1) Preset Tuning    \n"
+    "                     \n"
+    " 2) Saved Tuning     \n\n"
+    " X or 3) Go Back     \n";
+
+    display.print(disp_str.c_str());
+    display.display();
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    myBackButton->update();
+
+    if (my1Button->wasPressed()) {
+      if (load_preset_screen()) {
+        done = true;
+      };
+
+    } else if (my2Button->wasPressed()) {
+      if (load_saved_screen()) {
+        done = true;
+      };
+
+    } else if (my3Button->wasPressed() || myBackButton->wasPressed()) {
+      return false;
+    };
+  };
+
+  return true;
+};
+
 // This is the screen for saving to a save slot
 void save_tuning_screen() {
 
@@ -2019,6 +2064,96 @@ void save_tuning_screen() {
   delay(500);
 };
 
+void redetect_crank_screen() {
+
+  // In case the user has already tried removing it and it's freaking out, let's kill the sound.
+  mystring->soundKill();
+  mylowstring->soundKill();
+  mykeyclick->soundKill();
+  mytromp->soundKill();
+  mydrone->soundKill();
+  mybuzz->soundKill();
+
+  bool done = false;
+  while (!done) {
+
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 0);
+    std::string disp_str = ""
+    "                     \n"
+    "                     \n"
+    " Remove/Attach Crank \n"
+    " And press 1...      \n";
+
+    display.print(disp_str.c_str());
+    display.display();
+
+    my1Button->update();
+
+    if (my1Button->wasPressed()) {
+      mycrank->detect();
+      display.clearDisplay();
+      display.setTextSize(2);
+      display.setTextColor(WHITE);
+      display.setCursor(0, 0);
+      display.println(" DigiGurdy");
+      display.setTextSize(1);
+      display.println(" --------------------");
+      display.setTextSize(2);
+      display.println("   Crank  ");
+
+      if (mycrank->isDetected()) {
+        display.println(" Detected ");
+      } else {
+        display.println("   Absent ");
+      };
+
+      display.display();
+      delay(1000);
+
+      done = true;
+    };
+  };
+};
+
+bool other_options_screen() {
+
+  bool done = false;
+  while (!done) {
+
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 0);
+    std::string disp_str = ""
+    " ---Other Options--- \n"
+    "                     \n"
+    " 1) Remove/Attach    \n"
+    "      Crank          \n\n"
+    " X or 2) Go Back     \n";
+
+    display.print(disp_str.c_str());
+    display.display();
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    myBackButton->update();
+
+    if (my1Button->wasPressed()) {
+      redetect_crank_screen();
+      done = true;
+
+    } else if (my2Button->wasPressed() || myBackButton->wasPressed()) {
+      return false;
+    };
+  };
+
+  return true;
+};
+
 // This is the screen that X+O gets you.
 void pause_screen() {
 
@@ -2031,10 +2166,10 @@ void pause_screen() {
     display.setCursor(0, 0);
     std::string disp_str = ""
     " ----Pause  Menu---- \n"
-    " 1) Load Preset      \n"
-    " 2) Load Save Slot   \n"
-    " 3) Save This Tuning \n"
-    " 4) New Tuning Setup \n\n"
+    " 1) Load Tuning      \n"
+    " 2) Save This Tuning \n"
+    " 3) New Tuning Setup \n"
+    " 4) Other Options  \n\n"
     " X or 5) Go Back     \n";
 
     if (drone_mode == 0) {
@@ -2060,23 +2195,27 @@ void pause_screen() {
     myOkButton->update();
 
     if (my1Button->wasPressed()) {
-      load_preset_screen();
-      done = true;
-
-    } else if (my2Button->wasPressed()) {
-      if (load_saved_screen()) {
+      if (load_tuning_screen()) {
         done = true;
       };
 
-    } else if (my3Button->wasPressed()) {
+    } else if (my2Button->wasPressed()) {
       save_tuning_screen();
       done = true;
 
+    } else if (my3Button->wasPressed()) {
+      if (tuning()) {
+        done = true;
+      };
+
     } else if (my4Button->wasPressed()) {
-      if (tuning()) {done = true;};
+      if (other_options_screen()) {
+        done = true;
+      };
 
     } else if (my5Button->wasPressed() || myBackButton->wasPressed()) {
       done = true;
+
     } else if (myOkButton->wasPressed()) {
       if (drone_mode == 0) {
         drone_mode = 1; // 1 == both off
@@ -2333,9 +2472,9 @@ void loop() {
   };
 
   test_count +=1;
-  if (test_count > 100) {
+  if (test_count > 1000) {
     test_count = 0;
-    Serial.print("100 loop()s took: ");
+    Serial.print("1,000 loop()s took: ");
     Serial.print(millis() - start_time);
     Serial.print("ms\n");
     start_time = millis();
