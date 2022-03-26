@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v1.1.5 (testing)
+// VERSION: v1.1.6 (testing)
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
@@ -1030,7 +1030,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("18 Mar 2022,  v1.1.5 ");
+  display.println("26 Mar 2022,  v1.1.6 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -1659,10 +1659,10 @@ bool load_preset_screen() {
     " ---Load A Preset--- \n"
     " Select a Preset:    \n"
     "                     \n"
-    " 1) G/C, C Drones    \n"
-    " 2) G/C, G Drones    \n"
-    " 3) D/G, D Drones    \n"
-    " 4) D/G, G Drones    \n"
+    " 1) " + PRESET1_NAME + "\n"
+    " 2) " + PRESET2_NAME + "\n"
+    " 3) " + PRESET3_NAME + "\n"
+    " 4) " + PRESET4_NAME + "\n"
     " X or 5) Go Back     \n";
 
     display.print(disp_str.c_str());
@@ -2333,9 +2333,9 @@ void loop() {
   };
 
   test_count +=1;
-  if (test_count > 100) {
+  if (test_count > 1000) {
     test_count = 0;
-    Serial.print("100 loop()s took: ");
+    Serial.print("1,000 loop()s took: ");
     Serial.print(millis() - start_time);
     Serial.print("ms\n");
     start_time = millis();
