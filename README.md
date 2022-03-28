@@ -1,9 +1,10 @@
 # digigurdy-baz
 
-**Check out version 1.2.0! (NEW)**
+**Check out version 1.2.1! (NEW)**
 
 * Ability to remove/attach crank during play.
 * Tuninig preset names are easily-adjustable with the tuning itself.
+* Warns before overwriting occupied save slot.
 
 Other "testing" branch changes since v1.0:
 
