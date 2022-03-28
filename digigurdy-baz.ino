@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v1.2.1 (testing)
+// VERSION: v1.2.5 (testing)
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
@@ -521,7 +521,7 @@ class GurdyCrank {
       for (int i = 0; i < num_samples; i++) {
         samples[i] = myadc->adc0->analogReadContinuous();
         sample_sum += samples[i];
-        delay(1);
+        delay(2);
       };
 
       // Get the average voltage
@@ -1030,7 +1030,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("27 Mar 2022,  v1.2.1 ");
+  display.println("27 Mar 2022,  v1.2.5 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -1866,6 +1866,119 @@ void welcome_screen() {
   };
 };
 
+// This is the tuning screen for an individual string.  Single argument is a GurdyString pointer.
+void tune_string_screen(GurdyString *this_string) {
+  bool done = false;
+  int new_note = this_string->getOpenNote();
+  delay(300);
+  while (!done) {
+
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 0);
+    std::string disp_str = ""
+    " ---String Tuning--- \n"
+    " 1) Tune Down        \n"
+    " 2) Tune Up          \n\n";
+
+    display.print(disp_str.c_str());
+
+    display.setTextSize(2);
+    disp_str = ""
+    "  " + LongNoteNum[new_note] + "\n";
+
+    display.print(disp_str.c_str());
+
+    display.setTextSize(1);
+    disp_str = "\n"
+    " X) Done / Go Back   \n";
+
+    display.print(disp_str.c_str());
+
+    display.display();
+
+    my1Button->update();
+    my2Button->update();
+    myBackButton->update();
+
+    if (my1Button->wasPressed()) {
+      if (new_note > 24) {
+        new_note -= 1;
+        delay(300);
+      };
+    } else if (my1Button->beingPressed()) {
+      if (new_note > 24) {
+        new_note -= 1;
+        delay(150);
+      };
+    } else if (my2Button->wasPressed()) {
+      if (new_note < 111) {
+        new_note += 1;
+        delay(300);
+      };
+    } else if (my2Button->beingPressed()) {
+      if (new_note < 111) {
+        new_note += 1;
+        delay(150);
+      };
+    } else if (myBackButton->wasPressed()) {
+      this_string->setOpenNote(new_note);
+      done = true;
+    };
+  };
+};
+
+// This screen allows the user to make manual changes to each string.
+void manual_tuning_screen() {
+
+  while (true) {
+
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 0);
+    std::string disp_str = ""
+    " ---Manual Tuning--- \n"
+    " Choose a string:    \n"
+    " 1) Hi Mel.- " + NoteNum[mystring->getOpenNote()] + " \n"
+    " 2) Lo Mel.- " + NoteNum[mylowstring->getOpenNote()] + " \n"
+    " 3) Drone. - " + NoteNum[mydrone->getOpenNote()] + " \n"
+    " 4) Tromp. - " + NoteNum[mytromp->getOpenNote()] + " \n"
+    "                     \n"
+    " X or 5) Go Back     \n";
+
+    display.print(disp_str.c_str());
+    display.display();
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    my4Button->update();
+    my5Button->update();
+    myBackButton->update();
+
+    if (my1Button->wasPressed()) {
+      tune_string_screen(mystring);
+
+    } else if (my2Button->wasPressed()) {
+      tune_string_screen(mylowstring);
+
+    } else if (my3Button->wasPressed()) {
+      tune_string_screen(mydrone);
+
+    } else if (my4Button->wasPressed()) {
+      tune_string_screen(mytromp);
+
+    } else if (my5Button->wasPressed() || myBackButton->wasPressed()) {
+      return;
+    };
+  };
+
+  return;
+};
+
 bool tuning() {
 
   bool done = false;
@@ -1877,12 +1990,11 @@ bool tuning() {
     display.setCursor(0, 0);
     std::string disp_str = ""
     " ----Tuning Menu---- \n"
-    "                     \n"
-    " Choose Base Tuning: \n"
-    "                     \n"
-    "       1) G/C        \n"
-    "       2) D/G        \n"
-    "   X or 3) Go Back   \n"
+    "   Guided Tuning:    \n"
+    "     1) G/C          \n"
+    "     2) D/G          \n"
+    "   3) Manual Tuning  \n"
+    "   X or 4) Go Back   \n"
     "                     \n";
 
     display.print(disp_str.c_str());
@@ -1892,6 +2004,7 @@ bool tuning() {
     my1Button->update();
     my2Button->update();
     my3Button->update();
+    my4Button->update();
     myBackButton->update();
 
     if (my1Button->wasPressed()) {
@@ -1901,7 +2014,12 @@ bool tuning() {
     } else if (my2Button->wasPressed()) {
       gc_or_dg = false;
       done = true;
-    } else if (my3Button->wasPressed() || myBackButton->wasPressed()) {
+
+    } else if (my3Button->wasPressed()) {
+      manual_tuning_screen();
+      return true;
+
+    } else if (my4Button->wasPressed() || myBackButton->wasPressed()) {
       return false;
     };
   };
