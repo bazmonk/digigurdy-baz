@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v1.2.5 (testing)
+// VERSION: v1.2.6 (testing)
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
@@ -1030,7 +1030,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("27 Mar 2022,  v1.2.5 ");
+  display.println("27 Mar 2022,  v1.2.6 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -2286,6 +2286,52 @@ void redetect_crank_screen() {
   };
 };
 
+void about_screen() {
+
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  display.println(" DigiGurdy");
+  display.setTextSize(1);
+  display.println(" --------------------");
+  display.println("   By Basil Lalli,   ");
+  display.println("Concept By J. Dingley");
+  display.println("27 Mar 2022,  v1.2.6 ");
+  display.println("                     ");
+  display.println("  shorturl.at/tuDY1  ");
+  display.display();
+
+  while (true) {
+    myBackButton->update();
+
+    if(myBackButton->wasPressed()) {
+      break;
+    };
+  };
+
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  display.println("      DigiGurdy      ");
+  display.println(" --------------------");
+  display.println("Special Thanks:      ");
+  display.println("                     ");
+  display.println("John Dingley         ");
+  display.println("David Jacobs         ");
+  display.println("lune36400            ");
+  display.display();
+
+  while (true) {
+    myBackButton->update();
+
+    if(myBackButton->wasPressed()) {
+      break;
+    };
+  };
+};
+
 bool other_options_screen() {
 
   bool done = false;
@@ -2299,22 +2345,26 @@ bool other_options_screen() {
     " ---Other Options--- \n"
     "                     \n"
     " 1) Remove/Attach    \n"
-    "      Crank          \n\n"
-    " X or 2) Go Back     \n";
+    "      Crank          \n"
+    " 2) About DigiGurdy  \n\n"
+    " X or 3) Go Back     \n";
 
     display.print(disp_str.c_str());
     display.display();
 
-    // Check the 1 and 2 buttons
     my1Button->update();
     my2Button->update();
+    my3Button->update();
     myBackButton->update();
 
     if (my1Button->wasPressed()) {
       redetect_crank_screen();
       done = true;
 
-    } else if (my2Button->wasPressed() || myBackButton->wasPressed()) {
+    } else if (my2Button->wasPressed()) {
+      about_screen();
+
+    } else if (my3Button->wasPressed() || myBackButton->wasPressed()) {
       return false;
     };
   };
