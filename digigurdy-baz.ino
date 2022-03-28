@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v1.2.0 (testing)
+// VERSION: v1.2.1 (testing)
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
@@ -1030,7 +1030,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("26 Mar 2022,  v1.2.0 ");
+  display.println("27 Mar 2022,  v1.2.1 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -1995,29 +1995,71 @@ bool load_tuning_screen() {
   return true;
 };
 
+// Checks if save slot is occupied and prompts user to overwrite if necessary.
+// Returns true if slot is empty or OK to overwrite.
+bool check_save_tuning(int slot) {
+
+  if (EEPROM.read(slot) == 0) {
+    return true;
+  } else {
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 0);
+    std::string disp_str = ""
+    " ----Save Tuning---- \n"
+    "                     \n"
+    " Save slot is full,  \n"
+    "    Save anyway?     \n"
+    "                     \n"
+    "      1) Save        \n"
+    "                     \n"
+    " X or 2) Go Back     \n";
+
+    display.print(disp_str.c_str());
+    display.display();
+
+    bool done = false;
+    while (!done) {
+
+      my1Button->update();
+      my2Button->update();
+      myBackButton->update();
+
+      if (my1Button->wasPressed()) {
+        return true;
+
+      } else if (my2Button->wasPressed() || myBackButton->wasPressed()) {
+        return false;
+      };
+    };
+    return false;
+  };
+};
+
 // This is the screen for saving to a save slot
 void save_tuning_screen() {
-
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setCursor(0, 0);
-  std::string disp_str = ""
-  " ----Save Tuning---- \n"
-  " Choose a Save Slot: \n"
-  "                     \n"
-  "      1) Slot 1      \n"
-  "      2) Slot 2      \n"
-  "      3) Slot 3      \n"
-  "      4) Slot 4      \n"
-  "      X) Go Back     \n";
-
-  display.print(disp_str.c_str());
-  display.display();
 
   bool done = false;
   int slot = 0;
   while (!done) {
+
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 0);
+    std::string disp_str = ""
+    " ----Save Tuning---- \n"
+    " Choose a Save Slot: \n"
+    "                     \n"
+    "      1) Slot 1      \n"
+    "      2) Slot 2      \n"
+    "      3) Slot 3      \n"
+    "      4) Slot 4      \n"
+    "      X) Go Back     \n";
+
+    display.print(disp_str.c_str());
+    display.display();
 
     // Check the 1 and 2 buttons
     my1Button->update();
@@ -2027,24 +2069,32 @@ void save_tuning_screen() {
     myBackButton->update();
 
     if (my1Button->wasPressed()) {
-      save_tunings(EEPROM_SLOT1);
-      slot = 1;
-      done = true;
+      if (check_save_tuning(EEPROM_SLOT1)) {
+        save_tunings(EEPROM_SLOT1);
+        slot = 1;
+        done = true;
+      };
 
     } else if (my2Button->wasPressed()) {
-      save_tunings(EEPROM_SLOT2);
-      slot = 2;
-      done = true;
+      if (check_save_tuning(EEPROM_SLOT2)) {
+        save_tunings(EEPROM_SLOT2);
+        slot = 2;
+        done = true;
+      };
 
     } else if (my3Button->wasPressed()) {
-      save_tunings(EEPROM_SLOT3);
-      slot = 3;
-      done = true;
+      if (check_save_tuning(EEPROM_SLOT3)) {
+        save_tunings(EEPROM_SLOT3);
+        slot = 3;
+        done = true;
+      };
 
     } else if (my4Button->wasPressed()) {
-      save_tunings(EEPROM_SLOT4);
-      slot = 4;
-      done = true;
+      if (check_save_tuning(EEPROM_SLOT4)) {
+        save_tunings(EEPROM_SLOT4);
+        slot = 4;
+        done = true;
+      };
 
     } else if (myBackButton->wasPressed()) {
       // Just return.
