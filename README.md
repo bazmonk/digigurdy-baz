@@ -1,7 +1,8 @@
 # digigurdy-baz
 
-**Check out version 1.2.1! (NEW)**
+**Check out version 1.2.5! (NEW)**
 
+* **Manual free-tuning of _each_ string!**
 * Ability to remove/attach crank during play.
 * Tuninig preset names are easily-adjustable with the tuning itself.
 * Warns before overwriting occupied save slot.
