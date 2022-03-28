@@ -2294,6 +2294,10 @@ void pause_screen() {
   delay(750);
 };
 
+// ###########
+//  MAIN LOOP
+// ###########
+
 bool first_loop = true;
 
 int test_count = 0;
