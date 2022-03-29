@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v1.2.6 (testing)
+// VERSION: v1.2.7 (testing)
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
@@ -1030,7 +1030,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("27 Mar 2022,  v1.2.6 ");
+  display.println("28 Mar 2022,  v1.2.7 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -1215,7 +1215,8 @@ void tuning_hi_melody() {
   " 1) " + NoteNum[choice1] + " **  2) " + NoteNum[choice2] + "     \n"
   " 3) " + NoteNum[choice3] + "     4) " + NoteNum[choice4] + "     \n"
   "                     \n"
-  "  'O') Default (**)  \n"
+  "                     \n"
+  " O) Default (**)     \n"
   "                     \n";
 
   display.print(disp_str.c_str());
@@ -1277,7 +1278,8 @@ void tuning_low_melody() {
   " 1) " + NoteNum[choice1] + " **  2) " + NoteNum[choice2] + "     \n"
   " 3) " + NoteNum[choice3] + "     4) " + NoteNum[choice4] + "     \n"
   "                     \n"
-  "  'O') Default (**)  \n"
+  "                     \n"
+  " O) Default (**)     \n"
   "                     \n";
 
   display.print(disp_str.c_str());
@@ -1349,8 +1351,8 @@ void tuning_drone() {
   " 3) " + NoteNum[choice3] + " **  4) " + NoteNum[choice4] + "     \n"
   " 5) " + NoteNum[choice5] + "     6) " + NoteNum[choice6] + "     \n"
   "                     \n"
-  "  'O') Default (**)  \n"
-  "                     \n";
+  "                     \n"
+  " O) Default (**)     \n";
 
   display.print(disp_str.c_str());
   display.display();
@@ -1424,8 +1426,7 @@ void tuning_tromp() {
   " 3) " + NoteNum[choice3] + "     4) " + NoteNum[choice4] + "     \n"
   " 5) " + NoteNum[choice5] + "     6) " + NoteNum[choice6] + "     \n"
   "                     \n"
-  "                     \n"
-  "  'O') Default (**)  \n";
+  " O) Default (**)     \n";
 
   display.print(disp_str.c_str());
   display.display();
@@ -1510,8 +1511,8 @@ bool view_slot_screen(int slot_num) {
   if (EEPROM.read(slot + EEPROM_CAPO) > 0) { display.print("+"); };
   display.print(EEPROM.read(slot + EEPROM_CAPO));
   display.print("\n");
-  display.print(" Use?  'O' or 1) Yes \n");
-  display.print("       'X' or 2) No  \n");
+  display.print(" O or 1) Accept \n");
+  display.print(" X or 2) Go Back  \n");
 
   display.display();
 
@@ -1569,8 +1570,8 @@ bool view_preset_screen(int preset) {
   if (tunings[6] > 0) { display.print("+"); };
   display.print(tunings[6]);
   display.print("\n");
-  display.print(" Use?  'O' or 1) Yes \n");
-  display.print("       'X' or 2) No  \n");
+  display.print(" O or 1) Accept  \n");
+  display.print(" X or 2) Go Back  \n");
 
   display.display();
 
@@ -1752,7 +1753,7 @@ void playing_options_screen() {
       std::string disp_str = ""
       "  DISPLAY  \n"
       "  \n"
-      "  SAVED \n";
+      "   SAVED  \n";
 
       display.print(disp_str.c_str());
       display.display();
@@ -1990,12 +1991,13 @@ bool tuning() {
     display.setCursor(0, 0);
     std::string disp_str = ""
     " ----Tuning Menu---- \n"
-    "   Guided Tuning:    \n"
-    "     1) G/C          \n"
-    "     2) D/G          \n"
-    "   3) Manual Tuning  \n"
-    "   X or 4) Go Back   \n"
-    "                     \n";
+    "  Guided Setup:      \n"
+    "  1) G/C             \n"
+    "  2) D/G             \n"
+    "                     \n"
+    "  3) Manual Setup    \n"
+    "                     \n"
+    "  X or 4) Go Back    \n";
 
     display.print(disp_str.c_str());
     display.display();
@@ -2041,8 +2043,8 @@ bool tuning() {
   "        Drone:   " + NoteNum[mydrone->getOpenNote()] + "  \n"
   "    Trompette:   " + NoteNum[mytromp->getOpenNote()] + "  \n"
   "                     \n"
-  "'O' or 1) Accept     \n"
-  "'X' or 2) Go Back    \n";
+  "O or 1) Accept     \n"
+  "X or 2) Go Back    \n";
 
   display.print(disp_str.c_str());
   display.display();
@@ -2130,7 +2132,7 @@ bool check_save_tuning(int slot) {
     " Save slot is full,  \n"
     "    Save anyway?     \n"
     "                     \n"
-    "      1) Save        \n"
+    " 1) Overwrite        \n"
     "                     \n"
     " X or 2) Go Back     \n";
 
@@ -2294,10 +2296,10 @@ void about_screen() {
   display.setCursor(0, 0);
   display.println(" DigiGurdy");
   display.setTextSize(1);
-  display.println(" --------------------");
+  display.println("---------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("27 Mar 2022,  v1.2.6 ");
+  display.println("28 Mar 2022,  v1.2.7 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -2315,7 +2317,7 @@ void about_screen() {
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
   display.println("      DigiGurdy      ");
-  display.println(" --------------------");
+  display.println("---------------------");
   display.println("Special Thanks:      ");
   display.println("                     ");
   display.println("John Dingley         ");
@@ -2345,7 +2347,7 @@ bool other_options_screen() {
     " ---Other Options--- \n"
     "                     \n"
     " 1) Remove/Attach    \n"
-    "      Crank          \n"
+    "      Crank          \n\n"
     " 2) About DigiGurdy  \n\n"
     " X or 3) Go Back     \n";
 
