@@ -117,7 +117,7 @@ Here's a quick video explaining the controls:
 
 https://www.youtube.com/watch?v=yC0skMH7qog
 
-The keys for navigating the menus work much like John Dingley's code.  The bottom row represent number choices in menus, 1-6 starting from the left.  The "OK" or "O" button is the top right, and the "Back" or X button is the top left:
+The keys for navigating the menus work much like the original code did.  The bottom row represent number choices in menus, 1-6 starting from the left.  The "OK" or "O" button is the top right, and the "Back" or "X" button is the top left:
 
 ![keybox pic](https://raw.githubusercontent.com/wiki/bazmonk/digigurdy-baz/keys-full.jpeg)
 
