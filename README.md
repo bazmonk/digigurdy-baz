@@ -1,7 +1,9 @@
 # digigurdy-baz
 
-**Check out version 1.2.7! (NEW)**
+**Check out version 1.2.8! (NEW)**
 
+* No need to manually edit display library header file to specify resolution (for white OLEDs)
+  * Stock Adafruit_SSD1306 library works out-of-the-box, no weird half-screen.
 * Formatting/look-n-feel tweaks.
 * **Manual free-tuning of _each_ string!**
 * Ability to remove/attach crank during play.
