@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v1.2.7 (testing)
+// VERSION: v1.2.8 (testing)
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
@@ -116,6 +116,7 @@ const int CAPO_INDEX = num_keys - 5;
 #include <string>
 #include <ADC.h>
 
+// The "white OLED" uses these now.  The not-quite-standard blue version doesn't.
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64
 
@@ -136,7 +137,7 @@ const int CAPO_INDEX = num_keys - 5;
 
 // Initiate the correct kind of display object based on OLED type
 #ifdef WHITE_OLED
-  Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
+  Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
 #endif
 #ifdef BLUE_OLED
   Adafruit_SH1106 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
@@ -1030,7 +1031,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("28 Mar 2022,  v1.2.7 ");
+  display.println("29 Mar 2022,  v1.2.8 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -2299,7 +2300,7 @@ void about_screen() {
   display.println("---------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("28 Mar 2022,  v1.2.7 ");
+  display.println("29 Mar 2022,  v1.2.8 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
