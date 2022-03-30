@@ -44,6 +44,8 @@ The code has been significantly streamlined (20% the size of the original source
 ### OLED Display
 Your digigurdy may have an SSD1306 display (the "white OLED"), or the SH1106 display (the "blue OLED").  This code needs to be compiled for the correct display.
 
+_Note: Older versions of the code also needed to have the Adafruit_SSD1306.h file slightly edited to specify the correct resolution, causing a "half-screen" problem if it wasn't.  This has been fixed in v1.2.8.  No editing of the libraries are necessary now._
+
 Near the very top of the code are two `#define` statements.  Uncomment the appropriate line to build for either display type.  The version on this repository is set to white (because that's the one I have).
 
 For white OLEDs:
