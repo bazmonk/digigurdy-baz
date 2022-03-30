@@ -101,7 +101,7 @@ Regular users can utilize it to effectively clear their save slots and reset the
 
 The DigiGurdy is just a MIDI controller in a hurdy-gurdy-like shape.  It gives out *instructions* on how to make notes, but it has to be connected to a synthsizer to actually *interpret* those into music.
 
-DigiGurdy supports both SerialMIDI over USB, and a powered, standard MIDI-out jack, which can be used with a Bluetooth MIDI transmitter, for example.  Both are ready upon startup with no extra setup necessary on the controller end.
+DigiGurdy supports both SerialMIDI over USB, and a powered, standard MIDI-out jack, which can be used with a Bluetooth MIDI transmitter, for example.  Both are ready upon startup with no extra setup necessary on the controller end.  Both the USB MIDI and MIDI jack are running simultaneously: if for some reason you want to use both and hook it up to two synthesizers at the same time, go for it.
 
 The closest thing to a "standard" recommendation for a synth is bs-16i, a MIDI app for iOS.  It works great, it can be connected into Garageband or other apps in your workflow, etc.  If you go with this option, there's a couple presets in this repository for you to try.
 
