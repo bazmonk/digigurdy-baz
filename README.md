@@ -130,14 +130,20 @@ During play, these are all the "hidden" keycombos:
 
 After showing the Adafruit logo (represent!) and a title screen, crank detection will silently work in the background for about 5 seconds.
 
-* **DO NOT TURN THE CRANK DURING CRANK DETECTION!**  It's ok if you do, but you may fool the digigurdy into thinking there is no crank installed (yes, that does sound backwards, but it's the truth).  If you do this accidentally, just unpower and power back up the digigurdy.  It'll forgive you and forget it ever even happened.
+* **DO NOT TURN THE CRANK DURING CRANK DETECTION!**  It can fool the crank detection into paradoxically not detecting a crank.  Since > v1.0 crank detection is much faster, so this is a lot harder to do now.  If you manage to do it--you're fast!--just restart it again.
 
 From there, you will be shown the Startup Menu.  There's options here to load one of the included presets, load a tuning you've saved before, set up a new tuning, and other options.
 
 **New Users**: the four preset options are for you!  Each one is a reasonable combination, and they're good starting points while you experiment with making others.
 
 #### Other Options
-The "Other Options" menu is only available at startup.  It allows you to clear your EEPROM, and choose whether you want playing notes to display as a large note letter, or a letter + staff/scale image.  Your display preference is persistent and doesn't need to be adjusted each time.
+The "Other Options" menu at startup offers two options:
+* Clear EEPROM - this clears the memory and save slots (and all of your digigurdy's memory).  First-time installations should do this just to be sure (other data in there can cause bugs, and sometimes the save format changes a little).  It doesn't hurt to do this after upgrading, either...
+* Playing Screen - during actual play, you can either have a large "C7"-like display, or that side-by-side with a staff graphic showing the note as well.  This is adjustable here.
+
+The "Other Options" during play has two different options:
+* Remove/Attach Crank - this goes through the crank-detection routine that happens on startup again.  If you have a model with a detachable crank, this allows you to dock/un-dock it without having to restart it.
+* About screen - Hit the X button to go through it.  Useful for reporting problems: it helps me if you can tell me what version you're using.  The URL on it links back to this repository if you forget where to find this page.  Also a quick thanks to folks that have been helping me throughout this.
 
 ### Play
 
