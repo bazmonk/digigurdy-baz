@@ -184,4 +184,4 @@ I haven't really thought of how I'll handle a bunch of competing pull requests b
 
 ## Acknowledgements
 
-HUGE credit to John Dingley, his amazing creation (the DigiGurdy itself), and the original codebase that he wrote.  Everything I've done here is what he did, just written down differently.  
+HUGE credit to John Dingley, his amazing creation (the DigiGurdy itself), and the original codebase that he wrote.  He worked out the display, the way the crank works, the interaction with the MIDI subsystem... I'm standing on his shoulders.
