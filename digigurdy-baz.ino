@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v1.2.8 (testing)
+// VERSION: v1.2.9 (testing)
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
@@ -26,22 +26,20 @@ const int MELODY_VIBRATO = 0;
 // very fast readings and averaging them to get our "reading" in the code.  This is how many readings
 // we average.
 //
-// This number basically determines how quickly the whole thing runs as well.  Lower samples will
-// sound jittery but will raise the overall responsiveness of everything.  Higher samples eliminate
-// jitter but above 10,000 you'll start to really notice the responsiveness go down.
-//
-// I like to make it so that loops run at about 2.5kHz, making the other values below
+// I like to make it so that loops run at about *500Hz*, making the other values below
 // "feel" the same, and this works out to around:
 //
-// Teensy3.5 @120mHz = 4000
-// Teensy4.1 @600mHz = 11000
-const int SPIN_SAMPLES = 4000;
+// Teensy3.5 @120mHz = 20000
+// Teensy4.1 @600mHz = ??? Not sure yet, at least 40,000
+const int SPIN_SAMPLES = 20000;
 
 // This is the high voltage mark.  It determines how easily the crank makes the drones start.
-// With my crank, I can go as low as 3, but it gets ridiculously sensitive (bumping into your gurdy
+// With my crank, I can go as low as 2, but it gets ridiculously sensitive (bumping into your gurdy
 // agitates the crank enough to register).  It doesn't need to be very high, though, unless you want
 // you crank to have a "minmum speed limit" before it starts sounding.
-const int V_THRESHOLD = 8;
+//
+// Especially if you are using a bridge rectifier to have a 2-way crank, you'll want this as low as you can.
+const int V_THRESHOLD = 2;
 
 // (the equivalent of V_THRESHOLD for buzzing is what the knob does, so there's no variable for it).
 
@@ -55,10 +53,10 @@ const int V_THRESHOLD = 8;
 // how quickly the crank kicks on when you start spinning, and should be at least a few times larger
 // than the SPIN_DECAY.  SPIN_THRESHOLD influences how quickly the noise cuts off after you stop
 // spinning.
-const int MAX_SPIN = 15;
-const int SPIN_WEIGHT = 15;
+const int MAX_SPIN = 18;
+const int SPIN_WEIGHT = 6;
 const int SPIN_DECAY = 1;
-const int SPIN_THRESHOLD = 2;
+const int SPIN_THRESHOLD = 1;
 
 // Buzzing works sort of the same way except the buzz counter jumps immediately to the
 // BUZZ_SMOOTHING value and then begins to decay by BUZZ_DECAY.  Any positive "buzz"
@@ -68,7 +66,7 @@ const int SPIN_THRESHOLD = 2;
 // but make it harder to make separate coups rapidly.  Adjust this to find the sweet spot between
 // how easy you want it to buzz and how quickly/consistently you can work a crank.  Players much
 // better than me may want a smaller value.
-const int BUZZ_SMOOTHING = 30;
+const int BUZZ_SMOOTHING = 25;
 const int BUZZ_DECAY = 1;
 
 // KEYBOX VARIABLES:
@@ -614,6 +612,11 @@ class GurdyCrank {
         crank_voltage = sample_total / spin_samples;
         sample_total = 0;
 
+        Serial.print("Crank: ");
+        Serial.print(crank_voltage);
+        Serial.print("  Buzz: ");
+        Serial.println(myKnob->getVoltage());
+
         // Based on that voltage, we either bump up the spin by the spin_weight,
         // or we let it decay.
         if (crank_voltage > v_threshold) {
@@ -1031,7 +1034,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("29 Mar 2022,  v1.2.8 ");
+  display.println("01 Apr 2022,  v1.2.9 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -2300,7 +2303,7 @@ void about_screen() {
   display.println("---------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("29 Mar 2022,  v1.2.8 ");
+  display.println("01 Apr 2022,  v1.2.9 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
