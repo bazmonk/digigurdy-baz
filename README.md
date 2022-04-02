@@ -1,7 +1,9 @@
 # digigurdy-baz
 
-**Check out version 1.2.7! (NEW)**
+**Check out version 1.2.8! (NEW)**
 
+* No need to manually edit display library header file to specify resolution (for white OLEDs)
+  * Stock Adafruit_SSD1306 library works out-of-the-box, no weird half-screen.
 * Formatting/look-n-feel tweaks.
 * **Manual free-tuning of _each_ string!**
 * Ability to remove/attach crank during play.
@@ -41,6 +43,8 @@ The code has been significantly streamlined (20% the size of the original source
 
 ### OLED Display
 Your digigurdy may have an SSD1306 display (the "white OLED"), or the SH1106 display (the "blue OLED").  This code needs to be compiled for the correct display.
+
+_Note: Older versions of the code also needed to have the Adafruit_SSD1306.h file slightly edited to specify the correct resolution, causing a "half-screen" problem if it wasn't.  This has been fixed in v1.2.8.  No editing of the libraries are necessary now._
 
 Near the very top of the code are two `#define` statements.  Uncomment the appropriate line to build for either display type.  The version on this repository is set to white (because that's the one I have).
 
@@ -97,7 +101,7 @@ Regular users can utilize it to effectively clear their save slots and reset the
 
 The DigiGurdy is just a MIDI controller in a hurdy-gurdy-like shape.  It gives out *instructions* on how to make notes, but it has to be connected to a synthsizer to actually *interpret* those into music.
 
-DigiGurdy supports both SerialMIDI over USB, and a powered, standard MIDI-out jack, which can be used with a Bluetooth MIDI transmitter, for example.  Both are ready upon startup with no extra setup necessary on the controller end.
+DigiGurdy supports both SerialMIDI over USB, and a powered, standard MIDI-out jack, which can be used with a Bluetooth MIDI transmitter, for example.  Both are ready upon startup with no extra setup necessary on the controller end.  Both the USB MIDI and MIDI jack are running simultaneously: if for some reason you want to use both and hook it up to two synthesizers at the same time, go for it.
 
 The closest thing to a "standard" recommendation for a synth is bs-16i, a MIDI app for iOS.  It works great, it can be connected into Garageband or other apps in your workflow, etc.  If you go with this option, there's a couple presets in this repository for you to try.
 
@@ -113,7 +117,7 @@ Here's a quick video explaining the controls:
 
 https://www.youtube.com/watch?v=yC0skMH7qog
 
-The keys for navigating the menus work much like John Dingley's code.  The bottom row represent number choices in menus, 1-6 starting from the left.  The "OK" or "O" button is the top right, and the "Back" or X button is the top left:
+The keys for navigating the menus work much like the original code did.  The bottom row represent number choices in menus, 1-6 starting from the left.  The "OK" or "O" button is the top right, and the "Back" or "X" button is the top left:
 
 ![keybox pic](https://raw.githubusercontent.com/wiki/bazmonk/digigurdy-baz/keys-full.jpeg)
 
@@ -126,14 +130,20 @@ During play, these are all the "hidden" keycombos:
 
 After showing the Adafruit logo (represent!) and a title screen, crank detection will silently work in the background for about 5 seconds.
 
-* **DO NOT TURN THE CRANK DURING CRANK DETECTION!**  It's ok if you do, but you may fool the digigurdy into thinking there is no crank installed (yes, that does sound backwards, but it's the truth).  If you do this accidentally, just unpower and power back up the digigurdy.  It'll forgive you and forget it ever even happened.
+* **DO NOT TURN THE CRANK DURING CRANK DETECTION!**  It can fool the crank detection into paradoxically not detecting a crank.  Since > v1.0 crank detection is much faster, so this is a lot harder to do now.  If you manage to do it--you're fast!--just restart it again.
 
 From there, you will be shown the Startup Menu.  There's options here to load one of the included presets, load a tuning you've saved before, set up a new tuning, and other options.
 
 **New Users**: the four preset options are for you!  Each one is a reasonable combination, and they're good starting points while you experiment with making others.
 
 #### Other Options
-The "Other Options" menu is only available at startup.  It allows you to clear your EEPROM, and choose whether you want playing notes to display as a large note letter, or a letter + staff/scale image.  Your display preference is persistent and doesn't need to be adjusted each time.
+The "Other Options" menu at startup offers two options:
+* Clear EEPROM - this clears the memory and save slots (and all of your digigurdy's memory).  First-time installations should do this just to be sure (other data in there can cause bugs, and sometimes the save format changes a little).  It doesn't hurt to do this after upgrading, either...
+* Playing Screen - during actual play, you can either have a large "C7"-like display, or that side-by-side with a staff graphic showing the note as well.  This is adjustable here.
+
+The "Other Options" during play has two different options:
+* Remove/Attach Crank - this goes through the crank-detection routine that happens on startup again.  If you have a model with a detachable crank, this allows you to dock/un-dock it without having to restart it.
+* About screen - Hit the X button to go through it.  Useful for reporting problems: it helps me if you can tell me what version you're using.  The URL on it links back to this repository if you forget where to find this page.  Also a quick thanks to folks that have been helping me throughout this.
 
 ### Play
 
@@ -174,4 +184,4 @@ I haven't really thought of how I'll handle a bunch of competing pull requests b
 
 ## Acknowledgements
 
-HUGE credit to John Dingley, his amazing creation (the DigiGurdy itself), and the original codebase that he wrote.  Everything I've done here is what he did, just written down differently.  
+HUGE credit to John Dingley, his amazing creation (the DigiGurdy itself), and the original codebase that he wrote.  He worked out the display, the way the crank works, the interaction with the MIDI subsystem... I'm standing on his shoulders.
