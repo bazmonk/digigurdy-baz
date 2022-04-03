@@ -17,7 +17,7 @@
 // VIBRATO: I use a long-delay, very slow vibrato on the melody strings.  This variable controls how
 // much vibrato (how much modulation like with a physical mod wheel on a MIDI keyboard) to send.
 // Setting it to 0 sends no modulation.  Max is 127.  I use 16...
-const int MELODY_VIBRATO = 0;
+const int MELODY_VIBRATO = 16;
 
 // Cranking and buzz behavior:
 
@@ -31,7 +31,7 @@ const int MELODY_VIBRATO = 0;
 //
 // Teensy3.5 @120mHz = 20000
 // Teensy4.1 @600mHz = ??? Not sure yet, at least 40,000
-const int SPIN_SAMPLES = 20000;
+const int SPIN_SAMPLES = 1000;
 
 // This is the high voltage mark.  It determines how easily the crank makes the drones start.
 // With my crank, I can go as low as 2, but it gets ridiculously sensitive (bumping into your gurdy
@@ -39,7 +39,7 @@ const int SPIN_SAMPLES = 20000;
 // you crank to have a "minmum speed limit" before it starts sounding.
 //
 // Especially if you are using a bridge rectifier to have a 2-way crank, you'll want this as low as you can.
-const int V_THRESHOLD = 2;
+const int V_THRESHOLD = 4;
 
 // (the equivalent of V_THRESHOLD for buzzing is what the knob does, so there's no variable for it).
 
@@ -53,10 +53,10 @@ const int V_THRESHOLD = 2;
 // how quickly the crank kicks on when you start spinning, and should be at least a few times larger
 // than the SPIN_DECAY.  SPIN_THRESHOLD influences how quickly the noise cuts off after you stop
 // spinning.
-const int MAX_SPIN = 18;
-const int SPIN_WEIGHT = 6;
-const int SPIN_DECAY = 1;
-const int SPIN_THRESHOLD = 1;
+const int MAX_SPIN = 20000;
+const int SPIN_WEIGHT = 3000;
+const int SPIN_DECAY = 48;
+const int SPIN_THRESHOLD = 6001;
 
 // Buzzing works sort of the same way except the buzz counter jumps immediately to the
 // BUZZ_SMOOTHING value and then begins to decay by BUZZ_DECAY.  Any positive "buzz"
@@ -66,7 +66,7 @@ const int SPIN_THRESHOLD = 1;
 // but make it harder to make separate coups rapidly.  Adjust this to find the sweet spot between
 // how easy you want it to buzz and how quickly/consistently you can work a crank.  Players much
 // better than me may want a smaller value.
-const int BUZZ_SMOOTHING = 25;
+const int BUZZ_SMOOTHING = 250;
 const int BUZZ_DECAY = 1;
 
 // KEYBOX VARIABLES:
@@ -494,8 +494,8 @@ class GurdyCrank {
     };
 
     void beginPolling() {
-      myadc->adc0->setConversionSpeed(ADC_CONVERSION_SPEED::VERY_LOW_SPEED);
-      myadc->adc0->setSamplingSpeed(ADC_SAMPLING_SPEED::VERY_LOW_SPEED);
+      myadc->adc0->setConversionSpeed(ADC_CONVERSION_SPEED::HIGH_SPEED);
+      myadc->adc0->setSamplingSpeed(ADC_SAMPLING_SPEED::HIGH_SPEED);
       myadc->adc0->startContinuous(voltage_pin);
     };
 
@@ -608,11 +608,14 @@ class GurdyCrank {
           sample_total += myadc->adc0->analogReadContinuous();
         };
 
+        Serial.print("Sampled: ");
+        Serial.print((sample_total / spin_samples));
+
         // The voltage reading we're using is the average of those.
-        crank_voltage = sample_total / spin_samples;
+        crank_voltage = ((sample_total / spin_samples) + (crank_voltage * 2)) / 3;
         sample_total = 0;
 
-        Serial.print("Crank: ");
+        Serial.print(" Smoothed: ");
         Serial.print(crank_voltage);
         Serial.print("  Buzz: ");
         Serial.println(myKnob->getVoltage());
