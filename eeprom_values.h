@@ -25,4 +25,4 @@ static const int EEPROM_TPOSE = 5;
 static const int EEPROM_CAPO = 6;
 
 // This int saves the play screen type.  0 = note + staff, 1 = note only;
-static const int EEPROM_DISPLY_TYPE = 1;
+static const int EEPROM_DISPLY_TYPE = 100;
