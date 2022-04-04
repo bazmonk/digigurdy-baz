@@ -965,6 +965,9 @@ GurdyButton *tpose_up;
 GurdyButton *tpose_down;
 GurdyButton *capo;
 
+// LUNE - for each extra button, declare its object here.
+GurdyButton *save_toggle;
+
 // This defines the +/- one octave transpose range.
 const int max_tpose = 12;
 int tpose_offset;
@@ -1124,6 +1127,9 @@ void setup() {
 
   capo = new GurdyButton(23); // The capo button
   capo_offset = 0;
+
+  // LUNE - Initialize each new button object to its pin here.
+  save_toggle = new GurdyButton(YOUR BUTTON PIN);
 
 };
 
@@ -2488,6 +2494,9 @@ bool first_loop = true;
 int test_count = 0;
 int start_time = millis();
 
+// LUNE - this is to keep track of which slot we're on.
+int this_slot = 0;
+
 // The loop() function is repeatedly run by the Teensy unit after setup() completes.
 // This is the main logic of the program and defines how the strings, keys, click, buzz,
 // and buttons acutally behave during play.
@@ -2525,8 +2534,27 @@ void loop() {
   tpose_down->update();
   capo->update();
 
+  // LUNE - each loop, update your new buttons with the rest of them...
+  save_toggle->update();
+
   myOkButton->update();
   myBackButton->update();
+
+  // LUNE - describe what to do when the button is pressed here...
+  if (save_toggle->wasPressed() {
+    this_slot += 1;
+    if (this_slot == 5) {
+      this_slot = 1;
+    };
+
+    int slot_address = 0;
+    if (this_slot == 1) { slot_address = EEPROM_SLOT1; };
+    if (this_slot == 2) { slot_address = EEPROM_SLOT2; };
+    if (this_slot == 3) { slot_address = EEPROM_SLOT3; };
+    if (this_slot == 4) { slot_address = EEPROM_SLOT4; };
+    load_saved_tunings(slot_address);
+  };
+
 
   // If the "X" and "O" buttons are both down, trigger the tuning menu
   if (myOkButton->beingPressed() && myBackButton->beingPressed()) {
