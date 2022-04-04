@@ -1,6 +1,14 @@
 # digigurdy-baz
 
-**Check out version 1.2.8! (NEW)**
+**Check out version 1.3.1! (NEW)**
+
+* Tweaked spin algorithm and values for use with reversible cranks.  Should still work fine with normal cranks!
+  * Lower `SPIN_DECAY` if you find it too sensitive at slow speeds before trying to mess with other values.  It'll give you a good place to start.
+  * Raise `V_THRESHOLD` if you get "phantom" cranking.  I *strongly recommend* you slightly modify your crank motor by grounding it to the negative wire somehow.  In my tests it significantly elminates a lot of the noise from the crank sampling and allows you to have a hair-trigger crank and great responsiveness.
+  * Raise `BUZZ_SMOOTHING` to make coups smoother, lower it to allow you to make coups faster.  Buzzing is separate from the `SPIN_` variables entirely so don't adjust them in an attempt to influence the buzz.  Because you can adjust the buzz voltage on-the-fly with the knob, this shouldn't require much adjustment.  
+* Cranking uses a rolling average to calculate voltage now.
+
+Other "testing" branch changes since v1.0:
 
 * No need to manually edit display library header file to specify resolution (for white OLEDs)
   * Stock Adafruit_SSD1306 library works out-of-the-box, no weird half-screen.
@@ -9,9 +17,6 @@
 * Ability to remove/attach crank during play.
 * Tuninig preset names are easily-adjustable with the tuning itself.
 * Warns before overwriting occupied save slot.
-
-Other "testing" branch changes since v1.0:
-
 * A re-worked analog polling mechanism giving better crank performance
 * Set this if you want the melody strings to send any modulation (usually used as vibrato).
   * Setting it to zero disables the feature (I'll leave it this way in the repository).
