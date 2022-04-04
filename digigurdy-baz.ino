@@ -59,6 +59,7 @@ const int SPIN_WEIGHT = 2500;
 // Users using a normal crank like John does it, you'll just want to increase if your crank is jittery at low
 // speeds.
 const int SPIN_DECAY = 200;
+
 // This is the point notes start:
 const int SPIN_THRESHOLD = 5001;
 // This is the point they stop:
