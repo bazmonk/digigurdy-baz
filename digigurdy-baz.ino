@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v1.2.9 (testing)
+// VERSION: v1.3.0 (testing)
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
@@ -25,13 +25,8 @@ const int MELODY_VIBRATO = 0;
 // out the voltage so our readings don't wander on their own, we're taking several thousand
 // very fast readings and averaging them to get our "reading" in the code.  This is how many readings
 // we average.
-//
-// I like to make it so that loops run at about *500Hz*, making the other values below
-// "feel" the same, and this works out to around:
-//
-// Teensy3.5 @120mHz = 20000
-// Teensy4.1 @600mHz = ??? Not sure yet, at least 40,000
-const int SPIN_SAMPLES = 20000;
+
+const int SPIN_SAMPLES = 1000;
 
 // This is the high voltage mark.  It determines how easily the crank makes the drones start.
 // With my crank, I can go as low as 2, but it gets ridiculously sensitive (bumping into your gurdy
@@ -53,10 +48,11 @@ const int V_THRESHOLD = 2;
 // how quickly the crank kicks on when you start spinning, and should be at least a few times larger
 // than the SPIN_DECAY.  SPIN_THRESHOLD influences how quickly the noise cuts off after you stop
 // spinning.
-const int MAX_SPIN = 18;
-const int SPIN_WEIGHT = 6;
-const int SPIN_DECAY = 1;
-const int SPIN_THRESHOLD = 1;
+const int MAX_SPIN = 9000;
+const int SPIN_WEIGHT = 5800;
+const int SPIN_DECAY = 38;
+const int SPIN_THRESHOLD = 8001;
+const int SPIN_STOP_THRESHOLD = 1650;
 
 // Buzzing works sort of the same way except the buzz counter jumps immediately to the
 // BUZZ_SMOOTHING value and then begins to decay by BUZZ_DECAY.  Any positive "buzz"
@@ -66,7 +62,7 @@ const int SPIN_THRESHOLD = 1;
 // but make it harder to make separate coups rapidly.  Adjust this to find the sweet spot between
 // how easy you want it to buzz and how quickly/consistently you can work a crank.  Players much
 // better than me may want a smaller value.
-const int BUZZ_SMOOTHING = 25;
+const int BUZZ_SMOOTHING = 250;
 const int BUZZ_DECAY = 1;
 
 // KEYBOX VARIABLES:
@@ -451,6 +447,7 @@ class GurdyCrank {
     static const int spin_weight = SPIN_WEIGHT;
     static const int spin_decay = SPIN_DECAY;
     static const int spin_threshold = SPIN_THRESHOLD;
+    static const int spin_stop_threshold = SPIN_STOP_THRESHOLD;
     static const int spin_samples = SPIN_SAMPLES;
     long int sample_total;
     int spin;
@@ -494,8 +491,8 @@ class GurdyCrank {
     };
 
     void beginPolling() {
-      myadc->adc0->setConversionSpeed(ADC_CONVERSION_SPEED::VERY_LOW_SPEED);
-      myadc->adc0->setSamplingSpeed(ADC_SAMPLING_SPEED::VERY_LOW_SPEED);
+      myadc->adc0->setConversionSpeed(ADC_CONVERSION_SPEED::HIGH_SPEED);
+      myadc->adc0->setSamplingSpeed(ADC_SAMPLING_SPEED::HIGH_SPEED);
       myadc->adc0->startContinuous(voltage_pin);
     };
 
@@ -608,11 +605,14 @@ class GurdyCrank {
           sample_total += myadc->adc0->analogReadContinuous();
         };
 
+        Serial.print("Sampled: ");
+        Serial.print((sample_total / spin_samples));
+
         // The voltage reading we're using is the average of those.
-        crank_voltage = sample_total / spin_samples;
+        crank_voltage = ((sample_total / spin_samples) + (crank_voltage)) / 2;
         sample_total = 0;
 
-        Serial.print("Crank: ");
+        Serial.print(" Smoothed: ");
         Serial.print(crank_voltage);
         Serial.print("  Buzz: ");
         Serial.println(myKnob->getVoltage());
@@ -648,7 +648,7 @@ class GurdyCrank {
           // Now that we checked, we can update this...
           is_spinning = true;
 
-        } else {
+        } else if (spin < spin_stop_threshold) {
 
           // If we were spinning before, we just stopped.
           if (is_spinning) {
@@ -1034,7 +1034,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("01 Apr 2022,  v1.2.9 ");
+  display.println("03 Apr 2022,  1.3.0 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -2303,7 +2303,7 @@ void about_screen() {
   display.println("---------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("01 Apr 2022,  v1.2.9 ");
+  display.println("03 Apr 2022,  1.3.0 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
