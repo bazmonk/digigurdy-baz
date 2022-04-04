@@ -1,5 +1,9 @@
 // Digigurdy-Baz
+<<<<<<< HEAD
 // VERSION: v1.3.1 (testing)
+=======
+// VERSION: v1.3.0 (testing)
+>>>>>>> 6de38b620b18dacffd1730fd36d948017f907135
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
@@ -26,7 +30,11 @@ const int MELODY_VIBRATO = 0;
 // very fast readings and averaging them to get our "reading" in the code.  This is how many readings
 // we average.
 
+<<<<<<< HEAD
 const int SPIN_SAMPLES = 700;
+=======
+const int SPIN_SAMPLES = 1000;
+>>>>>>> 6de38b620b18dacffd1730fd36d948017f907135
 
 // This is the high voltage mark.  It determines how easily the crank makes the drones start.
 // With my crank, I can go as low as 2, but it gets ridiculously sensitive (bumping into your gurdy
@@ -48,6 +56,7 @@ const int V_THRESHOLD = 4;
 // how quickly the crank kicks on when you start spinning, and should be at least a few times larger
 // than the SPIN_DECAY.  SPIN_THRESHOLD influences how quickly the noise cuts off after you stop
 // spinning.
+<<<<<<< HEAD
 const int MAX_SPIN = 7500;
 const int SPIN_WEIGHT = 2500;
 
@@ -63,6 +72,13 @@ const int SPIN_DECAY = 200;
 const int SPIN_THRESHOLD = 5001;
 // This is the point they stop:
 const int SPIN_STOP_THRESHOLD = 1000;
+=======
+const int MAX_SPIN = 9000;
+const int SPIN_WEIGHT = 5800;
+const int SPIN_DECAY = 38;
+const int SPIN_THRESHOLD = 8001;
+const int SPIN_STOP_THRESHOLD = 1650;
+>>>>>>> 6de38b620b18dacffd1730fd36d948017f907135
 
 // Buzzing works sort of the same way except the buzz counter jumps immediately to the
 // BUZZ_SMOOTHING value and then begins to decay by BUZZ_DECAY.  Any positive "buzz"
@@ -1044,7 +1060,11 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
+<<<<<<< HEAD
   display.println("03 Apr 2022,  1.3.1 ");
+=======
+  display.println("03 Apr 2022,  1.3.0 ");
+>>>>>>> 6de38b620b18dacffd1730fd36d948017f907135
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -2313,7 +2333,11 @@ void about_screen() {
   display.println("---------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
+<<<<<<< HEAD
   display.println("03 Apr 2022,  1.3.1 ");
+=======
+  display.println("03 Apr 2022,  1.3.0 ");
+>>>>>>> 6de38b620b18dacffd1730fd36d948017f907135
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
