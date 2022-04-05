@@ -1,115 +1,14 @@
 // Digigurdy-Baz
-// VERSION: v1.3.1 (testing)]
+// VERSION: v1.3.2 (testing)]
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
 //   https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy
 // REPOSITORY: https://github.com/bazmonk/digigurdy-baz
 
-// ##############
-// CONFIG SECTION
-// ##############
-
-// USERS!!! Uncomment one of these lines depending on what kind of OLED screen you have.
-#define WHITE_OLED
-//#define BLUE_OLED
-
-// VIBRATO: I use a long-delay, very slow vibrato on the melody strings.  This variable controls how
-// much vibrato (how much modulation like with a physical mod wheel on a MIDI keyboard) to send.
-// Setting it to 0 sends no modulation.  Max is 127.  I use 16...
-const int MELODY_VIBRATO = 0;
-
-// Cranking and buzz behavior:
-
-// We're doing continuous reading of the cranks now, so reads are nearly instantaneous.  To smooth
-// out the voltage so our readings don't wander on their own, we're taking several thousand
-// very fast readings and averaging them to get our "reading" in the code.  This is how many readings
-// we average.
-
-const int SPIN_SAMPLES = 700;
-
-// This is the high voltage mark.  It determines how easily the crank makes the drones start.
-// With my crank, I can go as low as 2, but it gets ridiculously sensitive (bumping into your gurdy
-// agitates the crank enough to register).  It doesn't need to be very high, though, unless you want
-// you crank to have a "minmum speed limit" before it starts sounding.
-//
-// Especially if you are using a bridge rectifier to have a 2-way crank, you'll want this as low as you can.
-const int V_THRESHOLD = 4;
-
-// (the equivalent of V_THRESHOLD for buzzing is what the knob does, so there's no variable for it).
-
-// The crank uses an internal "spin" counter to make it continue to play through the inconsistent
-// raw voltage the crank produces.  Each high voltage read increases the counter by SPIN_WEIGHT,
-// up to MAX_SPIN.  While low voltage is being read, spin decreases by SPIN_DECAY.  While spin is
-// greater than SPIN_THRESHOLD, it makes sound.
-//
-// A larger MAX_SPIN versus the SPIN_DECAY make the cranking more consistent at very low speeds,
-// at the expense of responding quickly when you stop cranking.  A higher SPIN_WEIGHT influences
-// how quickly the crank kicks on when you start spinning, and should be at least a few times larger
-// than the SPIN_DECAY.  SPIN_THRESHOLD influences how quickly the noise cuts off after you stop
-// spinning.
-const int MAX_SPIN = 7500;
-const int SPIN_WEIGHT = 2500;
-
-// I think I've got good values for everything else... in my opinion at least, users should try adjusting just
-// the SPIN_DECAY at first to change responsiveness.  Lower values make notes last longer over jitters in the
-// crank voltage.  Higher values make it run down spin faster overall, incresing responsiveness.
-//
-// Users using a rectifier for two-way cranking, you'll want to fiddle with this for personal feel.
-// Users using a normal crank like John does it, you'll just want to increase if your crank is jittery at low
-// speeds.
-const int SPIN_DECAY = 200;
-
-// This is the point notes start:
-const int SPIN_THRESHOLD = 5001;
-// This is the point they stop:
-const int SPIN_STOP_THRESHOLD = 1000;
-
-// Buzzing works sort of the same way except the buzz counter jumps immediately to the
-// BUZZ_SMOOTHING value and then begins to decay by BUZZ_DECAY.  Any positive "buzz"
-// value makes a buzz.
-//
-// Larger BUZZ_SMOOTHING values make the buzz stay on more consistently once you've triggered it,
-// but make it harder to make separate coups rapidly.  Adjust this to find the sweet spot between
-// how easy you want it to buzz and how quickly/consistently you can work a crank.  Players much
-// better than me may want a smaller value.
-const int BUZZ_SMOOTHING = 250;
-const int BUZZ_DECAY = 1;
-
-// KEYBOX VARIABLES:
-// The pin_array[] index here represents the MIDI note offset, and the value is the corresponding
-// teensy pin.  This defines which physical keys are part of the "keybox" and what order they're in.
-//
-// NOTE: There's no key that produces 0 offset (an "open" string),
-// so the first element is bogus.  It gets skipped entirely.
-int pin_array[] = {-1, 2, 24, 3, 25, 26, 4, 27, 5, 28, 29, 6, 30,
-                   7, 31, 8, 32, 33, 18, 34, 19, 35, 36, 20, 37};
-
-// This is literally just the size of the above array minus one.  I need this as a const to
-// declare the KeyboxButton array later on... or I just don't know enough C++ to know how to
-// *not* need it ;-)
-const int num_keys = 24;
-
-// These control which buttons on the keybox have the roles of the X, O, 1-6, etc. buttons.
-// Users with non-"standard" keyboxes (if there is such a thing!) may need to adjust these.
-//
-// These are array indexes, so if you count chromatically up your keybox and then subtract 1,
-// that is its index.
-const int BACK_INDEX = 0;
-const int OK_INDEX = num_keys - 2;
-const int BUTTON_1_INDEX = 1;
-const int BUTTON_2_INDEX = 3;
-const int BUTTON_3_INDEX = 4;
-const int BUTTON_4_INDEX = 6;
-const int BUTTON_5_INDEX = 8;
-const int BUTTON_6_INDEX = 9;
-const int TPOSE_UP_INDEX = num_keys - 1;
-const int TPOSE_DN_INDEX = num_keys - 3;
-const int CAPO_INDEX = num_keys - 5;
-
-// ##################
-// END CONFIG SECTION
-// ##################
+// #############################################################
+// CONFIG SECTION HAS MOVED: see the config.h for those options.
+// #############################################################
 
 #include <Adafruit_GFX.h>
 // https://www.pjrc.com/teensy/td_libs_Bounce.html
@@ -120,33 +19,6 @@ const int CAPO_INDEX = num_keys - 5;
 #include <MIDI.h>
 #include <string>
 #include <ADC.h>
-
-// The "white OLED" uses these now.  The not-quite-standard blue version doesn't.
-#define SCREEN_WIDTH 128 // OLED display width, in pixels
-#define SCREEN_HEIGHT 64
-
-// The white OLED uses Adafruit SSD1306.  Blue uses SH1106.
-#ifdef WHITE_OLED
-  #include <Adafruit_SSD1306.h>
-#endif
-#ifdef BLUE_OLED
-  #include <Adafruit_SH1106.h>
-#endif
-
-// These are the Teensy pins wired up for the OLED.
-#define OLED_MOSI 9
-#define OLED_CLK 10
-#define OLED_DC 11
-#define OLED_CS 12
-#define OLED_RESET 13
-
-// Initiate the correct kind of display object based on OLED type
-#ifdef WHITE_OLED
-  Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
-#endif
-#ifdef BLUE_OLED
-  Adafruit_SH1106 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
-#endif
 
 // enum Note maps absolute note names to MIDI note numbers (middle C4 = 60),
 // which range from 0 to 127.
@@ -205,6 +77,34 @@ std::string LongNoteNum[] = {
 #include "default_tunings.h" // Preset tunings.
 #include "note_bitmaps.h"    // Note (ABC) bitmaps
 #include "staff_bitmaps.h"   // Staff bitmaps
+#include "config.h"          // Configuration variables
+
+// The "white OLED" uses these now.  The not-quite-standard blue version doesn't.
+#define SCREEN_WIDTH 128 // OLED display width, in pixels
+#define SCREEN_HEIGHT 64
+
+// The white OLED uses Adafruit SSD1306.  Blue uses SH1106.
+#ifdef WHITE_OLED
+  #include <Adafruit_SSD1306.h>
+#endif
+#ifdef BLUE_OLED
+  #include <Adafruit_SH1106.h>
+#endif
+
+// These are the Teensy pins wired up for the OLED.
+#define OLED_MOSI 9
+#define OLED_CLK 10
+#define OLED_DC 11
+#define OLED_CS 12
+#define OLED_RESET 13
+
+// Initiate the correct kind of display object based on OLED type
+#ifdef WHITE_OLED
+  Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
+#endif
+#ifdef BLUE_OLED
+  Adafruit_SH1106 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
+#endif
 
 // Right now not using the std namespace is just impacting strings.  That's ok...
 using namespace MIDI_NAMESPACE;
@@ -1045,7 +945,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("03 Apr 2022,  1.3.1 ");
+  display.println("04 Apr 2022,  1.3.2 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -2314,7 +2214,7 @@ void about_screen() {
   display.println("---------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("03 Apr 2022,  1.3.1 ");
+  display.println("04 Apr 2022,  1.3.2 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();

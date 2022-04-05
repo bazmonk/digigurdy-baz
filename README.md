@@ -1,7 +1,8 @@
 # digigurdy-baz
 
-**Check out version 1.3.1! (NEW)**
+**Check out version 1.3.2! (NEW)**
 
+* **Configuration variables are now in a config.h file**
 * Tweaked spin algorithm and values for use with reversible cranks.  Should still work fine with normal cranks!
   * Lower `SPIN_DECAY` if you find it too sensitive at slow speeds before trying to mess with other values.  It'll give you a good place to start.
   * Raise `V_THRESHOLD` if you get "phantom" cranking.  I *strongly recommend* you slightly modify your crank motor by grounding it to the negative wire somehow.  In my tests it significantly elminates a lot of the noise from the crank sampling and allows you to have a hair-trigger crank and great responsiveness.
