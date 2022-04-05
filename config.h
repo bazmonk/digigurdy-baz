@@ -21,6 +21,8 @@ const int MELODY_VIBRATO = 0;
 //
 // Currently, the rest of the settings assume "1,000 loop()s took: 139ms" per the Serial Monitor output.
 // Teensy3.5 @ 120MHz = 700
+// Teensy4.1 @ 600MHz ~ 3850
+// Teensy4.1 @ 150Mhz ~ 1150
 
 const int SPIN_SAMPLES = 700;
 
@@ -30,7 +32,7 @@ const int SPIN_SAMPLES = 700;
 // you crank to have a "minmum speed limit" before it starts sounding.
 //
 // Especially if you are using a bridge rectifier to have a 2-way crank, you'll want this **as low as you can.**
-const int V_THRESHOLD = 4;
+const int V_THRESHOLD = 5;
 
 // (the equivalent of V_THRESHOLD for buzzing is what the knob does, so there's no variable for it).
 
