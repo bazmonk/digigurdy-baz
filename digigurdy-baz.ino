@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v1.3.3 (testing)]
+// VERSION: v1.3.4 (testing)]
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
@@ -433,6 +433,8 @@ class GurdyCrank {
 
       // Get the average voltage
       sample_mean = sample_sum / float(num_samples);
+      Serial.print("Detection average voltage: ");
+      Serial.println(sample_mean);
 
       // We need the sum of the square of the difference of each value now.
       for (int i = 0; i < num_samples; i++) {
@@ -525,6 +527,12 @@ class GurdyCrank {
 
         Serial.print(" Smoothed: ");
         Serial.print(crank_voltage);
+
+        crank_voltage = crank_voltage - int(sample_mean);
+
+        Serial.print(" Adjusted: ");
+        Serial.print(crank_voltage);
+
         Serial.print("  Buzz: ");
         Serial.println(myKnob->getVoltage());
 
@@ -945,7 +953,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("04 Apr 2022,  1.3.3 ");
+  display.println("04 Apr 2022,  1.3.4 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -2218,7 +2226,7 @@ void about_screen() {
   display.println("---------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("04 Apr 2022,  1.3.3 ");
+  display.println("04 Apr 2022,  1.3.4 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();

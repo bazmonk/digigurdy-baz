@@ -1,7 +1,9 @@
 # digigurdy-baz
 
-**Check out version 1.3.2! (NEW)**
+**Check out version 1.3.4! (NEW)**
 
+* Basic voltage compensation!
+  * Should let you lower your `V_THRESHOLD` and get better crank performance.
 * **Configuration variables are now in a config.h file**
 * Tweaked spin algorithm and values for use with reversible cranks.  Should still work fine with normal cranks!
   * Lower `SPIN_DECAY` if you find it too sensitive at slow speeds before trying to mess with other values.  It'll give you a good place to start.

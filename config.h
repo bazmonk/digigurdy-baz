@@ -20,9 +20,11 @@ const int MELODY_VIBRATO = 0;
 // as quickly as this does.
 //
 // Currently, the rest of the settings assume "1,000 loop()s took: 139ms" per the Serial Monitor output.
-// Teensy3.5 @ 120MHz = 700
-// Teensy4.1 @ 600MHz ~ 3850
-// Teensy4.1 @ 150Mhz ~ 1150
+// Teensy3.5 @ 120MHz = 700   <-- full 3.5 speed
+// Teensy3.5 @  72Mhz = 240   <-- this seems to work fine... 
+// Teensy3.5 @  48Mhz = 100   <-- more like 160ms... this is so-so-stable. 
+// Teensy4.1 @ 600MHz ~ 3850  <-- full 4.1 speed... seems unnecessary
+// Teensy4.1 @ 150Mhz ~ 1150  <-- seems fine
 
 const int SPIN_SAMPLES = 700;
 
