@@ -2400,6 +2400,9 @@ bool first_loop = true;
 int test_count = 0;
 int start_time = millis();
 
+int stopped_playing_time = 0;
+bool note_display_off = true;
+
 // The loop() function is repeatedly run by the Teensy unit after setup() completes.
 // This is the main logic of the program and defines how the strings, keys, click, buzz,
 // and buttons acutally behave during play.
@@ -2603,7 +2606,9 @@ void loop() {
     mydrone->soundKill();
     mybuzz->soundKill();
 
-    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
+    // Mark the time we stopped playing and trip the turn-off-the-display flag
+    stopped_playing_time = millis();
+    note_display_off = false;
 
   // If the crank stops and the toggle was off, turn off sound.
   } else if (mycrank->stoppedSpinning() && !bigbutton->toggleOn()) {
@@ -2613,7 +2618,19 @@ void loop() {
     mytromp->soundOff();
     mydrone->soundOff();
     mybuzz->soundOff();
-    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
+
+    stopped_playing_time = millis();
+    note_display_off = false;
+  };
+
+  // Once the sound stops, track the time until a fifth of a second has passed, then go back to the
+  // non-playing display.  This just makes the display looks a bit nicer even if the sound jitters a
+  // little.  It's subtle but I like the touch.
+  if (!note_display_off && !bigbutton->toggleOn() && !mycrank->isSpinning()) {
+    if ((millis() - stopped_playing_time) > 200) {
+      note_display_off = true;
+      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mydrone->getVolume(), mytromp->getVolume());
+    };
   };
 
   // Apparently we need to do this to discard incoming data.
