@@ -23,6 +23,12 @@ static const int EEPROM_TROMP = 3;
 static const int EEPROM_BUZZ = 4;
 static const int EEPROM_TPOSE = 5;
 static const int EEPROM_CAPO = 6;
+static const int EEPROM_HI_MEL_VOL = 7;
+static const int EEPROM_LOW_MEL_VOL = 8;
+static const int EEPROM_DRONE_VOL = 9;
+static const int EEPROM_TROMP_VOL = 10;
+static const int EEPROM_BUZZ_VOL = 11;
+static const int EEPROM_KEYCLICK_VOL = 12;
 
 // This int saves the play screen type.  0 = note + staff, 1 = note only;
 static const int EEPROM_DISPLY_TYPE = 100;

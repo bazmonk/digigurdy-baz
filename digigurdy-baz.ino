@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v1.3.2 (testing)]
+// VERSION: v1.3.3 (testing)]
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
@@ -945,7 +945,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("04 Apr 2022,  1.3.2 ");
+  display.println("04 Apr 2022,  1.3.3 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -1861,8 +1861,8 @@ void manual_tuning_screen() {
     " 2) Lo Mel.- " + NoteNum[mylowstring->getOpenNote()] + " \n"
     " 3) Drone. - " + NoteNum[mydrone->getOpenNote()] + " \n"
     " 4) Tromp. - " + NoteNum[mytromp->getOpenNote()] + " \n"
-    "                     \n"
-    " X or 5) Go Back     \n";
+    " 5) Buzz   - " + NoteNum[mybuzz->getOpenNote()] + "  \n"
+    " X or 6) Go Back     \n";
 
     display.print(disp_str.c_str());
     display.display();
@@ -1873,6 +1873,7 @@ void manual_tuning_screen() {
     my3Button->update();
     my4Button->update();
     my5Button->update();
+    my6Button->update();
     myBackButton->update();
 
     if (my1Button->wasPressed()) {
@@ -1887,7 +1888,10 @@ void manual_tuning_screen() {
     } else if (my4Button->wasPressed()) {
       tune_string_screen(mytromp);
 
-    } else if (my5Button->wasPressed() || myBackButton->wasPressed()) {
+    } else if (my5Button->wasPressed()) {
+      tune_string_screen(mybuzz);
+
+    } else if (my6Button->wasPressed() || myBackButton->wasPressed()) {
       return;
     };
   };
@@ -2214,7 +2218,7 @@ void about_screen() {
   display.println("---------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("04 Apr 2022,  1.3.2 ");
+  display.println("04 Apr 2022,  1.3.3 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
