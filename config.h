@@ -18,6 +18,9 @@ const int MELODY_VIBRATO = 0;
 // You do what you want, but in my opinion, this should be left alone in lieu of adjusting the SPIN
 // and BUZZ variables below.  I'd only adjust this to make a faster Teensy or other controller run
 // as quickly as this does.
+//
+// Currently, the rest of the settings assume "1,000 loop()s took: 139ms" per the Serial Monitor output.
+// Teensy3.5 @ 120MHz = 700
 
 const int SPIN_SAMPLES = 700;
 
