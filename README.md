@@ -1,6 +1,15 @@
 # digigurdy-baz
 
-**Check out version 1.3.4! (NEW)**
+**Check out version 1.4.0! (NEW)**
+
+* **Manual volume control of all channels!**
+  * Volume saves with tuning in save slots.
+  * Gurdy starts up with an even volume on all channels (like before).  Presets do *not* carry volume info.
+* Chanter/melody string on/off control!
+* Renaming of the O/OK key and Capo key (the key next to it) to A and B respectively
+  * This is both for clarity, and because the keys no longer stick to those functions.
+
+Other "testing" branch changes since v1.0:
 
 * Basic voltage compensation!
   * Should let you lower your `V_THRESHOLD` and get better crank performance.
@@ -10,9 +19,6 @@
   * Raise `V_THRESHOLD` if you get "phantom" cranking.  I *strongly recommend* you slightly modify your crank motor by grounding it to the negative wire somehow.  In my tests it significantly elminates a lot of the noise from the crank sampling and allows you to have a hair-trigger crank and great responsiveness.
   * Raise `BUZZ_SMOOTHING` to make coups smoother, lower it to allow you to make coups faster.  Buzzing is separate from the `SPIN_` variables entirely so don't adjust them in an attempt to influence the buzz.  Because you can adjust the buzz voltage on-the-fly with the knob, this shouldn't require much adjustment.  
 * Cranking uses a rolling average to calculate voltage now.
-
-Other "testing" branch changes since v1.0:
-
 * No need to manually edit display library header file to specify resolution (for white OLEDs)
   * Stock Adafruit_SSD1306 library works out-of-the-box, no weird half-screen.
 * Formatting/look-n-feel tweaks.
@@ -125,13 +131,13 @@ Here's a quick video explaining the controls:
 
 https://www.youtube.com/watch?v=yC0skMH7qog
 
-The keys for navigating the menus work much like the original code did.  The bottom row represent number choices in menus, 1-6 starting from the left.  The "OK" or "O" button is the top right, and the "Back" or "X" button is the top left:
+The keys for navigating the menus work much like the original code did.  The bottom row represent number choices in menus, 1-6 starting from the left.  The "A" button is the top right button, "B" is the one next to that, and the "X" button is the top left:
 
-![keybox pic](https://raw.githubusercontent.com/wiki/bazmonk/digigurdy-baz/keys-full.jpeg)
+![keybox pic](https://raw.githubusercontent.com/wiki/bazmonk/digigurdy-baz/keycombos.jpeg)
 
 During play, these are all the "hidden" keycombos:
-* "X" + "O" = Pause menu: save/load/change tuning, turn drones on/off
-* "X" + "Capo" = Toggle through capos (just like the button on newer ones)
+* "X" + "A" = Pause menu: save/load/change tuning, turn drones on/off
+* "X" + "B" = Toggle through capos (just like the button on newer ones)
 * "1" + Tpose Down or Tpose Up = Transpose up and down (just like the buttons on newer ones)
 
 ### Startup
@@ -163,11 +169,11 @@ The third "extra" button toggles between a whole-note or two-whole-note capo on 
 
 ### Re-Tuning, Saving
 
-At any time during play, pressing the X and O (top left and right keys) at the same time brings up the Pause Menu.  This is a lot like the Startup Menu, except here you have an option to save your current tuning instead of the startup options.
+At any time during play, pressing the X and A (top left and right keys) at the same time brings up the Pause Menu.  This is a lot like the Startup Menu, except here you have an option to save your current tuning instead of the startup options.
 
 There are four save slots available to you.  They preserve the tunings and capo/transpose settings.
 
-Hitting the 'O' button in the Pause Menu toggles through muting options on the drone and trompette strings.  Your current mute settings will be reflected on the main screen.
+Hitting the 'A' button in the Pause Menu toggles through muting options on the drone and trompette strings.  Your current mute settings will be reflected on the main screen.
   * Drone/trompette mute settings are not part of the save settings and must be set every play session.
 
 ## I tried it and I don't like it.  Now what?
