@@ -903,6 +903,12 @@ bool gc_or_dg;
 // 3 = drone off, tromp on
 int drone_mode = 0;
 
+// similarly to drone_mode...
+// 0 = all on
+// 1 = high on, low off
+// 2 = high off, low on
+int mel_mode = 0;
+
 // Teensy and Arduino units start by running setup() once after powering up.
 // Here we establish how the "gurdy" is setup, what strings to use, and we also
 // start the MIDI communication.
@@ -2321,11 +2327,9 @@ void pause_screen() {
     display.setCursor(0, 0);
     std::string disp_str = ""
     " ----Pause  Menu---- \n"
-    " 1) Load Tuning      \n"
-    " 2) Save This Tuning \n"
-    " 3) New Tuning Setup \n"
-    " 4) Other Options  \n\n"
-    " X or 5) Go Back     \n";
+    " 1) Load    2) Save  \n"
+    " 3) New     4) Other \n\n"
+    " X or 5) Go Back     \n\n";
 
     if (drone_mode == 0) {
       disp_str = disp_str + "A) Drone:On ,Trmp:On \n";
@@ -2335,6 +2339,14 @@ void pause_screen() {
       disp_str = disp_str + "A) Drone:On, Trmp:Off\n";
     } else if (drone_mode == 3) {
       disp_str = disp_str + "A) Drone:Off,Trmp:On \n";
+    };
+
+    if (mel_mode == 0) {
+      disp_str = disp_str + "B) High:On ,  Low:On \n";
+    } else if (mel_mode == 1) {
+      disp_str = disp_str + "B) High:On ,  Low:Off\n";
+    } else if (mel_mode == 2) {
+      disp_str = disp_str + "B) High:Off,  Low:On \n";
     };
 
     display.print(disp_str.c_str());
@@ -2348,6 +2360,7 @@ void pause_screen() {
     my5Button->update();
     myXButton->update();
     myAButton->update();
+    myBButton->update();
 
     if (my1Button->wasPressed()) {
       if (load_tuning_screen()) {
@@ -2388,6 +2401,20 @@ void pause_screen() {
         drone_mode = 0; // 0 == both on
         mydrone->setMute(false);
         mytromp->setMute(false);
+      };
+    } else if (myBButton->wasPressed()) {
+      if (mel_mode == 0) {
+        mel_mode = 1; // 1 == high on, low off
+        mystring->setMute(false);
+        mylowstring->setMute(true);
+      } else if (mel_mode == 1) {
+        mel_mode = 2; // 2 == high off, low on
+        mystring->setMute(true);
+        mylowstring->setMute(false);
+      } else if (mel_mode == 2) {
+        mel_mode = 0; // 0 == high on, low on
+        mystring->setMute(false);
+        mylowstring->setMute(false);
       };
     };
   };
