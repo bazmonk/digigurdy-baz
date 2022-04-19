@@ -2,6 +2,9 @@
 
 **Check out version 1.4.0! (NEW)**
 
+* **Manual volume control of all channels!**
+  * Volume saves with tuning in save slots.
+  * Gurdy starts up with an even volume on all channels (like before).  Presets do *not* carry volume info.
 * Chanter/melody string on/off control!
 * Renaming of the O/OK key and Capo key (the key next to it) to A and B respectively
   * This is both for clarity, and because the keys no longer stick to those functions.
