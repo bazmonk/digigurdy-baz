@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v1.3.4 (testing)]
+// VERSION: v1.4.0 (testing)]
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
@@ -229,6 +229,7 @@ class GurdyString {
     int open_note;          // This string's base note
     int midi_channel;       // This string's MIDI channel (1-8)
     int midi_volume;        // 0-127, I'm using 56 everywhere right now
+    bool mute_on = false;   // Controls the mute feature
     int note_being_played;  // The note being sounded (base note + key offset)
                             // This is necessary to turn off notes before turning on new ones.
 
@@ -254,14 +255,16 @@ class GurdyString {
     // because of that.
     void soundOn(int my_offset = 0, int my_modulation = 0) {
       note_being_played = open_note + my_offset;
-      usbMIDI.sendNoteOn(note_being_played, midi_volume, midi_channel);
-      MIDI_obj->sendNoteOn(note_being_played, midi_volume, midi_channel);
+      if (!mute_on) {
+        usbMIDI.sendNoteOn(note_being_played, midi_volume, midi_channel);
+        MIDI_obj->sendNoteOn(note_being_played, midi_volume, midi_channel);
 
-      // If modulation isn't zero, send that as a MIDI CC for this channel
-      // This is meant to be configured to create a gentle vibrato.
-      if (my_modulation > 0) {
-        usbMIDI.sendControlChange(1, my_modulation, midi_channel);
-        MIDI_obj->sendControlChange(1, my_modulation, midi_channel);
+        // If modulation isn't zero, send that as a MIDI CC for this channel
+        // This is meant to be configured to create a gentle vibrato.
+        if (my_modulation > 0) {
+          usbMIDI.sendControlChange(1, my_modulation, midi_channel);
+          MIDI_obj->sendControlChange(1, my_modulation, midi_channel);
+        }
       }
     };
 
@@ -294,6 +297,10 @@ class GurdyString {
     int getVolume() {
       return midi_volume;
     };
+
+    void setMute(bool mute) {
+      mute_on = mute;
+    }
 };
 
 // BuzzKnob manages the potentiometer knob that adjusts the buzzing threshold.
@@ -953,7 +960,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("04 Apr 2022,  1.3.4 ");
+  display.println("04 Apr 2022,  1.4.0 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -2226,7 +2233,7 @@ void about_screen() {
   display.println("---------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("04 Apr 2022,  1.3.4 ");
+  display.println("04 Apr 2022,  1.4.0 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -2366,20 +2373,20 @@ void pause_screen() {
     } else if (myOkButton->wasPressed()) {
       if (drone_mode == 0) {
         drone_mode = 1; // 1 == both off
-        mydrone->setVolume(0);
-        mytromp->setVolume(0);
+        mydrone->setMute(true);
+        mytromp->setMute(true);
       } else if (drone_mode == 1) {
         drone_mode = 2; // 2 == drone on, tromp off
-        mydrone->setVolume(56);
-        mytromp->setVolume(0);
+        mydrone->setMute(false);
+        mytromp->setMute(true);
       } else if (drone_mode == 2) {
         drone_mode = 3; // 3 == drone off, tromp on
-        mydrone->setVolume(0);
-        mytromp->setVolume(56);
+        mydrone->setMute(true);
+        mytromp->setMute(false);
       } else if (drone_mode == 3) {
         drone_mode = 0; // 0 == both on
-        mydrone->setVolume(56);
-        mytromp->setVolume(56);
+        mydrone->setMute(false);
+        mytromp->setMute(false);
       };
     };
   };
