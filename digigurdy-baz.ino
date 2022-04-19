@@ -836,7 +836,7 @@ SerialMIDI<HardwareSerial> mySerialMIDI(Serial1);
 // Create a new MidiInterface object using that serial interface
 MidiInterface<SerialMIDI<HardwareSerial>> *myMIDI;
 
-// This is for the crank
+// This is for the crank, the audio-to-digital chip
 ADC* adc;
 
 // Declare the "keybox" and buttons.
@@ -847,8 +847,8 @@ GurdyCrank *mycrank;
 // As musical keys, these are referred to in the mygurdy object above.
 // This declaration of them is specifically for their use as navigational
 // buttons in the menu screens.  ok = O, back = X.
-KeyboxButton *myOkButton;
-KeyboxButton *myBackButton;
+KeyboxButton *myAButton;
+KeyboxButton *myXButton;
 KeyboxButton *my1Button;
 KeyboxButton *my2Button;
 KeyboxButton *my3Button;
@@ -860,7 +860,7 @@ KeyboxButton *my6Button;
 KeyboxButton *myAltTposeButton;
 KeyboxButton *myAltTposeUp;
 KeyboxButton *myAltTposeDown;
-KeyboxButton *myAltCapo;
+KeyboxButton *myBButton;
 
 // Note that there aren't special classes for melody, drone, even the keyclick.
 // They are differentiated in the main loop():
@@ -1004,8 +1004,9 @@ void setup() {
   bigbutton = new ToggleButton(39);
 
   // These indices are defined in the CONFIG SECTION
-  myBackButton = mygurdy->keybox[BACK_INDEX];
-  myOkButton = mygurdy->keybox[OK_INDEX];
+  myXButton = mygurdy->keybox[X_INDEX];
+  myAButton = mygurdy->keybox[A_INDEX];
+  myBButton = mygurdy->keybox[B_INDEX];
 
   my1Button = mygurdy->keybox[BUTTON_1_INDEX];
   my2Button = mygurdy->keybox[BUTTON_2_INDEX];
@@ -1016,7 +1017,7 @@ void setup() {
 
   myAltTposeUp = mygurdy->keybox[TPOSE_UP_INDEX];
   myAltTposeDown = mygurdy->keybox[TPOSE_DN_INDEX];
-  myAltCapo = mygurdy->keybox[CAPO_INDEX];
+
 
   // Which channel is which doesn't really matter, but I'm sticking with
   // John's channels so his videos on setting it up with a tablet/phone still work.
@@ -1051,7 +1052,7 @@ void setup() {
 // First-time hackers of this code: the loop() at the end of this is the main()
 // of ardruino/teensy programs.  It runs in an endless loop.  The welcome_screen()
 // is the first screen that comes after startup if you're trying to track down the flow.
-// The pause_screen() is what comes up when X+O is pressed.  The rest of the functions/screens
+// The pause_screen() is what comes up when X+A is pressed.  The rest of the functions/screens
 // get called from them.  Hope that helps you find the part you care about!
 
 // load_preset_tunings accepts an int between 1-4 and sets the appropriate preset.
@@ -1146,7 +1147,7 @@ void tuning_hi_melody() {
   " 3) " + NoteNum[choice3] + "     4) " + NoteNum[choice4] + "     \n"
   "                     \n"
   "                     \n"
-  " O) Default (**)     \n"
+  " A) Default (**)     \n"
   "                     \n";
 
   display.print(disp_str.c_str());
@@ -1160,9 +1161,9 @@ void tuning_hi_melody() {
     my2Button->update();
     my3Button->update();
     my4Button->update();
-    myOkButton->update();
+    myAButton->update();
 
-    if (my1Button->wasPressed() || myOkButton->wasPressed()) {
+    if (my1Button->wasPressed() || myAButton->wasPressed()) {
       mystring->setOpenNote(choice1);
       done = true;
     } else if (my2Button->wasPressed()) {
@@ -1209,7 +1210,7 @@ void tuning_low_melody() {
   " 3) " + NoteNum[choice3] + "     4) " + NoteNum[choice4] + "     \n"
   "                     \n"
   "                     \n"
-  " O) Default (**)     \n"
+  " A) Default (**)     \n"
   "                     \n";
 
   display.print(disp_str.c_str());
@@ -1223,9 +1224,9 @@ void tuning_low_melody() {
     my2Button->update();
     my3Button->update();
     my4Button->update();
-    myOkButton->update();
+    myAButton->update();
 
-    if (my1Button->wasPressed() || myOkButton->wasPressed()) {
+    if (my1Button->wasPressed() || myAButton->wasPressed()) {
       mylowstring->setOpenNote(choice1);
       done = true;
     } else if (my2Button->wasPressed()) {
@@ -1282,7 +1283,7 @@ void tuning_drone() {
   " 5) " + NoteNum[choice5] + "     6) " + NoteNum[choice6] + "     \n"
   "                     \n"
   "                     \n"
-  " O) Default (**)     \n";
+  " A) Default (**)     \n";
 
   display.print(disp_str.c_str());
   display.display();
@@ -1297,7 +1298,7 @@ void tuning_drone() {
     my4Button->update();
     my5Button->update();
     my6Button->update();
-    myOkButton->update();
+    myAButton->update();
 
     if (my1Button->wasPressed()) {
       mydrone->setOpenNote(choice1);
@@ -1305,7 +1306,7 @@ void tuning_drone() {
     } else if (my2Button->wasPressed()) {
       mydrone->setOpenNote(choice2);
       done = true;
-    } else if (my3Button->wasPressed() || myOkButton->wasPressed()) {
+    } else if (my3Button->wasPressed() || myAButton->wasPressed()) {
       mydrone->setOpenNote(choice3);
       done = true;
     } else if (my4Button->wasPressed()) {
@@ -1356,7 +1357,7 @@ void tuning_tromp() {
   " 3) " + NoteNum[choice3] + "     4) " + NoteNum[choice4] + "     \n"
   " 5) " + NoteNum[choice5] + "     6) " + NoteNum[choice6] + "     \n"
   "                     \n"
-  " O) Default (**)     \n";
+  " A) Default (**)     \n";
 
   display.print(disp_str.c_str());
   display.display();
@@ -1371,9 +1372,9 @@ void tuning_tromp() {
     my4Button->update();
     my5Button->update();
     my6Button->update();
-    myOkButton->update();
+    myAButton->update();
 
-    if (my1Button->wasPressed() || myOkButton->wasPressed()) {
+    if (my1Button->wasPressed() || myAButton->wasPressed()) {
       mytromp->setOpenNote(choice1);
       done = true;
     } else if (my2Button->wasPressed()) {
@@ -1441,7 +1442,7 @@ bool view_slot_screen(int slot_num) {
   if (EEPROM.read(slot + EEPROM_CAPO) > 0) { display.print("+"); };
   display.print(EEPROM.read(slot + EEPROM_CAPO));
   display.print("\n");
-  display.print(" O or 1) Accept \n");
+  display.print(" A or 1) Accept \n");
   display.print(" X or 2) Go Back  \n");
 
   display.display();
@@ -1452,14 +1453,14 @@ bool view_slot_screen(int slot_num) {
     // Check the 1 and 2 buttons
     my1Button->update();
     my2Button->update();
-    myOkButton->update();
-    myBackButton->update();
+    myAButton->update();
+    myXButton->update();
 
-    if (my1Button->wasPressed() || myOkButton->wasPressed()) {
+    if (my1Button->wasPressed() || myAButton->wasPressed()) {
       load_saved_tunings(slot);
       done = true;
 
-    } else if (my2Button->wasPressed() || myBackButton->wasPressed()) {
+    } else if (my2Button->wasPressed() || myXButton->wasPressed()) {
       return false;
     };
   };
@@ -1500,7 +1501,7 @@ bool view_preset_screen(int preset) {
   if (tunings[6] > 0) { display.print("+"); };
   display.print(tunings[6]);
   display.print("\n");
-  display.print(" O or 1) Accept  \n");
+  display.print(" A or 1) Accept  \n");
   display.print(" X or 2) Go Back  \n");
 
   display.display();
@@ -1511,14 +1512,14 @@ bool view_preset_screen(int preset) {
     // Check the 1 and 2 buttons
     my1Button->update();
     my2Button->update();
-    myOkButton->update();
-    myBackButton->update();
+    myAButton->update();
+    myXButton->update();
 
-    if (my1Button->wasPressed() || myOkButton->wasPressed()) {
+    if (my1Button->wasPressed() || myAButton->wasPressed()) {
       load_preset_tunings(preset);
       done = true;
 
-    } else if (my2Button->wasPressed() || myBackButton->wasPressed()) {
+    } else if (my2Button->wasPressed() || myXButton->wasPressed()) {
       return false;
     };
   };
@@ -1555,7 +1556,7 @@ bool load_saved_screen() {
     my3Button->update();
     my4Button->update();
     my5Button->update();
-    myBackButton->update();
+    myXButton->update();
 
     if (my1Button->wasPressed()) {
       if (view_slot_screen(1)) { done = true; };
@@ -1569,7 +1570,7 @@ bool load_saved_screen() {
     } else if (my4Button->wasPressed()) {
       if (view_slot_screen(4)) { done = true; };
 
-    } else if (my5Button->wasPressed() || myBackButton->wasPressed()) {
+    } else if (my5Button->wasPressed() || myXButton->wasPressed()) {
       return false;
     };
   };
@@ -1605,7 +1606,7 @@ bool load_preset_screen() {
     my3Button->update();
     my4Button->update();
     my5Button->update();
-    myBackButton->update();
+    myXButton->update();
 
     if (my1Button->wasPressed()) {
       if (view_preset_screen(1)) {done = true;};
@@ -1617,7 +1618,7 @@ bool load_preset_screen() {
       if (view_preset_screen(3)) {done = true;};
     } else if (my4Button->wasPressed()) {
       if (view_preset_screen(4)) {done = true;};
-    } else if (my5Button->wasPressed() || myBackButton->wasPressed()) {
+    } else if (my5Button->wasPressed() || myXButton->wasPressed()) {
       return false;
     };
   };
@@ -1650,7 +1651,7 @@ void playing_options_screen() {
     // Check the 1 and 2 buttons
     my1Button->update();
     my2Button->update();
-    myBackButton->update();
+    myXButton->update();
 
     if (my1Button->wasPressed()) {
 
@@ -1689,7 +1690,7 @@ void playing_options_screen() {
       display.display();
       delay(750);
       done = true;
-    } else if (myBackButton->wasPressed()) {
+    } else if (myXButton->wasPressed()) {
       done = true;
     };
   };
@@ -1723,7 +1724,7 @@ void options_screen() {
     // Check the 1 and 2 buttons
     my1Button->update();
     my2Button->update();
-    myBackButton->update();
+    myXButton->update();
 
     if (my1Button->wasPressed()) {
 
@@ -1746,7 +1747,7 @@ void options_screen() {
     } else if (my2Button->wasPressed()) {
       playing_options_screen();
       done = true;
-    } else if (myBackButton->wasPressed()) {
+    } else if (myXButton->wasPressed()) {
       done = true;
     };
   };
@@ -1831,7 +1832,7 @@ void tune_string_screen(GurdyString *this_string) {
 
     my1Button->update();
     my2Button->update();
-    myBackButton->update();
+    myXButton->update();
 
     if (my1Button->wasPressed()) {
       if (new_note > 24) {
@@ -1853,7 +1854,7 @@ void tune_string_screen(GurdyString *this_string) {
         new_note += 1;
         delay(150);
       };
-    } else if (myBackButton->wasPressed()) {
+    } else if (myXButton->wasPressed()) {
       this_string->setOpenNote(new_note);
       done = true;
     };
@@ -1889,7 +1890,7 @@ void manual_tuning_screen() {
     my4Button->update();
     my5Button->update();
     my6Button->update();
-    myBackButton->update();
+    myXButton->update();
 
     if (my1Button->wasPressed()) {
       tune_string_screen(mystring);
@@ -1906,7 +1907,7 @@ void manual_tuning_screen() {
     } else if (my5Button->wasPressed()) {
       tune_string_screen(mybuzz);
 
-    } else if (my6Button->wasPressed() || myBackButton->wasPressed()) {
+    } else if (my6Button->wasPressed() || myXButton->wasPressed()) {
       return;
     };
   };
@@ -1941,7 +1942,7 @@ bool tuning() {
     my2Button->update();
     my3Button->update();
     my4Button->update();
-    myBackButton->update();
+    myXButton->update();
 
     if (my1Button->wasPressed()) {
       gc_or_dg = true;
@@ -1955,7 +1956,7 @@ bool tuning() {
       manual_tuning_screen();
       return true;
 
-    } else if (my4Button->wasPressed() || myBackButton->wasPressed()) {
+    } else if (my4Button->wasPressed() || myXButton->wasPressed()) {
       return false;
     };
   };
@@ -1977,7 +1978,7 @@ bool tuning() {
   "        Drone:   " + NoteNum[mydrone->getOpenNote()] + "  \n"
   "    Trompette:   " + NoteNum[mytromp->getOpenNote()] + "  \n"
   "                     \n"
-  "O or 1) Accept     \n"
+  "A or 1) Accept     \n"
   "X or 2) Go Back    \n";
 
   display.print(disp_str.c_str());
@@ -1989,14 +1990,14 @@ bool tuning() {
     // Check the 1 and 2 buttons
     my1Button->update();
     my2Button->update();
-    myOkButton->update();
-    myBackButton->update();
+    myAButton->update();
+    myXButton->update();
 
-    if (myOkButton->wasPressed() || my1Button->wasPressed()) {
+    if (myAButton->wasPressed() || my1Button->wasPressed()) {
       done = true;
       return true;
 
-    } else if (myBackButton->wasPressed() || my2Button->wasPressed()) {
+    } else if (myXButton->wasPressed() || my2Button->wasPressed()) {
       return false;
       done = true;
     };
@@ -2029,7 +2030,7 @@ bool load_tuning_screen() {
     my1Button->update();
     my2Button->update();
     my3Button->update();
-    myBackButton->update();
+    myXButton->update();
 
     if (my1Button->wasPressed()) {
       if (load_preset_screen()) {
@@ -2041,7 +2042,7 @@ bool load_tuning_screen() {
         done = true;
       };
 
-    } else if (my3Button->wasPressed() || myBackButton->wasPressed()) {
+    } else if (my3Button->wasPressed() || myXButton->wasPressed()) {
       return false;
     };
   };
@@ -2078,12 +2079,12 @@ bool check_save_tuning(int slot) {
 
       my1Button->update();
       my2Button->update();
-      myBackButton->update();
+      myXButton->update();
 
       if (my1Button->wasPressed()) {
         return true;
 
-      } else if (my2Button->wasPressed() || myBackButton->wasPressed()) {
+      } else if (my2Button->wasPressed() || myXButton->wasPressed()) {
         return false;
       };
     };
@@ -2120,7 +2121,7 @@ void save_tuning_screen() {
     my2Button->update();
     my3Button->update();
     my4Button->update();
-    myBackButton->update();
+    myXButton->update();
 
     if (my1Button->wasPressed()) {
       if (check_save_tuning(EEPROM_SLOT1)) {
@@ -2150,7 +2151,7 @@ void save_tuning_screen() {
         done = true;
       };
 
-    } else if (myBackButton->wasPressed()) {
+    } else if (myXButton->wasPressed()) {
       // Just return.
       return;
     };
@@ -2239,9 +2240,9 @@ void about_screen() {
   display.display();
 
   while (true) {
-    myBackButton->update();
+    myXButton->update();
 
-    if(myBackButton->wasPressed()) {
+    if(myXButton->wasPressed()) {
       break;
     };
   };
@@ -2260,9 +2261,9 @@ void about_screen() {
   display.display();
 
   while (true) {
-    myBackButton->update();
+    myXButton->update();
 
-    if(myBackButton->wasPressed()) {
+    if(myXButton->wasPressed()) {
       break;
     };
   };
@@ -2291,7 +2292,7 @@ bool other_options_screen() {
     my1Button->update();
     my2Button->update();
     my3Button->update();
-    myBackButton->update();
+    myXButton->update();
 
     if (my1Button->wasPressed()) {
       redetect_crank_screen();
@@ -2300,7 +2301,7 @@ bool other_options_screen() {
     } else if (my2Button->wasPressed()) {
       about_screen();
 
-    } else if (my3Button->wasPressed() || myBackButton->wasPressed()) {
+    } else if (my3Button->wasPressed() || myXButton->wasPressed()) {
       return false;
     };
   };
@@ -2308,7 +2309,7 @@ bool other_options_screen() {
   return true;
 };
 
-// This is the screen that X+O gets you.
+// This is the screen that X+A gets you.
 void pause_screen() {
 
   bool done = false;
@@ -2327,13 +2328,13 @@ void pause_screen() {
     " X or 5) Go Back     \n";
 
     if (drone_mode == 0) {
-      disp_str = disp_str + "O) Drone:On ,Trmp:On \n";
+      disp_str = disp_str + "A) Drone:On ,Trmp:On \n";
     } else if (drone_mode == 1) {
-      disp_str = disp_str + "O) Drone:Off,Trmp:Off\n";
+      disp_str = disp_str + "A) Drone:Off,Trmp:Off\n";
     } else if (drone_mode == 2) {
-      disp_str = disp_str + "O) Drone:On, Trmp:Off\n";
+      disp_str = disp_str + "A) Drone:On, Trmp:Off\n";
     } else if (drone_mode == 3) {
-      disp_str = disp_str + "O) Drone:Off,Trmp:On \n";
+      disp_str = disp_str + "A) Drone:Off,Trmp:On \n";
     };
 
     display.print(disp_str.c_str());
@@ -2345,8 +2346,8 @@ void pause_screen() {
     my3Button->update();
     my4Button->update();
     my5Button->update();
-    myBackButton->update();
-    myOkButton->update();
+    myXButton->update();
+    myAButton->update();
 
     if (my1Button->wasPressed()) {
       if (load_tuning_screen()) {
@@ -2367,10 +2368,10 @@ void pause_screen() {
         done = true;
       };
 
-    } else if (my5Button->wasPressed() || myBackButton->wasPressed()) {
+    } else if (my5Button->wasPressed() || myXButton->wasPressed()) {
       done = true;
 
-    } else if (myOkButton->wasPressed()) {
+    } else if (myAButton->wasPressed()) {
       if (drone_mode == 0) {
         drone_mode = 1; // 1 == both off
         mydrone->setMute(true);
@@ -2447,11 +2448,11 @@ void loop() {
   tpose_down->update();
   capo->update();
 
-  myOkButton->update();
-  myBackButton->update();
+  myAButton->update();
+  myXButton->update();
 
   // If the "X" and "O" buttons are both down, trigger the tuning menu
-  if (myOkButton->beingPressed() && myBackButton->beingPressed()) {
+  if (myAButton->beingPressed() && myXButton->beingPressed()) {
 
     // Turn off the sound :-)
     mystring->soundOff();
@@ -2471,7 +2472,7 @@ void loop() {
 
   // Check for a capo shift.
   if (capo->wasPressed() ||
-      (myBackButton->beingPressed() && myAltCapo->wasPressed())) {
+      (myXButton->beingPressed() && myBButton->wasPressed())) {
 
     capo_offset += 2;
 
