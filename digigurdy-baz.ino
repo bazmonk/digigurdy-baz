@@ -305,6 +305,11 @@ class GurdyString {
     bool getMute() {
       return mute_on;
     };
+
+    void setProgram(uint8_t program) {
+      usbMIDI.sendProgramChange(program, midi_channel);
+      MIDI_obj->sendProgramChange(program, midi_channel);
+    }
 };
 
 // BuzzKnob manages the potentiometer knob that adjusts the buzzing threshold.
@@ -767,6 +772,7 @@ void draw_note(int note, int x_offset) {
 
 
 int play_screen_type = 0;
+uint8_t scene_signal_type = 0;
 
 static const int dot_pos[] = {
   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -1059,7 +1065,18 @@ void setup() {
   capo = new GurdyButton(23); // The capo button
   capo_offset = 0;
 
+  scene_signal_type = EEPROM.read(EEPROM_SCENE_SIGNALLING);
 };
+
+void signal_scene_change(int scene_idx) {
+  if (scene_signal_type == 1) {
+    // Signal as a Program Control message on Channel 1
+    mystring->setProgram(scene_idx);
+  } else {
+    // 0 = Do nothing
+    // While this should be 0, if there is bad data we'll just ignore it and do nothing.
+  }
+}
 
 // ##############
 // MENU FUNCTIONS
@@ -1500,6 +1517,7 @@ bool view_slot_screen(int slot_num) {
 
     if (my1Button->wasPressed() || myAButton->wasPressed()) {
       load_saved_tunings(slot);
+      signal_scene_change(slot_num + 3); // Zero indexed and first 4 are reserved for presets
       done = true;
 
     } else if (my2Button->wasPressed() || myXButton->wasPressed()) {
@@ -1559,6 +1577,7 @@ bool view_preset_screen(int preset) {
 
     if (my1Button->wasPressed() || myAButton->wasPressed()) {
       load_preset_tunings(preset);
+      signal_scene_change(preset - 1); // Zero indexed
       done = true;
 
     } else if (my2Button->wasPressed() || myXButton->wasPressed()) {
@@ -1667,6 +1686,47 @@ bool load_preset_screen() {
   return true;
 };
 
+// This screen lets you choose how the gurdy indicates the turning to the controller
+void scene_options_screen() {
+  bool done = false;
+  while (!done) {
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 0);
+    std::string disp_str = ""
+    " - Choose           -\n"
+    " - Scene Signalling -\n"
+    " Select an Option:   \n"
+    "                     \n"
+    " 1) None             \n"
+    " 2) Program Control:1\n"
+    "                     \n"
+    " X) Go Back          \n";
+
+    display.print(disp_str.c_str());
+    display.display();
+
+
+    // Check the buttons
+    my1Button->update();
+    my2Button->update();
+    myXButton->update();
+
+    if (my1Button->wasPressed()) {
+      scene_signal_type = 0;
+      EEPROM.write(EEPROM_SCENE_SIGNALLING, scene_signal_type);
+      done = true;
+    } else if (my2Button->wasPressed()) {
+      scene_signal_type = 1;
+      EEPROM.write(EEPROM_SCENE_SIGNALLING, scene_signal_type);
+      done = true;
+    } else if (myXButton->wasPressed()) {
+      done = true;
+    }
+  }
+}
+
 // This screen lets you choose what kind of display you want.
 void playing_options_screen() {
   bool done = false;
@@ -1754,8 +1814,8 @@ void options_screen() {
     " Select an Option:   \n"
     "                     \n"
     " 1) Clear EEPROM     \n"
-    "                     \n"
     " 2) Playing Screen   \n"
+    " 3) Scene Control    \n"
     "                     \n"
     " X) Go Back          \n";
 
@@ -1766,6 +1826,7 @@ void options_screen() {
     // Check the 1 and 2 buttons
     my1Button->update();
     my2Button->update();
+    my3Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {
@@ -1788,6 +1849,9 @@ void options_screen() {
 
     } else if (my2Button->wasPressed()) {
       playing_options_screen();
+      done = true;
+    } else if (my3Button->wasPressed()) {
+      scene_options_screen();
       done = true;
     } else if (myXButton->wasPressed()) {
       done = true;
