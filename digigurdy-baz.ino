@@ -1678,7 +1678,7 @@ void playing_options_screen() {
     my2Button->update();
     myBackButton->update();
 
-    if (myOkButton->wasPressed()) {
+    if (my1Button->wasPressed()) {
 
       play_screen_type = 0;
       EEPROM.write(EEPROM_DISPLY_TYPE, 0);
