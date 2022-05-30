@@ -32,3 +32,9 @@ static const int EEPROM_KEYCLICK_VOL = 12;
 
 // This int saves the play screen type.  0 = note + staff, 1 = note only;
 static const int EEPROM_DISPLY_TYPE = 100;
+
+// This int saves how saved tunings are conveyed to the midi controller.
+// 0 = nothing is done (default and old style)
+// 1 = Conveyed as a Program Control message on channel 1
+// ... Reserved for future use
+static const int EEPROM_SCENE_SIGNALLING = 101;
