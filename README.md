@@ -3,7 +3,7 @@
 **Check out version 1.4.1! (NEW)**
 
 * bs16i scene switching with tuning change!
-  * When enabled, if you have scenes (bs16i "presets") set up and assigned to numbers, this will tell bs16i to automatically switch scenes when you change to a preset or saved tuning slot.  The first four bs16i scenes go with the four preset tunings, and the next four go with the save slots.  More info below.
+  * When enabled, if you have scenes (bs16i "presets") set up and assigned to numbers, this will tell bs16i to automatically switch scenes when you change to a preset or saved tuning slot.  The first four bs16i scenes go with the four preset tunings, and the next four go with the save slots.  [More info below.](https://github.com/bazmonk/digigurdy-baz/tree/testing#bs16i-scene-switching)
 * **Manual volume control of all channels!**
   * Volume saves with tuning in save slots.
   * Gurdy starts up with an even volume on all channels (like before).  Presets do *not* carry volume info.
