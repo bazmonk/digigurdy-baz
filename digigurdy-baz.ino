@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v1.4.0 (testing)]
+// VERSION: v1.4.1 (testing)]
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
@@ -984,7 +984,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("04 Apr 2022,  1.4.0 ");
+  display.println("04 Apr 2022,  1.4.1 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -1695,12 +1695,11 @@ void scene_options_screen() {
     display.setTextColor(WHITE);
     display.setCursor(0, 0);
     std::string disp_str = ""
-    " - Choose           -\n"
-    " - Scene Signalling -\n"
+    " -Scene Signalliing- \n"
     " Select an Option:   \n"
     "                     \n"
     " 1) None             \n"
-    " 2) Program Control:1\n"
+    " 2) Prog Chg, Ch. 1  \n"
     "                     \n"
     " X) Go Back          \n";
 
@@ -2472,7 +2471,7 @@ void about_screen() {
   display.println("---------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("04 Apr 2022,  1.4.0 ");
+  display.println("30 May 2022,  1.4.1 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -2496,6 +2495,7 @@ void about_screen() {
   display.println("John Dingley         ");
   display.println("David Jacobs         ");
   display.println("lune36400            ");
+  display.println("SalusaSecondus       ");
   display.display();
 
   while (true) {

@@ -1,7 +1,9 @@
 # digigurdy-baz
 
-**Check out version 1.4.0! (NEW)**
+**Check out version 1.4.1! (NEW)**
 
+* bs16i scene switching with tuning change!
+  * When enabled, if you have scenes (bs16i "presets") set up and assigned to numbers, this will tell bs16i to automatically switch scenes when you change to a preset or saved tuning slot.  The first four bs16i scenes go with the four preset tunings, and the next four go with the save slots.  More info below.
 * **Manual volume control of all channels!**
   * Volume saves with tuning in save slots.
   * Gurdy starts up with an even volume on all channels (like before).  Presets do *not* carry volume info.
@@ -175,6 +177,18 @@ There are four save slots available to you.  They preserve the tunings and capo/
 
 Hitting the 'A' button in the Pause Menu toggles through muting options on the drone and trompette strings.  Your current mute settings will be reflected on the main screen.
   * Drone/trompette mute settings are not part of the save settings and must be set every play session.
+
+#### bs16i Scene Switching
+
+If you are using bs16i, enable this feature in the options screen to allow the digigurdy to signal it when you change tunings.
+
+How it works:
+* In bs16i, create a "scene"... that's what the app calls a preset.  Choose the instruments and effects you want, etc.
+* Under the Settings->Scenes->Assignment menu, assign it to a number.  0-3 correspond with the four preset tunings on the digigurdy, and tunings 4-7 correspond with the four tuning slots that you can save yourself.
+* Under Settings->CoreMIDI, turn on the "Switch Scenes with Program Change" feature.  You can either use Omni, or Channel 1 (digigurdy will sent on channel 1).
+* Finally, in the digigurdy options screen, enable Scene Control.
+
+Now, when you're using your digigurdy and switch to a preset or a save slot, bs16i will automatically switch to the scene you've configured to go with that tuning!
 
 ## I tried it and I don't like it.  Now what?
 
