@@ -109,6 +109,8 @@ std::string LongNoteNum[] = {
 // Right now not using the std namespace is just impacting strings.  That's ok...
 using namespace MIDI_NAMESPACE;
 
+elapsedMillis the_time;
+
 // #################
 // CLASS DEFINITIONS
 // #################
@@ -354,277 +356,114 @@ class BuzzKnob {
 // class GurdyCrank controls the cranking mechanism, including the buzz triggers.
 class GurdyCrank {
   private:
-    int voltage_pin;
-    static const int num_samples = 500;  // This number is from the original code
-    int samples[num_samples];
-    int sample_sum;
-    float sample_mean;
-    float squared_sum;
-    float deviations;
+    int sensor_pin;
+    float spoke_width = 1.0/80; // 40 spokes, 80 transitions per revolution
+    float v_inst = 0.0;
+    float v_last = 0.0;
+    float v_avg = 0.0;
+    float a_inst = 0.0;
+    float a_last = 0.0;
+    float a_avg = 0.0;
+    int last_event_time;
 
-    int crank_voltage;
-
-    // The original code uses a technique where a counter is incremented by a
-    // large amount up to a max amount when voltage is detected.  When voltage
-    // isn't detected, the counter decays more slowly (about a 5th as quickly).
-    // This "smooths" over momentary fluctuations in the analog voltage from
-    // the crank.  I'm using the same approach here.  To keep things straight,
-    // I'm calling this smoothed value the "spin" of the crank.
-    static const int max_spin = MAX_SPIN;
-    static const int spin_weight = SPIN_WEIGHT;
-    static const int spin_decay = SPIN_DECAY;
-    static const int spin_threshold = SPIN_THRESHOLD;
-    static const int spin_stop_threshold = SPIN_STOP_THRESHOLD;
-    static const int spin_samples = SPIN_SAMPLES;
-    long int sample_total;
-    int spin;
-    bool started_spinning;
-    bool stopped_spinning;
-    bool is_spinning;
-    static const int v_threshold = V_THRESHOLD;
-
-    BuzzKnob* myKnob;
-    bool started_buzzing;
-    bool stopped_buzzing;
-    bool is_buzzing;
-    // This is how many cycles to "smooth" the buzz.  About 20,000 cycles in one second.
-    int buzz_smoothing = BUZZ_SMOOTHING;
-    int buzz_decay = BUZZ_DECAY;
-    int buzz_countdown;
-
-    ADC* myadc;
+    bool last_event;
+    bool this_event;
+    bool has_changed;
+    bool was_spinning = false;
 
   public:
+    // s_pin is the out pin of the optical sensor.  This is pin 15 (same as analog A1)
+    // on a normal didigurdy.  buzz_pin is the out pin of the buzz pot, usually A2 (a.k.a 16).
+    GurdyCrank(int s_pin, int buzz_pin) {
 
-    // v_pin is the voltage pin of the crank.  This is A1 on a normal didigurdy.
-    GurdyCrank(int v_pin, int buzz_pin, ADC* adc_obj) {
+      //myKnob = new BuzzKnob(buzz_pin, adc_obj);
 
-      myKnob = new BuzzKnob(buzz_pin, adc_obj);
-
-      myadc = adc_obj;
-      voltage_pin = v_pin;
-      pinMode(voltage_pin, INPUT);
-
-      crank_voltage = 0;
-      spin = 0;
-      started_spinning = false;
-      stopped_spinning = false;
-      is_spinning = false;
-
-      started_buzzing = false;
-      stopped_buzzing = false;
-      is_buzzing = false;
-      buzz_countdown = buzz_smoothing;
-    };
-
-    void beginPolling() {
-      myadc->adc0->setConversionSpeed(ADC_CONVERSION_SPEED::HIGH_SPEED);
-      myadc->adc0->setSamplingSpeed(ADC_SAMPLING_SPEED::HIGH_SPEED);
-      myadc->adc0->startContinuous(voltage_pin);
-    };
-
-    // Crank detection - this comes from John's code.  We sample the voltage
-    // of the crank's voltage pin 500 times really quick (100/s for 5s).
-    // With that, we calculate the standard deviation of the results.
-    //
-    // My understanding is this: if the motor is connected and at rest, it
-    // will give a consistent very-low voltage.  If the pin is not connected
-    // to anything, its voltage will wander around.  If the results are less than
-    // 10 stDev from the mean, we consdier it detected.
-    //
-    // Moving the crank during the detection *does* throw it off.  Don't do that.
-    void detect() {
-
-      sample_sum = 0;
-      sample_mean = 0;
-      squared_sum = 0;
-      deviations = 0;
-
-      // Read the crank 500 times real quick.
-      for (int i = 0; i < num_samples; i++) {
-        samples[i] = myadc->adc0->analogReadContinuous();
-        sample_sum += samples[i];
-        delay(2);
-      };
-
-      // Get the average voltage
-      sample_mean = sample_sum / float(num_samples);
-      Serial.print("Detection average voltage: ");
-      Serial.println(sample_mean);
-
-      // We need the sum of the square of the difference of each value now.
-      for (int i = 0; i < num_samples; i++) {
-        squared_sum += pow((sample_mean - float(samples[i])), 2);
-      };
-
-      // The square root of the average of *that* is the stardard devitaion.
-      deviations = sqrt(squared_sum / float(num_samples));
+      sensor_pin = s_pin;
+      pinMode(sensor_pin, INPUT_PULLUP);
+      last_event = digitalRead(sensor_pin);
+      last_event_time = the_time;
     };
 
     bool isDetected() {
-      return (deviations < 10);
-    };
-
-    void refreshBuzz() {
-      if (isDetected()) {
-
-        // Buzzing happens if the crank generates more voltage than the
-        // adjusted voltage from the knob.  But this is too jittery.  Instead, we take many rapid
-        // readings, average that, and then use that.  Even smooth, the motors most digigurdies use
-        // are indexed and don't generate consistent voltage.  So we employ two weighted counters
-        // that increase rapidly if voltage is high and then decrese more slowly, and use *those*
-        // to actually determine whether or not to make cranking/buzzing sound.
-        if (crank_voltage > myKnob->getVoltage()) {
-          buzz_countdown = buzz_smoothing;
-        } else if (buzz_countdown > 0) {
-          buzz_countdown -= buzz_decay;
-        };
-
-        if (buzz_countdown > 0) {
-
-          // If we weren't buzzing before this, we just started.
-          if (!is_buzzing) {
-            started_buzzing = true;
-          };
-
-          // If we were already buzzing and started_buzzing last cycle,
-          // we didn't just start buzzing anymore.
-          if (started_buzzing && is_buzzing) {
-            started_buzzing = false;
-          };
-
-          // Now that we checked, we can update this...
-          is_buzzing = true;
-
-        } else {
-
-          // If we were buzzing before, we just stopped.
-          if (is_buzzing) {
-            stopped_buzzing = true;
-          };
-
-          // If we stopped buzzing last cycle, we didn't just stop
-          // anymore.
-          if (stopped_buzzing && !is_buzzing) {
-            stopped_buzzing = false;
-          };
-
-          // Now that we're done checking if we *were* buzzing, we can set this.
-          is_buzzing = false;
-        };
-
-      // If the crank isn't *connected*, the pin will report phantom buzzing,
-      // so if the crank isn't *detected*, don't buzz at all:
-      } else {
-        started_buzzing = false;
-        is_buzzing = false;
-        stopped_buzzing = false;
-      };
+      return true;
     };
 
     // This is meant to be run every loop().
     void update() {
-      if (isDetected()) {
-        // Update the knob first.
-        myKnob->update();
-        refreshBuzz();
 
-        // Poll the crank voltage a few thousand times real quick...
-        for (int x = 0; x < spin_samples; x++) {
-          sample_total += myadc->adc0->analogReadContinuous();
-        };
+      has_changed = false;
+      // We want to wait up to 10ms before deciding if we've stopped or not
+      int this_time = the_time;
+      while ((the_time - this_time < 40) && !has_changed) {
+        this_event = digitalRead(sensor_pin);
 
-        Serial.print("Sampled: ");
-        Serial.print((sample_total / spin_samples));
-
-        // The voltage reading we're using is the average of those.
-        crank_voltage = ((sample_total / spin_samples) + (crank_voltage)) / 2;
-        sample_total = 0;
-
-        Serial.print(" Smoothed: ");
-        Serial.print(crank_voltage);
-
-        crank_voltage = crank_voltage - int(sample_mean);
-
-        Serial.print(" Adjusted: ");
-        Serial.print(crank_voltage);
-
-        Serial.print("  Buzz: ");
-        Serial.println(myKnob->getVoltage());
-
-        // Based on that voltage, we either bump up the spin by the spin_weight,
-        // or we let it decay.
-        if (crank_voltage > v_threshold) {
-          spin += spin_weight;
-          if (spin > max_spin) {
-            spin = max_spin;
-          };
+        // If a transition occurs, continue, otherwise wait a bit and check again
+        if (this_event != last_event) {
+          has_changed = true;
         } else {
-          spin -= spin_decay;
-          if (spin < 0) {
-            spin = 0;
-          };
-        };
+          delay(1);
+        }
+      }
 
-        // The crank is considered spinning if the spin is over spin_threshold.
-        if (spin > spin_threshold) {
+      // Now after up to 10ms, decide if we're moving.
+      if (has_changed) {
+        last_event = this_event;
+        v_inst = spoke_width * 60000.0 / (the_time - last_event_time); // this is rpm.
+        v_avg = (v_inst + v_last) / 2.0;
+        a_inst = (v_inst - v_last) / (the_time - last_event_time);
+        a_avg = (a_inst + a_last) / 2.0;
 
-          // If we weren't spinning before this, we just started.
-          if (!is_spinning) {
-            started_spinning = true;
-          };
-
-          // If we were already spinning and started_spinning last cycle,
-          // we didn't just start spinning anymore.
-          if (started_spinning && is_spinning) {
-            started_spinning = false;
-          };
-
-          // Now that we checked, we can update this...
-          is_spinning = true;
-
-        } else if (spin < spin_stop_threshold) {
-
-          // If we were spinning before, we just stopped.
-          if (is_spinning) {
-            stopped_spinning = true;
-          };
-
-          // If we stopped spinning last cycle, we didn't just stop
-          // anymore.
-          if (stopped_spinning && !is_spinning) {
-            stopped_spinning = false;
-          };
-
-          is_spinning = false;
-        };
-
-      // If the crank wasn't detected, it acts like a crank that never gets spun.
+        v_last = v_inst;
+        a_last = a_inst;
+        last_event_time = the_time;
       } else {
-        is_spinning = false;
-        started_spinning = false;
-        stopped_spinning = false;
-      };
+        v_inst = 0;
+        v_avg = (v_inst + v_last) / 2;
+        a_inst = 0;
+        a_avg = (a_inst + a_last) / 2;
+
+        v_last = v_inst;
+        a_last = a_inst;
+      }
     };
 
     bool startedSpinning() {
-      return started_spinning;
+      if (isSpinning()) {
+        if (!was_spinning) {
+          was_spinning = true;
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
     };
 
     bool stoppedSpinning() {
-      return stopped_spinning;
+      if (!isSpinning()) {
+        if (was_spinning) {
+          was_spinning = false;
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
     };
 
     bool isSpinning() {
-      return is_spinning;
+      Serial.println(v_avg);
+      return (v_avg > 5);
     };
 
     bool startedBuzzing() {
-      return started_buzzing;
+      return false;
     };
 
     bool stoppedBuzzing() {
-      return stopped_buzzing;
+      return false;
     };
 };
 
@@ -1000,9 +839,7 @@ void setup() {
   myMIDI->begin();
 
   adc = new ADC();
-  mycrank = new GurdyCrank(A1, A2, adc);
-  mycrank->beginPolling();
-  mycrank->detect();
+  mycrank = new GurdyCrank(15, A2);
   display.clearDisplay();
   display.setTextSize(2);
   display.setTextColor(WHITE);
@@ -1076,7 +913,7 @@ void signal_scene_change(int scene_idx) {
     // 0 = Do nothing
     // While this should be 0, if there is bad data we'll just ignore it and do nothing.
   }
-}
+};
 
 // ##############
 // MENU FUNCTIONS
@@ -2435,7 +2272,6 @@ void redetect_crank_screen() {
     my1Button->update();
 
     if (my1Button->wasPressed()) {
-      mycrank->detect();
       display.clearDisplay();
       display.setTextSize(2);
       display.setTextColor(WHITE);
