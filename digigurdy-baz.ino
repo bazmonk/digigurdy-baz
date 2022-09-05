@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v1.4.1 (testing)]
+// VERSION: v1.7.1 (testing)]
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
@@ -18,6 +18,7 @@
 // https://www.pjrc.com/teensy/td_libs_MIDI.html
 #include <MIDI.h>
 #include <string>
+#include <ADC.h>
 #include <ADC.h>
 
 // enum Note maps absolute note names to MIDI note numbers (middle C4 = 60),
@@ -109,6 +110,9 @@ std::string LongNoteNum[] = {
 // Right now not using the std namespace is just impacting strings.  That's ok...
 using namespace MIDI_NAMESPACE;
 
+// This is a special Teensyduino internal variable that always returns the elapsed milliseconds
+// since being turned on.  Super-handy!  It might have problems when the variable overflows and
+// rolls over, but that should only happen if you leave it on 49 days straight.
 elapsedMillis the_time;
 
 // #################
@@ -357,13 +361,13 @@ class BuzzKnob {
 class GurdyCrank {
   private:
     int sensor_pin;
-    float spoke_width = 1.0/80; // 40 spokes, 80 transitions per revolution
-    float v_inst = 0.0;
-    float v_last = 0.0;
-    float v_avg = 0.0;
-    float a_inst = 0.0;
-    float a_last = 0.0;
-    float a_avg = 0.0;
+    float spoke_width = 1.0/ (NUM_SPOKES * 2); // 40 spokes, 80 transitions per revolution
+    double v_inst = 0.0;
+    double v_last = 0.0;
+    double v_avg = 0.0;
+    double a_inst = 0.0;
+    double a_last = 0.0;
+    double a_avg = 0.0;
     int last_event_time;
 
     bool last_event;
@@ -371,12 +375,14 @@ class GurdyCrank {
     bool has_changed;
     bool was_spinning = false;
 
+    BuzzKnob* myKnob;
+
   public:
     // s_pin is the out pin of the optical sensor.  This is pin 15 (same as analog A1)
     // on a normal didigurdy.  buzz_pin is the out pin of the buzz pot, usually A2 (a.k.a 16).
-    GurdyCrank(int s_pin, int buzz_pin) {
+ GurdyCrank(int s_pin, int buzz_pin, ADC* adc_obj) {
 
-      //myKnob = new BuzzKnob(buzz_pin, adc_obj);
+      myKnob = new BuzzKnob(buzz_pin, adc_obj);
 
       sensor_pin = s_pin;
       pinMode(sensor_pin, INPUT_PULLUP);
@@ -390,6 +396,8 @@ class GurdyCrank {
 
     // This is meant to be run every loop().
     void update() {
+      myKnob->update();
+      Serial.println(myKnob->getVoltage());
 
       has_changed = false;
       // We want to wait up to 10ms before deciding if we've stopped or not
@@ -454,8 +462,7 @@ class GurdyCrank {
     };
 
     bool isSpinning() {
-      Serial.println(v_avg);
-      return (v_avg > 5);
+      return (v_avg > 0.2);
     };
 
     bool startedBuzzing() {
@@ -823,23 +830,23 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("04 Apr 2022,  1.4.1 ");
+  display.println("05 Sep 2022,  1.7.1 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
   delay(1000);
 
-  // // Un-comment to print yourself debugging messages to the Teensyduino
-  // // serial console.
-  // Serial.begin(38400);
-  // delay(1000);
-  // Serial.println("Hello.");
+  // Un-comment to print yourself debugging messages to the Teensyduino
+  // serial console.
+  Serial.begin(38400);
+  delay(1000);
+  Serial.println("Hello.");
 
   myMIDI = new MidiInterface<SerialMIDI<HardwareSerial>>((SerialMIDI<HardwareSerial>&)mySerialMIDI);
   myMIDI->begin();
 
   adc = new ADC();
-  mycrank = new GurdyCrank(15, A2);
+  mycrank = new GurdyCrank(15, A2, adc);
   display.clearDisplay();
   display.setTextSize(2);
   display.setTextColor(WHITE);
@@ -2307,7 +2314,7 @@ void about_screen() {
   display.println("---------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("30 May 2022,  1.4.1 ");
+  display.println("05 Sep 2022,  1.7.1 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -2510,7 +2517,6 @@ bool note_display_off = true;
 // This is the main logic of the program and defines how the strings, keys, click, buzz,
 // and buttons acutally behave during play.
 void loop() {
-
   // loop() actually runs too fast and gets ahead of hardware calls if it's allowed to run freely.
   // This was noticeable in older versions when the crank got "stuck" and would not buzz and took
   // oddly long to stop playing when the crank stopped moving.
@@ -2750,4 +2756,5 @@ void loop() {
     Serial.print("ms\n");
     start_time = millis();
   }
+  delay(1);
 };

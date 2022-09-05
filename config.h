@@ -10,6 +10,12 @@ const int MELODY_VIBRATO = 0;
 
 // Cranking and buzz behavior:
 
+// NEW FOR OPTICAL CRANKS:
+//
+// The crank algorithm works in terms of the crank's actual velocity and acceleration.  Thus it is
+// necessary to know how many slots there are in a revolution.
+const int NUM_SPOKES = 250;
+
 // We're doing continuous reading of the cranks now, so reads are nearly instantaneous.  To smooth
 // out the voltage so our readings don't wander on their own, we're taking several thousand
 // very fast readings and averaging them to get our "reading" in the code.  This is how many readings
