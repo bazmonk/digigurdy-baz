@@ -1,6 +1,10 @@
 # digigurdy-baz
 
-**Check out version 1.4.1! (NEW)**
+**Check out version 1.7.0! (NEW)**
+
+* OPTICAL CRANK VERSION!
+
+Other "testing" branch changes since v1.0:
 
 * bs16i scene switching with tuning change!
   * When enabled, if you have scenes (bs16i "presets") set up and assigned to numbers, this will tell bs16i to automatically switch scenes when you change to a preset or saved tuning slot.  The first four bs16i scenes go with the four preset tunings, and the next four go with the save slots.  [More info below.](https://github.com/bazmonk/digigurdy-baz/tree/testing#bs16i-scene-switching)
@@ -10,9 +14,6 @@
 * Chanter/melody string on/off control!
 * Renaming of the O/OK key and Capo key (the key next to it) to A and B respectively
   * This is both for clarity, and because the keys no longer stick to those functions.
-
-Other "testing" branch changes since v1.0:
-
 * Basic voltage compensation!
   * Should let you lower your `V_THRESHOLD` and get better crank performance.
 * **Configuration variables are now in a config.h file**
