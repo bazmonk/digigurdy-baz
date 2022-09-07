@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v1.7.1 (testing)]
+// VERSION: v1.7.0 (testing)]
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
@@ -111,9 +111,10 @@ std::string LongNoteNum[] = {
 using namespace MIDI_NAMESPACE;
 
 // This is a special Teensyduino internal variable that always returns the elapsed milliseconds
-// since being turned on.  Super-handy!  It might have problems when the variable overflows and
-// rolls over, but that should only happen if you leave it on 49 days straight.
-elapsedMillis the_time;
+// since being turned on.  Super-handy!
+elapsedMicros the_timer;
+elapsedMicros the_stop_timer;
+elapsedMillis the_knob_timer;
 
 // #################
 // CLASS DEFINITIONS
@@ -323,12 +324,13 @@ class GurdyString {
 class BuzzKnob {
   private:
     int voltage_pin;
-    // We only update the knob 100x less often than the crank.  This still comes out to a couple
-    // times a second.
-    static const int poll_interval = 100;
+    // We only update the knob a couple times a second (this should be about 500ms).
+    static const int poll_interval = 5000;
     int poll_counter;
     int knob_voltage;
     ADC* myadc;
+
+    int last_poll_time;
 
   public:
     BuzzKnob(int v_pin, ADC* adc_obj) {
@@ -343,17 +345,20 @@ class BuzzKnob {
     // This should be run every loop() during play.
     // Reads the knob voltage every poll_interval cycles.
     void update() {
-      poll_counter += 1;
-      if (poll_counter == poll_interval) {
-        poll_counter = 0;
+      if (the_knob_timer > 500) {
+        the_knob_timer = 0;
         knob_voltage = myadc->adc1->analogReadContinuous();
       };
     };
 
-    // Returns an adjusted voltage value suitible
-    // for comparing with the crank's.
+    // Returns an a raw voltage between 0 and 1023.
     float getVoltage() {
-      return (float)(knob_voltage / 2.2);
+      return (float)(knob_voltage);
+    };
+
+    // This returns a weighted value based off the voltage between 60 and 180.
+    float getThreshold() {
+      return (60 + (getVoltage() / 8.5));
     };
 };
 
@@ -361,14 +366,17 @@ class BuzzKnob {
 class GurdyCrank {
   private:
     int sensor_pin;
-    float spoke_width = 1.0/ (NUM_SPOKES * 2); // 40 spokes, 80 transitions per revolution
+    double spoke_width = 1.0 / (NUM_SPOKES * 2.0);
     double v_inst = 0.0;
+    double v_2 = 0.0;
+    double v_3 = 0.0;
+    double v_4 = 0.0;
     double v_last = 0.0;
     double v_avg = 0.0;
     double a_inst = 0.0;
-    double a_last = 0.0;
     double a_avg = 0.0;
-    int last_event_time;
+    unsigned int this_time;
+    unsigned int last_read_time;
 
     bool last_event;
     bool this_event;
@@ -377,17 +385,20 @@ class GurdyCrank {
 
     BuzzKnob* myKnob;
 
+    int trans_count = 0;
+    float rev_count = 0;
+    int same_count = 0;
+
   public:
     // s_pin is the out pin of the optical sensor.  This is pin 15 (same as analog A1)
     // on a normal didigurdy.  buzz_pin is the out pin of the buzz pot, usually A2 (a.k.a 16).
- GurdyCrank(int s_pin, int buzz_pin, ADC* adc_obj) {
+    GurdyCrank(int s_pin, int buzz_pin, ADC* adc_obj) {
 
       myKnob = new BuzzKnob(buzz_pin, adc_obj);
 
       sensor_pin = s_pin;
       pinMode(sensor_pin, INPUT_PULLUP);
       last_event = digitalRead(sensor_pin);
-      last_event_time = the_time;
     };
 
     bool isDetected() {
@@ -396,43 +407,43 @@ class GurdyCrank {
 
     // This is meant to be run every loop().
     void update() {
-      myKnob->update();
-      Serial.println(myKnob->getVoltage());
+      // myKnob->update();
 
-      has_changed = false;
-      // We want to wait up to 10ms before deciding if we've stopped or not
-      int this_time = the_time;
-      while ((the_time - this_time < 40) && !has_changed) {
+      // We check every millisecond at most...
+      if (the_timer > 1000) {
         this_event = digitalRead(sensor_pin);
 
-        // If a transition occurs, continue, otherwise wait a bit and check again
         if (this_event != last_event) {
-          has_changed = true;
-        } else {
-          delay(1);
-        }
-      }
+          last_event = this_event;
 
-      // Now after up to 10ms, decide if we're moving.
-      if (has_changed) {
-        last_event = this_event;
-        v_inst = spoke_width * 60000.0 / (the_time - last_event_time); // this is rpm.
-        v_avg = (v_inst + v_last) / 2.0;
-        a_inst = (v_inst - v_last) / (the_time - last_event_time);
-        a_avg = (a_inst + a_last) / 2.0;
+          trans_count += 1;
+          rev_count = trans_count / (NUM_SPOKES * 2);
 
-        v_last = v_inst;
-        a_last = a_inst;
-        last_event_time = the_time;
-      } else {
-        v_inst = 0;
-        v_avg = (v_inst + v_last) / 2;
-        a_inst = 0;
-        a_avg = (a_inst + a_last) / 2;
+          Serial.println(the_timer);
 
-        v_last = v_inst;
-        a_last = a_inst;
-      }
+          v_inst = (spoke_width * 60000000.0) / (the_timer);
+          v_avg = (v_inst  + v_2 + v_3 + v_4) / 4.0;
+          v_4 = v_3;
+          v_3 = v_2;
+          v_2 = v_inst;
+
+          a_inst = (v_inst - v_last) / (the_timer);
+          a_avg = (a_inst + a_avg) / 2;
+          
+          the_timer = 0;
+
+        } else if (the_stop_timer > 1000) {
+          v_inst = 0.9 * v_inst;
+          v_avg = (v_inst + v_2 + v_3 + v_4) / 4.0;
+          v_4 = v_3;
+          v_3 = v_2;
+          v_2 = v_inst;
+
+          a_inst = (v_inst - v_last) / (the_timer);
+          a_avg = (a_inst + a_avg) / 2;
+          the_stop_timer = 0;
+        };
+      };
     };
 
     bool startedSpinning() {
@@ -462,7 +473,7 @@ class GurdyCrank {
     };
 
     bool isSpinning() {
-      return (v_avg > 0.2);
+      return (v_avg > 5);
     };
 
     bool startedBuzzing() {
@@ -471,6 +482,18 @@ class GurdyCrank {
 
     bool stoppedBuzzing() {
       return false;
+    };
+
+    double getVAvg() {
+      return v_avg;
+    };
+
+    int getCount() {
+      return trans_count;
+    };
+
+    double getRev() {
+      return rev_count;
     };
 };
 
@@ -830,7 +853,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("05 Sep 2022,  1.7.1 ");
+  display.println("05 Sep 2022,  1.7.0 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -838,7 +861,7 @@ void setup() {
 
   // Un-comment to print yourself debugging messages to the Teensyduino
   // serial console.
-  Serial.begin(38400);
+  Serial.begin(115200);
   delay(1000);
   Serial.println("Hello.");
 
@@ -2314,7 +2337,7 @@ void about_screen() {
   display.println("---------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("05 Sep 2022,  1.7.1 ");
+  display.println("05 Sep 2022,  1.7.0 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -2749,12 +2772,16 @@ void loop() {
   };
 
   test_count +=1;
-  if (test_count > 1000) {
+  if (test_count > 100000) {
     test_count = 0;
-    Serial.print("1,000 loop()s took: ");
+    Serial.print("100,000 loop()s took: ");
     Serial.print(millis() - start_time);
-    Serial.print("ms\n");
+    Serial.print("ms.  Avg Velocity: ");
+    Serial.print(mycrank->getVAvg());
+    Serial.print("rpm. Transitions: ");
+    Serial.print(mycrank->getCount());
+    Serial.print(", est. rev: ");
+    Serial.println(mycrank->getRev());
     start_time = millis();
   }
-  delay(1);
 };

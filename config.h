@@ -14,7 +14,9 @@ const int MELODY_VIBRATO = 0;
 //
 // The crank algorithm works in terms of the crank's actual velocity and acceleration.  Thus it is
 // necessary to know how many slots there are in a revolution.
-const int NUM_SPOKES = 250;
+//
+// This is a count of the black/blocking bars on your wheel, not the number of transitions.
+const int NUM_SPOKES = 89;
 
 // We're doing continuous reading of the cranks now, so reads are nearly instantaneous.  To smooth
 // out the voltage so our readings don't wander on their own, we're taking several thousand
