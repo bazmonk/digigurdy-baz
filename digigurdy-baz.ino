@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v1.4.1 (testing)]
+// VERSION: v1.7.5 (new_crank)
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
@@ -108,6 +108,14 @@ std::string LongNoteNum[] = {
 
 // Right now not using the std namespace is just impacting strings.  That's ok...
 using namespace MIDI_NAMESPACE;
+
+// This is a special Teensyduino internal variable that counts up by micro/milliseconds
+// automatically.  It's easy to set these to zero in code and simply wait for it to increment up to
+// some time without using delay() and freezing the entire program.  Using these I can pace the
+// reading of pins n' stuff, but still let the loop run as fast as it can.
+elapsedMicros the_timer;
+elapsedMicros the_stop_timer;
+elapsedMillis the_knob_timer;
 
 // #################
 // CLASS DEFINITIONS
@@ -317,12 +325,13 @@ class GurdyString {
 class BuzzKnob {
   private:
     int voltage_pin;
-    // We only update the knob 100x less often than the crank.  This still comes out to a couple
-    // times a second.
-    static const int poll_interval = 100;
+    // We only update the knob a couple times a second (this should be about 500ms).
+    static const int poll_interval = 5000;
     int poll_counter;
     int knob_voltage;
     ADC* myadc;
+
+    int last_poll_time;
 
   public:
     BuzzKnob(int v_pin, ADC* adc_obj) {
@@ -335,296 +344,209 @@ class BuzzKnob {
     };
 
     // This should be run every loop() during play.
-    // Reads the knob voltage every poll_interval cycles.
+    // Reads the knob voltage second.
     void update() {
-      poll_counter += 1;
-      if (poll_counter == poll_interval) {
-        poll_counter = 0;
+      if (the_knob_timer > 1000) {
+        the_knob_timer = 0;
         knob_voltage = myadc->adc1->analogReadContinuous();
       };
     };
 
-    // Returns an adjusted voltage value suitible
-    // for comparing with the crank's.
+    // Returns an a raw voltage between 0 and 1023.
     float getVoltage() {
-      return (float)(knob_voltage / 2.2);
+      return (float)(knob_voltage);
+    };
+
+    // This returns a weighted value based off the voltage between 60 and 180.
+    float getThreshold() {
+      return (60 + (getVoltage() / 8.5));
     };
 };
 
 // class GurdyCrank controls the cranking mechanism, including the buzz triggers.
+//   * This version is for optical (IR gate) sensors.  The digital pin readings are expected to
+//     oscillate between 0 and 1 only.
+//   * NUM_SPOKES in config.h needs to be defined as the number of "spokes" (dark lines) on your
+//     wheel, not the number of dark+light bars.  Your RPMs will be half-speed if you do that.
 class GurdyCrank {
   private:
-    int voltage_pin;
-    static const int num_samples = 500;  // This number is from the original code
-    int samples[num_samples];
-    int sample_sum;
-    float sample_mean;
-    float squared_sum;
-    float deviations;
+    int sensor_pin;
+    double spoke_width = 1.0 / (NUM_SPOKES * 2.0);
+    double v_inst = 0.0;
+    double v_2 = 0.0;
+    double v_3 = 0.0;
+    double v_4 = 0.0;
+    double v_last = 0.0;
+    double v_avg = 0.0;
+    // double a_inst = 0.0;
+    // double a_avg = 0.0;
+    unsigned int this_time;
+    unsigned int last_read_time;
 
-    int crank_voltage;
+    bool last_event;
+    bool this_event;
+    bool has_changed;
+    bool was_spinning = false;
+    bool was_buzzing = false;
 
-    // The original code uses a technique where a counter is incremented by a
-    // large amount up to a max amount when voltage is detected.  When voltage
-    // isn't detected, the counter decays more slowly (about a 5th as quickly).
-    // This "smooths" over momentary fluctuations in the analog voltage from
-    // the crank.  I'm using the same approach here.  To keep things straight,
-    // I'm calling this smoothed value the "spin" of the crank.
-    static const int max_spin = MAX_SPIN;
-    static const int spin_weight = SPIN_WEIGHT;
-    static const int spin_decay = SPIN_DECAY;
-    static const int spin_threshold = SPIN_THRESHOLD;
-    static const int spin_stop_threshold = SPIN_STOP_THRESHOLD;
-    static const int spin_samples = SPIN_SAMPLES;
-    long int sample_total;
-    int spin;
-    bool started_spinning;
-    bool stopped_spinning;
-    bool is_spinning;
-    static const int v_threshold = V_THRESHOLD;
 
     BuzzKnob* myKnob;
-    bool started_buzzing;
-    bool stopped_buzzing;
-    bool is_buzzing;
-    // This is how many cycles to "smooth" the buzz.  About 20,000 cycles in one second.
-    int buzz_smoothing = BUZZ_SMOOTHING;
-    int buzz_decay = BUZZ_DECAY;
-    int buzz_countdown;
 
-    ADC* myadc;
+    int trans_count = 0;
+    float rev_count = 0;
+    int same_count = 0;
 
   public:
-
-    // v_pin is the voltage pin of the crank.  This is A1 on a normal didigurdy.
-    GurdyCrank(int v_pin, int buzz_pin, ADC* adc_obj) {
+    // s_pin is the out pin of the optical sensor.  This is pin 15 (same as analog A1)
+    // on a normal didigurdy.  buzz_pin is the out pin of the buzz pot, usually A2 (a.k.a 16).
+    GurdyCrank(int s_pin, int buzz_pin, ADC* adc_obj) {
 
       myKnob = new BuzzKnob(buzz_pin, adc_obj);
 
-      myadc = adc_obj;
-      voltage_pin = v_pin;
-      pinMode(voltage_pin, INPUT);
-
-      crank_voltage = 0;
-      spin = 0;
-      started_spinning = false;
-      stopped_spinning = false;
-      is_spinning = false;
-
-      started_buzzing = false;
-      stopped_buzzing = false;
-      is_buzzing = false;
-      buzz_countdown = buzz_smoothing;
-    };
-
-    void beginPolling() {
-      myadc->adc0->setConversionSpeed(ADC_CONVERSION_SPEED::HIGH_SPEED);
-      myadc->adc0->setSamplingSpeed(ADC_SAMPLING_SPEED::HIGH_SPEED);
-      myadc->adc0->startContinuous(voltage_pin);
-    };
-
-    // Crank detection - this comes from John's code.  We sample the voltage
-    // of the crank's voltage pin 500 times really quick (100/s for 5s).
-    // With that, we calculate the standard deviation of the results.
-    //
-    // My understanding is this: if the motor is connected and at rest, it
-    // will give a consistent very-low voltage.  If the pin is not connected
-    // to anything, its voltage will wander around.  If the results are less than
-    // 10 stDev from the mean, we consdier it detected.
-    //
-    // Moving the crank during the detection *does* throw it off.  Don't do that.
-    void detect() {
-
-      sample_sum = 0;
-      sample_mean = 0;
-      squared_sum = 0;
-      deviations = 0;
-
-      // Read the crank 500 times real quick.
-      for (int i = 0; i < num_samples; i++) {
-        samples[i] = myadc->adc0->analogReadContinuous();
-        sample_sum += samples[i];
-        delay(2);
-      };
-
-      // Get the average voltage
-      sample_mean = sample_sum / float(num_samples);
-      Serial.print("Detection average voltage: ");
-      Serial.println(sample_mean);
-
-      // We need the sum of the square of the difference of each value now.
-      for (int i = 0; i < num_samples; i++) {
-        squared_sum += pow((sample_mean - float(samples[i])), 2);
-      };
-
-      // The square root of the average of *that* is the stardard devitaion.
-      deviations = sqrt(squared_sum / float(num_samples));
+      sensor_pin = s_pin;
+      pinMode(sensor_pin, INPUT_PULLUP);
+      last_event = digitalRead(sensor_pin);
     };
 
     bool isDetected() {
-      return (deviations < 10);
-    };
-
-    void refreshBuzz() {
-      if (isDetected()) {
-
-        // Buzzing happens if the crank generates more voltage than the
-        // adjusted voltage from the knob.  But this is too jittery.  Instead, we take many rapid
-        // readings, average that, and then use that.  Even smooth, the motors most digigurdies use
-        // are indexed and don't generate consistent voltage.  So we employ two weighted counters
-        // that increase rapidly if voltage is high and then decrese more slowly, and use *those*
-        // to actually determine whether or not to make cranking/buzzing sound.
-        if (crank_voltage > myKnob->getVoltage()) {
-          buzz_countdown = buzz_smoothing;
-        } else if (buzz_countdown > 0) {
-          buzz_countdown -= buzz_decay;
-        };
-
-        if (buzz_countdown > 0) {
-
-          // If we weren't buzzing before this, we just started.
-          if (!is_buzzing) {
-            started_buzzing = true;
-          };
-
-          // If we were already buzzing and started_buzzing last cycle,
-          // we didn't just start buzzing anymore.
-          if (started_buzzing && is_buzzing) {
-            started_buzzing = false;
-          };
-
-          // Now that we checked, we can update this...
-          is_buzzing = true;
-
-        } else {
-
-          // If we were buzzing before, we just stopped.
-          if (is_buzzing) {
-            stopped_buzzing = true;
-          };
-
-          // If we stopped buzzing last cycle, we didn't just stop
-          // anymore.
-          if (stopped_buzzing && !is_buzzing) {
-            stopped_buzzing = false;
-          };
-
-          // Now that we're done checking if we *were* buzzing, we can set this.
-          is_buzzing = false;
-        };
-
-      // If the crank isn't *connected*, the pin will report phantom buzzing,
-      // so if the crank isn't *detected*, don't buzz at all:
-      } else {
-        started_buzzing = false;
-        is_buzzing = false;
-        stopped_buzzing = false;
-      };
+      return true;
     };
 
     // This is meant to be run every loop().
     void update() {
-      if (isDetected()) {
-        // Update the knob first.
-        myKnob->update();
-        refreshBuzz();
 
-        // Poll the crank voltage a few thousand times real quick...
-        for (int x = 0; x < spin_samples; x++) {
-          sample_total += myadc->adc0->analogReadContinuous();
+      // Check if we need to update the knob reading...
+      myKnob->update();
+
+      // We check every millisecond at most...
+      if (the_timer > SAMPLE_RATE) {
+        this_event = digitalRead(sensor_pin);
+
+        // If there was a transition on the wheel:
+        if (this_event != last_event) {
+          last_event = this_event;
+
+          trans_count += 1;
+          rev_count = trans_count / (NUM_SPOKES * 2);
+
+          // Velocity is converted to rpm (no particular reason except it's easy to imagine how fast
+          // this is in real-world terms.  1 crank per sec is 60rpm, 3 seconds per crank is 20rpm...
+          v_inst = (spoke_width * 60000000.0) / (the_timer);
+
+          v_avg = (v_inst + v_2 + v_3 + v_4) / 4.0;
+          v_4 = v_3;
+          v_3 = v_2;
+          v_2 = v_inst;
+
+          // I'm not using acceleration here but I'm wondering if it's useful, so I'm leaving these
+          // comments.
+          // a_inst = (v_inst - v_last) / (the_timer);
+          // a_avg = (a_inst + a_avg) / 2;
+
+          Serial.print("+ Time: ");
+          Serial.print(the_timer);
+          Serial.print(" V_inst: ");
+          Serial.print(v_inst);
+          Serial.print(" V_avg: ");
+          Serial.print(v_avg);
+          Serial.print(" Knob: ");
+          Serial.println(myKnob->getThreshold());
+
+          the_timer = 0;
+          the_stop_timer = 0;
+
+        // If there was no transition after 10ms, decay the velocity.
+      } else if (the_stop_timer > DECAY_RATE) {
+          v_inst = DECAY_FACTOR * v_inst;
+          v_avg = (v_inst + v_2 + v_3 + v_4) / 4.0;
+          v_4 = v_3;
+          v_3 = v_2;
+          v_2 = v_inst;
+
+          // a_inst = (v_inst - v_last) / (the_timer);
+          // a_avg = (a_inst + a_avg) / 2;
+
+          the_stop_timer = 0;
+
+          Serial.print("- Time: ");
+          Serial.print(the_timer);
+          Serial.print(" V_inst: ");
+          Serial.print(v_inst);
+          Serial.print(" V_avg: ");
+          Serial.print(v_avg);
+          Serial.print(" Knob: ");
+          Serial.println(myKnob->getThreshold());
+
         };
-
-        Serial.print("Sampled: ");
-        Serial.print((sample_total / spin_samples));
-
-        // The voltage reading we're using is the average of those.
-        crank_voltage = ((sample_total / spin_samples) + (crank_voltage)) / 2;
-        sample_total = 0;
-
-        Serial.print(" Smoothed: ");
-        Serial.print(crank_voltage);
-
-        crank_voltage = crank_voltage - int(sample_mean);
-
-        Serial.print(" Adjusted: ");
-        Serial.print(crank_voltage);
-
-        Serial.print("  Buzz: ");
-        Serial.println(myKnob->getVoltage());
-
-        // Based on that voltage, we either bump up the spin by the spin_weight,
-        // or we let it decay.
-        if (crank_voltage > v_threshold) {
-          spin += spin_weight;
-          if (spin > max_spin) {
-            spin = max_spin;
-          };
-        } else {
-          spin -= spin_decay;
-          if (spin < 0) {
-            spin = 0;
-          };
-        };
-
-        // The crank is considered spinning if the spin is over spin_threshold.
-        if (spin > spin_threshold) {
-
-          // If we weren't spinning before this, we just started.
-          if (!is_spinning) {
-            started_spinning = true;
-          };
-
-          // If we were already spinning and started_spinning last cycle,
-          // we didn't just start spinning anymore.
-          if (started_spinning && is_spinning) {
-            started_spinning = false;
-          };
-
-          // Now that we checked, we can update this...
-          is_spinning = true;
-
-        } else if (spin < spin_stop_threshold) {
-
-          // If we were spinning before, we just stopped.
-          if (is_spinning) {
-            stopped_spinning = true;
-          };
-
-          // If we stopped spinning last cycle, we didn't just stop
-          // anymore.
-          if (stopped_spinning && !is_spinning) {
-            stopped_spinning = false;
-          };
-
-          is_spinning = false;
-        };
-
-      // If the crank wasn't detected, it acts like a crank that never gets spun.
-      } else {
-        is_spinning = false;
-        started_spinning = false;
-        stopped_spinning = false;
       };
     };
 
     bool startedSpinning() {
-      return started_spinning;
+      if (isSpinning()) {
+        if (!was_spinning) {
+          was_spinning = true;
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
     };
 
     bool stoppedSpinning() {
-      return stopped_spinning;
+      if (!isSpinning()) {
+        if (was_spinning) {
+          was_spinning = false;
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
     };
 
     bool isSpinning() {
-      return is_spinning;
+      return (v_avg > V_THRESHOLD);
     };
 
     bool startedBuzzing() {
-      return started_buzzing;
+      if (getVAvg() > myKnob->getThreshold()) {
+        if (!was_buzzing) {
+          was_buzzing = true;
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
     };
 
     bool stoppedBuzzing() {
-      return stopped_buzzing;
+      if (getVAvg() <= myKnob->getThreshold()) {
+        if (was_buzzing) {
+          was_buzzing = false;
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    };
+
+    double getVAvg() {
+      return v_avg;
+    };
+
+    int getCount() {
+      return trans_count;
+    };
+
+    double getRev() {
+      return rev_count;
     };
 };
 
@@ -984,25 +906,23 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("04 Apr 2022,  1.4.1 ");
+  display.println("07 Sep 2022,  1.7.5 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
   delay(1000);
 
-  // // Un-comment to print yourself debugging messages to the Teensyduino
-  // // serial console.
-  // Serial.begin(38400);
-  // delay(1000);
-  // Serial.println("Hello.");
+  // Un-comment to print yourself debugging messages to the Teensyduino
+  // serial console.
+  Serial.begin(115200);
+  delay(1000);
+  Serial.println("Hello.");
 
   myMIDI = new MidiInterface<SerialMIDI<HardwareSerial>>((SerialMIDI<HardwareSerial>&)mySerialMIDI);
   myMIDI->begin();
 
   adc = new ADC();
-  mycrank = new GurdyCrank(A1, A2, adc);
-  mycrank->beginPolling();
-  mycrank->detect();
+  mycrank = new GurdyCrank(15, A2, adc);
   display.clearDisplay();
   display.setTextSize(2);
   display.setTextColor(WHITE);
@@ -1076,7 +996,7 @@ void signal_scene_change(int scene_idx) {
     // 0 = Do nothing
     // While this should be 0, if there is bad data we'll just ignore it and do nothing.
   }
-}
+};
 
 // ##############
 // MENU FUNCTIONS
@@ -2435,7 +2355,6 @@ void redetect_crank_screen() {
     my1Button->update();
 
     if (my1Button->wasPressed()) {
-      mycrank->detect();
       display.clearDisplay();
       display.setTextSize(2);
       display.setTextColor(WHITE);
@@ -2471,7 +2390,7 @@ void about_screen() {
   display.println("---------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("30 May 2022,  1.4.1 ");
+  display.println("05 Sep 2022,  1.7.5 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -2674,7 +2593,6 @@ bool note_display_off = true;
 // This is the main logic of the program and defines how the strings, keys, click, buzz,
 // and buttons acutally behave during play.
 void loop() {
-
   // loop() actually runs too fast and gets ahead of hardware calls if it's allowed to run freely.
   // This was noticeable in older versions when the crank got "stuck" and would not buzz and took
   // oddly long to stop playing when the crank stopped moving.
@@ -2907,11 +2825,16 @@ void loop() {
   };
 
   test_count +=1;
-  if (test_count > 1000) {
+  if (test_count > 100000) {
     test_count = 0;
-    Serial.print("1,000 loop()s took: ");
+    Serial.print("100,000 loop()s took: ");
     Serial.print(millis() - start_time);
-    Serial.print("ms\n");
+    Serial.print("ms.  Avg Velocity: ");
+    Serial.print(mycrank->getVAvg());
+    Serial.print("rpm. Transitions: ");
+    Serial.print(mycrank->getCount());
+    Serial.print(", est. rev: ");
+    Serial.println(mycrank->getRev());
     start_time = millis();
   }
 };
