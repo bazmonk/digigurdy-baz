@@ -110,8 +110,10 @@ std::string LongNoteNum[] = {
 // Right now not using the std namespace is just impacting strings.  That's ok...
 using namespace MIDI_NAMESPACE;
 
-// This is a special Teensyduino internal variable that always returns the elapsed milliseconds
-// since being turned on.  Super-handy!
+// This is a special Teensyduino internal variable that counts up by micro/milliseconds
+// automatically.  It's easy to set these to zero in code and simply wait for it to increment up to
+// some time without using delay() and freezing the entire program.  Using these I can pace the
+// reading of pins n' stuff, but still let the loop run as fast as it can.
 elapsedMicros the_timer;
 elapsedMicros the_stop_timer;
 elapsedMillis the_knob_timer;
@@ -363,6 +365,10 @@ class BuzzKnob {
 };
 
 // class GurdyCrank controls the cranking mechanism, including the buzz triggers.
+//   * This version is for optical (IR gate) sensors.  The digital pin readings are expected to
+//     oscillate between 0 and 1 only.
+//   * NUM_SPOKES in config.h needs to be defined as the number of "spokes" (dark lines) on your
+//     wheel, not the number of dark+light bars.  Your RPMs will be half-speed if you do that.
 class GurdyCrank {
   private:
     int sensor_pin;
@@ -413,25 +419,37 @@ class GurdyCrank {
       if (the_timer > 1000) {
         this_event = digitalRead(sensor_pin);
 
+        // If there was a transition on the wheel:
         if (this_event != last_event) {
           last_event = this_event;
 
           trans_count += 1;
           rev_count = trans_count / (NUM_SPOKES * 2);
 
-          Serial.println(the_timer);
-
+          // Velocity is converted to rpm (no particular reason except it's easy to imagine how fast
+          // this is in real-world terms.  1 crank per sec is 60rpm, 3 seconds per crank is 20rpm...
           v_inst = (spoke_width * 60000000.0) / (the_timer);
+
           v_avg = (v_inst  + v_2 + v_3 + v_4) / 4.0;
           v_4 = v_3;
           v_3 = v_2;
           v_2 = v_inst;
 
-          a_inst = (v_inst - v_last) / (the_timer);
-          a_avg = (a_inst + a_avg) / 2;
-          
+          // I'm not using acceleration here but I'm wondering if it's useful, so I'm leaving these
+          // comments.
+          // a_inst = (v_inst - v_last) / (the_timer);
+          // a_avg = (a_inst + a_avg) / 2;
+
+          Serial.print("+ Time: ");
+          Serial.print(the_timer);
+          Serial.print(" V_avg: ");
+          Serial.print(v_avg);
+          Serial.print(" Knob: ");
+          Serial.println(myKnob->getThreshold());
+
           the_timer = 0;
 
+        // If there was no transition after 1ms, decay the velocity.
         } else if (the_stop_timer > 1000) {
           v_inst = 0.9 * v_inst;
           v_avg = (v_inst + v_2 + v_3 + v_4) / 4.0;
@@ -439,9 +457,18 @@ class GurdyCrank {
           v_3 = v_2;
           v_2 = v_inst;
 
-          a_inst = (v_inst - v_last) / (the_timer);
-          a_avg = (a_inst + a_avg) / 2;
+          // a_inst = (v_inst - v_last) / (the_timer);
+          // a_avg = (a_inst + a_avg) / 2;
+
           the_stop_timer = 0;
+
+          Serial.print("- Time: ");
+          Serial.print(the_timer);
+          Serial.print(" V_avg: ");
+          Serial.print(v_avg);
+          Serial.print(" Knob: ");
+          Serial.println(myKnob->getThreshold());
+
         };
       };
     };
