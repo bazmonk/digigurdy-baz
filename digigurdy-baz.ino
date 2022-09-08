@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v1.7.0 (testing)]
+// VERSION: v1.7.5 (new_crank)
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
@@ -18,7 +18,6 @@
 // https://www.pjrc.com/teensy/td_libs_MIDI.html
 #include <MIDI.h>
 #include <string>
-#include <ADC.h>
 #include <ADC.h>
 
 // enum Note maps absolute note names to MIDI note numbers (middle C4 = 60),
@@ -420,7 +419,7 @@ class GurdyCrank {
       myKnob->update();
 
       // We check every millisecond at most...
-      if (the_timer > 1000) {
+      if (the_timer > SAMPLE_RATE) {
         this_event = digitalRead(sensor_pin);
 
         // If there was a transition on the wheel:
@@ -457,8 +456,8 @@ class GurdyCrank {
           the_stop_timer = 0;
 
         // If there was no transition after 10ms, decay the velocity.
-        } else if (the_stop_timer > 10000) {
-          v_inst = 0.2 * v_inst;
+      } else if (the_stop_timer > DECAY_RATE) {
+          v_inst = DECAY_FACTOR * v_inst;
           v_avg = (v_inst + v_2 + v_3 + v_4) / 4.0;
           v_4 = v_3;
           v_3 = v_2;
@@ -509,7 +508,7 @@ class GurdyCrank {
     };
 
     bool isSpinning() {
-      return (v_avg > 9);
+      return (v_avg > V_THRESHOLD);
     };
 
     bool startedBuzzing() {
@@ -907,7 +906,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("05 Sep 2022,  1.7.0 ");
+  display.println("07 Sep 2022,  1.7.5 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -2391,7 +2390,7 @@ void about_screen() {
   display.println("---------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("05 Sep 2022,  1.7.0 ");
+  display.println("05 Sep 2022,  1.7.5 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
