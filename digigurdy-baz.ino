@@ -345,9 +345,9 @@ class BuzzKnob {
     };
 
     // This should be run every loop() during play.
-    // Reads the knob voltage every poll_interval cycles.
+    // Reads the knob voltage second.
     void update() {
-      if (the_knob_timer > 500) {
+      if (the_knob_timer > 1000) {
         the_knob_timer = 0;
         knob_voltage = myadc->adc1->analogReadContinuous();
       };
@@ -379,8 +379,8 @@ class GurdyCrank {
     double v_4 = 0.0;
     double v_last = 0.0;
     double v_avg = 0.0;
-    double a_inst = 0.0;
-    double a_avg = 0.0;
+    // double a_inst = 0.0;
+    // double a_avg = 0.0;
     unsigned int this_time;
     unsigned int last_read_time;
 
@@ -388,6 +388,8 @@ class GurdyCrank {
     bool this_event;
     bool has_changed;
     bool was_spinning = false;
+    bool was_buzzing = false;
+
 
     BuzzKnob* myKnob;
 
@@ -413,7 +415,9 @@ class GurdyCrank {
 
     // This is meant to be run every loop().
     void update() {
-      // myKnob->update();
+
+      // Check if we need to update the knob reading...
+      myKnob->update();
 
       // We check every millisecond at most...
       if (the_timer > 1000) {
@@ -430,7 +434,7 @@ class GurdyCrank {
           // this is in real-world terms.  1 crank per sec is 60rpm, 3 seconds per crank is 20rpm...
           v_inst = (spoke_width * 60000000.0) / (the_timer);
 
-          v_avg = (v_inst  + v_2 + v_3 + v_4) / 4.0;
+          v_avg = (v_inst + v_2 + v_3 + v_4) / 4.0;
           v_4 = v_3;
           v_3 = v_2;
           v_2 = v_inst;
@@ -442,16 +446,19 @@ class GurdyCrank {
 
           Serial.print("+ Time: ");
           Serial.print(the_timer);
+          Serial.print(" V_inst: ");
+          Serial.print(v_inst);
           Serial.print(" V_avg: ");
           Serial.print(v_avg);
           Serial.print(" Knob: ");
           Serial.println(myKnob->getThreshold());
 
           the_timer = 0;
+          the_stop_timer = 0;
 
-        // If there was no transition after 1ms, decay the velocity.
-        } else if (the_stop_timer > 1000) {
-          v_inst = 0.9 * v_inst;
+        // If there was no transition after 10ms, decay the velocity.
+        } else if (the_stop_timer > 10000) {
+          v_inst = 0.2 * v_inst;
           v_avg = (v_inst + v_2 + v_3 + v_4) / 4.0;
           v_4 = v_3;
           v_3 = v_2;
@@ -464,6 +471,8 @@ class GurdyCrank {
 
           Serial.print("- Time: ");
           Serial.print(the_timer);
+          Serial.print(" V_inst: ");
+          Serial.print(v_inst);
           Serial.print(" V_avg: ");
           Serial.print(v_avg);
           Serial.print(" Knob: ");
@@ -500,15 +509,33 @@ class GurdyCrank {
     };
 
     bool isSpinning() {
-      return (v_avg > 5);
+      return (v_avg > 9);
     };
 
     bool startedBuzzing() {
-      return false;
+      if (getVAvg() > myKnob->getThreshold()) {
+        if (!was_buzzing) {
+          was_buzzing = true;
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
     };
 
     bool stoppedBuzzing() {
-      return false;
+      if (getVAvg() <= myKnob->getThreshold()) {
+        if (was_buzzing) {
+          was_buzzing = false;
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
     };
 
     double getVAvg() {
