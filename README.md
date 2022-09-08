@@ -1,8 +1,16 @@
 # digigurdy-baz
 
-**Check out version 1.7.0! (NEW)**
+**Check out version 1.7.5! (NEW)**
 
-* OPTICAL CRANK VERSION!
+* OPTICAL CRANK VERSION!  Versions above v1.5 will be for John's new IR-sensor based crank design.
+  * It's smooth!
+  * Buzzing acts better.
+  * The `config.h` file contains all-new parameters for adjusting the crank behavior.  There's less of them, and they're easier to understand in terms of what they actually do.
+  * This code expects to have the sensor hooked up to it directly, *not* through a TeensyLC.
+    * This will be explained [in a wiki page here soon](https://github.com/bazmonk/digigurdy-baz/wiki/optical_setup).
+    * Long story short, the OUT pin of the sensor goes straight to the same pin on the Teensy as the crank did before (that's pin 15, a.k.a. A1).  You need to run 3.3v (NOT 5v, do not do that) to the sensor.  I'm grabbing it off the voltage wire going to the buzz potentiometer because it's somewhat accessible on my unit w/o taking it all apart. 
+  * **The motor-crank version of the code is still available in the [v1.4.1 branch of this repo](https://github.com/bazmonk/digigurdy-baz/tree/v1.4.1).**  It will continue to get bug fixes and any UI improvements that carry over from future versions.
+  * This code has only been tested on Teensy4.1, Adafruit ("WHITE") screen.  The BLUE screen isn't tested and likely doesn't work.  Teensy3.5 is untested, but likely does work just fine.
 
 Other "testing" branch changes since v1.0:
 
