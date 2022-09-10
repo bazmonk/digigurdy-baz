@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v1.7.5 (new_crank)
+// VERSION: v1.7.6 (dynamic samplite rate)
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
@@ -906,7 +906,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("07 Sep 2022,  1.7.5 ");
+  display.println("10 Sep 2022,  1.7.6 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -2390,7 +2390,7 @@ void about_screen() {
   display.println("---------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("05 Sep 2022,  1.7.5 ");
+  display.println("10 Sep 2022,  1.7.6 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
