@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v1.7.6 (dynamic samplite rate)
+// VERSION: v1.7.7 (dynamic samplite rate)
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
@@ -118,6 +118,7 @@ elapsedMicros the_read_timer;
 elapsedMicros the_spoke_timer;
 elapsedMicros the_stop_timer;
 elapsedMillis the_knob_timer;
+elapsedMillis the_buzz_timer;
 
 // #################
 // CLASS DEFINITIONS
@@ -380,10 +381,14 @@ class GurdyCrank {
     double v_2 = 0.0;
     double v_3 = 0.0;
     double v_4 = 0.0;
+    double v_5 = 0.0;
+    double v_6 = 0.0;
+    double v_7 = 0.0;
+    double v_8 = 0.0;
     double v_avg = 0.0;
 
     unsigned int this_time;
-    unsigned int lt_1, lt_2, lt_3, lt_4 = 0;
+    unsigned int lt_1, lt_2, lt_3, lt_4, lt_5, lt_6, lt_7, lt_8 = 0;
     float lt_avg;
     float lt_stdev;
 
@@ -431,6 +436,10 @@ class GurdyCrank {
           rev_count = trans_count / (NUM_SPOKES * 2);
 
           // Rotate our last four velocity values
+          // v_8 = v_7;
+          // v_7 = v_6;
+          v_6 = v_5;
+          v_5 = v_4;
           v_4 = v_3;
           v_3 = v_2;
           v_2 = v_smooth;
@@ -442,27 +451,33 @@ class GurdyCrank {
           // reading of this transition with the last as we go, as a preliminary smoothing technique.
           v_last = v_inst;
           v_inst = (spoke_width * 60000000.0) / (the_spoke_timer);
-          v_smooth = (v_inst + v_last) / 2.0;
 
-          v_avg = (v_smooth + v_2 + v_3 + v_4) / 4.0;
+          //v_smooth = (v_inst + v_last) / 2.0;
+          v_smooth = v_inst;
 
-          if (v_smooth - v_2 < 0) {
-            v_avg = v_avg + ((v_smooth - v_2) / 2.0);
-          };
-          
+          v_avg = (v_smooth + v_2 + v_3 + v_4 + v_5 + v_6) / 6.0;
+
+          // if (v_smooth - v_2 < 0) {
+          //   v_avg = v_avg + ((v_smooth - v_2) / 2.0);
+          // };
+
           //v_avg = (0.8 * ((v_2 + v_3 + v_4) / 3)) + (0.2 * v_smooth);
 
           // Rotate our last times
+          lt_8 = lt_7;
+          lt_7 = lt_6;
+          lt_6 = lt_5;
+          lt_5 = lt_4;
           lt_4 = lt_3;
           lt_3 = lt_2;
           lt_2 = lt_1;
           lt_1 = the_spoke_timer;
 
           // Calculate the average of the last four times between readings
-          lt_avg = (lt_1 + lt_2 + lt_3 + lt_4) / 4.0;
+          lt_avg = (lt_1 + lt_2 + lt_3 + lt_4 + lt_5 + lt_6 + lt_7 + lt_8) / 8.0;
 
           // Calculate the standard deviation of the last four times.
-          lt_stdev = sqrt(((pow((lt_1 - lt_avg), 2) + pow((lt_2 - lt_avg), 2) + pow((lt_3 - lt_avg), 2) + pow((lt_4 - lt_avg), 2)) / 4.0));
+          lt_stdev = sqrt((pow((lt_1 - lt_avg), 2) + pow((lt_2 - lt_avg), 2) + pow((lt_3 - lt_avg), 2) + pow((lt_4 - lt_avg), 2) + pow((lt_5 - lt_avg), 2) + pow((lt_6 - lt_avg), 2) + pow((lt_7 - lt_avg), 2) + pow((lt_8 - lt_avg), 2)) / 8.0);
 
           Serial.print("MOVED,");
           Serial.print(v_smooth);
@@ -483,28 +498,36 @@ class GurdyCrank {
         } else if (the_stop_timer > (lt_avg + (lt_stdev * 3.0)) || the_stop_timer > MAX_WAIT_TIME) {
 
           // Rotate our last four velocity values
+          // v_8 = v_7;
+          // v_7 = v_6;
+          v_6 = v_5;
+          v_5 = v_4;
           v_4 = v_3;
           v_3 = v_2;
           v_2 = v_smooth;
 
           v_smooth = v_smooth * DECAY_FACTOR;
-          v_avg = (v_smooth + v_2 + v_3 + v_4) / 4.0;
+          v_avg = (v_smooth + v_2 + v_3 + v_4 + v_5 + v_6) / 6.0;
 
-          if (v_smooth - v_2 < 0) {
-            v_avg = v_avg + ((v_smooth - v_2) / 1.5);
-          };
-          
+          // if (v_smooth - v_2 < 0) {
+          //   v_avg = v_avg + ((v_smooth - v_2) / 1.5);
+          // };
+
           // Rotate our last times
+          lt_8 = lt_7;
+          lt_7 = lt_6;
+          lt_6 = lt_5;
+          lt_5 = lt_4;
           lt_4 = lt_3;
           lt_3 = lt_2;
           lt_2 = lt_1;
           lt_1 = the_spoke_timer;
 
           // Calculate the average of the last four times between readings
-          lt_avg = (lt_1 + lt_2 + lt_3 + lt_4) / 4.0;
+          lt_avg = (lt_1 + lt_2 + lt_3 + lt_4 + lt_5 + lt_6 + lt_7 + lt_8) / 8.0;
 
           // Calculate the standard deviation of the last four times.
-          lt_stdev = sqrt(((pow((lt_1 - lt_avg), 2) + pow((lt_2 - lt_avg), 2) + pow((lt_3 - lt_avg), 2) + pow((lt_4 - lt_avg), 2)) / 4.0));
+          lt_stdev = sqrt((pow((lt_1 - lt_avg), 2) + pow((lt_2 - lt_avg), 2) + pow((lt_3 - lt_avg), 2) + pow((lt_4 - lt_avg), 2) + pow((lt_5 - lt_avg), 2) + pow((lt_6 - lt_avg), 2) + pow((lt_7 - lt_avg), 2) + pow((lt_8 - lt_avg), 2)) / 8.0);
 
 
           Serial.print("DECAY,");
@@ -561,6 +584,7 @@ class GurdyCrank {
       if (getVAvg() > myKnob->getThreshold()) {
         if (!was_buzzing) {
           was_buzzing = true;
+          the_buzz_timer = 0;
           return true;
         } else {
           return false;
@@ -571,7 +595,7 @@ class GurdyCrank {
     };
 
     bool stoppedBuzzing() {
-      if (getVAvg() <= myKnob->getThreshold()) {
+      if (getVAvg() <= myKnob->getThreshold() && the_buzz_timer > BUZZ_MIN) {
         if (was_buzzing) {
           was_buzzing = false;
           return true;
@@ -952,7 +976,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("10 Sep 2022,  1.7.6 ");
+  display.println("17 Sep 2022,  1.7.7 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -2436,7 +2460,7 @@ void about_screen() {
   display.println("---------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("10 Sep 2022,  1.7.6 ");
+  display.println("17 Sep 2022,  1.7.7 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -2870,17 +2894,17 @@ void loop() {
   while (usbMIDI.read()) {
   };
 
-  // test_count +=1;
-  // if (test_count > 100000) {
-  //   test_count = 0;
-  //   Serial.print("100,000 loop()s took: ");
-  //   Serial.print(millis() - start_time);
-  //   Serial.print("ms.  Avg Velocity: ");
-  //   Serial.print(mycrank->getVAvg());
-  //   Serial.print("rpm. Transitions: ");
-  //   Serial.print(mycrank->getCount());
-  //   Serial.print(", est. rev: ");
-  //   Serial.println(mycrank->getRev());
-  //   start_time = millis();
-  // }
+  test_count +=1;
+  if (test_count > 100000) {
+    test_count = 0;
+    Serial.print("100,000 loop()s took: ");
+    Serial.print(millis() - start_time);
+    Serial.print("ms.  Avg Velocity: ");
+    Serial.print(mycrank->getVAvg());
+    Serial.print("rpm. Transitions: ");
+    Serial.print(mycrank->getCount());
+    Serial.print(", est. rev: ");
+    Serial.println(mycrank->getRev());
+    start_time = millis();
+  }
 };

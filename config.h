@@ -6,7 +6,7 @@
 // VIBRATO: I use a long-delay, very slow vibrato on the melody strings.  This variable controls how
 // much vibrato (how much modulation like with a physical mod wheel on a MIDI keyboard) to send.
 // Setting it to 0 sends no modulation.  Max is 127.  I use 16...
-const int MELODY_VIBRATO = 0;
+const int MELODY_VIBRATO = 16;
 
 // Cranking and buzz behavior:
 
@@ -19,7 +19,7 @@ const int MELODY_VIBRATO = 0;
 const int NUM_SPOKES = 89;
 
 // This is the minimum velocity that produces sound.  This is actual crank rpm (rev/minute).
-const float V_THRESHOLD = 9.5;
+const float V_THRESHOLD = 10.5;
 
 // This is how long (in microseconds, 1000us = 1ms = 0.001s) the code waits in between reading the
 // crank.  This determines the resolution, not how long we're waiting to detect movement.
@@ -36,7 +36,10 @@ const int DECAY_RATE = 10000;
 // Once the crank has stopped (after the DECAY_RATE above), we multiply the last velocity by this.
 // E.g. 0.2 means if the velocity was 60, once we stop we consider the current velocity to be 12,
 // then 2.4, then 0.48, etc.  This gets averaged in to give us a "smooth" spin-down.
-const float DECAY_FACTOR = 0.5;
+const float DECAY_FACTOR = 0.00;
+
+// This is how long in milliseconds to buzz *at least* once it starts.
+const int BUZZ_MIN = 100;
 
 // KEYBOX VARIABLES:
 // The pin_array[] index here represents the MIDI note offset, and the value is the corresponding
