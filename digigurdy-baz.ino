@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v1.7.5 (new_crank)
+// VERSION: v1.7.7 (dynamic samplite rate)
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
@@ -114,8 +114,11 @@ using namespace MIDI_NAMESPACE;
 // some time without using delay() and freezing the entire program.  Using these I can pace the
 // reading of pins n' stuff, but still let the loop run as fast as it can.
 elapsedMicros the_timer;
+elapsedMicros the_read_timer;
+elapsedMicros the_spoke_timer;
 elapsedMicros the_stop_timer;
 elapsedMillis the_knob_timer;
+elapsedMillis the_buzz_timer;
 
 // #################
 // CLASS DEFINITIONS
@@ -373,28 +376,31 @@ class GurdyCrank {
     int sensor_pin;
     double spoke_width = 1.0 / (NUM_SPOKES * 2.0);
     double v_inst = 0.0;
+    double v_last = 0.0;
+    double v_smooth = 0.0;
     double v_2 = 0.0;
     double v_3 = 0.0;
     double v_4 = 0.0;
-    double v_last = 0.0;
+    double v_5 = 0.0;
+    double v_6 = 0.0;
+    double v_7 = 0.0;
+    double v_8 = 0.0;
     double v_avg = 0.0;
-    // double a_inst = 0.0;
-    // double a_avg = 0.0;
+
     unsigned int this_time;
-    unsigned int last_read_time;
+    unsigned int lt_1, lt_2, lt_3, lt_4, lt_5, lt_6, lt_7, lt_8 = 0;
+    float lt_avg;
+    float lt_stdev;
 
     bool last_event;
     bool this_event;
-    bool has_changed;
     bool was_spinning = false;
     bool was_buzzing = false;
-
 
     BuzzKnob* myKnob;
 
     int trans_count = 0;
     float rev_count = 0;
-    int same_count = 0;
 
   public:
     // s_pin is the out pin of the optical sensor.  This is pin 15 (same as analog A1)
@@ -418,7 +424,7 @@ class GurdyCrank {
       // Check if we need to update the knob reading...
       myKnob->update();
 
-      // We check every millisecond at most...
+      // Check as close to the sample rate as possible...
       if (the_timer > SAMPLE_RATE) {
         this_event = digitalRead(sensor_pin);
 
@@ -429,55 +435,118 @@ class GurdyCrank {
           trans_count += 1;
           rev_count = trans_count / (NUM_SPOKES * 2);
 
+          // Rotate our last four velocity values
+          // v_8 = v_7;
+          // v_7 = v_6;
+          v_6 = v_5;
+          v_5 = v_4;
+          v_4 = v_3;
+          v_3 = v_2;
+          v_2 = v_smooth;
+
           // Velocity is converted to rpm (no particular reason except it's easy to imagine how fast
           // this is in real-world terms.  1 crank per sec is 60rpm, 3 seconds per crank is 20rpm...
-          v_inst = (spoke_width * 60000000.0) / (the_timer);
+          //
+          // On nearly every wheel, spokes and holes won't be the same width.  So we average the raw
+          // reading of this transition with the last as we go, as a preliminary smoothing technique.
+          v_last = v_inst;
+          v_inst = (spoke_width * 60000000.0) / (the_spoke_timer);
 
-          v_avg = (v_inst + v_2 + v_3 + v_4) / 4.0;
+          //v_smooth = (v_inst + v_last) / 2.0;
+          v_smooth = v_inst;
+
+          v_avg = (v_smooth + v_2 + v_3 + v_4 + v_5 + v_6) / 6.0;
+
+          // if (v_smooth - v_2 < 0) {
+          //   v_avg = v_avg + ((v_smooth - v_2) / 2.0);
+          // };
+
+          //v_avg = (0.8 * ((v_2 + v_3 + v_4) / 3)) + (0.2 * v_smooth);
+
+          // Rotate our last times
+          lt_8 = lt_7;
+          lt_7 = lt_6;
+          lt_6 = lt_5;
+          lt_5 = lt_4;
+          lt_4 = lt_3;
+          lt_3 = lt_2;
+          lt_2 = lt_1;
+          lt_1 = the_spoke_timer;
+
+          // Calculate the average of the last four times between readings
+          lt_avg = (lt_1 + lt_2 + lt_3 + lt_4 + lt_5 + lt_6 + lt_7 + lt_8) / 8.0;
+
+          // Calculate the standard deviation of the last four times.
+          lt_stdev = sqrt((pow((lt_1 - lt_avg), 2) + pow((lt_2 - lt_avg), 2) + pow((lt_3 - lt_avg), 2) + pow((lt_4 - lt_avg), 2) + pow((lt_5 - lt_avg), 2) + pow((lt_6 - lt_avg), 2) + pow((lt_7 - lt_avg), 2) + pow((lt_8 - lt_avg), 2)) / 8.0);
+
+          Serial.print("MOVED,");
+          Serial.print(v_smooth);
+          Serial.print(",");
+          Serial.print(v_avg);
+          Serial.print(",");
+          Serial.print(lt_1);
+          Serial.print(",");
+          Serial.print(lt_avg);
+          Serial.print(",");
+          Serial.print(lt_stdev);
+          Serial.print(",");
+          Serial.println((lt_stdev + lt_avg));
+
+          the_stop_timer = 0;
+          the_spoke_timer = 0;
+
+        } else if (the_stop_timer > (lt_avg + (lt_stdev * 3.0)) || the_stop_timer > MAX_WAIT_TIME) {
+
+          // Rotate our last four velocity values
+          // v_8 = v_7;
+          // v_7 = v_6;
+          v_6 = v_5;
+          v_5 = v_4;
           v_4 = v_3;
           v_3 = v_2;
-          v_2 = v_inst;
+          v_2 = v_smooth;
 
-          // I'm not using acceleration here but I'm wondering if it's useful, so I'm leaving these
-          // comments.
-          // a_inst = (v_inst - v_last) / (the_timer);
-          // a_avg = (a_inst + a_avg) / 2;
+          v_smooth = v_smooth * DECAY_FACTOR;
+          v_avg = (v_smooth + v_2 + v_3 + v_4 + v_5 + v_6) / 6.0;
 
-          Serial.print("+ Time: ");
-          Serial.print(the_timer);
-          Serial.print(" V_inst: ");
-          Serial.print(v_inst);
-          Serial.print(" V_avg: ");
+          // if (v_smooth - v_2 < 0) {
+          //   v_avg = v_avg + ((v_smooth - v_2) / 1.5);
+          // };
+
+          // Rotate our last times
+          lt_8 = lt_7;
+          lt_7 = lt_6;
+          lt_6 = lt_5;
+          lt_5 = lt_4;
+          lt_4 = lt_3;
+          lt_3 = lt_2;
+          lt_2 = lt_1;
+          lt_1 = the_spoke_timer;
+
+          // Calculate the average of the last four times between readings
+          lt_avg = (lt_1 + lt_2 + lt_3 + lt_4 + lt_5 + lt_6 + lt_7 + lt_8) / 8.0;
+
+          // Calculate the standard deviation of the last four times.
+          lt_stdev = sqrt((pow((lt_1 - lt_avg), 2) + pow((lt_2 - lt_avg), 2) + pow((lt_3 - lt_avg), 2) + pow((lt_4 - lt_avg), 2) + pow((lt_5 - lt_avg), 2) + pow((lt_6 - lt_avg), 2) + pow((lt_7 - lt_avg), 2) + pow((lt_8 - lt_avg), 2)) / 8.0);
+
+
+          Serial.print("DECAY,");
+          Serial.print(v_smooth);
+          Serial.print(",");
           Serial.print(v_avg);
-          Serial.print(" Knob: ");
-          Serial.println(myKnob->getThreshold());
-
-          the_timer = 0;
-          the_stop_timer = 0;
-
-        // If there was no transition after 10ms, decay the velocity.
-      } else if (the_stop_timer > DECAY_RATE) {
-          v_inst = DECAY_FACTOR * v_inst;
-          v_avg = (v_inst + v_2 + v_3 + v_4) / 4.0;
-          v_4 = v_3;
-          v_3 = v_2;
-          v_2 = v_inst;
-
-          // a_inst = (v_inst - v_last) / (the_timer);
-          // a_avg = (a_inst + a_avg) / 2;
+          Serial.print(",");
+          Serial.print(lt_1);
+          Serial.print(",");
+          Serial.print(lt_avg);
+          Serial.print(",");
+          Serial.print(lt_stdev);
+          Serial.print(",");
+          Serial.println((lt_stdev + lt_avg));
 
           the_stop_timer = 0;
+        }
 
-          Serial.print("- Time: ");
-          Serial.print(the_timer);
-          Serial.print(" V_inst: ");
-          Serial.print(v_inst);
-          Serial.print(" V_avg: ");
-          Serial.print(v_avg);
-          Serial.print(" Knob: ");
-          Serial.println(myKnob->getThreshold());
-
-        };
+        the_timer = 0;
       };
     };
 
@@ -515,6 +584,7 @@ class GurdyCrank {
       if (getVAvg() > myKnob->getThreshold()) {
         if (!was_buzzing) {
           was_buzzing = true;
+          the_buzz_timer = 0;
           return true;
         } else {
           return false;
@@ -525,7 +595,7 @@ class GurdyCrank {
     };
 
     bool stoppedBuzzing() {
-      if (getVAvg() <= myKnob->getThreshold()) {
+      if (getVAvg() <= myKnob->getThreshold() && the_buzz_timer > BUZZ_MIN) {
         if (was_buzzing) {
           was_buzzing = false;
           return true;
@@ -906,7 +976,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("07 Sep 2022,  1.7.5 ");
+  display.println("17 Sep 2022,  1.7.7 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -2390,7 +2460,7 @@ void about_screen() {
   display.println("---------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("05 Sep 2022,  1.7.5 ");
+  display.println("17 Sep 2022,  1.7.7 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
