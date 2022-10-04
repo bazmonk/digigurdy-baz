@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v1.7.7 (dynamic samplite rate)
+// VERSION: v1.8.0 (expression)
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
@@ -119,6 +119,8 @@ elapsedMicros the_spoke_timer;
 elapsedMicros the_stop_timer;
 elapsedMillis the_knob_timer;
 elapsedMillis the_buzz_timer;
+
+elapsedMicros test_timer;
 
 // #################
 // CLASS DEFINITIONS
@@ -321,6 +323,11 @@ class GurdyString {
       usbMIDI.sendProgramChange(program, midi_channel);
       MIDI_obj->sendProgramChange(program, midi_channel);
     }
+
+    void setExpression(int exp) {
+      usbMIDI.sendControlChange(11, exp, midi_channel);
+      MIDI_obj->sendControlChange(11, exp, midi_channel);
+    };
 };
 
 // BuzzKnob manages the potentiometer knob that adjusts the buzzing threshold.
@@ -976,7 +983,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("17 Sep 2022,  1.7.7 ");
+  display.println("03 Oct 2022,  1.8.0 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -2460,7 +2467,7 @@ void about_screen() {
   display.println("---------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("17 Sep 2022,  1.7.7 ");
+  display.println("03 Oct 2022,  1.8.0 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -2659,6 +2666,9 @@ int start_time = millis();
 int stopped_playing_time = 0;
 bool note_display_off = true;
 
+int expression = 0;
+int cur_v = 0;
+
 // The loop() function is repeatedly run by the Teensy unit after setup() completes.
 // This is the main logic of the program and defines how the strings, keys, click, buzz,
 // and buttons acutally behave during play.
@@ -2800,6 +2810,23 @@ void loop() {
   // We don't actually do anything if nothing changed this cycle.  Strings stay on/off automatically,
   // and the click sound goes away because of the sound in the soundfont, not the length of the
   // MIDI note itself.  We just turn that on and off like the other strings.
+
+  // ...Well ok, now we do!  This determines expression:
+  if (test_timer > 400) {
+
+    cur_v = mycrank->getVAvg();
+    if (cur_v > EXPRESSION_VMAX) {
+      cur_v = EXPRESSION_VMAX;
+    } else if (cur_v < V_THRESHOLD) {
+      cur_v = V_THRESHOLD;
+    }
+    expression = int(((cur_v - V_THRESHOLD)/(EXPRESSION_VMAX - V_THRESHOLD)) * (127 - EXPRESSION_START) + EXPRESSION_START);
+    mystring->setExpression(expression);
+    mylowstring->setExpression(expression);
+    mytromp->setExpression(expression);
+    mydrone->setExpression(expression);
+    test_timer = 0;
+  }
 
   // If the big button is toggled on or the crank is active (i.e., if we're making noise):
   if (bigbutton->toggleOn() || mycrank->isSpinning()) {
