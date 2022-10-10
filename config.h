@@ -8,6 +8,13 @@
 // Setting it to 0 sends no modulation.  Max is 127.  I use 16...
 const int MELODY_VIBRATO = 16;
 
+// EXPRESSION:
+// Beyond EXPRESSION_VMAX RPMs, the volume will be at max.
+const float EXPRESSION_VMAX = 100.0;
+
+// At the slowest crank velocity, volume will start at this value (0 = silent, 127 = max)
+const int EXPRESSION_START = 50;
+
 // Cranking and buzz behavior:
 
 // NEW FOR OPTICAL CRANKS:

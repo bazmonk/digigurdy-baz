@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v1.7.7 (dynamic samplite rate)
+// VERSION: v1.7.8 (dynamic sample rate)
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
@@ -187,7 +187,7 @@ class ToggleButton: public GurdyButton {
     bool toggled;
   public:
     ToggleButton(int my_pin, bool start_toggled = false) : GurdyButton(my_pin) {
-      bounce_obj = new Bounce(my_pin, 5);
+      bounce_obj = new Bounce(my_pin, 10);
       pinMode(my_pin, INPUT_PULLUP);
       toggled = start_toggled;
     };
@@ -976,7 +976,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("17 Sep 2022,  1.7.7 ");
+  display.println("09 Oct 2022,  1.7.8 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -2163,6 +2163,8 @@ bool tuning() {
     display.print(disp_str.c_str());
     display.display();
 
+    delay(250);
+
     // Check the 1 and 2 buttons
     my1Button->update();
     my2Button->update();
@@ -2211,6 +2213,8 @@ bool tuning() {
   display.print(disp_str.c_str());
   display.display();
 
+  delay(250);
+
   done = false;
   while (!done) {
 
@@ -2252,6 +2256,8 @@ bool load_tuning_screen() {
 
     display.print(disp_str.c_str());
     display.display();
+
+    delay(250);
 
     // Check the 1 and 2 buttons
     my1Button->update();
@@ -2460,7 +2466,7 @@ void about_screen() {
   display.println("---------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("17 Sep 2022,  1.7.7 ");
+  display.println("09 Oct 2022,  1.7.8 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -2572,6 +2578,8 @@ void pause_screen() {
 
     display.print(disp_str.c_str());
     display.display();
+
+    delay(150);
 
     // Check the 1 and 2 buttons
     my1Button->update();
