@@ -1,8 +1,9 @@
 # digigurdy-baz
 
-**Check out version 1.7.7! (NEW)**
+**Check out version 1.7.8! (NEW)**
 
-* 1.7.7 -
+* 1.7.8 -
+  * Timings of debounce button performance improved
   * Taking average of last six readings now to determine voltage.
   * Sampling is done as quick as possible, but the time to expect a sensor-change is determined based on the average times of the last several readings.
   * There is now a BUZZ_MIN variable.  Buzz events will last at least this long (smoother buzz).
