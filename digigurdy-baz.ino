@@ -379,12 +379,12 @@ class SimpleLED {
       digitalWrite(led_pin, LOW);
     };
 
-    on() {
-      digitalWrite(led_pin, HIGH)
+    void on() {
+      digitalWrite(led_pin, HIGH);
     };
 
-    off() {
-      digitalWrite(led_pin, LOW)
+    void off() {
+      digitalWrite(led_pin, LOW);
     };
 };
 
