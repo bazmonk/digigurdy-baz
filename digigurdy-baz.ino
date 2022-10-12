@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v1.7.8 (dynamic sample rate)
+// VERSION: v1.7.9 (dynamic sample rate)
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
@@ -366,6 +366,28 @@ class BuzzKnob {
     };
 };
 
+// class SimpleLED is for controlling LED lights wired up to a given pin on the Teensy (and ground)
+class SimpleLED {
+  private:
+    int led_pin;
+
+  public:
+    SimpleLED(int pin) {
+      led_pin = pin;
+      pinMode(led_pin, OUTPUT);
+      // Not sure if this is needed, but let's make sure it's off:
+      digitalWrite(led_pin, LOW);
+    };
+
+    on() {
+      digitalWrite(led_pin, HIGH)
+    };
+
+    off() {
+      digitalWrite(led_pin, LOW)
+    };
+};
+
 // class GurdyCrank controls the cranking mechanism, including the buzz triggers.
 //   * This version is for optical (IR gate) sensors.  The digital pin readings are expected to
 //     oscillate between 0 and 1 only.
@@ -398,6 +420,7 @@ class GurdyCrank {
     bool was_buzzing = false;
 
     BuzzKnob* myKnob;
+    SimpleLED* myLED;
 
     int trans_count = 0;
     float rev_count = 0;
@@ -405,9 +428,10 @@ class GurdyCrank {
   public:
     // s_pin is the out pin of the optical sensor.  This is pin 15 (same as analog A1)
     // on a normal didigurdy.  buzz_pin is the out pin of the buzz pot, usually A2 (a.k.a 16).
-    GurdyCrank(int s_pin, int buzz_pin, ADC* adc_obj) {
+    GurdyCrank(int s_pin, int buzz_pin, ADC* adc_obj, int led_pin) {
 
       myKnob = new BuzzKnob(buzz_pin, adc_obj);
+      myLED = new SimpleLED(led_pin);
 
       sensor_pin = s_pin;
       pinMode(sensor_pin, INPUT_PULLUP);
@@ -585,6 +609,7 @@ class GurdyCrank {
         if (!was_buzzing) {
           was_buzzing = true;
           the_buzz_timer = 0;
+          myLED->on();
           return true;
         } else {
           return false;
@@ -598,6 +623,7 @@ class GurdyCrank {
       if (getVAvg() <= myKnob->getThreshold() && the_buzz_timer > BUZZ_MIN) {
         if (was_buzzing) {
           was_buzzing = false;
+          myLED->off();
           return true;
         } else {
           return false;
@@ -976,7 +1002,7 @@ void setup() {
   display.println(" --------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("09 Oct 2022,  1.7.8 ");
+  display.println("11 Oct 2022,  1.7.9 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -992,7 +1018,7 @@ void setup() {
   myMIDI->begin();
 
   adc = new ADC();
-  mycrank = new GurdyCrank(15, A2, adc);
+  mycrank = new GurdyCrank(15, A2, adc, 40);
   display.clearDisplay();
   display.setTextSize(2);
   display.setTextColor(WHITE);
@@ -2466,7 +2492,7 @@ void about_screen() {
   display.println("---------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("09 Oct 2022,  1.7.8 ");
+  display.println("11 Oct 2022,  1.7.9 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
