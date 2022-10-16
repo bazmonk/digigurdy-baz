@@ -3,6 +3,9 @@
 #define WHITE_OLED
 //#define BLUE_OLED
 
+// Uncomment this if you do not want to use the buzz LED feature
+#define LED_KNOB
+
 // VIBRATO: I use a long-delay, very slow vibrato on the melody strings.  This variable controls how
 // much vibrato (how much modulation like with a physical mod wheel on a MIDI keyboard) to send.
 // Setting it to 0 sends no modulation.  Max is 127.  I use 16...
@@ -78,3 +81,6 @@ const int BUTTON_5_INDEX = 8;
 const int BUTTON_6_INDEX = 9;
 const int TPOSE_UP_INDEX = num_keys - 1;
 const int TPOSE_DN_INDEX = num_keys - 3;
+
+// LED_PIN is the pin used for
+const int LED_PIN = 40;

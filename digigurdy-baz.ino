@@ -1,8 +1,9 @@
 // Digigurdy-Baz
-// VERSION: v1.7.9 (dynamic sample rate)
+// VERSION: v1.7.99 (dynamic sample rate, LED)
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
+//   https://digigurdy.com/
 //   https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy
 // REPOSITORY: https://github.com/bazmonk/digigurdy-baz
 
@@ -420,7 +421,10 @@ class GurdyCrank {
     bool was_buzzing = false;
 
     BuzzKnob* myKnob;
-    SimpleLED* myLED;
+
+    #ifdef LED_KNOB
+      SimpleLED* myLED;
+    #endif
 
     int trans_count = 0;
     float rev_count = 0;
@@ -431,7 +435,10 @@ class GurdyCrank {
     GurdyCrank(int s_pin, int buzz_pin, ADC* adc_obj, int led_pin) {
 
       myKnob = new BuzzKnob(buzz_pin, adc_obj);
-      myLED = new SimpleLED(led_pin);
+
+      #ifdef LED_KNOB
+        myLED = new SimpleLED(led_pin);
+      #endif
 
       sensor_pin = s_pin;
       pinMode(sensor_pin, INPUT_PULLUP);
@@ -609,7 +616,11 @@ class GurdyCrank {
         if (!was_buzzing) {
           was_buzzing = true;
           the_buzz_timer = 0;
-          myLED->on();
+
+          #ifdef LED_KNOB
+            myLED->on();
+          #endif
+
           return true;
         } else {
           return false;
@@ -623,7 +634,11 @@ class GurdyCrank {
       if (getVAvg() <= myKnob->getThreshold() && the_buzz_timer > BUZZ_MIN) {
         if (was_buzzing) {
           was_buzzing = false;
-          myLED->off();
+
+          #ifdef LED_KNOB
+            myLED->off();
+          #endif
+
           return true;
         } else {
           return false;
@@ -999,10 +1014,10 @@ void setup() {
   display.setCursor(0, 0);
   display.println(" DigiGurdy");
   display.setTextSize(1);
-  display.println(" --------------------");
+  display.println("---------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("11 Oct 2022,  1.7.9 ");
+  display.println("15 Oct 2022,  1.7.99 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -1018,7 +1033,7 @@ void setup() {
   myMIDI->begin();
 
   adc = new ADC();
-  mycrank = new GurdyCrank(15, A2, adc, 40);
+  mycrank = new GurdyCrank(15, A2, adc, LED_PIN);
   display.clearDisplay();
   display.setTextSize(2);
   display.setTextColor(WHITE);
@@ -2492,7 +2507,7 @@ void about_screen() {
   display.println("---------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("11 Oct 2022,  1.7.9 ");
+  display.println("15 Oct 2022,  1.7.99 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
