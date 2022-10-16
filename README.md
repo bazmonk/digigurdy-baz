@@ -2,8 +2,9 @@
 
 **Check out version 1.7.9! (NEW)**
 
-* 1.7.9 -
-  * Buzz Knob LED implemented (or any LED you happen to connect to pin 40)
+* 1.7.99 -
+  * Buzz Knob LED can be disabled in config.h if desired.  LED_PIN also a config variable.
+  * Buzz Knob LED implemented (~~or any LED you happen to connect to pin 40~~ see above)
   * Timings of debounce button performance improved
   * Taking average of last six readings now to determine voltage.
   * Sampling is done as quick as possible, but the time to expect a sensor-change is determined based on the average times of the last several readings.
