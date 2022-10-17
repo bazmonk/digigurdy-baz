@@ -6,7 +6,7 @@
 // VIBRATO: I use a long-delay, very slow vibrato on the melody strings.  This variable controls how
 // much vibrato (how much modulation like with a physical mod wheel on a MIDI keyboard) to send.
 // Setting it to 0 sends no modulation.  Max is 127.  I use 16...
-const int MELODY_VIBRATO = 0;
+const int MELODY_VIBRATO = 16;
 
 // Cranking and buzz behavior:
 
