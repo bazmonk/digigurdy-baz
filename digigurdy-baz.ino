@@ -30,8 +30,6 @@
 #include "staff_bitmaps.h"   // Staff bitmaps
 #include "config.h"          // Configuration variables
 
-#include "display.h"         // Intializes our display object
-
 // These are classes, also in the repository
 #include "gurdybutton.h"     // For basic buttons
 #include "togglebutton.h"    // For click-on, click-on buttons
@@ -39,6 +37,10 @@
 #include "gurdycrank.h"      // For the crank!
 #include "gurdystring.h"     // For talking to MIDI
 #include "hurdygurdy.h"      // For managing the keybox buttons
+
+// These are all about the display
+#include "display.h"         // Intializes our display object
+#include "startup_screens.h" // Startup-related screens.
 
 // Right now not using the std namespace is just impacting strings.  That's ok...
 using namespace MIDI_NAMESPACE;
@@ -291,56 +293,8 @@ void setup() {
     display.begin(SH1106_SWITCHCAPVCC);
   #endif
 
-  // Clear the buffer.
-  display.clearDisplay();
-
-  // Intro animated sequence
-  // display.clearDisplay();
-  display.drawBitmap(0, 0, logos[0], 128, 64, 1);
-  display.display();
-  delay(1000);
-  display.clearDisplay();
-  display.drawBitmap(0, 0, logos[1], 128, 64, 1);
-  display.display();
-  delay(130);
-  display.clearDisplay();
-  display.drawBitmap(0, 0, logos[2], 128, 64, 1);
-  display.display();
-  delay(130);
-  display.clearDisplay();
-  display.drawBitmap(0, 0, logos[3], 128, 64, 1);
-  display.display();
-  delay(130);
-  display.clearDisplay();
-  display.drawBitmap(0, 0, logos[4], 128, 64, 1);
-  display.display();
-  delay(130);
-  display.clearDisplay();
-  display.drawBitmap(0, 0, logos[5], 128, 64, 1);
-  display.display();
-  delay(130);
-  display.clearDisplay();
-  display.drawBitmap(0, 0, logos[6], 128, 64, 1);
-  display.display();
-  delay(130);
-  display.clearDisplay();
-  display.drawBitmap(0, 0, logos[7], 128, 64, 1);
-  display.display();
-
-  display.clearDisplay();
-  display.setTextSize(2);
-  display.setTextColor(WHITE);
-  display.setCursor(0, 0);
-  display.println(" DigiGurdy");
-  display.setTextSize(1);
-  display.println("---------------------");
-  display.println("   By Basil Lalli,   ");
-  display.println("Concept By J. Dingley");
-  display.println("22 Oct 2022,  1.9.2 ");
-  display.println("                     ");
-  display.println("  shorturl.at/tuDY1  ");
-  display.display();
-  delay(1000);
+  start_display();
+  startup_screen_sqeuence();
 
   // Un-comment to print yourself debugging messages to the Teensyduino
   // serial console.
