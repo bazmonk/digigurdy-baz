@@ -85,7 +85,7 @@ https://www.youtube.com/watch?v=yC0skMH7qog
 
 The keys for navigating the menus work much like the original code did.  The bottom row represent number choices in menus, 1-6 starting from the left.  The "A" button is the top right button, "B" is the one next to that, and the "X" button is the top left:
 
-![keybox pic](https://raw.githubusercontent.com/wiki/bazmonk/digigurdy-baz/keys.png)
+![keybox pic](https://raw.githubusercontent.com/wiki/bazmonk/digigurdy-baz/keys.jpeg)
 
 During play, these are all the "hidden" keycombos:
 * "X" + "A" = Pause menu: save/load/change tuning, turn drones on/off
