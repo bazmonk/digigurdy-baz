@@ -30,6 +30,9 @@
 #include "staff_bitmaps.h"   // Staff bitmaps
 #include "config.h"          // Configuration variables
 
+// These are classes, also in the repository
+#include "simpleled.h"       // For controlling LED lights
+
 // The "white OLED" uses these now.  The not-quite-standard blue version doesn't.
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64
@@ -314,28 +317,6 @@ class BuzzKnob {
     // This returns a weighted value based off the voltage between 60 and 180.
     float getThreshold() {
       return (60 + (getVoltage() / 8.5));
-    };
-};
-
-// class SimpleLED is for controlling LED lights wired up to a given pin on the Teensy (and ground)
-class SimpleLED {
-  private:
-    int led_pin;
-
-  public:
-    SimpleLED(int pin) {
-      led_pin = pin;
-      pinMode(led_pin, OUTPUT);
-      // Not sure if this is needed, but let's make sure it's off:
-      digitalWrite(led_pin, LOW);
-    };
-
-    void on() {
-      digitalWrite(led_pin, HIGH);
-    };
-
-    void off() {
-      digitalWrite(led_pin, LOW);
     };
 };
 

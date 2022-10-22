@@ -1,3 +1,6 @@
+#ifndef NOTES_H
+#define NOTES_H
+
 // enum Note maps absolute note names to MIDI note numbers (middle C4 = 60),
 // which range from 0 to 127.
 //
@@ -48,3 +51,5 @@ std::string LongNoteNum[] = {
   "  C8   ", "C#8/Db8", "  D8   ", "D#8/Eb8", "  E8   ", "  F8   ", "F#8/Gb8", "  G8   ", "G#8/Ab8", "  A8   ", "A#8/Bb8", "  B8   ",
   "  C9   ", "C#9/Db9", "  D9   ", "D#9/Eb9", "  E9   ", "  F9   ", "F#9/Gb9", "  G9   "
 };
+
+#endif
