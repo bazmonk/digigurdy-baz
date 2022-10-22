@@ -36,6 +36,7 @@
 #include "gurdybutton.h"     // For basic buttons
 #include "togglebutton.h"    // For click-on, click-on buttons
 #include "keyboxbutton.h"    // For the keybox buttons
+#include "gurdycrank.h"      // For the crank!
 
 // The "white OLED" uses these now.  The not-quite-standard blue version doesn't.
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
@@ -71,11 +72,7 @@ using namespace MIDI_NAMESPACE;
 // automatically.  It's easy to set these to zero in code and simply wait for it to increment up to
 // some time without using delay() and freezing the entire program.  Using these I can pace the
 // reading of pins n' stuff, but still let the loop run as fast as it can.
-elapsedMicros the_timer;
 elapsedMicros the_read_timer;
-elapsedMicros the_spoke_timer;
-elapsedMicros the_stop_timer;
-elapsedMillis the_buzz_timer;
 
 // #################
 // CLASS DEFINITIONS
@@ -173,278 +170,6 @@ class GurdyString {
     }
 };
 
-// class GurdyCrank controls the cranking mechanism, including the buzz triggers.
-//   * This version is for optical (IR gate) sensors.  The digital pin readings are expected to
-//     oscillate between 0 and 1 only.
-//   * NUM_SPOKES in config.h needs to be defined as the number of "spokes" (dark lines) on your
-//     wheel, not the number of dark+light bars.  Your RPMs will be half-speed if you do that.
-class GurdyCrank {
-  private:
-    int sensor_pin;
-    double spoke_width = 1.0 / (NUM_SPOKES * 2.0);
-    double v_inst = 0.0;
-    double v_last = 0.0;
-    double v_smooth = 0.0;
-    double v_2 = 0.0;
-    double v_3 = 0.0;
-    double v_4 = 0.0;
-    double v_5 = 0.0;
-    double v_6 = 0.0;
-    double v_7 = 0.0;
-    double v_8 = 0.0;
-    double v_avg = 0.0;
-
-    unsigned int this_time;
-    unsigned int lt_1, lt_2, lt_3, lt_4, lt_5, lt_6, lt_7, lt_8 = 0;
-    float lt_avg;
-    float lt_stdev;
-
-    bool last_event;
-    bool this_event;
-    bool was_spinning = false;
-    bool was_buzzing = false;
-
-    BuzzKnob* myKnob;
-
-    #ifdef LED_KNOB
-      SimpleLED* myLED;
-    #endif
-
-    int trans_count = 0;
-    float rev_count = 0;
-
-  public:
-    // s_pin is the out pin of the optical sensor.  This is pin 15 (same as analog A1)
-    // on a normal didigurdy.  buzz_pin is the out pin of the buzz pot, usually A2 (a.k.a 16).
-    GurdyCrank(int s_pin, int buzz_pin, ADC* adc_obj, int led_pin) {
-
-      myKnob = new BuzzKnob(buzz_pin, adc_obj);
-
-      #ifdef LED_KNOB
-        myLED = new SimpleLED(led_pin);
-      #endif
-
-      sensor_pin = s_pin;
-      pinMode(sensor_pin, INPUT_PULLUP);
-      last_event = digitalRead(sensor_pin);
-    };
-
-    bool isDetected() {
-      return true;
-    };
-
-    // This is meant to be run every loop().
-    void update() {
-
-      // Check if we need to update the knob reading...
-      myKnob->update();
-
-      // Check as close to the sample rate as possible...
-      if (the_timer > SAMPLE_RATE) {
-        this_event = digitalRead(sensor_pin);
-
-        // If there was a transition on the wheel:
-        if (this_event != last_event) {
-          last_event = this_event;
-
-          trans_count += 1;
-          rev_count = trans_count / (NUM_SPOKES * 2);
-
-          // Rotate our last four velocity values
-          // v_8 = v_7;
-          // v_7 = v_6;
-          v_6 = v_5;
-          v_5 = v_4;
-          v_4 = v_3;
-          v_3 = v_2;
-          v_2 = v_smooth;
-
-          // Velocity is converted to rpm (no particular reason except it's easy to imagine how fast
-          // this is in real-world terms.  1 crank per sec is 60rpm, 3 seconds per crank is 20rpm...
-          //
-          // On nearly every wheel, spokes and holes won't be the same width.  So we average the raw
-          // reading of this transition with the last as we go, as a preliminary smoothing technique.
-          v_last = v_inst;
-          v_inst = (spoke_width * 60000000.0) / (the_spoke_timer);
-
-          //v_smooth = (v_inst + v_last) / 2.0;
-          v_smooth = v_inst;
-
-          v_avg = (v_smooth + v_2 + v_3 + v_4 + v_5 + v_6) / 6.0;
-
-          // if (v_smooth - v_2 < 0) {
-          //   v_avg = v_avg + ((v_smooth - v_2) / 2.0);
-          // };
-
-          //v_avg = (0.8 * ((v_2 + v_3 + v_4) / 3)) + (0.2 * v_smooth);
-
-          // Rotate our last times
-          lt_8 = lt_7;
-          lt_7 = lt_6;
-          lt_6 = lt_5;
-          lt_5 = lt_4;
-          lt_4 = lt_3;
-          lt_3 = lt_2;
-          lt_2 = lt_1;
-          lt_1 = the_spoke_timer;
-
-          // Calculate the average of the last four times between readings
-          lt_avg = (lt_1 + lt_2 + lt_3 + lt_4 + lt_5 + lt_6 + lt_7 + lt_8) / 8.0;
-
-          // Calculate the standard deviation of the last four times.
-          lt_stdev = sqrt((pow((lt_1 - lt_avg), 2) + pow((lt_2 - lt_avg), 2) + pow((lt_3 - lt_avg), 2) + pow((lt_4 - lt_avg), 2) + pow((lt_5 - lt_avg), 2) + pow((lt_6 - lt_avg), 2) + pow((lt_7 - lt_avg), 2) + pow((lt_8 - lt_avg), 2)) / 8.0);
-
-          Serial.print("MOVED,");
-          Serial.print(v_smooth);
-          Serial.print(",");
-          Serial.print(v_avg);
-          Serial.print(",");
-          Serial.print(lt_1);
-          Serial.print(",");
-          Serial.print(lt_avg);
-          Serial.print(",");
-          Serial.print(lt_stdev);
-          Serial.print(",");
-          Serial.println((lt_stdev + lt_avg));
-
-          the_stop_timer = 0;
-          the_spoke_timer = 0;
-
-        } else if (the_stop_timer > (lt_avg + (lt_stdev * 3.0)) || the_stop_timer > MAX_WAIT_TIME) {
-
-          // Rotate our last four velocity values
-          // v_8 = v_7;
-          // v_7 = v_6;
-          v_6 = v_5;
-          v_5 = v_4;
-          v_4 = v_3;
-          v_3 = v_2;
-          v_2 = v_smooth;
-
-          v_smooth = v_smooth * DECAY_FACTOR;
-          v_avg = (v_smooth + v_2 + v_3 + v_4 + v_5 + v_6) / 6.0;
-
-          // if (v_smooth - v_2 < 0) {
-          //   v_avg = v_avg + ((v_smooth - v_2) / 1.5);
-          // };
-
-          // Rotate our last times
-          lt_8 = lt_7;
-          lt_7 = lt_6;
-          lt_6 = lt_5;
-          lt_5 = lt_4;
-          lt_4 = lt_3;
-          lt_3 = lt_2;
-          lt_2 = lt_1;
-          lt_1 = the_spoke_timer;
-
-          // Calculate the average of the last four times between readings
-          lt_avg = (lt_1 + lt_2 + lt_3 + lt_4 + lt_5 + lt_6 + lt_7 + lt_8) / 8.0;
-
-          // Calculate the standard deviation of the last four times.
-          lt_stdev = sqrt((pow((lt_1 - lt_avg), 2) + pow((lt_2 - lt_avg), 2) + pow((lt_3 - lt_avg), 2) + pow((lt_4 - lt_avg), 2) + pow((lt_5 - lt_avg), 2) + pow((lt_6 - lt_avg), 2) + pow((lt_7 - lt_avg), 2) + pow((lt_8 - lt_avg), 2)) / 8.0);
-
-
-          Serial.print("DECAY,");
-          Serial.print(v_smooth);
-          Serial.print(",");
-          Serial.print(v_avg);
-          Serial.print(",");
-          Serial.print(lt_1);
-          Serial.print(",");
-          Serial.print(lt_avg);
-          Serial.print(",");
-          Serial.print(lt_stdev);
-          Serial.print(",");
-          Serial.println((lt_stdev + lt_avg));
-
-          the_stop_timer = 0;
-        }
-
-        the_timer = 0;
-      };
-    };
-
-    bool startedSpinning() {
-      if (isSpinning()) {
-        if (!was_spinning) {
-          was_spinning = true;
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
-    };
-
-    bool stoppedSpinning() {
-      if (!isSpinning()) {
-        if (was_spinning) {
-          was_spinning = false;
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
-    };
-
-    bool isSpinning() {
-      return (v_avg > V_THRESHOLD);
-    };
-
-    bool startedBuzzing() {
-      if (getVAvg() > myKnob->getThreshold()) {
-        if (!was_buzzing) {
-          was_buzzing = true;
-          the_buzz_timer = 0;
-
-          #ifdef LED_KNOB
-            myLED->on();
-          #endif
-
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
-    };
-
-    bool stoppedBuzzing() {
-      if (getVAvg() <= myKnob->getThreshold() && the_buzz_timer > BUZZ_MIN) {
-        if (was_buzzing) {
-          was_buzzing = false;
-
-          #ifdef LED_KNOB
-            myLED->off();
-          #endif
-
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
-    };
-
-    double getVAvg() {
-      return v_avg;
-    };
-
-    int getCount() {
-      return trans_count;
-    };
-
-    double getRev() {
-      return rev_count;
-    };
-};
-
 // class HurdyGurdy is basically a virtual keybox for buttons that control
 // notes.  It manages updating and detecting the button actions and determines
 // ultimately which note the "keybox" is producing.
@@ -458,7 +183,7 @@ class HurdyGurdy {
 
   public:
     KeyboxButton* keybox[num_keys];
-    HurdyGurdy(int pin_arr[], int key_size) {
+    HurdyGurdy(const int pin_arr[], int key_size) {
       keybox_size = key_size;
       max_offset = 0;
 

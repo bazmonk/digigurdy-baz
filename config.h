@@ -1,3 +1,5 @@
+#ifndef CONFIG_H
+#define CONFIG_H
 
 // ALL USERS!!! Uncomment one of these lines depending on what kind of OLED screen you have.
 #define WHITE_OLED
@@ -57,7 +59,7 @@ const int BUZZ_MIN = 100;
 //
 // NOTE: There's no key that produces 0 offset (an "open" string),
 // so the first element is bogus.  It gets skipped entirely.
-int pin_array[] = {-1, 2, 24, 3, 25, 26, 4, 27, 5, 28, 29, 6, 30,
+const int pin_array[] = {-1, 2, 24, 3, 25, 26, 4, 27, 5, 28, 29, 6, 30,
                    7, 31, 8, 32, 33, 18, 34, 19, 35, 36, 20, 37};
 
 // This is literally just the size of the above array minus one.  I need this as a const to
@@ -84,3 +86,5 @@ const int TPOSE_DN_INDEX = num_keys - 3;
 
 // LED_PIN is the pin used for
 const int LED_PIN = 40;
+
+#endif
