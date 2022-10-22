@@ -32,6 +32,7 @@
 
 // These are classes, also in the repository
 #include "simpleled.h"       // For controlling LED lights
+#include "buzzknob.h"        // For controlling the buzz sensitivity knob
 
 // The "white OLED" uses these now.  The not-quite-standard blue version doesn't.
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
@@ -71,7 +72,6 @@ elapsedMicros the_timer;
 elapsedMicros the_read_timer;
 elapsedMicros the_spoke_timer;
 elapsedMicros the_stop_timer;
-elapsedMillis the_knob_timer;
 elapsedMillis the_buzz_timer;
 
 // #################
@@ -275,49 +275,6 @@ class GurdyString {
       usbMIDI.sendProgramChange(program, midi_channel);
       MIDI_obj->sendProgramChange(program, midi_channel);
     }
-};
-
-// BuzzKnob manages the potentiometer knob that adjusts the buzzing threshold.
-// The GurdyCrank class below uses it to determine when buzzing happens.
-class BuzzKnob {
-  private:
-    int voltage_pin;
-    // We only update the knob a couple times a second (this should be about 500ms).
-    static const int poll_interval = 5000;
-    int poll_counter;
-    int knob_voltage;
-    ADC* myadc;
-
-    int last_poll_time;
-
-  public:
-    BuzzKnob(int v_pin, ADC* adc_obj) {
-      myadc = adc_obj;
-      voltage_pin = v_pin;
-      pinMode(voltage_pin, INPUT);
-      myadc->adc1->startContinuous(voltage_pin);
-      poll_counter = 0;
-      knob_voltage = 0;
-    };
-
-    // This should be run every loop() during play.
-    // Reads the knob voltage second.
-    void update() {
-      if (the_knob_timer > 1000) {
-        the_knob_timer = 0;
-        knob_voltage = myadc->adc1->analogReadContinuous();
-      };
-    };
-
-    // Returns an a raw voltage between 0 and 1023.
-    float getVoltage() {
-      return (float)(knob_voltage);
-    };
-
-    // This returns a weighted value based off the voltage between 60 and 180.
-    float getThreshold() {
-      return (60 + (getVoltage() / 8.5));
-    };
 };
 
 // class GurdyCrank controls the cranking mechanism, including the buzz triggers.
