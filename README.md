@@ -2,7 +2,11 @@
 
 **Pre-compiled builds of the code will be made available from 1.7.99 and up.  See https://github.com/bazmonk/digigurdy-baz/wiki/install-by-hex for installation instructions.**
 
-**Check out version 1.7.99! (NEW)**
+**Check out version 1.9.0! (NEW)**
+
+* 1.9.0 -
+  * Reorganization of custom classes into separate files.  It's for my sanity... this makes the main file about 25% smaller, and enforces some best practices on my part.
+  * Introduction of precombiled builds for users.
 
 * 1.7.99 -
   * Buzz Knob LED can be disabled in config.h if desired.  LED_PIN also a config variable.
@@ -72,64 +76,6 @@ The code has been significantly streamlined (20% the size of the original source
 * **On-Screen-Display** showing current string tunings, transpose and capo settings, as well as a read-out of the current note being played on the keybox.
   * While playing, a [big pretty bitmap note](https://www.youtube.com/shorts/XOBMtSio8nA) or [a note + staff](https://www.youtube.com/shorts/KD5NucKWTos) now displays instead of the full settings.  They still show up when not playing.  This is adjustable in the startup menu.
 * Muting of both or either the drone/trompette strings directly from the pause menu.
-
-## Installation
-
-### OLED Display
-Your digigurdy may have an SSD1306 display (the "white OLED"), or the SH1106 display (the "blue OLED").  This code needs to be compiled for the correct display.
-
-_Note: Older versions of the code also needed to have the Adafruit_SSD1306.h file slightly edited to specify the correct resolution, causing a "half-screen" problem if it wasn't.  This has been fixed in v1.2.8.  No editing of the libraries are necessary now._
-
-Near the very top of the code are two `#define` statements.  Uncomment the appropriate line to build for either display type.  The version on this repository is set to white (because that's the one I have).
-
-For white OLEDs:
-
-```
-#define WHITE_OLED
-//#define BLUE_OLED
-```
-
-For blue OLEDs:
-
-```
-//#define WHITE_OLED
-#define BLUE_OLED
-```
-
-### Teensy4.1 Support
-Digigurdy-baz has preliminary Teensy4.1 support.  The `SPIN_SAMPLES` variable should be adjusted so that each cycle of the code takes about as long.  These are the values I use, which both give about 100 cycles in 40ms.  This isn't a magic number, but it's what I settled on during testing and base the rest of the timing off of.  The crank/buzz should behave about the same by adjusting this to match:
-
-```
-// Teensy3.5 @120mHz = 4000
-// Teensy4.1 @600mHz = 11000
-const int SPIN_SAMPLES = 11000;
-```
-
-The `testing` branch of the code has Serial Monitoring turned on and prints each 100 loops with how long it's taking.  If you hook up your digigurdy to your computer and view the serial monitor inside the Teensyduino program, you can use this to gauge what `SPIN_SAMPLES` should be in other situations.
-
-### Compiling/Uploading
-After that, the steps are the same for the original digigurdy code.  You will need:
-  * Teensyduino, the IDE and build environment for the electronics
-  * The appropriate `Adafruit_[SSD1306 or SH1106]` library (see the whilte/blue display section above) for your gurdy installed within Teensyduino (`Sketch->Include Library->Manage Libraries...`).
-    * If it isn't already installed or doesn't install with the OLED library as a dependency, you also need the `Adafruit_GFX` general graphics library as well.
-    * If you have the SH1106 "blue" OLED, you need the SH1106 libraries here: https://github.com/wonho-maker/Adafruit_SH1106. Other versions will not work.
-  * The main `digigurdy-baz.ino` file along with the header files in a directory/folder named `digigurdy-baz`.  Teensyduino will offer to make this folder and move the file around if you don't.  The easiest way to make sure everything is in the right place is to simply clone this repository from github to your computer.  The repo itself is named the correct way for Teensyduino, and you can easily pull new updates later on if you want.
-
-With that in place, you should be able to open the `digigurdy-baz.ino` file in Teensyduino, and compile/upload it to your digigurdy.  Make sure to select the correct port for it and that the other settings look like this after plugging your gurdy to your computer:
-
-![teensyduino settings](https://raw.githubusercontent.com/wiki/bazmonk/digigurdy-baz/teensyduino.png)
-
-NOTE: Make sure in particular that the Teensy version is correct and that "USB Type" is "Serial + MIDI".  
-
-After uploading, it should automatically restart and be ready-to-go!
-
-### Clear EEPROM for first-time installations
-
-Testing has already shown that strange side-effects occur when the EEPROM (your digigurdy's memory) is filled with other stuff.  The start-up screen includes an `Other Options` selection, and inside is an option to clear your EEPROM.
-
-First-time users of this codebase should do this before continuing.  It only needs to be done once.
-
-Regular users can utilize it to effectively clear their save slots and reset the display style.
 
 ### Connecting to a Synthesizer
 
