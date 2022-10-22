@@ -6,6 +6,7 @@
 class ToggleButton: public GurdyButton {
   private:
     bool toggled;
+    
   public:
     ToggleButton(int my_pin);
 

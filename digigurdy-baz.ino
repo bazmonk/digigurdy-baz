@@ -22,7 +22,7 @@
 #include <ADC.h>
 
 // These are found in the digigurdy-baz repository
-#include "notes.h"           // Lets me refer to notes programmatically
+#include "notes.h"           // Note and note string variables
 #include "bitmaps.h"         // Pretty pictures
 #include "eeprom_values.h"   // Save-slot memory addresses
 #include "default_tunings.h" // Preset tunings.
@@ -35,6 +35,7 @@
 #include "buzzknob.h"        // For controlling the buzz sensitivity knob
 #include "gurdybutton.h"     // For basic buttons
 #include "togglebutton.h"    // For click-on, click-on buttons
+#include "keyboxbutton.h"    // For the keybox buttons
 
 // The "white OLED" uses these now.  The not-quite-standard blue version doesn't.
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
@@ -80,26 +81,7 @@ elapsedMillis the_buzz_timer;
 // CLASS DEFINITIONS
 // #################
 
-// class KeyboxButton adds a note offset variable to the GurdyButton class.
-//   This class is meant for use with the keybox keys, where:
-//   * Button type is press-on, release-off
-//   * Button has an offset that it raises notes to on a string.
-class KeyboxButton: public GurdyButton {
-  private:
-    int note_offset;
 
-  public:
-    KeyboxButton(int my_pin, int my_offset) : GurdyButton(my_pin) {
-      bounce_obj = new Bounce(my_pin, 5);
-      pinMode(my_pin, INPUT_PULLUP);
-      note_offset = my_offset;
-    };
-
-    int getOffset() {
-      return note_offset;
-    };
-
-};
 
 // GurdyString manages turning "strings" on and off and determining their note.
 // It abstracts the interactions with the MIDI layer.
