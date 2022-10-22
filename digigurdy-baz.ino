@@ -33,6 +33,7 @@
 // These are classes, also in the repository
 #include "simpleled.h"       // For controlling LED lights
 #include "buzzknob.h"        // For controlling the buzz sensitivity knob
+#include "gurdybutton.h"     // For basic buttons
 
 // The "white OLED" uses these now.  The not-quite-standard blue version doesn't.
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
@@ -77,60 +78,6 @@ elapsedMillis the_buzz_timer;
 // #################
 // CLASS DEFINITIONS
 // #################
-
-// Button objects abstract the physical buttons.
-//   This class is for generic buttons like the octave/tpose ones, which are
-//   press-on, release-off but otherwise generic in purpose.
-class GurdyButton {
-  protected:
-    Bounce* bounce_obj;
-    bool being_pressed;
-  public:
-
-    // my_pin corresponds to the physical Teensy pin.
-    GurdyButton(int my_pin) {
-
-      // The 5 is 5ms wait for events to complete.
-      // Recommended from the Bounce webpage for "good" buttons.
-      bounce_obj = new Bounce(my_pin, 5);
-
-      // In John's code the non-keybox buttons weren't using Bounce.
-      // I'm taking a guess that INPUT_PULLUP is what I want to use here but I think so.
-      // Originally it was using DirectRead/Write and INPUT.
-      pinMode(my_pin, INPUT_PULLUP);
-
-      being_pressed = false;
-    };
-
-    // Bounce objects should only be update()-ed once per loop(),
-    // so I'm not putting it in wasPressed()/wasReleased().
-    void update() {
-
-      bounce_obj->update();
-
-      // If button was pressed or released this cycle, record that.
-      if (bounce_obj->fallingEdge()) {
-        being_pressed = true;
-      } else if (bounce_obj->risingEdge()) {
-        being_pressed = false;
-      };
-    };
-
-    // This returns true if the button is being pressed.
-    bool beingPressed() {
-      return being_pressed;
-    };
-
-    // This returns true ONLY if the button was pressed this particular loop cycle.
-    bool wasPressed() {
-      return bounce_obj->fallingEdge();
-    };
-
-    // This returns true ONLY if the button was released this particular loop cycle.
-    bool wasReleased() {
-      return bounce_obj->risingEdge();
-    };
-};
 
 // class ToggleButton adds a state toggle to the GurdyButton class
 //   This class is meant for buttons where:
