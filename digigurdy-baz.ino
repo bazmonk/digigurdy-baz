@@ -31,12 +31,12 @@
 #include "config.h"          // Configuration variables
 
 // These are classes, also in the repository
-#include "simpleled.h"       // For controlling LED lights
-#include "buzzknob.h"        // For controlling the buzz sensitivity knob
 #include "gurdybutton.h"     // For basic buttons
 #include "togglebutton.h"    // For click-on, click-on buttons
 #include "keyboxbutton.h"    // For the keybox buttons
 #include "gurdycrank.h"      // For the crank!
+#include "gurdystring.h"     // For talking to MIDI
+#include "hurdygurdy.h"      // For managing the keybox buttons
 
 // The "white OLED" uses these now.  The not-quite-standard blue version doesn't.
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
@@ -67,176 +67,6 @@
 
 // Right now not using the std namespace is just impacting strings.  That's ok...
 using namespace MIDI_NAMESPACE;
-
-// This is a special Teensyduino internal variable that counts up by micro/milliseconds
-// automatically.  It's easy to set these to zero in code and simply wait for it to increment up to
-// some time without using delay() and freezing the entire program.  Using these I can pace the
-// reading of pins n' stuff, but still let the loop run as fast as it can.
-elapsedMicros the_read_timer;
-
-// #################
-// CLASS DEFINITIONS
-// #################
-
-
-
-// GurdyString manages turning "strings" on and off and determining their note.
-// It abstracts the interactions with the MIDI layer.
-class GurdyString {
-  private:
-    int open_note;          // This string's base note
-    int midi_channel;       // This string's MIDI channel (1-8)
-    int midi_volume;        // 0-127, I'm using 56 everywhere right now
-    bool mute_on = false;   // Controls the mute feature
-    int note_being_played;  // The note being sounded (base note + key offset)
-                            // This is necessary to turn off notes before turning on new ones.
-
-    // This is a pointer to the MIDI object that powers the phsyical MIDI ports on the gurdy.
-    // usbMIDI shows up with Arduino library magic somehow and we don't need this for it.
-    MidiInterface<SerialMIDI<HardwareSerial>> *MIDI_obj;
-
-  public:
-    GurdyString(int my_channel, int my_note, midi::MidiInterface<midi::SerialMIDI<HardwareSerial>> *my_MIDI_obj, int my_vol = 70) {
-      midi_channel = my_channel;
-      open_note = my_note;
-      midi_volume = my_vol;
-      note_being_played = open_note;
-      MIDI_obj = my_MIDI_obj;
-    };
-
-    // soundOn() sends sound on this string's channel at its notes
-    // optionally with an additional offset (e.g. a key being pressed)
-    //
-    // I DO NOT KNOW why I can just access usbMIDI here, but even when
-    // creating MIDI_obj globally, I could not access MIDI_obj the same way.
-    // Bringing in a pointer and working with MIDI_obj in this manner is
-    // because of that.
-    void soundOn(int my_offset = 0, int my_modulation = 0) {
-      note_being_played = open_note + my_offset;
-      if (!mute_on) {
-        usbMIDI.sendNoteOn(note_being_played, midi_volume, midi_channel);
-        MIDI_obj->sendNoteOn(note_being_played, midi_volume, midi_channel);
-
-        // If modulation isn't zero, send that as a MIDI CC for this channel
-        // This is meant to be configured to create a gentle vibrato.
-        if (my_modulation > 0) {
-          usbMIDI.sendControlChange(1, my_modulation, midi_channel);
-          MIDI_obj->sendControlChange(1, my_modulation, midi_channel);
-        }
-      }
-    };
-
-    // soundOff gracefully turns off the playing note on the string.
-    void soundOff() {
-      usbMIDI.sendNoteOff(note_being_played, midi_volume, midi_channel);
-      MIDI_obj->sendNoteOff(note_being_played, midi_volume, midi_channel);
-    };
-
-    // soundKill is a nuclear version of soundOff() that kills sound on the channel.
-    // It does not need to know the note being played as it kills all of them.
-    void soundKill() {
-      usbMIDI.sendControlChange(123, 0, midi_channel);
-      MIDI_obj->sendControlChange(123, 0, midi_channel);
-    };
-
-    int getOpenNote() {
-      return open_note;
-    };
-
-    void setOpenNote(int new_note) {
-      open_note = new_note;
-    };
-
-    // MIDI volume is an integer between 0 (off) and 127 (full volume).
-    void setVolume(int vol) {
-      midi_volume = vol;
-    };
-
-    int getVolume() {
-      return midi_volume;
-    };
-
-    void setMute(bool mute) {
-      mute_on = mute;
-    };
-
-    bool getMute() {
-      return mute_on;
-    };
-
-    void setProgram(uint8_t program) {
-      usbMIDI.sendProgramChange(program, midi_channel);
-      MIDI_obj->sendProgramChange(program, midi_channel);
-    }
-};
-
-// class HurdyGurdy is basically a virtual keybox for buttons that control
-// notes.  It manages updating and detecting the button actions and determines
-// ultimately which note the "keybox" is producing.
-class HurdyGurdy {
-  private:
-    int keybox_size;         // How many keys are in the keybox
-    int max_offset;          // The currest highest key being pressed
-    int prev_offset;         // The highest key from last loop() cycle
-    bool higher_key_pressed;
-    bool lower_key_pressed;
-
-  public:
-    KeyboxButton* keybox[num_keys];
-    HurdyGurdy(const int pin_arr[], int key_size) {
-      keybox_size = key_size;
-      max_offset = 0;
-
-      // Run through the array from the top of this file and create all the keyboxbutton
-      // objects
-      for(int x = 1; x < key_size + 1; x++) {
-        keybox[x-1] = new KeyboxButton(pin_arr[x], x);
-      };
-    };
-
-    // This method both updates all the keys, and returns the highest offset/notes
-    // being pressed this cycle.
-    int getMaxOffset() {
-
-      higher_key_pressed = false;
-      lower_key_pressed = false;
-
-      // Save the last highest key
-      prev_offset = max_offset;
-      max_offset = 0;
-
-      // Look at each key in order
-      for(int x = 0; x < keybox_size; x++) {
-        // Update the key
-        keybox[x]->update();
-
-        // if the key is being pressed, record that key's offset.  Array is in order,
-        // so at the end we should have the max_offset.
-        if (keybox[x]->beingPressed()) {
-          max_offset = keybox[x]->getOffset();
-        };
-      };
-
-      if (max_offset > prev_offset) {
-        higher_key_pressed = true;
-      };
-
-      if (max_offset < prev_offset) {
-        lower_key_pressed = true;
-      };
-
-      return max_offset;
-    };
-
-    bool higherKeyPressed() {
-      return higher_key_pressed;
-    };
-
-    bool lowerKeyPressed() {
-      return lower_key_pressed;
-    };
-
-};
 
 void printDisplay(int mel1, int mel2, int drone, int tromp, int tpose, int cap, int offset, bool hi_mute, bool lo_mute, bool drone_mute, bool tromp_mute) {
 
