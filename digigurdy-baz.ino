@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v1.9.0 (reorg)
+// VERSION: v1.9.1 (reorg)
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
@@ -270,6 +270,11 @@ GurdyButton *tpose_up;
 GurdyButton *tpose_down;
 GurdyButton *capo;
 
+// These are the "extra" buttons, new on the Oct '22 gurdies
+GurdyButton *ex1Button;
+GurdyButton *ex2Button;
+GurdyButton *ex3Button;
+
 // This defines the +/- one octave transpose range.
 const int max_tpose = 12;
 int tpose_offset;
@@ -356,7 +361,7 @@ void setup() {
   display.println("---------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("21 Oct 2022,  1.9.0 ");
+  display.println("21 Oct 2022,  1.9.1 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -434,6 +439,10 @@ void setup() {
 
   capo = new GurdyButton(23); // The capo button
   capo_offset = 0;
+
+  ex1Button = new GurdyButton(41);
+  ex2Button = new GurdyButton(15);
+  ex3Button = new GurdyButton(14);
 
   scene_signal_type = EEPROM.read(EEPROM_SCENE_SIGNALLING);
 };
@@ -1846,7 +1855,7 @@ void about_screen() {
   display.println("---------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("21 Oct 2022,  1.9.0 ");
+  display.println("21 Oct 2022,  1.9.1 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -1936,7 +1945,7 @@ void pause_screen() {
     " ----Pause  Menu---- \n"
     " 1) Load    2) Save  \n"
     " 3) Tuning  4) Other \n\n"
-    " X or 5) Go Back     \n\n";
+    " X, 5 or ex1) Go Back\n\n";
 
     if (drone_mode == 0) {
       disp_str = disp_str + "A) Drone:On ,Trmp:On \n";
@@ -1970,6 +1979,7 @@ void pause_screen() {
     myXButton->update();
     myAButton->update();
     myBButton->update();
+    ex1Button->update();
 
     if (my1Button->wasPressed()) {
       if (load_tuning_screen()) {
@@ -1990,7 +2000,7 @@ void pause_screen() {
         done = true;
       };
 
-    } else if (my5Button->wasPressed() || myXButton->wasPressed()) {
+    } else if (my5Button->wasPressed() || myXButton->wasPressed() || ex1Button->wasPressed()) {
       done = true;
 
     } else if (myAButton->wasPressed()) {
@@ -2086,8 +2096,13 @@ void loop() {
   myAButton->update();
   myXButton->update();
 
-  // If the "X" and "O" buttons are both down, trigger the tuning menu
-  if (myAButton->beingPressed() && myXButton->beingPressed()) {
+  ex1Button->update();
+  ex2Button->update();
+  ex3Button->update();
+
+  // If the "X" and "O" buttons are both down, or if the first extra button is pressed,
+  // trigger the tuning menu
+  if ((myAButton->beingPressed() && myXButton->beingPressed()) || ex1Button->wasPressed()) {
 
     // Turn off the sound :-)
     mystring->soundOff();

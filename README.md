@@ -2,7 +2,10 @@
 
 **Pre-compiled builds of the code will be made available from 1.7.99 and up.  See https://github.com/bazmonk/digigurdy-baz/wiki/install-by-hex for installation instructions.**
 
-**Check out version 1.9.0! (NEW)**
+**Check out version 1.9.1! (NEW)**
+
+* 1.9.1 -
+  * Leftmost button acts as pause menu shortcut.
 
 * 1.9.0 -
   * Reorganization of custom classes into separate files.  It's for my sanity... this makes the main file about 25% smaller, and enforces some best practices on my part.
