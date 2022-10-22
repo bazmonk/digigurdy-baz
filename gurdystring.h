@@ -11,6 +11,7 @@ class GurdyString {
     int midi_channel;       // This string's MIDI channel (1-8)
     int midi_volume;        // 0-127, I'm using 56 everywhere right now
     bool mute_on = false;   // Controls the mute feature
+    bool is_playing = false;
     int note_being_played;  // The note being sounded (base note + key offset)
                             // This is necessary to turn off notes before turning on new ones.
 
@@ -29,6 +30,7 @@ class GurdyString {
     int getVolume();
     void setMute(bool mute);
     bool getMute();
+    bool isPlaying();
     void setProgram(uint8_t program);
 };
 

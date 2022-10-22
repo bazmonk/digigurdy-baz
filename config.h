@@ -28,10 +28,10 @@ const int EXPRESSION_START = 50;
 // necessary to know how many slots there are in a revolution.
 //
 // This is a count of the black/blocking bars on your wheel, not the number of transitions.
-const int NUM_SPOKES = 89;
+const int NUM_SPOKES = 80;
 
 // This is the minimum velocity that produces sound.  This is actual crank rpm (rev/minute).
-const float V_THRESHOLD = 10.5;
+const float V_THRESHOLD = 5.5;
 
 // This is how long (in microseconds, 1000us = 1ms = 0.001s) the code waits in between reading the
 // crank.  This determines the resolution, not how long we're waiting to detect movement.
@@ -39,11 +39,7 @@ const int SAMPLE_RATE = 100;
 
 // How long we wait for potential movement of the crank changes dynamically, but not longer than
 // this time in microseconds.
-const int MAX_WAIT_TIME = 45000;
-
-// This is how long to wait after the last detected motion to start lowering the average velocity,
-// also in microseconds.  This is basically how long to wait to detect more motion.
-const int DECAY_RATE = 10000;
+const int MAX_WAIT_TIME = 40000;
 
 // Once the crank has stopped (after the DECAY_RATE above), we multiply the last velocity by this.
 // E.g. 0.2 means if the velocity was 60, once we stop we consider the current velocity to be 12,

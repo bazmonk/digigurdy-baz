@@ -27,6 +27,7 @@ GurdyCrank::GurdyCrank(int s_pin, int buzz_pin, ADC* adc_obj, int led_pin) {
   last_event = digitalRead(sensor_pin);
 };
 
+// This had a use, and may just go away...
 bool GurdyCrank::isDetected() {
   return true;
 };

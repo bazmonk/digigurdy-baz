@@ -30,12 +30,14 @@ void GurdyString::soundOn(int my_offset, int my_modulation) {
       MIDI_obj->sendControlChange(1, my_modulation, midi_channel);
     }
   }
+  is_playing = true;
 };
 
 // soundOff gracefully turns off the playing note on the string.
 void GurdyString::soundOff() {
   usbMIDI.sendNoteOff(note_being_played, midi_volume, midi_channel);
   MIDI_obj->sendNoteOff(note_being_played, midi_volume, midi_channel);
+  is_playing = false;
 };
 
 // soundKill is a nuclear version of soundOff() that kills sound on the channel.
@@ -43,6 +45,7 @@ void GurdyString::soundOff() {
 void GurdyString::soundKill() {
   usbMIDI.sendControlChange(123, 0, midi_channel);
   MIDI_obj->sendControlChange(123, 0, midi_channel);
+  is_playing = false;
 };
 
 int GurdyString::getOpenNote() {
@@ -68,6 +71,10 @@ void GurdyString::setMute(bool mute) {
 
 bool GurdyString::getMute() {
   return mute_on;
+};
+
+bool GurdyString::isPlaying() {
+  return is_playing;
 };
 
 void GurdyString::setProgram(uint8_t program) {

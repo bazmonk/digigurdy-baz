@@ -85,7 +85,7 @@ void printDisplay(int mel1, int mel2, int drone, int tromp, int tpose, int cap, 
   if (!lo_mute) {
     disp_str = disp_str + " Low Melody: " + LongNoteNum[mel2 + tpose] + "\n\n";
   } else {
-    disp_str = disp_str + " Low Melody:   MUTE \n";
+    disp_str = disp_str + " Low Melody:   MUTE \n\n";
   };
   if (!tromp_mute) {
     disp_str = disp_str + "  Trompette: " + LongNoteNum[tromp + tpose + cap] + "\n";
@@ -378,24 +378,6 @@ void setup() {
 
   adc = new ADC();
   mycrank = new GurdyCrank(15, A2, adc, LED_PIN);
-  display.clearDisplay();
-  display.setTextSize(2);
-  display.setTextColor(WHITE);
-  display.setCursor(0, 0);
-  display.println(" DigiGurdy");
-  display.setTextSize(1);
-  display.println(" --------------------");
-  display.setTextSize(2);
-  display.println("   Crank  ");
-
-  if (mycrank->isDetected()) {
-    display.println(" Detected ");
-  } else {
-    display.println("   Absent ");
-  };
-
-  display.display();
-  delay(1000);
 
   // The keybox arrangement is decided by pin_array, which is up in the CONFIG SECTION
   // of this file.  Make adjustments there.
@@ -433,15 +415,15 @@ void setup() {
   mykeyclick = new GurdyString(6, Note(b5), myMIDI);
 
 
-  tpose_up = new GurdyButton(21);   // A.k.a. the button formerly known as octave-up
-  tpose_down = new GurdyButton(22); // A.k.a. the button formerly known as octave-down
+  tpose_up = new GurdyButton(22);   // A.k.a. the button formerly known as octave-up
+  tpose_down = new GurdyButton(21); // A.k.a. the button formerly known as octave-down
   tpose_offset = 0;
 
   capo = new GurdyButton(23); // The capo button
   capo_offset = 0;
 
   ex1Button = new GurdyButton(41);
-  ex2Button = new GurdyButton(15);
+  ex2Button = new GurdyButton(17);
   ex3Button = new GurdyButton(14);
 
   scene_signal_type = EEPROM.read(EEPROM_SCENE_SIGNALLING);
@@ -2196,6 +2178,88 @@ void loop() {
     } else {
       printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
                    tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
+    };
+  };
+
+  // If ex2 is pressed during play, cycle through the melody string on/off options.
+  if (ex2Button->wasPressed()) {
+    if (mel_mode == 0) {
+      mel_mode = 1; // 1 == high on, low off
+      mystring->setMute(false);
+      mylowstring->setMute(true);
+      if (mylowstring->isPlaying()) {
+        mylowstring->soundOff();
+        mylowstring->soundOn();
+      };
+    } else if (mel_mode == 1) {
+      mel_mode = 2; // 2 == high off, low on
+      mystring->setMute(true);
+      mylowstring->setMute(false);
+      if (mystring->isPlaying()) {
+        mystring->soundOff();
+        mystring->soundOn();
+        mylowstring->soundOff();
+        mylowstring->soundOn();
+      };
+    } else if (mel_mode == 2) {
+      mel_mode = 0; // 0 == high on, low on
+      mystring->setMute(false);
+      mylowstring->setMute(false);
+      if (mystring->isPlaying()) {
+        mystring->soundOff();
+        mystring->soundOn();
+      };
+    };
+    if (mystring->isPlaying()) {
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset);
+    } else {
+      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
+    };
+  };
+
+  // If ex3 is pressed during play, cycle thought the drone/trompette on/off options.
+  if (ex3Button->wasPressed()) {
+    if (drone_mode == 0) {
+      drone_mode = 1; // 1 == both off
+      mydrone->setMute(true);
+      mytromp->setMute(true);
+      if (mydrone->isPlaying()) {
+        mydrone->soundOff();
+        mydrone->soundOn();
+        mytromp->soundOff();
+        mytromp->soundOn();
+      };
+    } else if (drone_mode == 1) {
+      drone_mode = 2; // 2 == drone on, tromp off
+      mydrone->setMute(false);
+      mytromp->setMute(true);
+      if (mydrone->isPlaying()) {
+        mydrone->soundOff();
+        mydrone->soundOn();
+      };
+    } else if (drone_mode == 2) {
+      drone_mode = 3; // 3 == drone off, tromp on
+      mydrone->setMute(true);
+      mytromp->setMute(false);
+      if (mydrone->isPlaying()) {
+        mydrone->soundOff();
+        mydrone->soundOn();
+        mytromp->soundOff();
+        mytromp->soundOn();
+      };
+    } else if (drone_mode == 3) {
+      drone_mode = 0; // 0 == both on
+      mydrone->setMute(false);
+      mytromp->setMute(false);
+      if (mydrone->isPlaying()) {
+        mydrone->soundOff();
+        mydrone->soundOn();
+      };
+    };
+    if (mystring->isPlaying()) {
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset);
+    } else {
+      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
     };
   };
 

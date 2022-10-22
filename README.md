@@ -5,7 +5,15 @@
 **Check out version 1.9.1! (NEW)**
 
 * 1.9.1 -
-  * Leftmost button acts as pause menu shortcut.
+  * The new "extra" buttons are (left-to-right) called ex1, ex2, ex3.
+    * ex1 toggles the pause menu (the "A+X" combo)
+    * ex2 toggles through the melody mute options (there's 3)
+    * ex3 toggles through the drone/trompette mute options (there's 4)
+    * (the second two work during play!)
+  * I've made the crank a little more sensitive to cutting off when cranking stops.
+  * I've made the minimum velocity for sound a tiny lower (about 1 rev per 5 seconds, pretty slow)
+  * Cleaned up some unused variables.
+
 
 * 1.9.0 -
   * Reorganization of custom classes into separate files.  It's for my sanity... this makes the main file about 25% smaller, and enforces some best practices on my part.
