@@ -58,24 +58,7 @@ Other "testing" branch changes since v1.0:
 
 ## About
 
-This is a rewrite of the digigurdy code (https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy).
-
-The code has been significantly streamlined (20% the size of the original source code, compiles to only 30% the teensy3.5's capacity), and there are several new features:
-
-* A re-worked tuning menu, allowing a choice of G/C or D/G tuning, each with a selection (one each, four total) of:
-  * 4 high chanterelles (unison and fifths)
-  * 4 low chanterelles (unison and fifths)
-  * 6 drones
-  * 6 trompettes
-* The capo button allows **on-the-fly** toggling of 1 or 2 whole-note capos on the drone/trompette strings.
-* Two transpose buttons allow **on-the-fly** transposing of all strings up *or* down one octave in half-steps (12 up, 12 down)!
-  * Every tuning can be played in *any key* within an octave of it.
-* 4 pre-loaded default presets (matching John Dingley's orignal presets)
-* 4 _save slots_ for saving your favorite tunings!
-* Built-in EEPROM clearing feature for first-time installation
-* **On-Screen-Display** showing current string tunings, transpose and capo settings, as well as a read-out of the current note being played on the keybox.
-  * While playing, a [big pretty bitmap note](https://www.youtube.com/shorts/XOBMtSio8nA) or [a note + staff](https://www.youtube.com/shorts/KD5NucKWTos) now displays instead of the full settings.  They still show up when not playing.  This is adjustable in the startup menu.
-* Muting of both or either the drone/trompette strings directly from the pause menu.
+This is the software repository for the digigurdy code (https://digigurdy.com).
 
 ### Connecting to a Synthesizer
 
@@ -176,4 +159,4 @@ I haven't really thought of how I'll handle a bunch of competing pull requests b
 
 ## Acknowledgements
 
-HUGE credit to John Dingley, his amazing creation (the DigiGurdy itself), and the original codebase that he wrote.  He worked out the display, the way the crank works, the interaction with the MIDI subsystem... I'm standing on his shoulders.
+HUGE credit to John Dingley, his amazing creation (the DigiGurdy itself), and the original codebase that he wrote.  He worked out the display, the way the original crank worked, the interaction with the MIDI subsystem... I'm standing on his shoulders.
