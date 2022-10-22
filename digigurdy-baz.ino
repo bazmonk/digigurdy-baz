@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v1.9.1 (reorg)
+// VERSION: v1.9.2 (reorg)
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
@@ -30,6 +30,8 @@
 #include "staff_bitmaps.h"   // Staff bitmaps
 #include "config.h"          // Configuration variables
 
+#include "display.h"         // Intializes our display object
+
 // These are classes, also in the repository
 #include "gurdybutton.h"     // For basic buttons
 #include "togglebutton.h"    // For click-on, click-on buttons
@@ -37,33 +39,6 @@
 #include "gurdycrank.h"      // For the crank!
 #include "gurdystring.h"     // For talking to MIDI
 #include "hurdygurdy.h"      // For managing the keybox buttons
-
-// The "white OLED" uses these now.  The not-quite-standard blue version doesn't.
-#define SCREEN_WIDTH 128 // OLED display width, in pixels
-#define SCREEN_HEIGHT 64
-
-// The white OLED uses Adafruit SSD1306.  Blue uses SH1106.
-#ifdef WHITE_OLED
-  #include <Adafruit_SSD1306.h>
-#endif
-#ifdef BLUE_OLED
-  #include <Adafruit_SH1106.h>
-#endif
-
-// These are the Teensy pins wired up for the OLED.
-#define OLED_MOSI 9
-#define OLED_CLK 10
-#define OLED_DC 11
-#define OLED_CS 12
-#define OLED_RESET 13
-
-// Initiate the correct kind of display object based on OLED type
-#ifdef WHITE_OLED
-  Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
-#endif
-#ifdef BLUE_OLED
-  Adafruit_SH1106 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
-#endif
 
 // Right now not using the std namespace is just impacting strings.  That's ok...
 using namespace MIDI_NAMESPACE;
@@ -270,7 +245,7 @@ GurdyButton *tpose_up;
 GurdyButton *tpose_down;
 GurdyButton *capo;
 
-// These are the "extra" buttons, new on the Oct '22 gurdies
+// These are the "extra" buttons, new on the rev3.0 gurdies
 GurdyButton *ex1Button;
 GurdyButton *ex2Button;
 GurdyButton *ex3Button;
@@ -361,7 +336,7 @@ void setup() {
   display.println("---------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("21 Oct 2022,  1.9.1 ");
+  display.println("22 Oct 2022,  1.9.2 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -370,7 +345,7 @@ void setup() {
   // Un-comment to print yourself debugging messages to the Teensyduino
   // serial console.
   Serial.begin(115200);
-  delay(1000);
+  delay(500);
   Serial.println("Hello.");
 
   myMIDI = new MidiInterface<SerialMIDI<HardwareSerial>>((SerialMIDI<HardwareSerial>&)mySerialMIDI);
@@ -1837,7 +1812,7 @@ void about_screen() {
   display.println("---------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("21 Oct 2022,  1.9.1 ");
+  display.println("22 Oct 2022,  1.9.2 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();

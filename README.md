@@ -2,7 +2,10 @@
 
 **Pre-compiled builds of the code will be made available from 1.7.99 and up.  See https://github.com/bazmonk/digigurdy-baz/wiki/install-by-hex for installation instructions.**
 
-**Check out version 1.9.1! (NEW)**
+**Check out version 1.9.2! (NEW)**
+
+* 1.9.2 -
+  * Further re-org.
 
 * 1.9.1 -
   * The new "extra" buttons are (left-to-right) called ex1, ex2, ex3.
