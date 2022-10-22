@@ -34,6 +34,7 @@
 #include "simpleled.h"       // For controlling LED lights
 #include "buzzknob.h"        // For controlling the buzz sensitivity knob
 #include "gurdybutton.h"     // For basic buttons
+#include "togglebutton.h"    // For click-on, click-on buttons
 
 // The "white OLED" uses these now.  The not-quite-standard blue version doesn't.
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
@@ -78,40 +79,6 @@ elapsedMillis the_buzz_timer;
 // #################
 // CLASS DEFINITIONS
 // #################
-
-// class ToggleButton adds a state toggle to the GurdyButton class
-//   This class is meant for buttons where:
-//   * Pressing and releasing once activates it.
-//   * Pressing and releasing again deactivates it.
-class ToggleButton: public GurdyButton {
-  private:
-    bool toggled;
-  public:
-    ToggleButton(int my_pin, bool start_toggled = false) : GurdyButton(my_pin) {
-      bounce_obj = new Bounce(my_pin, 10);
-      pinMode(my_pin, INPUT_PULLUP);
-      toggled = start_toggled;
-    };
-
-    // update() works a little differently and also checks the toggle status.
-    void update() {
-      bounce_obj->update();
-
-      // We'll only look at the downpress to register the toggle.
-      if(bounce_obj->fallingEdge()) {
-        toggled = !toggled;
-      };
-    };
-
-    bool toggleOn() {
-      return toggled;
-    };
-
-    // This is to forcibly turn the toggle off after a menu press.
-    void setToggle(bool new_toggle) {
-      toggled = new_toggle;
-    };
-};
 
 // class KeyboxButton adds a note offset variable to the GurdyButton class.
 //   This class is meant for use with the keybox keys, where:
