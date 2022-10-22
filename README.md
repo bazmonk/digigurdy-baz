@@ -1,6 +1,8 @@
 # digigurdy-baz
 
-**Check out version 1.7.9! (NEW)**
+**Pre-compiled builds of the code will be made available from 1.7.99 and up.  See https://github.com/bazmonk/digigurdy-baz/wiki/install-by-hex for installation instructions.**
+
+**Check out version 1.7.99! (NEW)**
 
 * 1.7.99 -
   * Buzz Knob LED can be disabled in config.h if desired.  LED_PIN also a config variable.
