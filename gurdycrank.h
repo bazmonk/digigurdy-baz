@@ -2,6 +2,7 @@
 #define GURDYCRANK_H
 
 #include "buzzknob.h"
+#include "config.h"
 #include "simpleled.h"
 
 // class GurdyCrank controls the cranking mechanism, including the buzz triggers.
