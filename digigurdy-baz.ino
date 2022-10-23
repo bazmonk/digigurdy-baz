@@ -304,18 +304,13 @@ void tuning_hi_melody() {
   int choice3;
   int choice4;
 
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setCursor(0, 0);
-
   String disp_str = "         ";
   if (gc_or_dg) {
     base_note = Note(g4);
-    disp_str = disp_str + "G/C         \n";
+    disp_str += "G/C         \n";
   } else {
     base_note = Note(d4);
-    disp_str = disp_str + "D/G         \n";
+    disp_str += "D/G         \n";
   };
 
   choice1 = base_note + 12;
@@ -323,18 +318,15 @@ void tuning_hi_melody() {
   choice3 = base_note;
   choice4 = base_note + 5;
 
-  disp_str = disp_str + \
-  " Choose High Melody: \n"
-  "                     \n"
-  " 1) " + NoteNum[choice1] + " **  2) " + NoteNum[choice2] + "     \n"
-  " 3) " + NoteNum[choice3] + "     4) " + NoteNum[choice4] + "     \n"
-  "                     \n"
-  "                     \n"
-  " A) Default (**)     \n"
-  "                     \n";
+  disp_str += " Choose High Melody: \n"
+              "                     \n"
+              " 1) " + NoteNum[choice1] + " **  2) " + NoteNum[choice2] + "     \n"
+              " 3) " + NoteNum[choice3] + "     4) " + NoteNum[choice4] + "     \n"
+              "                     \n"
+              "                     \n"
+              " A) Default (**)     \n";
 
-  display.print(disp_str.c_str());
-  display.display();
+  print_screen(disp_str);
 
   bool done = false;
 
@@ -381,23 +373,17 @@ void tuning_low_melody() {
   choice3 = base_note - 12;
   choice4 = base_note - 19;
 
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setCursor(0, 0);
-
   String disp_str = " High Melody:   " + NoteNum[mystring->getOpenNote()] + "   \n"
-  " Choose Low Melody:  \n"
-  "                     \n"
-  " 1) " + NoteNum[choice1] + " **  2) " + NoteNum[choice2] + "     \n"
-  " 3) " + NoteNum[choice3] + "     4) " + NoteNum[choice4] + "     \n"
-  "                     \n"
-  "                     \n"
-  " A) Default (**)     \n"
-  "                     \n";
+                    " Choose Low Melody:  \n"
+                    "                     \n"
+                    " 1) " + NoteNum[choice1] + " **  2) " + NoteNum[choice2] + "     \n"
+                    " 3) " + NoteNum[choice3] + "     4) " + NoteNum[choice4] + "     \n"
+                    "                     \n"
+                    "                     \n"
+                    " A) Default (**)     \n"
+                    "                     \n";
 
-  display.print(disp_str.c_str());
-  display.display();
+  print_screen(disp_str);
 
   bool done = false;
 
@@ -454,22 +440,16 @@ void tuning_drone() {
     choice6 = base_note;
   };
 
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setCursor(0, 0);
-
   String disp_str = " Hi/Lo Melody: " + NoteNum[mystring->getOpenNote()] + "/" + NoteNum[mylowstring->getOpenNote()] + " \n"
-  "    Choose Drone:    \n"
-  " 1) " + NoteNum[choice1] + "     2) " + NoteNum[choice2] + "     \n"
-  " 3) " + NoteNum[choice3] + " **  4) " + NoteNum[choice4] + "     \n"
-  " 5) " + NoteNum[choice5] + "     6) " + NoteNum[choice6] + "     \n"
-  "                     \n"
-  "                     \n"
-  " A) Default (**)     \n";
+                    "    Choose Drone:    \n"
+                    " 1) " + NoteNum[choice1] + "     2) " + NoteNum[choice2] + "     \n"
+                    " 3) " + NoteNum[choice3] + " **  4) " + NoteNum[choice4] + "     \n"
+                    " 5) " + NoteNum[choice5] + "     6) " + NoteNum[choice6] + "     \n"
+                    "                     \n"
+                    "                     \n"
+                    " A) Default (**)     \n";
 
-  display.print(disp_str.c_str());
-  display.display();
+  print_screen(disp_str);
 
   bool done = false;
 
@@ -528,22 +508,16 @@ void tuning_tromp() {
   choice5 = base_note - 19;
   choice6 = base_note - 12;
 
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setCursor(0, 0);
-
   String disp_str = " Hi/Lo Melody: " + NoteNum[mystring->getOpenNote()] + "/" + NoteNum[mylowstring->getOpenNote()] + " \n"
-  " Drone: " + NoteNum[mydrone->getOpenNote()] + "           \n"
-  "  Choose Trompette:  \n"
-  " 1) " + NoteNum[choice1] + " **  2) " + NoteNum[choice2] + "     \n"
-  " 3) " + NoteNum[choice3] + "     4) " + NoteNum[choice4] + "     \n"
-  " 5) " + NoteNum[choice5] + "     6) " + NoteNum[choice6] + "     \n"
-  "                     \n"
-  " A) Default (**)     \n";
+                    " Drone: " + NoteNum[mydrone->getOpenNote()] + "           \n"
+                    "  Choose Trompette:  \n"
+                    " 1) " + NoteNum[choice1] + " **  2) " + NoteNum[choice2] + "     \n"
+                    " 3) " + NoteNum[choice3] + "     4) " + NoteNum[choice4] + "     \n"
+                    " 5) " + NoteNum[choice5] + "     6) " + NoteNum[choice6] + "     \n"
+                    "                     \n"
+                    " A) Default (**)     \n";
 
-  display.print(disp_str.c_str());
-  display.display();
+  print_screen(disp_str);
 
   bool done = false;
 
@@ -601,34 +575,22 @@ bool view_slot_screen(int slot_num) {
   if (slot_num == 3) { slot = EEPROM_SLOT3; };
   if (slot_num == 4) { slot = EEPROM_SLOT4; };
 
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setCursor(0, 0);
-  display.print(" -Saved Slot Tuning- \n");
-  display.print(" Hi Melody: ");
-  display.print(LongNoteNum[EEPROM.read(slot + EEPROM_HI_MEL)].c_str());
-  display.print("  \n");
-  display.print(" Lo Melody: ");
-  display.print(LongNoteNum[EEPROM.read(slot + EEPROM_LO_MEL)].c_str());
-  display.print("  \n");
-  display.print(" Drone:     ");
-  display.print(LongNoteNum[EEPROM.read(slot + EEPROM_DRONE)].c_str());
-  display.print("  \n");
-  display.print(" Trompette: ");
-  display.print(LongNoteNum[EEPROM.read(slot + EEPROM_TROMP)].c_str());
-  display.print("  \n");
-  display.print(" Tpose: ");
-  if (EEPROM.read(slot + EEPROM_TPOSE) > 12) { display.print("+"); };
-  display.print((EEPROM.read(slot + EEPROM_TPOSE))-12);
-  display.print("  Capo: ");
-  if (EEPROM.read(slot + EEPROM_CAPO) > 0) { display.print("+"); };
-  display.print(EEPROM.read(slot + EEPROM_CAPO));
-  display.print("\n");
-  display.print(" A or 1) Accept \n");
-  display.print(" X or 2) Go Back  \n");
+  String disp_str = " -Saved Slot Tuning- \n"
+                    " Hi Melody: " + LongNoteNum[EEPROM.read(slot + EEPROM_HI_MEL)] + "  \n"
+                    " Lo Melody: " + LongNoteNum[EEPROM.read(slot + EEPROM_LO_MEL)] + "  \n"
+                    " Drone:     " + LongNoteNum[EEPROM.read(slot + EEPROM_DRONE)] + "  \n"
+                    " Trompette: " + LongNoteNum[EEPROM.read(slot + EEPROM_TROMP)] + "  \n"
+                    " Tpose: ";
 
-  display.display();
+  if (EEPROM.read(slot + EEPROM_TPOSE) > 12) { disp_str += "+"; };
+  disp_str = disp_str + ((EEPROM.read(slot + EEPROM_TPOSE))-12) + "  Capo: ";
+
+  if (EEPROM.read(slot + EEPROM_CAPO) > 0) { disp_str += "+"; };
+  disp_str = disp_str + (EEPROM.read(slot + EEPROM_CAPO)) + "\n"
+             " A or 1) Accept \n"
+             " X or 2) Go Back  \n";
+
+  print_screen(disp_str);
 
   bool done = false;
   while (!done) {
@@ -988,22 +950,16 @@ void welcome_screen() {
   bool done = false;
   while (!done) {
 
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 0);
-    String disp_str = ""
-    " -----DigiGurdy----- \n"
-    " Select an Option:   \n"
-    "                     \n"
-    " 1) Load Preset      \n"
-    " 2) Load Save Slot   \n"
-    " 3) New Tuning Setup \n"
-    " 4) Other Options    \n"
-    "                     \n";
+    String disp_str = " -----DigiGurdy----- \n"
+                      " Select an Option:   \n"
+                      "                     \n"
+                      " 1) Load Preset      \n"
+                      " 2) Load Save Slot   \n"
+                      " 3) New Tuning Setup \n"
+                      " 4) Other Options    \n"
+                      "                     \n";
 
-    display.print(disp_str.c_str());
-    display.display();
+    print_screen(disp_str);
 
     // Check the 1 and 2 buttons
     my1Button->update();

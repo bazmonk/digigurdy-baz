@@ -7,7 +7,7 @@
 #define WHITE_OLED
 //#define BLUE_OLED
 
-// Uncomment this if you do not want to use the buzz LED feature
+// Comment this if you do not want to use the buzz LED feature
 #define LED_KNOB
 
 const String VERSION = "1.9.4";
