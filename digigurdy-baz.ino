@@ -19,13 +19,12 @@
 #include "default_tunings.h" // Preset tunings.
 #include "config.h"          // Configuration variables
 
-#include "common.h"
-
 // These are all about the display
 #include "display.h"         // Intializes our display object
 #include "startup_screens.h" // Startup-related screens.
 #include "play_screens.h"    // The screens mid-play (notes and staffs)
 #include "tuning_screens.h"  // The tuning and sub-menu screens.
+#include "other_screens.h"   // The "other" screen tree.
 
 // Right now not using the std namespace is just impacting strings.  That's ok...
 using namespace MIDI_NAMESPACE;
@@ -201,14 +200,6 @@ void signal_scene_change(int scene_idx) {
 // ##############
 // MENU FUNCTIONS
 // ##############
-//
-// Functions here drive the main behavior of the digigurdy.
-//
-// First-time hackers of this code: the loop() at the end of this is the main()
-// of ardruino/teensy programs.  It runs in an endless loop.  The welcome_screen()
-// is the first screen that comes after startup if you're trying to track down the flow.
-// The pause_screen() is what comes up when X+A is pressed.  The rest of the functions/screens
-// get called from them.  Hope that helps you find the part you care about!
 
 // load_preset_tunings accepts an int between 1-4 and sets the appropriate preset.
 // See the default_tunings.h file to modify what the presets actually are.
@@ -813,119 +804,6 @@ void save_tuning_screen() {
   display.print("\n  Saved!");
   display.display();
   delay(500);
-};
-
-void redetect_crank_screen() {
-
-  // In case the user has already tried removing it and it's freaking out, let's kill the sound.
-  mystring->soundKill();
-  mylowstring->soundKill();
-  mykeyclick->soundKill();
-  mytromp->soundKill();
-  mydrone->soundKill();
-  mybuzz->soundKill();
-
-  bool done = false;
-  while (!done) {
-
-    String disp_str = "                     \n"
-                      "                     \n"
-                      " Remove/Attach Crank \n"
-                      " And press 1...      \n";
-
-    print_screen(disp_str);
-
-    my1Button->update();
-
-    if (my1Button->wasPressed()) {
-      display.clearDisplay();
-      display.setTextSize(2);
-      display.setTextColor(WHITE);
-      display.setCursor(0, 0);
-      display.println(" DigiGurdy");
-      display.setTextSize(1);
-      display.println(" --------------------");
-      display.setTextSize(2);
-      display.println("   Crank  ");
-
-      if (mycrank->isDetected()) {
-        display.println(" Detected ");
-      } else {
-        display.println("   Absent ");
-      };
-
-      display.display();
-      delay(1000);
-
-      done = true;
-    };
-  };
-};
-
-void options_about_screen() {
-
-  about_screen();
-
-  while (true) {
-    myXButton->update();
-
-    if(myXButton->wasPressed()) {
-      break;
-    };
-  };
-
-  String disp_str = "      DigiGurdy      "
-                    "---------------------"
-                    "Special Thanks:      "
-                    "                     "
-                    "John Dingley         "
-                    "David Jacobs         "
-                    "lune36400            "
-                    "SalusaSecondus       ";
-
-  print_screen(disp_str);
-
-  while (true) {
-    myXButton->update();
-
-    if(myXButton->wasPressed()) {
-      break;
-    };
-  };
-};
-
-bool other_options_screen() {
-
-  bool done = false;
-  while (!done) {
-
-    String disp_str = " ---Other Options--- \n"
-                      "                     \n"
-                      " 1) Remove/Attach    \n"
-                      "      Crank          \n\n"
-                      " 2) About DigiGurdy  \n\n"
-                      " X or 3) Go Back     \n";
-
-    print_screen(disp_str);
-
-    my1Button->update();
-    my2Button->update();
-    my3Button->update();
-    myXButton->update();
-
-    if (my1Button->wasPressed()) {
-      redetect_crank_screen();
-      done = true;
-
-    } else if (my2Button->wasPressed()) {
-      options_about_screen();
-
-    } else if (my3Button->wasPressed() || myXButton->wasPressed()) {
-      return false;
-    };
-  };
-
-  return true;
 };
 
 // This is the screen that X+A gets you.
