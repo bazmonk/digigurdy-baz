@@ -1,6 +1,8 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+// This header gives access to the common gurdy objects for menu functions
+
 #include "gurdybutton.h"     // For basic buttons
 #include "togglebutton.h"    // For click-on, click-on buttons
 #include "keyboxbutton.h"    // For the keybox buttons
