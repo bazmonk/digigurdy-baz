@@ -42,6 +42,8 @@ void startup_screen_sqeuence() {
   display.display();
 
   display.clearDisplay();
+
+  // Display the about screen
   about_screen();
   delay(600);
 };
