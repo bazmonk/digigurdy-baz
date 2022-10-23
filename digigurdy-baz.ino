@@ -26,21 +26,15 @@
 #include "bitmaps.h"         // Pretty pictures
 #include "eeprom_values.h"   // Save-slot memory addresses
 #include "default_tunings.h" // Preset tunings.
-#include "note_bitmaps.h"    // Note (ABC) bitmaps
 #include "staff_bitmaps.h"   // Staff bitmaps
 #include "config.h"          // Configuration variables
 
-// These are classes, also in the repository
-#include "gurdybutton.h"     // For basic buttons
-#include "togglebutton.h"    // For click-on, click-on buttons
-#include "keyboxbutton.h"    // For the keybox buttons
-#include "gurdycrank.h"      // For the crank!
-#include "gurdystring.h"     // For talking to MIDI
-#include "hurdygurdy.h"      // For managing the keybox buttons
+#include "common.h"
 
 // These are all about the display
 #include "display.h"         // Intializes our display object
 #include "startup_screens.h" // Startup-related screens.
+#include "play_screens.h"    // The screens mid-play (notes and staffs)
 
 // Right now not using the std namespace is just impacting strings.  That's ok...
 using namespace MIDI_NAMESPACE;
@@ -96,29 +90,6 @@ void printDisplay(int mel1, int mel2, int drone, int tromp, int tpose, int cap, 
   display.print(disp_str.c_str());
   display.display();
 };
-
-void draw_note(int note, int x_offset) {
-  int octave = (note / 12 ) - 1;
-  int note_pos = (note % 12);
-
-  display.drawXBitmap(x_offset,0, letter[note_pos], 64, 64, 1);
-
-  if (octave >=0) {
-    // If we're making a regular note...
-    if (note_pos == 0 || note_pos == 2 || note_pos == 4 || note_pos == 5 ||
-        note_pos == 7 || note_pos == 9 || note_pos == 11) {
-
-      display.drawXBitmap(x_offset + 52,43, octave_num[octave], 14, 21, 1);
-    // If we're making a sharp/flat...
-    } else {
-      display.drawXBitmap(x_offset,0, sharp_num[octave], 64, 64, 1);
-    };
-  };
-
-  display.display();
-
-};
-
 
 int play_screen_type = 0;
 uint8_t scene_signal_type = 0;
@@ -207,27 +178,27 @@ MidiInterface<SerialMIDI<HardwareSerial>> *myMIDI;
 ADC* adc;
 
 // Declare the "keybox" and buttons.
-HurdyGurdy *mygurdy;
-ToggleButton *bigbutton;
-GurdyCrank *mycrank;
+extern HurdyGurdy *mygurdy;
+extern ToggleButton *bigbutton;
+extern GurdyCrank *mycrank;
 
 // As musical keys, these are referred to in the mygurdy object above.
 // This declaration of them is specifically for their use as navigational
 // buttons in the menu screens.  ok = O, back = X.
-KeyboxButton *myAButton;
-KeyboxButton *myXButton;
-KeyboxButton *my1Button;
-KeyboxButton *my2Button;
-KeyboxButton *my3Button;
-KeyboxButton *my4Button;
-KeyboxButton *my5Button;
-KeyboxButton *my6Button;
+extern KeyboxButton *myAButton;
+extern KeyboxButton *myXButton;
+extern KeyboxButton *my1Button;
+extern KeyboxButton *my2Button;
+extern KeyboxButton *my3Button;
+extern KeyboxButton *my4Button;
+extern KeyboxButton *my5Button;
+extern KeyboxButton *my6Button;
 
 // For legacy button-combo support:
-KeyboxButton *myAltTposeButton;
-KeyboxButton *myAltTposeUp;
-KeyboxButton *myAltTposeDown;
-KeyboxButton *myBButton;
+extern KeyboxButton *myAltTposeButton;
+extern KeyboxButton *myAltTposeUp;
+extern KeyboxButton *myAltTposeDown;
+extern KeyboxButton *myBButton;
 
 // Note that there aren't special classes for melody, drone, even the keyclick.
 // They are differentiated in the main loop():
@@ -235,22 +206,22 @@ KeyboxButton *myBButton;
 // * A drone/trompette is one that doesn't change.
 // * The keyclick "string" is just a drone that comes on and off at particular times.
 // * The buzz "string" is also just a drone that comes on/off at other particular times.
-GurdyString *mystring;
-GurdyString *mylowstring;
-GurdyString *mykeyclick;
-GurdyString *mytromp;
-GurdyString *mydrone;
-GurdyString *mybuzz;
+extern GurdyString *mystring;
+extern GurdyString *mylowstring;
+extern GurdyString *mykeyclick;
+extern GurdyString *mytromp;
+extern GurdyString *mydrone;
+extern GurdyString *mybuzz;
 
 // These are the dedicated transpose/capo buttons
-GurdyButton *tpose_up;
-GurdyButton *tpose_down;
-GurdyButton *capo;
+extern GurdyButton *tpose_up;
+extern GurdyButton *tpose_down;
+extern GurdyButton *capo;
 
 // These are the "extra" buttons, new on the rev3.0 gurdies
-GurdyButton *ex1Button;
-GurdyButton *ex2Button;
-GurdyButton *ex3Button;
+extern GurdyButton *ex1Button;
+extern GurdyButton *ex2Button;
+extern GurdyButton *ex3Button;
 
 // This defines the +/- one octave transpose range.
 const int max_tpose = 12;
@@ -285,13 +256,6 @@ int mel_mode = 0;
 // Here we establish how the "gurdy" is setup, what strings to use, and we also
 // start the MIDI communication.
 void setup() {
-
-  #ifdef WHITE_OLED
-    display.begin(SSD1306_SWITCHCAPVCC);
-  #endif
-  #ifdef BLUE_OLED
-    display.begin(SH1106_SWITCHCAPVCC);
-  #endif
 
   start_display();
   startup_screen_sqeuence();

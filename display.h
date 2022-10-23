@@ -2,6 +2,7 @@
 #define DISPLAY_H
 
 #include <Adafruit_GFX.h>
+#include <string>
 #include "config.h"
 
 // The white OLED uses Adafruit SSD1306.  Blue uses SH1106.
@@ -31,5 +32,6 @@
 #endif
 
 void start_display();
+void print_screen(std::string disp_str);
 
 #endif

@@ -15,3 +15,13 @@ void start_display() {
     display.begin(SH1106_SWITCHCAPVCC);
   #endif
 };
+
+void print_screen(std::string disp_str) {
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+
+  display.print(disp_str.c_str());
+  display.display();
+};
