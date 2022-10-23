@@ -26,7 +26,6 @@
 #include "bitmaps.h"         // Pretty pictures
 #include "eeprom_values.h"   // Save-slot memory addresses
 #include "default_tunings.h" // Preset tunings.
-#include "staff_bitmaps.h"   // Staff bitmaps
 #include "config.h"          // Configuration variables
 
 #include "common.h"
@@ -93,77 +92,6 @@ void printDisplay(int mel1, int mel2, int drone, int tromp, int tpose, int cap, 
 
 int play_screen_type = 0;
 uint8_t scene_signal_type = 0;
-
-static const int dot_pos[] = {
-  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-  -1, -1, -1, -1, 57, 53, 53, 49, 49, 45, 45, 41,
-  37, 37, 33, 33, 57, 53, 53, 49, 49, 45, 45, 41,
-  37, 37, 33, 33, 57, 53, 53, 57, 57, 53, 53, 49,
-  45, 45, 49, 49, 45, 41, 41, 37, 37, 33, 33, 29,
-  25, 25, 21, 21, 17, 13, 13,  9,  9,  5,  5,  1,
-   5,  5,  1,  1,  4,  0,  0, 24, 24, 20, 20, 16,
-  12, 12,  8,  8,  4,  0,  0, 24, 24, 20, 20, 16,
-  12, 12,  8,  8,  4,  0,  0, -1, -1, -1, -1, -1,
-  -1, -1, -1, -1, -1, -1, -1, -1
-};
-
-static const int staff_index[] = {
-  -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-  -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-  -1,-1,-1,-1, 6, 6, 6, 6, 6, 6, 6, 6,
-   6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-   6, 6, 6, 6, 6, 6, 6, 5, 5, 5, 5, 4,
-   4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-   3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2,
-   1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
-   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-   0, 0, 0, 0, 0, 0, 0,-1,-1,-1,-1,-1,
-  -1,-1,-1,-1,-1,-1,-1,-1
-};
-
-static const int va_marker[] = {
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2,
-  2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1,
-  1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3,
-  3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4,
-  4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0
-};
-
-void draw_staff(int note, int x_offset) {
-  if (dot_pos[note] >= 0) {
-    display.drawXBitmap(x_offset,0, staffs[staff_index[note]], 64, 64, 1);
-
-    display.drawXBitmap(x_offset + 29, dot_pos[note], dot, 7, 7, 1);
-
-    if (va_marker[note] == 2) {
-      display.drawXBitmap(x_offset + 42, 36, va15, 20, 10, 1);
-    } else if (va_marker[note] == 1) {
-      display.drawXBitmap(x_offset + 42, 36, va8, 20, 10, 1);
-    } else if (va_marker[note] == 3) {
-      display.drawXBitmap(x_offset + 42, 10, va8, 20, 10, 1);
-    } else if (va_marker[note] == 4) {
-      display.drawXBitmap(x_offset + 42, 10, va15, 20, 10, 1);
-    }
-  };
-  display.display();
-};
-
-void draw_play_screen(int note) {
-  display.clearDisplay();
-  if (play_screen_type == 0) {
-    draw_note(note, 0);
-    draw_staff(note, 64);
-  } else {
-    draw_note(note, 32);
-  };
-};
 
 // ##################
 // GLOBAL SETUP STUFF
@@ -2018,7 +1946,7 @@ void loop() {
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
 
-      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset);
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
     } else {
       printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
                  tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
@@ -2044,7 +1972,7 @@ void loop() {
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
 
-      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset);
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
     } else {
       printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
                    tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
@@ -2067,7 +1995,7 @@ void loop() {
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
 
-      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset);
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
     } else {
       printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
                    tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
@@ -2104,7 +2032,7 @@ void loop() {
       };
     };
     if (mystring->isPlaying()) {
-      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset);
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
     } else {
       printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
     };
@@ -2150,7 +2078,7 @@ void loop() {
       };
     };
     if (mystring->isPlaying()) {
-      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset);
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
     } else {
       printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
     };
@@ -2172,14 +2100,14 @@ void loop() {
       mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
-      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset);
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
 
     } else if (mycrank->startedSpinning() && !bigbutton->toggleOn()) {
       mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
       mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
-      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset);
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
 
     // Turn off the previous notes and turn on the new one with a click if new key this cycle.
     // NOTE: I'm not touching the drone/trompette.  Just leave it on if it's a key change.
@@ -2191,7 +2119,7 @@ void loop() {
       mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
       mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
       mykeyclick->soundOn(tpose_offset);
-      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset);
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
     };
 
     // Whenever we're playing, check for buzz.
