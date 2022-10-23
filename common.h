@@ -13,6 +13,15 @@
 #include "hurdygurdy.h"      // For managing the keybox buttons
 #include "notes.h"
 
+// ************
+// * COMMON.H *
+// ************
+// This file declares external objects out of the main file for use in other files here.
+// For example, menu screen functions that modify strings need access to their objects.
+// The idea is that a new screen function file just needs this in its header to grab the stuff
+// typically needed.  Some things (like EEPROM) are left out because they're only used in one
+// or two places.
+
 // I want to be able to interact with these objects across several files, so this is how
 // I'm doing it.  Is it proper?  Probably not, but it seems simple enough.
 

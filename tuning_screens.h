@@ -5,7 +5,6 @@
 #include "config.h"
 #include "common.h"
 #include "display.h"
-#include "notes.h"
 
 extern KeyboxButton *myAButton;
 extern KeyboxButton *myXButton;
