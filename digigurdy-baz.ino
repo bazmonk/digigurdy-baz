@@ -1,5 +1,4 @@
 // Digigurdy-Baz
-// VERSION: v1.9.3 (reorg)
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:

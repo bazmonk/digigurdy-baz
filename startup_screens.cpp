@@ -1,4 +1,5 @@
 #include "display.h"
+#include "config.h"
 #include "bitmaps.h"
 #include "startup_screens.h"
 
@@ -56,10 +57,10 @@ void about_screen() {
   String disp_str = "---------------------"
                     "   By Basil Lalli,   "
                     "Concept By J. Dingley"
-                    "23 Oct 2022,  1.9.3  "
+                    + REL_DATE + "\n"
                     "                     "
                     "  shorturl.at/tuDY1  ";
-                    
+
   display.println(disp_str);
   display.display();
 };

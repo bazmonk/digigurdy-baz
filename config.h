@@ -1,12 +1,17 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <Arduino.h>
+
 // ALL USERS!!! Uncomment one of these lines depending on what kind of OLED screen you have.
 #define WHITE_OLED
 //#define BLUE_OLED
 
 // Uncomment this if you do not want to use the buzz LED feature
 #define LED_KNOB
+
+const String VERSION = "1.9.3";
+const String REL_DATE = "23 Oct, 2022, v" + VERSION;
 
 // VIBRATO: I use a long-delay, very slow vibrato on the melody strings.  This variable controls how
 // much vibrato (how much modulation like with a physical mod wheel on a MIDI keyboard) to send.
