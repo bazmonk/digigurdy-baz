@@ -49,7 +49,7 @@ void startup_screen_sqeuence() {
   display.println("---------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("22 Oct 2022,  1.9.2 ");
+  display.println("23 Oct 2022,  1.9.3 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();

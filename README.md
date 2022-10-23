@@ -4,6 +4,10 @@
 
 **Check out version 1.9.2! (NEW)**
 
+* 1.9.3 -
+  * I've been using the wrong `string` :-(  Migrated from `std::string` to `String`.
+  * Compiled code got about 40% smaller.
+
 * 1.9.2 -
   * Further re-org.
 

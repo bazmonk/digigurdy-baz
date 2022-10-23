@@ -58,13 +58,13 @@ void printDisplay(int mel1, int mel2, int drone, int tromp, int tpose, int cap, 
 
   // This whole thing could be written more clearly...
 
-  std::string disp_str0 = "";
-  std::string disp_str = "";
+  String disp_str0 = "";
+  String disp_str = "";
 
   disp_str0 = "\n Tpose: ";
   disp_str = "\n\n";
   if (!hi_mute) {
-    disp_str = disp_str + "  Hi Melody: " + LongNoteNum[mel1 + tpose] + "\n";
+    disp_str = disp_str + "  Hi Melody: " + String(LongNoteNum[mel1 + tpose]) + "\n";
   } else {
     disp_str = disp_str + "  Hi Melody:   MUTE \n";
   };
@@ -89,7 +89,7 @@ void printDisplay(int mel1, int mel2, int drone, int tromp, int tpose, int cap, 
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
 
-  display.print(disp_str0.c_str());
+  display.print(disp_str0);
 
   // This is because the version of gcc Teensy uses has a bug with std::to_string(int)...
   // I need to print the tpose separately here because the display object will aceept it if it's not
@@ -102,6 +102,6 @@ void printDisplay(int mel1, int mel2, int drone, int tromp, int tpose, int cap, 
   if (cap > 0) { display.print("+"); };
   display.print(cap);
 
-  display.print(disp_str.c_str());
+  display.print(disp_str);
   display.display();
 };
