@@ -623,34 +623,21 @@ bool view_preset_screen(int preset) {
   if (preset == 3) { tunings = PRESET3; };
   if (preset == 4) { tunings = PRESET4; };
 
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setCursor(0, 0);
-  display.print(" ---Preset Tuning--- \n");
-  display.print(" Hi Melody: ");
-  display.print(LongNoteNum[tunings[0]].c_str());
-  display.print("  \n");
-  display.print(" Lo Melody: ");
-  display.print(LongNoteNum[tunings[1]].c_str());
-  display.print("  \n");
-  display.print(" Drone:     ");
-  display.print(LongNoteNum[tunings[2]].c_str());
-  display.print("  \n");
-  display.print(" Trompette: ");
-  display.print(LongNoteNum[tunings[3]].c_str());
-  display.print("  \n");
-  display.print(" Tpose: ");
-  if (tunings[5] > 12) { display.print("+"); };
-  display.print(tunings[5]);
-  display.print("  Capo: ");
-  if (tunings[6] > 0) { display.print("+"); };
-  display.print(tunings[6]);
-  display.print("\n");
-  display.print(" A or 1) Accept  \n");
-  display.print(" X or 2) Go Back  \n");
+  String disp_str = " ---Preset Tuning--- \n"
+                    " Hi Melody: " + LongNoteNum[tunings[0]] + "  \n"
+                    " Lo Melody: " + LongNoteNum[tunings[1]] + "  \n"
+                    " Drone:     " + LongNoteNum[tunings[2]] + "  \n"
+                    " Trompette: " + LongNoteNum[tunings[3]] + "  \n"
+                    " Tpose: ";
 
-  display.display();
+  if (tunings[5] > 12) { disp_str += "+"; };
+  disp_str = disp_str + tunings[5] + "  Capo: ";
+  if (tunings[6] > 0) { disp_str += "+"; };
+  disp_str = disp_str + tunings[6] + "\n"
+             " A or 1) Accept  \n"
+             " X or 2) Go Back  \n";
+
+  print_screen(disp_str);
 
   bool done = false;
   while (!done) {
@@ -680,22 +667,16 @@ bool load_saved_screen() {
   bool done = false;
   while (!done) {
 
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 0);
-    String disp_str = ""
-    " --Load Saved Slot-- \n"
-    " Select for Preview: \n"
-    "                     \n"
-    "     1) Slot 1       \n"
-    "     2) Slot 2       \n"
-    "     3) Slot 3       \n"
-    "     4) Slot 4       \n"
-    "X or 5) Go Back      \n";
+    String disp_str = " --Load Saved Slot-- \n"
+                      " Select for Preview: \n"
+                      "                     \n"
+                      "     1) Slot 1       \n"
+                      "     2) Slot 2       \n"
+                      "     3) Slot 3       \n"
+                      "     4) Slot 4       \n"
+                      "X or 5) Go Back      \n";
 
-    display.print(disp_str.c_str());
-    display.display();
+    print_screen(disp_str);
 
     // Check the 1 and 2 buttons
     my1Button->update();
@@ -730,22 +711,16 @@ bool load_preset_screen() {
   bool done = false;
   while (!done) {
 
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 0);
-    String disp_str = ""
-    " ---Load A Preset--- \n"
-    " Select a Preset:    \n"
-    "                     \n"
-    " 1) " + PRESET1_NAME + "\n"
-    " 2) " + PRESET2_NAME + "\n"
-    " 3) " + PRESET3_NAME + "\n"
-    " 4) " + PRESET4_NAME + "\n"
-    " X or 5) Go Back     \n";
+    String disp_str = " ---Load A Preset--- \n"
+                      " Select a Preset:    \n"
+                      "                     \n"
+                      " 1) " + PRESET1_NAME + "\n"
+                      " 2) " + PRESET2_NAME + "\n"
+                      " 3) " + PRESET3_NAME + "\n"
+                      " 4) " + PRESET4_NAME + "\n"
+                      " X or 5) Go Back     \n";
 
-    display.print(disp_str.c_str());
-    display.display();
+    print_screen(disp_str);
 
     // Check the 1 and 2 buttons
     my1Button->update();
@@ -776,22 +751,16 @@ bool load_preset_screen() {
 void scene_options_screen() {
   bool done = false;
   while (!done) {
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 0);
-    String disp_str = ""
-    " -Scene Signalliing- \n"
-    " Select an Option:   \n"
-    "                     \n"
-    " 1) None             \n"
-    " 2) Prog Chg, Ch. 1  \n"
-    "                     \n"
-    " X) Go Back          \n";
 
-    display.print(disp_str.c_str());
-    display.display();
+    String disp_str = " -Scene Signalliing- \n"
+                      " Select an Option:   \n"
+                      "                     \n"
+                      " 1) None             \n"
+                      " 2) Prog Chg, Ch. 1  \n"
+                      "                     \n"
+                      " X) Go Back          \n";
 
+    print_screen(disp_str);
 
     // Check the buttons
     my1Button->update();
@@ -817,23 +786,16 @@ void playing_options_screen() {
   bool done = false;
   while (!done) {
 
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 0);
-    String disp_str = ""
-    " -Choose Play Screen-\n"
-    " Select an Option:   \n"
-    "                     \n"
-    " 1) Big Note + Staff \n"
-    "                     \n"
-    " 2) Big Note         \n"
-    "                     \n"
-    " X) Go Back          \n";
+    String disp_str = " -Choose Play Screen-\n"
+                      " Select an Option:   \n"
+                      "                     \n"
+                      " 1) Big Note + Staff \n"
+                      "                     \n"
+                      " 2) Big Note         \n"
+                      "                     \n"
+                      " X) Go Back          \n";
 
-    display.print(disp_str.c_str());
-    display.display();
-
+    print_screen(disp_str);
 
     // Check the 1 and 2 buttons
     my1Button->update();
@@ -854,7 +816,7 @@ void playing_options_screen() {
       "  \n"
       "  SAVED \n";
 
-      display.print(disp_str.c_str());
+      display.print(disp_str);
       display.display();
       delay(750);
       done = true;
@@ -873,7 +835,7 @@ void playing_options_screen() {
       "  \n"
       "   SAVED  \n";
 
-      display.print(disp_str.c_str());
+      display.print(disp_str);
       display.display();
       delay(750);
       done = true;
@@ -890,23 +852,16 @@ void options_screen() {
   bool done = false;
   while (!done) {
 
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 0);
-    String disp_str = ""
-    " ------Options------ \n"
-    " Select an Option:   \n"
-    "                     \n"
-    " 1) Clear EEPROM     \n"
-    " 2) Playing Screen   \n"
-    " 3) Scene Control    \n"
-    "                     \n"
-    " X) Go Back          \n";
+    String disp_str = " ------Options------ \n"
+                      " Select an Option:   \n"
+                      "                     \n"
+                      " 1) Clear EEPROM     \n"
+                      " 2) Playing Screen   \n"
+                      " 3) Scene Control    \n"
+                      "                     \n"
+                      " X) Go Back          \n";
 
-    display.print(disp_str.c_str());
-    display.display();
-
+    print_screen(disp_str);
 
     // Check the 1 and 2 buttons
     my1Button->update();
@@ -927,7 +882,7 @@ void options_screen() {
       "  \n"
       "  CLEARED \n";
 
-      display.print(disp_str.c_str());
+      display.print(disp_str);
       display.display();
       delay(750);
       done = true;
@@ -999,19 +954,19 @@ void tune_string_screen(GurdyString *this_string) {
     " 1) Tune Down        \n"
     " 2) Tune Up          \n\n";
 
-    display.print(disp_str.c_str());
+    display.print(disp_str);
 
     display.setTextSize(2);
     disp_str = ""
     "  " + LongNoteNum[new_note] + "\n";
 
-    display.print(disp_str.c_str());
+    display.print(disp_str);
 
     display.setTextSize(1);
     disp_str = "\n"
     " X) Done / Go Back   \n";
 
-    display.print(disp_str.c_str());
+    display.print(disp_str);
 
     display.display();
 
@@ -1094,18 +1049,6 @@ void manual_tuning_screen() {
   return;
 };
 
-// This is because Teensydruino GCC is old as hell, and to_string() doesn't work.
-String vol_to_str(int my_vol) {
-  char vol_char[3];
-  sprintf(vol_char, "%3d", my_vol);
-  int i;
-  String s = "";
-  for (i = 0; i < 3; i++) {
-      s = s + vol_char[i];
-  };
-  return s;
-};
-
 void change_volume_screen(GurdyString *this_string) {
   bool done = false;
   int new_vol = this_string->getVolume();
@@ -1116,24 +1059,22 @@ void change_volume_screen(GurdyString *this_string) {
     display.setTextSize(1);
     display.setTextColor(WHITE);
     display.setCursor(0, 0);
-    String disp_str = ""
-    " ---String Volume--- \n"
-    " 1) Volume Down      \n"
-    " 2) Volume Up        \n\n";
+    String disp_str = " ---String Volume--- \n"
+                      " 1) Volume Down      \n"
+                      " 2) Volume Up        \n\n";
 
-    display.print(disp_str.c_str());
+    display.print(disp_str);
 
     display.setTextSize(2);
-    disp_str = ""
-    "   " + vol_to_str(new_vol) + "\n";
+    disp_str = String("   ") + new_vol + "\n";
 
-    display.print(disp_str.c_str());
+    display.print(disp_str);
 
     display.setTextSize(1);
     disp_str = "\n"
     " X) Done / Go Back   \n";
 
-    display.print(disp_str.c_str());
+    display.print(disp_str);
 
     display.display();
 
@@ -1173,22 +1114,17 @@ void volume_screen() {
 
   while (true) {
 
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 0);
-    String disp_str = ""
-    " ------Volume------- \n"
-    " 1) Hi Mel.- " + vol_to_str(mystring->getVolume()) + " \n"
-    " 2) Lo Mel.- " + vol_to_str(mylowstring->getVolume()) + " \n"
-    " 3) Drone. - " + vol_to_str(mydrone->getVolume()) + " \n"
-    " 4) Tromp. - " + vol_to_str(mytromp->getVolume()) + " \n"
-    " 5) Buzz   - " + vol_to_str(mybuzz->getVolume()) + " \n"
-    " 6) Click  - " + vol_to_str(mykeyclick->getVolume()) + " \n"
-    " X) Go Back     \n";
+    String disp_str = String("") +
+                      " ------Volume------- \n"
+                      " 1) Hi Mel.- " + mystring->getVolume() + " \n"
+                      " 2) Lo Mel.- " + mylowstring->getVolume() + " \n"
+                      " 3) Drone. - " + mydrone->getVolume() + " \n"
+                      " 4) Tromp. - " + mytromp->getVolume() + " \n"
+                      " 5) Buzz   - " + mybuzz->getVolume() + " \n"
+                      " 6) Click  - " + mykeyclick->getVolume() + " \n"
+                      " X) Go Back     \n";
 
-    display.print(disp_str.c_str());
-    display.display();
+    print_screen(disp_str);
 
     // Check the 1 and 2 buttons
     my1Button->update();
@@ -1230,22 +1166,16 @@ bool tuning() {
   bool done = false;
   while (!done) {
 
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 0);
-    String disp_str = ""
-    " ----Tuning Menu---- \n"
-    "  1) G/C, Guided     \n"
-    "  2) D/G, Guided     \n"
-    "  3) Manual Setup    \n"
-    "                     \n"
-    "  4) Volume Control  \n"
-    "                     \n"
-    "  X or 5) Go Back    \n";
+    String disp_str = " ----Tuning Menu---- \n"
+                      "  1) G/C, Guided     \n"
+                      "  2) D/G, Guided     \n"
+                      "  3) Manual Setup    \n"
+                      "                     \n"
+                      "  4) Volume Control  \n"
+                      "                     \n"
+                      "  X or 5) Go Back    \n";
 
-    display.print(disp_str.c_str());
-    display.display();
+    print_screen(disp_str);
 
     delay(250);
 
@@ -1280,22 +1210,16 @@ bool tuning() {
   tuning_tromp();
 
   // SUMMARY
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setCursor(0, 0);
-  String disp_str = ""
-  " -----Summary:------ \n"
-  "  High Melody:   " + NoteNum[mystring->getOpenNote()] + "  \n"
-  "   Low Melody:   " + NoteNum[mylowstring->getOpenNote()] + "  \n"
-  "        Drone:   " + NoteNum[mydrone->getOpenNote()] + "  \n"
-  "    Trompette:   " + NoteNum[mytromp->getOpenNote()] + "  \n"
-  "                     \n"
-  "A or 1) Accept     \n"
-  "X or 2) Go Back    \n";
+  String disp_str = " -----Summary:------ \n"
+                    "  High Melody:   " + NoteNum[mystring->getOpenNote()] + "  \n"
+                    "   Low Melody:   " + NoteNum[mylowstring->getOpenNote()] + "  \n"
+                    "        Drone:   " + NoteNum[mydrone->getOpenNote()] + "  \n"
+                    "    Trompette:   " + NoteNum[mytromp->getOpenNote()] + "  \n"
+                    "                     \n"
+                    "A or 1) Accept     \n"
+                    "X or 2) Go Back    \n";
 
-  display.print(disp_str.c_str());
-  display.display();
+  print_screen(disp_str);
 
   delay(250);
 
@@ -1326,20 +1250,14 @@ bool load_tuning_screen() {
   bool done = false;
   while (!done) {
 
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 0);
-    String disp_str = ""
-    " ----Load Tuning---- \n"
-    "                     \n"
-    " 1) Preset Tuning    \n"
-    "                     \n"
-    " 2) Saved Tuning     \n\n"
-    " X or 3) Go Back     \n";
+    String disp_str = " ----Load Tuning---- \n"
+                      "                     \n"
+                      " 1) Preset Tuning    \n"
+                      "                     \n"
+                      " 2) Saved Tuning     \n\n"
+                      " X or 3) Go Back     \n";
 
-    display.print(disp_str.c_str());
-    display.display();
+    print_screen(disp_str);
 
     delay(250);
 
@@ -1374,22 +1292,17 @@ bool check_save_tuning(int slot) {
   if (EEPROM.read(slot) == 0) {
     return true;
   } else {
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 0);
-    String disp_str = ""
-    " ----Save Tuning---- \n"
-    "                     \n"
-    " Save slot is full,  \n"
-    "    Save anyway?     \n"
-    "                     \n"
-    " 1) Overwrite        \n"
-    "                     \n"
-    " X or 2) Go Back     \n";
 
-    display.print(disp_str.c_str());
-    display.display();
+    String disp_str = " ----Save Tuning---- \n"
+                      "                     \n"
+                      " Save slot is full,  \n"
+                      "    Save anyway?     \n"
+                      "                     \n"
+                      " 1) Overwrite        \n"
+                      "                     \n"
+                      " X or 2) Go Back     \n";
+
+    print_screen(disp_str);
 
     bool done = false;
     while (!done) {
@@ -1416,22 +1329,16 @@ void save_tuning_screen() {
   int slot = 0;
   while (!done) {
 
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 0);
-    String disp_str = ""
-    " ----Save Tuning---- \n"
-    " Choose a Save Slot: \n"
-    "                     \n"
-    "      1) Slot 1      \n"
-    "      2) Slot 2      \n"
-    "      3) Slot 3      \n"
-    "      4) Slot 4      \n"
-    "      X) Go Back     \n";
+    String disp_str = " ----Save Tuning---- \n"
+                      " Choose a Save Slot: \n"
+                      "                     \n"
+                      "      1) Slot 1      \n"
+                      "      2) Slot 2      \n"
+                      "      3) Slot 3      \n"
+                      "      4) Slot 4      \n"
+                      "      X) Go Back     \n";
 
-    display.print(disp_str.c_str());
-    display.display();
+    print_screen(disp_str);
 
     // Check the 1 and 2 buttons
     my1Button->update();
@@ -1499,18 +1406,12 @@ void redetect_crank_screen() {
   bool done = false;
   while (!done) {
 
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 0);
-    String disp_str = ""
-    "                     \n"
-    "                     \n"
-    " Remove/Attach Crank \n"
-    " And press 1...      \n";
+    String disp_str = "                     \n"
+                      "                     \n"
+                      " Remove/Attach Crank \n"
+                      " And press 1...      \n";
 
-    display.print(disp_str.c_str());
-    display.display();
+    print_screen(disp_str);
 
     my1Button->update();
 
@@ -1551,19 +1452,16 @@ void options_about_screen() {
     };
   };
 
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setCursor(0, 0);
-  display.println("      DigiGurdy      ");
-  display.println("---------------------");
-  display.println("Special Thanks:      ");
-  display.println("                     ");
-  display.println("John Dingley         ");
-  display.println("David Jacobs         ");
-  display.println("lune36400            ");
-  display.println("SalusaSecondus       ");
-  display.display();
+  String disp_str = "      DigiGurdy      "
+                    "---------------------"
+                    "Special Thanks:      "
+                    "                     "
+                    "John Dingley         "
+                    "David Jacobs         "
+                    "lune36400            "
+                    "SalusaSecondus       ";
+
+  print_screen(disp_str);
 
   while (true) {
     myXButton->update();
@@ -1579,20 +1477,14 @@ bool other_options_screen() {
   bool done = false;
   while (!done) {
 
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 0);
-    String disp_str = ""
-    " ---Other Options--- \n"
-    "                     \n"
-    " 1) Remove/Attach    \n"
-    "      Crank          \n\n"
-    " 2) About DigiGurdy  \n\n"
-    " X or 3) Go Back     \n";
+    String disp_str = " ---Other Options--- \n"
+                      "                     \n"
+                      " 1) Remove/Attach    \n"
+                      "      Crank          \n\n"
+                      " 2) About DigiGurdy  \n\n"
+                      " X or 3) Go Back     \n";
 
-    display.print(disp_str.c_str());
-    display.display();
+    print_screen(disp_str);
 
     my1Button->update();
     my2Button->update();
@@ -1620,36 +1512,30 @@ void pause_screen() {
   bool done = false;
   while (!done) {
 
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 0);
-    String disp_str = ""
-    " ----Pause  Menu---- \n"
-    " 1) Load    2) Save  \n"
-    " 3) Tuning  4) Other \n\n"
-    " X, 5 or ex1) Go Back\n\n";
+    String disp_str = " ----Pause  Menu---- \n"
+                      " 1) Load    2) Save  \n"
+                      " 3) Tuning  4) Other \n\n"
+                      " X, 5 or ex1) Go Back\n\n";
 
     if (drone_mode == 0) {
-      disp_str = disp_str + "A) Drone:On ,Trmp:On \n";
+      disp_str += "A) Drone:On ,Trmp:On \n";
     } else if (drone_mode == 1) {
-      disp_str = disp_str + "A) Drone:Off,Trmp:Off\n";
+      disp_str += "A) Drone:Off,Trmp:Off\n";
     } else if (drone_mode == 2) {
-      disp_str = disp_str + "A) Drone:On, Trmp:Off\n";
+      disp_str += "A) Drone:On, Trmp:Off\n";
     } else if (drone_mode == 3) {
-      disp_str = disp_str + "A) Drone:Off,Trmp:On \n";
+      disp_str += "A) Drone:Off,Trmp:On \n";
     };
 
     if (mel_mode == 0) {
-      disp_str = disp_str + "B) High:On ,  Low:On \n";
+      disp_str += "B) High:On ,  Low:On \n";
     } else if (mel_mode == 1) {
-      disp_str = disp_str + "B) High:On ,  Low:Off\n";
+      disp_str += "B) High:On ,  Low:Off\n";
     } else if (mel_mode == 2) {
-      disp_str = disp_str + "B) High:Off,  Low:On \n";
+      disp_str += "B) High:Off,  Low:On \n";
     };
 
-    display.print(disp_str.c_str());
-    display.display();
+    print_screen(disp_str);
 
     delay(150);
 
@@ -1725,7 +1611,7 @@ void pause_screen() {
   display.clearDisplay();
   display.drawBitmap(0, 0, crank_on_logo, 128, 64, 1);
   display.display();
-  delay(750);
+  delay(500);
 };
 
 // ###########
