@@ -1,6 +1,7 @@
 #include "play_screens.h"
 #include "note_bitmaps.h"
 #include "staff_bitmaps.h"
+#include "notes.h"
 
 void draw_note(int note, int x_offset) {
   int octave = (note / 12 ) - 1;
@@ -51,4 +52,56 @@ void draw_play_screen(int note, int screen_type) {
   } else {
     draw_note(note, 32);
   };
+};
+
+void printDisplay(int mel1, int mel2, int drone, int tromp, int tpose, int cap, int offset, bool hi_mute, bool lo_mute, bool drone_mute, bool tromp_mute) {
+
+  // This whole thing could be written more clearly...
+
+  std::string disp_str0 = "";
+  std::string disp_str = "";
+
+  disp_str0 = "\n Tpose: ";
+  disp_str = "\n\n";
+  if (!hi_mute) {
+    disp_str = disp_str + "  Hi Melody: " + LongNoteNum[mel1 + tpose] + "\n";
+  } else {
+    disp_str = disp_str + "  Hi Melody:   MUTE \n";
+  };
+  if (!lo_mute) {
+    disp_str = disp_str + " Low Melody: " + LongNoteNum[mel2 + tpose] + "\n\n";
+  } else {
+    disp_str = disp_str + " Low Melody:   MUTE \n\n";
+  };
+  if (!tromp_mute) {
+    disp_str = disp_str + "  Trompette: " + LongNoteNum[tromp + tpose + cap] + "\n";
+  } else {
+    disp_str = disp_str + "  Trompette:   MUTE \n";
+  };
+  if (!drone_mute) {
+    disp_str = disp_str + "      Drone: " + LongNoteNum[drone + tpose + cap] + "\n\n";
+  } else {
+    disp_str = disp_str + "      Drone:   MUTE \n";
+  };
+
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+
+  display.print(disp_str0.c_str());
+
+  // This is because the version of gcc Teensy uses has a bug with std::to_string(int)...
+  // I need to print the tpose separately here because the display object will aceept it if it's not
+  // concatenated with a string.
+  if (tpose > 0) { display.print("+"); };
+  display.print(tpose);
+
+  display.print("  Capo: ");
+
+  if (cap > 0) { display.print("+"); };
+  display.print(cap);
+
+  display.print(disp_str.c_str());
+  display.display();
 };

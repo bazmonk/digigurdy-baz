@@ -7,10 +7,6 @@
 //   https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy
 // REPOSITORY: https://github.com/bazmonk/digigurdy-baz
 
-// #############################################################
-// CONFIG SECTION HAS MOVED: see the config.h for those options.
-// #############################################################
-
 #include <Adafruit_GFX.h>
 // https://www.pjrc.com/teensy/td_libs_Bounce.html
 #include <Bounce.h>
@@ -37,61 +33,6 @@
 
 // Right now not using the std namespace is just impacting strings.  That's ok...
 using namespace MIDI_NAMESPACE;
-
-void printDisplay(int mel1, int mel2, int drone, int tromp, int tpose, int cap, int offset, bool hi_mute, bool lo_mute, bool drone_mute, bool tromp_mute) {
-
-  // This whole thing could be written more clearly...
-
-  std::string disp_str0 = "";
-  std::string disp_str = "";
-
-  disp_str0 = "\n Tpose: ";
-  disp_str = "\n\n";
-  if (!hi_mute) {
-    disp_str = disp_str + "  Hi Melody: " + LongNoteNum[mel1 + tpose] + "\n";
-  } else {
-    disp_str = disp_str + "  Hi Melody:   MUTE \n";
-  };
-  if (!lo_mute) {
-    disp_str = disp_str + " Low Melody: " + LongNoteNum[mel2 + tpose] + "\n\n";
-  } else {
-    disp_str = disp_str + " Low Melody:   MUTE \n\n";
-  };
-  if (!tromp_mute) {
-    disp_str = disp_str + "  Trompette: " + LongNoteNum[tromp + tpose + cap] + "\n";
-  } else {
-    disp_str = disp_str + "  Trompette:   MUTE \n";
-  };
-  if (!drone_mute) {
-    disp_str = disp_str + "      Drone: " + LongNoteNum[drone + tpose + cap] + "\n\n";
-  } else {
-    disp_str = disp_str + "      Drone:   MUTE \n";
-  };
-
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setCursor(0, 0);
-
-  display.print(disp_str0.c_str());
-
-  // This is because the version of gcc Teensy uses has a bug with std::to_string(int)...
-  // I need to print the tpose separately here because the display object will aceept it if it's not
-  // concatenated with a string.
-  if (tpose > 0) { display.print("+"); };
-  display.print(tpose);
-
-  display.print("  Capo: ");
-
-  if (cap > 0) { display.print("+"); };
-  display.print(cap);
-
-  display.print(disp_str.c_str());
-  display.display();
-};
-
-int play_screen_type = 0;
-uint8_t scene_signal_type = 0;
 
 // ##################
 // GLOBAL SETUP STUFF
@@ -180,6 +121,9 @@ int drone_mode = 0;
 // 2 = high off, low on
 int mel_mode = 0;
 
+int play_screen_type = 0;
+uint8_t scene_signal_type = 0;
+
 // Teensy and Arduino units start by running setup() once after powering up.
 // Here we establish how the "gurdy" is setup, what strings to use, and we also
 // start the MIDI communication.
@@ -205,7 +149,7 @@ void setup() {
   mygurdy = new HurdyGurdy(pin_array, num_keys);
   bigbutton = new ToggleButton(39);
 
-  // These indices are defined in the CONFIG SECTION
+  // These indices are defined in config.h
   myXButton = mygurdy->keybox[X_INDEX];
   myAButton = mygurdy->keybox[A_INDEX];
   myBButton = mygurdy->keybox[B_INDEX];
