@@ -1095,22 +1095,16 @@ void manual_tuning_screen() {
 
   while (true) {
 
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 0);
-    String disp_str = ""
-    " ---Manual Tuning--- \n"
-    " Choose a string:    \n"
-    " 1) Hi Mel.- " + NoteNum[mystring->getOpenNote()] + " \n"
-    " 2) Lo Mel.- " + NoteNum[mylowstring->getOpenNote()] + " \n"
-    " 3) Drone. - " + NoteNum[mydrone->getOpenNote()] + " \n"
-    " 4) Tromp. - " + NoteNum[mytromp->getOpenNote()] + " \n"
-    " 5) Buzz   - " + NoteNum[mybuzz->getOpenNote()] + "  \n"
-    " X or 6) Go Back     \n";
+    String disp_str = " ---Manual Tuning--- \n"
+                      " Choose a string:    \n"
+                      " 1) Hi Mel.- " + NoteNum[mystring->getOpenNote()] + " \n"
+                      " 2) Lo Mel.- " + NoteNum[mylowstring->getOpenNote()] + " \n"
+                      " 3) Drone. - " + NoteNum[mydrone->getOpenNote()] + " \n"
+                      " 4) Tromp. - " + NoteNum[mytromp->getOpenNote()] + " \n"
+                      " 5) Buzz   - " + NoteNum[mybuzz->getOpenNote()] + "  \n"
+                      " X or 6) Go Back     \n";
 
-    display.print(disp_str.c_str());
-    display.display();
+    print_screen(disp_str);
 
     // Check the 1 and 2 buttons
     my1Button->update();
@@ -1814,7 +1808,7 @@ void loop() {
     display.display();
     delay(750);
 
-    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
+    print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
     first_loop = false;
   };
 
@@ -1849,7 +1843,7 @@ void loop() {
     bigbutton->setToggle(false);
 
     pause_screen();
-    printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
+    print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
                  tpose_offset, capo_offset, 0, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
   };
 
@@ -1878,7 +1872,7 @@ void loop() {
 
       draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
     } else {
-      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
+      print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
                  tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
     };
   };
@@ -1904,7 +1898,7 @@ void loop() {
 
       draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
     } else {
-      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
+      print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
                    tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
     };
   };
@@ -1927,7 +1921,7 @@ void loop() {
 
       draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
     } else {
-      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
+      print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
                    tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
     };
   };
@@ -1964,7 +1958,7 @@ void loop() {
     if (mystring->isPlaying()) {
       draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
     } else {
-      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
+      print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
     };
   };
 
@@ -2010,7 +2004,7 @@ void loop() {
     if (mystring->isPlaying()) {
       draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
     } else {
-      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
+      print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
     };
   };
 
@@ -2102,7 +2096,7 @@ void loop() {
   if (!note_display_off && !bigbutton->toggleOn() && !mycrank->isSpinning()) {
     if ((millis() - stopped_playing_time) > 200) {
       note_display_off = true;
-      printDisplay(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
+      print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
     };
   };
 

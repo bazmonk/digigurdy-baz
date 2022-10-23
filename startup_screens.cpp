@@ -56,12 +56,12 @@ void about_screen() {
   display.println(" DigiGurdy");
   display.setTextSize(1);
 
-  String disp_str = "---------------------"
-                    "   By Basil Lalli,   "
-                    "Concept By J. Dingley"
+  String disp_str = "---------------------\n"
+                    "   By Basil Lalli,   \n"
+                    "Concept By J. Dingley\n"
                     + REL_DATE + "\n"
-                    "                     "
-                    "  shorturl.at/tuDY1  ";
+                    "                     \n"
+                    "  shorturl.at/tuDY1  \n";
 
   display.println(disp_str);
   display.display();
