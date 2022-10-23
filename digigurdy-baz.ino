@@ -1590,21 +1590,9 @@ void redetect_crank_screen() {
   };
 };
 
-void about_screen() {
+void options_about_screen() {
 
-  display.clearDisplay();
-  display.setTextSize(2);
-  display.setTextColor(WHITE);
-  display.setCursor(0, 0);
-  display.println(" DigiGurdy");
-  display.setTextSize(1);
-  display.println("---------------------");
-  display.println("   By Basil Lalli,   ");
-  display.println("Concept By J. Dingley");
-  display.println("23 Oct 2022,  1.9.3 ");
-  display.println("                     ");
-  display.println("  shorturl.at/tuDY1  ");
-  display.display();
+  about_screen();
 
   while (true) {
     myXButton->update();
@@ -1667,7 +1655,7 @@ bool other_options_screen() {
       done = true;
 
     } else if (my2Button->wasPressed()) {
-      about_screen();
+      options_about_screen();
 
     } else if (my3Button->wasPressed() || myXButton->wasPressed()) {
       return false;
