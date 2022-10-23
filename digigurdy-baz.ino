@@ -1,5 +1,5 @@
 // Digigurdy-Baz
-// VERSION: v1.9.2 (reorg)
+// VERSION: v1.9.3 (reorg)
 
 // AUTHOR: Basil Lalli
 // DESCRIPTION: Digigurdy-Baz is a fork of the Digigurdy code by John Dingley.  See his page:
@@ -14,7 +14,6 @@
 // https://www.pjrc.com/teensy/td_midi.html
 // https://www.pjrc.com/teensy/td_libs_MIDI.html
 #include <MIDI.h>
-#include <string>
 #include <ADC.h>
 
 // These are found in the digigurdy-baz repository
@@ -311,7 +310,7 @@ void tuning_hi_melody() {
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
 
-  std::string disp_str = "         ";
+  String disp_str = "         ";
   if (gc_or_dg) {
     base_note = Note(g4);
     disp_str = disp_str + "G/C         \n";
@@ -388,7 +387,7 @@ void tuning_low_melody() {
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
 
-  std::string disp_str = " High Melody:   " + NoteNum[mystring->getOpenNote()] + "   \n"
+  String disp_str = " High Melody:   " + NoteNum[mystring->getOpenNote()] + "   \n"
   " Choose Low Melody:  \n"
   "                     \n"
   " 1) " + NoteNum[choice1] + " **  2) " + NoteNum[choice2] + "     \n"
@@ -461,7 +460,7 @@ void tuning_drone() {
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
 
-  std::string disp_str = " Hi/Lo Melody: " + NoteNum[mystring->getOpenNote()] + "/" + NoteNum[mylowstring->getOpenNote()] + " \n"
+  String disp_str = " Hi/Lo Melody: " + NoteNum[mystring->getOpenNote()] + "/" + NoteNum[mylowstring->getOpenNote()] + " \n"
   "    Choose Drone:    \n"
   " 1) " + NoteNum[choice1] + "     2) " + NoteNum[choice2] + "     \n"
   " 3) " + NoteNum[choice3] + " **  4) " + NoteNum[choice4] + "     \n"
@@ -535,7 +534,7 @@ void tuning_tromp() {
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
 
-  std::string disp_str = " Hi/Lo Melody: " + NoteNum[mystring->getOpenNote()] + "/" + NoteNum[mylowstring->getOpenNote()] + " \n"
+  String disp_str = " Hi/Lo Melody: " + NoteNum[mystring->getOpenNote()] + "/" + NoteNum[mylowstring->getOpenNote()] + " \n"
   " Drone: " + NoteNum[mydrone->getOpenNote()] + "           \n"
   "  Choose Trompette:  \n"
   " 1) " + NoteNum[choice1] + " **  2) " + NoteNum[choice2] + "     \n"
@@ -724,7 +723,7 @@ bool load_saved_screen() {
     display.setTextSize(1);
     display.setTextColor(WHITE);
     display.setCursor(0, 0);
-    std::string disp_str = ""
+    String disp_str = ""
     " --Load Saved Slot-- \n"
     " Select for Preview: \n"
     "                     \n"
@@ -774,7 +773,7 @@ bool load_preset_screen() {
     display.setTextSize(1);
     display.setTextColor(WHITE);
     display.setCursor(0, 0);
-    std::string disp_str = ""
+    String disp_str = ""
     " ---Load A Preset--- \n"
     " Select a Preset:    \n"
     "                     \n"
@@ -820,7 +819,7 @@ void scene_options_screen() {
     display.setTextSize(1);
     display.setTextColor(WHITE);
     display.setCursor(0, 0);
-    std::string disp_str = ""
+    String disp_str = ""
     " -Scene Signalliing- \n"
     " Select an Option:   \n"
     "                     \n"
@@ -861,7 +860,7 @@ void playing_options_screen() {
     display.setTextSize(1);
     display.setTextColor(WHITE);
     display.setCursor(0, 0);
-    std::string disp_str = ""
+    String disp_str = ""
     " -Choose Play Screen-\n"
     " Select an Option:   \n"
     "                     \n"
@@ -889,7 +888,7 @@ void playing_options_screen() {
       display.setTextSize(2);
       display.setTextColor(WHITE);
       display.setCursor(0, 0);
-      std::string disp_str = ""
+      String disp_str = ""
       "  DISPLAY  \n"
       "  \n"
       "  SAVED \n";
@@ -908,7 +907,7 @@ void playing_options_screen() {
       display.setTextSize(2);
       display.setTextColor(WHITE);
       display.setCursor(0, 0);
-      std::string disp_str = ""
+      String disp_str = ""
       "  DISPLAY  \n"
       "  \n"
       "   SAVED  \n";
@@ -934,7 +933,7 @@ void options_screen() {
     display.setTextSize(1);
     display.setTextColor(WHITE);
     display.setCursor(0, 0);
-    std::string disp_str = ""
+    String disp_str = ""
     " ------Options------ \n"
     " Select an Option:   \n"
     "                     \n"
@@ -962,7 +961,7 @@ void options_screen() {
       display.setTextSize(2);
       display.setTextColor(WHITE);
       display.setCursor(0, 0);
-      std::string disp_str = ""
+      String disp_str = ""
       "  EEPROM  \n"
       "  \n"
       "  CLEARED \n";
@@ -994,7 +993,7 @@ void welcome_screen() {
     display.setTextSize(1);
     display.setTextColor(WHITE);
     display.setCursor(0, 0);
-    std::string disp_str = ""
+    String disp_str = ""
     " -----DigiGurdy----- \n"
     " Select an Option:   \n"
     "                     \n"
@@ -1040,7 +1039,7 @@ void tune_string_screen(GurdyString *this_string) {
     display.setTextSize(1);
     display.setTextColor(WHITE);
     display.setCursor(0, 0);
-    std::string disp_str = ""
+    String disp_str = ""
     " ---String Tuning--- \n"
     " 1) Tune Down        \n"
     " 2) Tune Up          \n\n";
@@ -1101,7 +1100,7 @@ void manual_tuning_screen() {
     display.setTextSize(1);
     display.setTextColor(WHITE);
     display.setCursor(0, 0);
-    std::string disp_str = ""
+    String disp_str = ""
     " ---Manual Tuning--- \n"
     " Choose a string:    \n"
     " 1) Hi Mel.- " + NoteNum[mystring->getOpenNote()] + " \n"
@@ -1147,11 +1146,11 @@ void manual_tuning_screen() {
 };
 
 // This is because Teensydruino GCC is old as hell, and to_string() doesn't work.
-std::string vol_to_str(int my_vol) {
+String vol_to_str(int my_vol) {
   char vol_char[3];
   sprintf(vol_char, "%3d", my_vol);
   int i;
-  std::string s = "";
+  String s = "";
   for (i = 0; i < 3; i++) {
       s = s + vol_char[i];
   };
@@ -1168,7 +1167,7 @@ void change_volume_screen(GurdyString *this_string) {
     display.setTextSize(1);
     display.setTextColor(WHITE);
     display.setCursor(0, 0);
-    std::string disp_str = ""
+    String disp_str = ""
     " ---String Volume--- \n"
     " 1) Volume Down      \n"
     " 2) Volume Up        \n\n";
@@ -1229,7 +1228,7 @@ void volume_screen() {
     display.setTextSize(1);
     display.setTextColor(WHITE);
     display.setCursor(0, 0);
-    std::string disp_str = ""
+    String disp_str = ""
     " ------Volume------- \n"
     " 1) Hi Mel.- " + vol_to_str(mystring->getVolume()) + " \n"
     " 2) Lo Mel.- " + vol_to_str(mylowstring->getVolume()) + " \n"
@@ -1286,7 +1285,7 @@ bool tuning() {
     display.setTextSize(1);
     display.setTextColor(WHITE);
     display.setCursor(0, 0);
-    std::string disp_str = ""
+    String disp_str = ""
     " ----Tuning Menu---- \n"
     "  1) G/C, Guided     \n"
     "  2) D/G, Guided     \n"
@@ -1336,7 +1335,7 @@ bool tuning() {
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
-  std::string disp_str = ""
+  String disp_str = ""
   " -----Summary:------ \n"
   "  High Melody:   " + NoteNum[mystring->getOpenNote()] + "  \n"
   "   Low Melody:   " + NoteNum[mylowstring->getOpenNote()] + "  \n"
@@ -1382,7 +1381,7 @@ bool load_tuning_screen() {
     display.setTextSize(1);
     display.setTextColor(WHITE);
     display.setCursor(0, 0);
-    std::string disp_str = ""
+    String disp_str = ""
     " ----Load Tuning---- \n"
     "                     \n"
     " 1) Preset Tuning    \n"
@@ -1430,7 +1429,7 @@ bool check_save_tuning(int slot) {
     display.setTextSize(1);
     display.setTextColor(WHITE);
     display.setCursor(0, 0);
-    std::string disp_str = ""
+    String disp_str = ""
     " ----Save Tuning---- \n"
     "                     \n"
     " Save slot is full,  \n"
@@ -1472,7 +1471,7 @@ void save_tuning_screen() {
     display.setTextSize(1);
     display.setTextColor(WHITE);
     display.setCursor(0, 0);
-    std::string disp_str = ""
+    String disp_str = ""
     " ----Save Tuning---- \n"
     " Choose a Save Slot: \n"
     "                     \n"
@@ -1555,7 +1554,7 @@ void redetect_crank_screen() {
     display.setTextSize(1);
     display.setTextColor(WHITE);
     display.setCursor(0, 0);
-    std::string disp_str = ""
+    String disp_str = ""
     "                     \n"
     "                     \n"
     " Remove/Attach Crank \n"
@@ -1602,7 +1601,7 @@ void about_screen() {
   display.println("---------------------");
   display.println("   By Basil Lalli,   ");
   display.println("Concept By J. Dingley");
-  display.println("22 Oct 2022,  1.9.2 ");
+  display.println("23 Oct 2022,  1.9.3 ");
   display.println("                     ");
   display.println("  shorturl.at/tuDY1  ");
   display.display();
@@ -1647,7 +1646,7 @@ bool other_options_screen() {
     display.setTextSize(1);
     display.setTextColor(WHITE);
     display.setCursor(0, 0);
-    std::string disp_str = ""
+    String disp_str = ""
     " ---Other Options--- \n"
     "                     \n"
     " 1) Remove/Attach    \n"
@@ -1688,7 +1687,7 @@ void pause_screen() {
     display.setTextSize(1);
     display.setTextColor(WHITE);
     display.setCursor(0, 0);
-    std::string disp_str = ""
+    String disp_str = ""
     " ----Pause  Menu---- \n"
     " 1) Load    2) Save  \n"
     " 3) Tuning  4) Other \n\n"

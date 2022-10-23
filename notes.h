@@ -1,7 +1,6 @@
 #ifndef NOTES_H
 #define NOTES_H
-
-#include <string>
+#include <Arduino.h>
 
 // enum Note maps absolute note names to MIDI note numbers (middle C4 = 60),
 // which range from 0 to 127.
@@ -21,7 +20,7 @@ enum Note {
   c9, c9s, d9, d9s, e9, f9, f9s, g9
 };
 
-extern std::string NoteNum[];
-extern std::string LongNoteNum[];
+extern String NoteNum[];
+extern String LongNoteNum[];
 
 #endif

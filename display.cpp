@@ -16,12 +16,12 @@ void start_display() {
   #endif
 };
 
-void print_screen(std::string disp_str) {
+void print_screen(String disp_str) {
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
 
-  display.print(disp_str.c_str());
+  display.print(disp_str);
   display.display();
 };
