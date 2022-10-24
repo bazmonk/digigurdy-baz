@@ -1,3 +1,6 @@
+#ifndef DEFAULT_TUNINGS_H
+#define DEFAULT_TUNINGS_H
+
 // For reference, these are the values we're defining for each of these
 
 // int HI_MEL = high chanter open note
@@ -28,3 +31,5 @@ static const int PRESET3[] = {Note(d5), Note(d4), Note(d3), Note(d4), Note(d4), 
 // "D/G G Drones"
 static String PRESET4_NAME = "D/G, G Drones";
 static const int PRESET4[] = {Note(d5), Note(d4), Note(g2), Note(d4), Note(d4), 0, 0};
+
+#endif
