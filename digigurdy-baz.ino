@@ -209,6 +209,18 @@ void setup() {
   scene_signal_type = EEPROM.read(EEPROM_SCENE_SIGNALLING);
 };
 
+// ###########
+//  MAIN LOOP
+// ###########
+
+bool first_loop = true;
+
+// int test_count = 0;
+// int start_time = millis();
+
+int stopped_playing_time = 0;
+bool note_display_off = true;
+
 // The loop() function is repeatedly run by the Teensy unit after setup() completes.
 // This is the main logic of the program and defines how the strings, keys, click, buzz,
 // and buttons acutally behave during play.
@@ -542,10 +554,10 @@ void loop() {
   };
 
   // Apparently we need to do this to discard incoming data.
-//  while (myMIDI->read()) {
-//  };
-//  while (usbMIDI.read()) {
-//  };
+  while (myMIDI->read()) {
+  };
+  while (usbMIDI.read()) {
+  };
 
   test_count +=1;
   if (test_count > 100000) {

@@ -2,7 +2,7 @@
 
 // This is the screen that X+A (or an ex button) gets you.
 void pause_screen() {
-  Serial.println("In the pause screen");
+
   bool done = false;
   while (!done) {
 
@@ -30,6 +30,7 @@ void pause_screen() {
     };
 
     print_screen(disp_str);
+    
     delay(150);
 
     // Check the 1 and 2 buttons
