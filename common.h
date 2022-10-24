@@ -65,4 +65,6 @@ extern int play_screen_type;
 extern uint8_t scene_signal_type;
 extern bool gc_or_dg;
 
+extern int myoffset;
+
 #endif

@@ -15,6 +15,10 @@ void ExButton::setFunc(int func) {
 void ExButton::doFunc() {
   if (my_func == 1) {
     trigger_pause_menu();
-  };
+  } else if (my_func == 2) {
+    cycle_mel_mute();
+  } else if (my_func == 3) {
+    cycle_drone_tromp_mute();
+  }
   return;
 };
