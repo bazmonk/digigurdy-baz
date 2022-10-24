@@ -14,9 +14,9 @@
 
 // s_pin is the out pin of the optical sensor.  This is pin 15 (same as analog A1)
 // on a normal didigurdy.  buzz_pin is the out pin of the buzz pot, usually A2 (a.k.a 16).
-GurdyCrank::GurdyCrank(int s_pin, int buzz_pin, ADC* adc_obj, int led_pin) {
+GurdyCrank::GurdyCrank(int s_pin, int buzz_pin, int led_pin) {
 
-  myKnob = new BuzzKnob(buzz_pin, adc_obj);
+  myKnob = new BuzzKnob(buzz_pin);
 
   #ifdef LED_KNOB
     myLED = new SimpleLED(led_pin);

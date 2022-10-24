@@ -2,11 +2,10 @@
 
 // BuzzKnob manages the potentiometer knob that adjusts the buzzing threshold.
 // The GurdyCrank class below uses it to determine when buzzing happens.
-BuzzKnob::BuzzKnob(int v_pin, ADC* adc_obj) {
-      myadc = adc_obj;
+BuzzKnob::BuzzKnob(int v_pin) {
       voltage_pin = v_pin;
       pinMode(voltage_pin, INPUT);
-      myadc->adc1->startContinuous(voltage_pin);
+      adc->adc1->startContinuous(voltage_pin);
       poll_counter = 0;
       knob_voltage = 0;
 };
@@ -16,7 +15,7 @@ BuzzKnob::BuzzKnob(int v_pin, ADC* adc_obj) {
 void BuzzKnob::update() {
   if (the_knob_timer > 1000) {
     the_knob_timer = 0;
-    knob_voltage = myadc->adc1->analogReadContinuous();
+    knob_voltage = adc->adc1->analogReadContinuous();
   };
 };
 

@@ -143,7 +143,7 @@ void setup() {
   // myMIDI->begin();
 
   adc = new ADC();
-  mycrank = new GurdyCrank(15, A2, adc, LED_PIN);
+  mycrank = new GurdyCrank(15, A2, LED_PIN);
 
   // The keybox arrangement is decided by pin_array, which is up in the CONFIG SECTION
   // of this file.  Make adjustments there.

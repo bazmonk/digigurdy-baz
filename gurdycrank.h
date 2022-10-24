@@ -50,7 +50,7 @@ class GurdyCrank {
     elapsedMillis the_buzz_timer;
 
   public:
-    GurdyCrank(int s_pin, int buzz_pin, ADC* adc_obj, int led_pin);
+    GurdyCrank(int s_pin, int buzz_pin, int led_pin);
 
     bool isDetected();
     void update();
