@@ -36,10 +36,12 @@ using namespace MIDI_NAMESPACE;
 // GLOBAL SETUP STUFF
 // ##################
 
-// Create the serial interface object
-SerialMIDI<HardwareSerial> mySerialMIDI(Serial1);
-// Create a new MidiInterface object using that serial interface
-MidiInterface<SerialMIDI<HardwareSerial>> *myMIDI;
+MIDI_CREATE_DEFAULT_INSTANCE();
+
+// // Create the serial interface object
+// SerialMIDI<HardwareSerial> mySerialMIDI(Serial1);
+// // Create a new MidiInterface object using that serial interface
+// MidiInterface<SerialMIDI<HardwareSerial>> *myMIDI;
 
 // This is for the crank, the audio-to-digital chip
 ADC* adc;
@@ -136,8 +138,9 @@ void setup() {
   delay(500);
   Serial.println("Hello.");
 
-  myMIDI = new MidiInterface<SerialMIDI<HardwareSerial>>((SerialMIDI<HardwareSerial>&)mySerialMIDI);
-  myMIDI->begin();
+  MIDI.begin(MIDI_CHANNEL_OMNI);
+  // myMIDI = new MidiInterface<SerialMIDI<HardwareSerial>>((SerialMIDI<HardwareSerial>&)mySerialMIDI);
+  // myMIDI->begin();
 
   adc = new ADC();
   mycrank = new GurdyCrank(15, A2, adc, LED_PIN);
@@ -170,12 +173,12 @@ void setup() {
   // preset, a saved tuning, or a created one.  The menu shouldn't let you actually
   // end up with this, but I have to initialize them with something, so might as well
   // be a working tuning.
-  mystring = new GurdyString(1, Note(g4), myMIDI);
-  mylowstring = new GurdyString(2, Note(g3), myMIDI);
-  mytromp = new GurdyString(3, Note(c3), myMIDI);
-  mydrone = new GurdyString(4, Note(c2), myMIDI);
-  mybuzz = new GurdyString(5,Note(c3), myMIDI);
-  mykeyclick = new GurdyString(6, Note(b5), myMIDI);
+  mystring = new GurdyString(1, Note(g4));
+  mylowstring = new GurdyString(2, Note(g3));
+  mytromp = new GurdyString(3, Note(c3));
+  mydrone = new GurdyString(4, Note(c2));
+  mybuzz = new GurdyString(5,Note(c3));
+  mykeyclick = new GurdyString(6, Note(b5));
 
 
   tpose_up = new GurdyButton(22);   // A.k.a. the button formerly known as octave-up
@@ -1943,7 +1946,7 @@ void loop() {
   };
 
   // Apparently we need to do this to discard incoming data.
-  while (myMIDI->read()) {
+  while (MIDI.read()) {
   };
   while (usbMIDI.read()) {
   };
