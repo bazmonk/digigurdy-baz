@@ -81,5 +81,6 @@ extern int tpose_offset;
 extern int capo_offset;
 
 extern uint8_t scene_signal_type;
+extern int play_screen_type;
 
 #endif
