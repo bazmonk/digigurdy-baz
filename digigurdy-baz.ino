@@ -85,10 +85,12 @@ GurdyButton *ex2Button;
 GurdyButton *ex3Button;
 
 // This defines the +/- one octave transpose range.
+// max_tpose is the range on the screen.
 const int max_tpose = 12;
 int tpose_offset;
 
 // This defines the 0, +2, +4 capo range.
+// max_capo is how many to offer (in increments of two)
 const int max_capo = 4;
 int capo_offset;
 
@@ -110,7 +112,14 @@ int drone_mode = 0;
 // 2 = high off, low on
 int mel_mode = 0;
 
+// This records what kind of mid-play screen to use.
+// 0 - Big note + staff (default as per below)
+// 1 - Big note only
 int play_screen_type = 0;
+
+// Records if we're using MIDI scene signalling.
+// 0 - off (default as per below)
+// 1 - On
 uint8_t scene_signal_type = 0;
 
 // Teensy and Arduino units start by running setup() once after powering up.
