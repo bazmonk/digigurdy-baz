@@ -1,6 +1,8 @@
 #ifndef GURDYSTRING_H
 #define GURDYSTRING_H
 
+// https://www.pjrc.com/teensy/td_midi.html
+// https://www.pjrc.com/teensy/td_libs_MIDI.html
 #include <MIDI.h>
 
 extern MIDI_NAMESPACE::MidiInterface<MIDI_NAMESPACE::SerialMIDI<HardwareSerial>> MIDI;

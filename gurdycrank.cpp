@@ -93,18 +93,18 @@ void GurdyCrank::update() {
       // Calculate the standard deviation of the last four times.
       lt_stdev = sqrt((pow((lt_1 - lt_avg), 2) + pow((lt_2 - lt_avg), 2) + pow((lt_3 - lt_avg), 2) + pow((lt_4 - lt_avg), 2) + pow((lt_5 - lt_avg), 2) + pow((lt_6 - lt_avg), 2) + pow((lt_7 - lt_avg), 2) + pow((lt_8 - lt_avg), 2)) / 8.0);
 
-      Serial.print("MOVED,");
-      Serial.print(v_smooth);
-      Serial.print(",");
-      Serial.print(v_avg);
-      Serial.print(",");
-      Serial.print(lt_1);
-      Serial.print(",");
-      Serial.print(lt_avg);
-      Serial.print(",");
-      Serial.print(lt_stdev);
-      Serial.print(",");
-      Serial.println((lt_stdev + lt_avg));
+      // Serial.print("MOVED,");
+      // Serial.print(v_smooth);
+      // Serial.print(",");
+      // Serial.print(v_avg);
+      // Serial.print(",");
+      // Serial.print(lt_1);
+      // Serial.print(",");
+      // Serial.print(lt_avg);
+      // Serial.print(",");
+      // Serial.print(lt_stdev);
+      // Serial.print(",");
+      // Serial.println((lt_stdev + lt_avg));
 
       the_stop_timer = 0;
       the_spoke_timer = 0;
@@ -144,18 +144,18 @@ void GurdyCrank::update() {
       lt_stdev = sqrt((pow((lt_1 - lt_avg), 2) + pow((lt_2 - lt_avg), 2) + pow((lt_3 - lt_avg), 2) + pow((lt_4 - lt_avg), 2) + pow((lt_5 - lt_avg), 2) + pow((lt_6 - lt_avg), 2) + pow((lt_7 - lt_avg), 2) + pow((lt_8 - lt_avg), 2)) / 8.0);
 
 
-      Serial.print("DECAY,");
-      Serial.print(v_smooth);
-      Serial.print(",");
-      Serial.print(v_avg);
-      Serial.print(",");
-      Serial.print(lt_1);
-      Serial.print(",");
-      Serial.print(lt_avg);
-      Serial.print(",");
-      Serial.print(lt_stdev);
-      Serial.print(",");
-      Serial.println((lt_stdev + lt_avg));
+      // Serial.print("DECAY,");
+      // Serial.print(v_smooth);
+      // Serial.print(",");
+      // Serial.print(v_avg);
+      // Serial.print(",");
+      // Serial.print(lt_1);
+      // Serial.print(",");
+      // Serial.print(lt_avg);
+      // Serial.print(",");
+      // Serial.print(lt_stdev);
+      // Serial.print(",");
+      // Serial.println((lt_stdev + lt_avg));
 
       the_stop_timer = 0;
     }

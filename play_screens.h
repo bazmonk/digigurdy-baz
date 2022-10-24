@@ -3,6 +3,9 @@
 
 #include "display.h"
 
+// true = G/C tuning, false = D/G.  For the menus.
+extern bool gc_or_dg;
+
 void draw_note(int note, int x_offset);
 void draw_staff(int note, int x_offset);
 void draw_play_screen(int note, int screen_type);

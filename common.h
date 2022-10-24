@@ -51,4 +51,19 @@ extern GurdyButton *ex1Button;
 extern GurdyButton *ex2Button;
 extern GurdyButton *ex3Button;
 
+// This defines the +/- one octave transpose range.
+extern int max_tpose;
+extern int tpose_offset;
+
+// This defines the 0, +2, +4 capo range.
+extern int max_capo;
+extern int capo_offset;
+
+extern int drone_mode;
+extern int mel_mode;
+
+extern int play_screen_type;
+extern uint8_t scene_signal_type;
+extern bool gc_or_dg;
+
 #endif
