@@ -100,7 +100,7 @@ int drone_mode = 0;
 int mel_mode = 0;
 
 // This records what kind of mid-play screen to use.
-// 0 - Big note + staff (default as per below)
+// 0 - Big note + staff (default as per below),
 // 1 - Big note only
 int play_screen_type = 0;
 
@@ -209,18 +209,6 @@ void setup() {
   scene_signal_type = EEPROM.read(EEPROM_SCENE_SIGNALLING);
 };
 
-// ###########
-//  MAIN LOOP
-// ###########
-
-bool first_loop = true;
-
-// int test_count = 0;
-// int start_time = millis();
-
-int stopped_playing_time = 0;
-bool note_display_off = true;
-
 // The loop() function is repeatedly run by the Teensy unit after setup() completes.
 // This is the main logic of the program and defines how the strings, keys, click, buzz,
 // and buttons acutally behave during play.
@@ -268,8 +256,14 @@ void loop() {
   // trigger the tuning menu
   if ((myAButton->beingPressed() && myXButton->beingPressed()) || ex1Button->wasPressed()) {
 
-    GurdyString my_ptr = &mystring;
-    Serial.println(&mystring);
+    String my_ptr = int(&mystring);
+    Serial.println(my_ptr);
+
+    my_ptr = int(&mystring);
+    Serial.println(my_ptr);
+
+    my_ptr = int(&mystring);
+    Serial.println(my_ptr);
 
     // Turn off the sound :-)
     mystring->soundOff();
@@ -554,10 +548,10 @@ void loop() {
   };
 
   // Apparently we need to do this to discard incoming data.
-  while (myMIDI->read()) {
-  };
-  while (usbMIDI.read()) {
-  };
+//  while (myMIDI->read()) {
+//  };
+//  while (usbMIDI.read()) {
+//  };
 
   test_count +=1;
   if (test_count > 100000) {
