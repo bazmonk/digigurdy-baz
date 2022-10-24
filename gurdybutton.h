@@ -1,6 +1,7 @@
 #ifndef GURDYBUTTON_H
 #define GURDYBUTTON_H
 
+#include <Arduino.h>
 #include <Bounce.h>
 
 class GurdyButton {
