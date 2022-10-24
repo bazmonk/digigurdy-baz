@@ -6,25 +6,14 @@
 //   https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy
 // REPOSITORY: https://github.com/bazmonk/digigurdy-baz
 
-#include <Adafruit_GFX.h>
-// https://www.pjrc.com/teensy/td_libs_Bounce.html
-#include <Bounce.h>
-#include <EEPROM.h>
-#include <ADC.h>
+// Other includes are introduced where they're needed...
 
-// These are found in the digigurdy-baz repository
-#include "notes.h"           // Note and note string variables
-#include "bitmaps.h"         // Pretty pictures
-#include "eeprom_values.h"   // Save-slot memory addresses
-#include "config.h"          // Configuration variables
-
-// These are all about the display
-#include "display.h"            // Intializes our display object
 #include "startup_screens.h"    // Startup-related screens.
 #include "play_screens.h"       // The screens mid-play (notes and staffs)
 #include "tuning_screens.h"     // The tuning and sub-menu screens.
 #include "other_screens.h"      // The "other" screen tree.
 #include "save_load_screens.h"  // The save/load slot screens.
+#include "pause_screens.h"      // The pause menu.
 
 // Right now not using the std namespace is just impacting strings.  That's ok...
 using namespace MIDI_NAMESPACE;
@@ -132,9 +121,9 @@ void setup() {
 
   // Un-comment to print yourself debugging messages to the Teensyduino
   // serial console.
-  Serial.begin(115200);
-  delay(500);
-  Serial.println("Hello.");
+  // Serial.begin(115200);
+  // delay(500);
+  // Serial.println("Hello.");
 
   adc = new ADC();
 
@@ -196,122 +185,14 @@ void setup() {
   scene_signal_type = EEPROM.read(EEPROM_SCENE_SIGNALLING);
 };
 
-// This is the screen that X+A gets you.
-void pause_screen() {
-
-  bool done = false;
-  while (!done) {
-
-    String disp_str = " ----Pause  Menu---- \n"
-                      " 1) Load    2) Save  \n"
-                      " 3) Tuning  4) Other \n\n"
-                      " X, 5 or ex1) Go Back\n\n";
-
-    if (drone_mode == 0) {
-      disp_str += "A) Drone:On ,Trmp:On \n";
-    } else if (drone_mode == 1) {
-      disp_str += "A) Drone:Off,Trmp:Off\n";
-    } else if (drone_mode == 2) {
-      disp_str += "A) Drone:On, Trmp:Off\n";
-    } else if (drone_mode == 3) {
-      disp_str += "A) Drone:Off,Trmp:On \n";
-    };
-
-    if (mel_mode == 0) {
-      disp_str += "B) High:On ,  Low:On \n";
-    } else if (mel_mode == 1) {
-      disp_str += "B) High:On ,  Low:Off\n";
-    } else if (mel_mode == 2) {
-      disp_str += "B) High:Off,  Low:On \n";
-    };
-
-    print_screen(disp_str);
-
-    delay(150);
-
-    // Check the 1 and 2 buttons
-    my1Button->update();
-    my2Button->update();
-    my3Button->update();
-    my4Button->update();
-    my5Button->update();
-    myXButton->update();
-    myAButton->update();
-    myBButton->update();
-    ex1Button->update();
-
-    if (my1Button->wasPressed()) {
-      if (load_tuning_screen()) {
-        done = true;
-      };
-
-    } else if (my2Button->wasPressed()) {
-      save_tuning_screen();
-      done = true;
-
-    } else if (my3Button->wasPressed()) {
-      if (tuning()) {
-        done = true;
-      };
-
-    } else if (my4Button->wasPressed()) {
-      if (other_options_screen()) {
-        done = true;
-      };
-
-    } else if (my5Button->wasPressed() || myXButton->wasPressed() || ex1Button->wasPressed()) {
-      done = true;
-
-    } else if (myAButton->wasPressed()) {
-      if (drone_mode == 0) {
-        drone_mode = 1; // 1 == both off
-        mydrone->setMute(true);
-        mytromp->setMute(true);
-      } else if (drone_mode == 1) {
-        drone_mode = 2; // 2 == drone on, tromp off
-        mydrone->setMute(false);
-        mytromp->setMute(true);
-      } else if (drone_mode == 2) {
-        drone_mode = 3; // 3 == drone off, tromp on
-        mydrone->setMute(true);
-        mytromp->setMute(false);
-      } else if (drone_mode == 3) {
-        drone_mode = 0; // 0 == both on
-        mydrone->setMute(false);
-        mytromp->setMute(false);
-      };
-    } else if (myBButton->wasPressed()) {
-      if (mel_mode == 0) {
-        mel_mode = 1; // 1 == high on, low off
-        mystring->setMute(false);
-        mylowstring->setMute(true);
-      } else if (mel_mode == 1) {
-        mel_mode = 2; // 2 == high off, low on
-        mystring->setMute(true);
-        mylowstring->setMute(false);
-      } else if (mel_mode == 2) {
-        mel_mode = 0; // 0 == high on, low on
-        mystring->setMute(false);
-        mylowstring->setMute(false);
-      };
-    };
-  };
-
-  // Crank On! for half a sec.
-  display.clearDisplay();
-  display.drawBitmap(0, 0, crank_on_logo, 128, 64, 1);
-  display.display();
-  delay(500);
-};
-
 // ###########
 //  MAIN LOOP
 // ###########
 
 bool first_loop = true;
 
-int test_count = 0;
-int start_time = millis();
+// int test_count = 0;
+// int start_time = millis();
 
 int stopped_playing_time = 0;
 bool note_display_off = true;
@@ -638,17 +519,17 @@ void loop() {
   while (usbMIDI.read()) {
   };
 
-  test_count +=1;
-  if (test_count > 100000) {
-    test_count = 0;
-    Serial.print("100,000 loop()s took: ");
-    Serial.print(millis() - start_time);
-    Serial.print("ms.  Avg Velocity: ");
-    Serial.print(mycrank->getVAvg());
-    Serial.print("rpm. Transitions: ");
-    Serial.print(mycrank->getCount());
-    Serial.print(", est. rev: ");
-    Serial.println(mycrank->getRev());
-    start_time = millis();
-  }
+  // test_count +=1;
+  // if (test_count > 100000) {
+  //   test_count = 0;
+  //   Serial.print("100,000 loop()s took: ");
+  //   Serial.print(millis() - start_time);
+  //   Serial.print("ms.  Avg Velocity: ");
+  //   Serial.print(mycrank->getVAvg());
+  //   Serial.print("rpm. Transitions: ");
+  //   Serial.print(mycrank->getCount());
+  //   Serial.print(", est. rev: ");
+  //   Serial.println(mycrank->getRev());
+  //   start_time = millis();
+  // }
 };

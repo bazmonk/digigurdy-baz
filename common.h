@@ -83,4 +83,7 @@ extern int capo_offset;
 extern uint8_t scene_signal_type;
 extern int play_screen_type;
 
+extern int drone_mode;
+extern int mel_mode;
+
 #endif
