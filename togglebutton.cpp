@@ -1,7 +1,3 @@
-#include <Bounce.h>
-#include <Arduino.h>
-
-#include "gurdybutton.h"
 #include "togglebutton.h"
 
 // class ToggleButton adds a state toggle to the GurdyButton class

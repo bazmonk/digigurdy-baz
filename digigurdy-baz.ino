@@ -76,9 +76,9 @@ GurdyButton *tpose_down;
 GurdyButton *capo;
 
 // These are the "extra" buttons, new on the rev3.0 gurdies
-GurdyButton *ex1Button;
-GurdyButton *ex2Button;
-GurdyButton *ex3Button;
+ExButton *ex1Button;
+ExButton *ex2Button;
+ExButton *ex3Button;
 
 // This defines the +/- one octave transpose range.
 int max_tpose;
@@ -179,9 +179,9 @@ void setup() {
   capo = new GurdyButton(23); // The capo button
   capo_offset = 0;
 
-  ex1Button = new GurdyButton(41);
-  ex2Button = new GurdyButton(17);
-  ex3Button = new GurdyButton(14);
+  ex1Button = new ExButton(41);
+  ex2Button = new ExButton(17);
+  ex3Button = new ExButton(14);
 
   scene_signal_type = EEPROM.read(EEPROM_SCENE_SIGNALLING);
 
