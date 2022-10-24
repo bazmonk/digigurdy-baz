@@ -6,36 +6,28 @@
 //   https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy
 // REPOSITORY: https://github.com/bazmonk/digigurdy-baz
 
-#include <Adafruit_GFX.h>
-// https://www.pjrc.com/teensy/td_libs_Bounce.html
-#include <Bounce.h>
-#include <EEPROM.h>
-#include <ADC.h>
+// Other includes are introduced where they're needed...
 
-// These are found in the digigurdy-baz repository
-#include "notes.h"           // Note and note string variables
-#include "bitmaps.h"         // Pretty pictures
-#include "eeprom_values.h"   // Save-slot memory addresses
-#include "config.h"          // Configuration variables
-
-// These are all about the display
-#include "display.h"            // Intializes our display object
 #include "startup_screens.h"    // Startup-related screens.
 #include "play_screens.h"       // The screens mid-play (notes and staffs)
 #include "tuning_screens.h"     // The tuning and sub-menu screens.
 #include "other_screens.h"      // The "other" screen tree.
 #include "save_load_screens.h"  // The save/load slot screens.
+#include "pause_screens.h"      // The pause menu.
 
 // Right now not using the std namespace is just impacting strings.  That's ok...
 using namespace MIDI_NAMESPACE;
 
-// ##################
-// GLOBAL SETUP STUFF
-// ##################
+// ********************
+// * Global Variables *
+// ********************
+
+// These objects/variables are made available to other files via common.h
 
 // Declare MidiInterface object using that serial interface
 MidiInterface<SerialMIDI<HardwareSerial>> *myMIDI;
 
+// The BuzzKnob uses the Analog-to-Digital-Chip (ADC) to read.
 ADC* adc;
 
 // Declare the "keybox" and buttons.
@@ -85,17 +77,14 @@ GurdyButton *ex2Button;
 GurdyButton *ex3Button;
 
 // This defines the +/- one octave transpose range.
+// max_tpose is the range on the screen.
 const int max_tpose = 12;
 int tpose_offset;
 
 // This defines the 0, +2, +4 capo range.
+// max_capo is how many to offer (in increments of two)
 const int max_capo = 4;
 int capo_offset;
-
-// The offset is given when we update the buttons each cycle.
-// Buttons should only be updated once per cycle.  So we need this in the main loop()
-// to refer to it several times.
-int myoffset;
 
 // this tracks the drone/trompette mute status.  Starts all-on.
 // 0 = all on
@@ -110,19 +99,50 @@ int drone_mode = 0;
 // 2 = high off, low on
 int mel_mode = 0;
 
+// This records what kind of mid-play screen to use.
+// 0 - Big note + staff (default as per below)
+// 1 - Big note only
 int play_screen_type = 0;
+
+// Records if we're using MIDI scene signalling.
+// 0 - off (default as per below)
+// 1 - On
 uint8_t scene_signal_type = 0;
+
+// *******************
+// * Local Variables *
+// *******************
+
+// The offset is given when we update the buttons each cycle.
+// Buttons should only be updated once per cycle.  So we need this in the main loop()
+// to refer to it several times.
+int myoffset;
+
+// We do special stuff the first time we enter loop()
+bool first_loop = true;
+
+// If you want the serial debugging stuff I produce, you'll need this.
+int test_count = 0;
+int start_time = millis();
+bool test_here = false;
+
+// We track how long we stopped playing to delay the screen change.
+// note_display_off helps with that part.
+int stopped_playing_time = 0;
+bool note_display_off = true;
 
 // Teensy and Arduino units start by running setup() once after powering up.
 // Here we establish how the "gurdy" is setup, what strings to use, and we also
 // start the MIDI communication.
 void setup() {
 
+  // This initializes the display.
   start_display();
+
+  // Go through the starting screens.
   startup_screen_sqeuence();
 
-  // Un-comment to print yourself debugging messages to the Teensyduino
-  // serial console.
+  //Un-comment to print yourself debugging messages to the Teensyduino serial console.
   Serial.begin(115200);
   delay(500);
   Serial.println("Hello.");
@@ -134,6 +154,7 @@ void setup() {
   myMIDI = new MidiInterface<SerialMIDI<HardwareSerial>>((SerialMIDI<HardwareSerial>&)mySerialMIDI);
   myMIDI->begin();
 
+  // Initialize our crank.  This also initializes the BuzzKnob.
   mycrank = new GurdyCrank(15, A2, adc, LED_PIN);
 
   // The keybox arrangement is decided by pin_array, which is up in the CONFIG SECTION
@@ -171,141 +192,22 @@ void setup() {
   mybuzz = new GurdyString(5,Note(c3), myMIDI);
   mykeyclick = new GurdyString(6, Note(b5), myMIDI);
 
-
   tpose_up = new GurdyButton(22);   // A.k.a. the button formerly known as octave-up
   tpose_down = new GurdyButton(21); // A.k.a. the button formerly known as octave-down
-
   capo = new GurdyButton(23); // The capo button
 
+  // These are the three new extra buttons.
   ex1Button = new GurdyButton(41);
   ex2Button = new GurdyButton(17);
   ex3Button = new GurdyButton(14);
 
+  // Start with zero offsets
   tpose_offset = 0;
   capo_offset = 0;
 
+  // Set the saved MIDI scene change option.
   scene_signal_type = EEPROM.read(EEPROM_SCENE_SIGNALLING);
 };
-
-// This is the screen that X+A gets you.
-void pause_screen() {
-
-  bool done = false;
-  while (!done) {
-
-    String disp_str = " ----Pause  Menu---- \n"
-                      " 1) Load    2) Save  \n"
-                      " 3) Tuning  4) Other \n\n"
-                      " X, 5 or ex1) Go Back\n\n";
-
-    if (drone_mode == 0) {
-      disp_str += "A) Drone:On ,Trmp:On \n";
-    } else if (drone_mode == 1) {
-      disp_str += "A) Drone:Off,Trmp:Off\n";
-    } else if (drone_mode == 2) {
-      disp_str += "A) Drone:On, Trmp:Off\n";
-    } else if (drone_mode == 3) {
-      disp_str += "A) Drone:Off,Trmp:On \n";
-    };
-
-    if (mel_mode == 0) {
-      disp_str += "B) High:On ,  Low:On \n";
-    } else if (mel_mode == 1) {
-      disp_str += "B) High:On ,  Low:Off\n";
-    } else if (mel_mode == 2) {
-      disp_str += "B) High:Off,  Low:On \n";
-    };
-
-    print_screen(disp_str);
-
-    delay(150);
-
-    // Check the 1 and 2 buttons
-    my1Button->update();
-    my2Button->update();
-    my3Button->update();
-    my4Button->update();
-    my5Button->update();
-    myXButton->update();
-    myAButton->update();
-    myBButton->update();
-    ex1Button->update();
-
-    if (my1Button->wasPressed()) {
-      if (load_tuning_screen()) {
-        done = true;
-      };
-
-    } else if (my2Button->wasPressed()) {
-      save_tuning_screen();
-      done = true;
-
-    } else if (my3Button->wasPressed()) {
-      if (tuning()) {
-        done = true;
-      };
-
-    } else if (my4Button->wasPressed()) {
-      if (other_options_screen()) {
-        done = true;
-      };
-
-    } else if (my5Button->wasPressed() || myXButton->wasPressed() || ex1Button->wasPressed()) {
-      done = true;
-
-    } else if (myAButton->wasPressed()) {
-      if (drone_mode == 0) {
-        drone_mode = 1; // 1 == both off
-        mydrone->setMute(true);
-        mytromp->setMute(true);
-      } else if (drone_mode == 1) {
-        drone_mode = 2; // 2 == drone on, tromp off
-        mydrone->setMute(false);
-        mytromp->setMute(true);
-      } else if (drone_mode == 2) {
-        drone_mode = 3; // 3 == drone off, tromp on
-        mydrone->setMute(true);
-        mytromp->setMute(false);
-      } else if (drone_mode == 3) {
-        drone_mode = 0; // 0 == both on
-        mydrone->setMute(false);
-        mytromp->setMute(false);
-      };
-    } else if (myBButton->wasPressed()) {
-      if (mel_mode == 0) {
-        mel_mode = 1; // 1 == high on, low off
-        mystring->setMute(false);
-        mylowstring->setMute(true);
-      } else if (mel_mode == 1) {
-        mel_mode = 2; // 2 == high off, low on
-        mystring->setMute(true);
-        mylowstring->setMute(false);
-      } else if (mel_mode == 2) {
-        mel_mode = 0; // 0 == high on, low on
-        mystring->setMute(false);
-        mylowstring->setMute(false);
-      };
-    };
-  };
-
-  // Crank On! for half a sec.
-  display.clearDisplay();
-  display.drawBitmap(0, 0, crank_on_logo, 128, 64, 1);
-  display.display();
-  delay(500);
-};
-
-// ###########
-//  MAIN LOOP
-// ###########
-
-bool first_loop = true;
-
-int test_count = 0;
-int start_time = millis();
-
-int stopped_playing_time = 0;
-bool note_display_off = true;
 
 // The loop() function is repeatedly run by the Teensy unit after setup() completes.
 // This is the main logic of the program and defines how the strings, keys, click, buzz,
@@ -314,10 +216,10 @@ void loop() {
   // loop() actually runs too fast and gets ahead of hardware calls if it's allowed to run freely.
   // This was noticeable in older versions when the crank got "stuck" and would not buzz and took
   // oddly long to stop playing when the crank stopped moving.
-  //
+
   // A microsecond delay here lets everything keep up with itself.  The exactly delay is set at
   // the top in the config section.
-  //delayMicroseconds(LOOP_DELAY);
+  // delay(20);
 
   if (first_loop) {
     welcome_screen();
@@ -354,6 +256,9 @@ void loop() {
   // trigger the tuning menu
   if ((myAButton->beingPressed() && myXButton->beingPressed()) || ex1Button->wasPressed()) {
 
+    GurdyString my_ptr = &mystring;
+    Serial.println(&mystring);
+
     // Turn off the sound :-)
     mystring->soundOff();
     mylowstring->soundOff();
@@ -361,13 +266,13 @@ void loop() {
     mytromp->soundOff();
     mydrone->soundOff();
     mybuzz->soundOff();
-
     // If I don't do this, it comes on afterwards.
     bigbutton->setToggle(false);
 
     pause_screen();
     print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
                  tpose_offset, capo_offset, 0, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
+    test_here = true;
   };
 
   // Check for a capo shift.
@@ -543,10 +448,18 @@ void loop() {
     // * We just hit the button and we weren't cranking, OR
     // * We just started cranking and we hadn't hit the button.
     if (bigbutton->wasPressed() && !mycrank->isSpinning()) {
+      Serial.println("here3");
+      Serial.println(tpose_offset);
+      Serial.println(myoffset);
+      Serial.println(MELODY_VIBRATO);
       mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
+      Serial.println("here4");
       mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
+      Serial.println("here5");
       mytromp->soundOn(tpose_offset + capo_offset);
+      Serial.println("here6");
       mydrone->soundOn(tpose_offset + capo_offset);
+      Serial.println("here7");
       draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
 
     } else if (mycrank->startedSpinning() && !bigbutton->toggleOn()) {
@@ -623,11 +536,16 @@ void loop() {
     };
   };
 
+  if (test_here) {
+    Serial.println("test here end loop");
+    test_here = false;
+  };
+
   // Apparently we need to do this to discard incoming data.
-  while (myMIDI->read()) {
-  };
-  while (usbMIDI.read()) {
-  };
+//  while (myMIDI->read()) {
+//  };
+//  while (usbMIDI.read()) {
+//  };
 
   test_count +=1;
   if (test_count > 100000) {
