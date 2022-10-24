@@ -24,6 +24,10 @@
 
 #include "common.h"
 
+#include "gurdycrank.h"
+#include "hurdygurdy.h"
+#include "togglebutton.h"
+
 // These are all about the display
 #include "display.h"         // Intializes our display object
 #include "startup_screens.h" // Startup-related screens.
@@ -47,27 +51,27 @@ MIDI_CREATE_DEFAULT_INSTANCE();
 ADC* adc;
 
 // Declare the "keybox" and buttons.
-extern HurdyGurdy *mygurdy;
-extern ToggleButton *bigbutton;
-extern GurdyCrank *mycrank;
+HurdyGurdy *mygurdy;
+ToggleButton *bigbutton;
+GurdyCrank *mycrank;
 
 // As musical keys, these are referred to in the mygurdy object above.
 // This declaration of them is specifically for their use as navigational
 // buttons in the menu screens.  ok = O, back = X.
-extern KeyboxButton *myAButton;
-extern KeyboxButton *myXButton;
-extern KeyboxButton *my1Button;
-extern KeyboxButton *my2Button;
-extern KeyboxButton *my3Button;
-extern KeyboxButton *my4Button;
-extern KeyboxButton *my5Button;
-extern KeyboxButton *my6Button;
+KeyboxButton *myAButton;
+KeyboxButton *myXButton;
+KeyboxButton *my1Button;
+KeyboxButton *my2Button;
+KeyboxButton *my3Button;
+KeyboxButton *my4Button;
+KeyboxButton *my5Button;
+KeyboxButton *my6Button;
 
 // For legacy button-combo support:
-extern KeyboxButton *myAltTposeButton;
-extern KeyboxButton *myAltTposeUp;
-extern KeyboxButton *myAltTposeDown;
-extern KeyboxButton *myBButton;
+KeyboxButton *myAltTposeButton;
+KeyboxButton *myAltTposeUp;
+KeyboxButton *myAltTposeDown;
+KeyboxButton *myBButton;
 
 // Note that there aren't special classes for melody, drone, even the keyclick.
 // They are differentiated in the main loop():
@@ -75,22 +79,22 @@ extern KeyboxButton *myBButton;
 // * A drone/trompette is one that doesn't change.
 // * The keyclick "string" is just a drone that comes on and off at particular times.
 // * The buzz "string" is also just a drone that comes on/off at other particular times.
-extern GurdyString *mystring;
-extern GurdyString *mylowstring;
-extern GurdyString *mykeyclick;
-extern GurdyString *mytromp;
-extern GurdyString *mydrone;
-extern GurdyString *mybuzz;
+GurdyString *mystring;
+GurdyString *mylowstring;
+GurdyString *mykeyclick;
+GurdyString *mytromp;
+GurdyString *mydrone;
+GurdyString *mybuzz;
 
 // These are the dedicated transpose/capo buttons
-extern GurdyButton *tpose_up;
-extern GurdyButton *tpose_down;
-extern GurdyButton *capo;
+GurdyButton *tpose_up;
+GurdyButton *tpose_down;
+GurdyButton *capo;
 
 // These are the "extra" buttons, new on the rev3.0 gurdies
-extern GurdyButton *ex1Button;
-extern GurdyButton *ex2Button;
-extern GurdyButton *ex3Button;
+GurdyButton *ex1Button;
+GurdyButton *ex2Button;
+GurdyButton *ex3Button;
 
 // This defines the +/- one octave transpose range.
 const int max_tpose = 12;
