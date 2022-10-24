@@ -42,7 +42,6 @@ void pause_screen() {
     myXButton->update();
     myAButton->update();
     myBButton->update();
-    ex1Button->update();
 
     if (my1Button->wasPressed()) {
       if (load_tuning_screen()) {
@@ -63,7 +62,7 @@ void pause_screen() {
         done = true;
       };
 
-    } else if (my5Button->wasPressed() || myXButton->wasPressed() || ex1Button->wasPressed()) {
+    } else if (my5Button->wasPressed() || myXButton->wasPressed()) {
       done = true;
 
     } else if (myAButton->wasPressed()) {

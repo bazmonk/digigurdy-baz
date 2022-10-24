@@ -7,6 +7,7 @@
 #include "keyboxbutton.h"    // For the keybox buttons
 #include "gurdystring.h"     // For talking to MIDI
 #include "exbutton.h"
+#include "togglebutton.h"
 
 // I want to be able to interact with these objects across several files, so this is how
 // I'm doing it.  Is it proper?  Probably not, but it seems simple enough.
@@ -47,10 +48,7 @@ extern GurdyButton *tpose_up;
 extern GurdyButton *tpose_down;
 extern GurdyButton *capo;
 
-// These are the "extra" buttons, new on the rev3.0 gurdies
-extern ExButton *ex1Button;
-extern ExButton *ex2Button;
-extern ExButton *ex3Button;
+extern ToggleButton *bigbutton;
 
 // This defines the +/- one octave transpose range.
 extern int max_tpose;

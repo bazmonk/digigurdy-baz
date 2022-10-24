@@ -13,5 +13,8 @@ void ExButton::setFunc(int func) {
 };
 
 void ExButton::doFunc() {
+  if (my_func == 1) {
+    trigger_pause_menu();
+  };
   return;
 };

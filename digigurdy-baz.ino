@@ -254,7 +254,7 @@ void loop() {
 
   // If the "X" and "O" buttons are both down, or if the first extra button is pressed,
   // trigger the tuning menu
-  if ((myAButton->beingPressed() && myXButton->beingPressed()) || ex1Button->wasPressed()) {
+  if (myAButton->beingPressed() && myXButton->beingPressed()) {
 
     // Turn off the sound :-)
     mystring->soundOff();
@@ -349,6 +349,11 @@ void loop() {
       print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
                    tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
     };
+  };
+
+  // If ex1 is pressed during play, trigger the ex1 function.
+  if (ex1Button->wasPressed()) {
+    ex1Button->doFunc();
   };
 
   // If ex2 is pressed during play, cycle through the melody string on/off options.
