@@ -1,6 +1,8 @@
 #ifndef KEYBOXBUTTON_H
 #define KEYBOXBUTTON_H
 
+#include <Arduino.h>
+
 #include "gurdybutton.h"
 
 class KeyboxButton: public GurdyButton {
