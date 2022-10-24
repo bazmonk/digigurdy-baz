@@ -2,7 +2,13 @@
 
 **Pre-compiled builds of the code will be made available from 1.7.99 and up.  See https://github.com/bazmonk/digigurdy-baz/wiki/install-by-hex for installation instructions.**
 
-**Check out version 1.9.3! (NEW)**
+**Check out version 1.9.4! (NEW)**
+
+* 1.9.4 -
+  * Using the MIDI object the right way
+  * Moved menu screen functions off to separate file
+  * Cleaned up header tree and general structure.
+  * Compiled code less than 50% of 1.7.99.
 
 * 1.9.3 -
   * I've been using the wrong `string` :-(  Migrated from `std::string` to `String`.
