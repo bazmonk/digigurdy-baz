@@ -1,6 +1,3 @@
-#ifndef EEPROM_VALUES_H
-#define EEPROM_VALUES_H
-
 // This file holds memory addresses within the EEPROM used by digigurdy-baz.
 //
 // EEPROM memory is rated for at least 100,000 writes (reads are harmless).
@@ -41,5 +38,3 @@ static const int EEPROM_DISPLY_TYPE = 100;
 // 1 = Conveyed as a Program Control message on channel 1
 // ... Reserved for future use
 static const int EEPROM_SCENE_SIGNALLING = 101;
-
-#endif

@@ -2,20 +2,7 @@
 
 **Pre-compiled builds of the code will be made available from 1.7.99 and up.  See https://github.com/bazmonk/digigurdy-baz/wiki/install-by-hex for installation instructions.**
 
-**Check out version 1.9.4! (NEW)**
-
-* 1.9.4 -
-  * Created a much-needed display helper function and re-wrote all menu screens to use it.
-    * Saves several-hundred lines of code.
-  * MAJOR code reorganization.
-    * All menu screen functions are in their own files.
-    * Main file cleaned down to <600 lines (from nearly 3,000 at v1.7.99).
-    * `#include` "web" cleaned up and more to standard.
-  * In total:
-    * "code" portion of Teensy code is 50% versus v1.7.99!
-    * Compiled HEX file is 37% smaller!
-    * Code is much more maintainable/extensible now.
-    * I'm not ashamed to show other programmers this now :-)
+**Check out version 1.9.3! (NEW)**
 
 * 1.9.3 -
   * I've been using the wrong `string` :-(  Migrated from `std::string` to `String`.

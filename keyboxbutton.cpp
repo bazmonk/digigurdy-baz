@@ -1,3 +1,7 @@
+#include <Bounce.h>
+#include <Arduino.h>
+
+#include "gurdybutton.h"
 #include "keyboxbutton.h"
 
 // class KeyboxButton adds a note offset variable to the GurdyButton class.

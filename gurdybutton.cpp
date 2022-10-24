@@ -1,5 +1,7 @@
 #include "gurdybutton.h"
 
+#include <ADC.h>
+
 // GurdyButton objects abstract the physical buttons.
 //   This class is for generic buttons like the octave/tpose ones, which are
 //   press-on, release-off but otherwise generic in purpose.

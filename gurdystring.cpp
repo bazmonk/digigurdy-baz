@@ -19,13 +19,9 @@ GurdyString::GurdyString(int my_channel, int my_note, midi::MidiInterface<midi::
 // because of that.
 void GurdyString::soundOn(int my_offset, int my_modulation) {
   note_being_played = open_note + my_offset;
-  Serial.println("I get in SoundOn");
   if (!mute_on) {
-    Serial.println("I get here!");
     usbMIDI.sendNoteOn(note_being_played, midi_volume, midi_channel);
-    Serial.println("I get here Too!");
     MIDI_obj->sendNoteOn(note_being_played, midi_volume, midi_channel);
-    Serial.println("Even here?!");
 
     // If modulation isn't zero, send that as a MIDI CC for this channel
     // This is meant to be configured to create a gentle vibrato.
