@@ -10,7 +10,7 @@
 // Comment this if you do not want to use the buzz LED feature
 #define LED_KNOB
 
-const String VERSION = "1.9.5r";
+const String VERSION = "1.9.5";
 const String REL_DATE = "24 Oct, 2022, v" + VERSION;
 
 // VIBRATO: I use a long-delay, very slow vibrato on the melody strings.  This variable controls how

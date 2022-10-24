@@ -1,6 +1,9 @@
 #ifndef PAUSE_SCREENS_H
 #define PAUSE_SCREENS_H
 
+// Need this now because EEPROM supports strings, which
+// apparently doesn't load it itself.
+#include <Arduino.h>
 #include <EEPROM.h>
 
 #include "common.h"

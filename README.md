@@ -4,6 +4,11 @@
 
 **Check out version 1.9.4! (NEW)**
 
+* 1.9.5 -
+  * Internal support for exButton configurable actions.
+  * Fix necessary to work around Teensyduino 1.57 (the latest) bug.
+    * https://forum.pjrc.com/threads/71359-EEPROM-h-doesn-t-include-String-library-on-its-own-now-that-it-has-String-support?p=314717#post314717
+
 * 1.9.4 -
   * Using the MIDI object the right way
   * Moved menu screen functions off to separate file
