@@ -45,7 +45,7 @@ void startup_screen_sqeuence() {
 
   // Display the about screen
   about_screen();
-  delay(600);
+  delay(1000);
 };
 
 void about_screen() {

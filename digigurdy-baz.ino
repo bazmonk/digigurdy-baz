@@ -12,6 +12,7 @@
 #include "eeprom_values.h"   // Save-slot memory addresses
 #include "config.h"          // Configuration variables
 
+#include "exbutton.h"
 #include "common.h"
 
 #include "gurdycrank.h"
@@ -252,9 +253,15 @@ void loop() {
   ex2Button->update();
   ex3Button->update();
 
+  bool go_menu = false;
+  if ((ex1Button->wasPressed() && ex1Button->getFunc() == 1) ||
+      (ex2Button->wasPressed() && ex2Button->getFunc() == 1) ||
+      (ex3Button->wasPressed() && ex3Button->getFunc() == 1)) {
+    go_menu = true;
+  }
   // If the "X" and "O" buttons are both down, or if the first extra button is pressed,
   // trigger the tuning menu
-  if (myAButton->beingPressed() && myXButton->beingPressed()) {
+  if ((myAButton->beingPressed() && myXButton->beingPressed()) || go_menu) {
 
     // Turn off the sound :-)
     mystring->soundOff();
@@ -349,11 +356,6 @@ void loop() {
       print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
                    tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
     };
-  };
-
-  // If ex1 is pressed during play, trigger the ex1 function.
-  if (ex1Button->wasPressed()) {
-    ex1Button->doFunc();
   };
 
   // If ex2 is pressed during play, cycle through the melody string on/off options.

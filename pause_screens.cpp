@@ -351,13 +351,13 @@ void options_about_screen() {
     };
   };
 
-  String disp_str = "      DigiGurdy      "
-                    "---------------------"
-                    "Special Thanks:      "
-                    "                     "
-                    "John Dingley         "
-                    "David Jacobs         "
-                    "lune36400            "
+  String disp_str = "      DigiGurdy      \n"
+                    "---------------------\n"
+                    "Special Thanks:      \n"
+                    "                     \n"
+                    "John Dingley         \n"
+                    "David Jacobs         \n"
+                    "lune36400            \n"
                     "SalusaSecondus       ";
 
   print_screen(disp_str);
@@ -378,8 +378,8 @@ bool other_options_screen() {
 
     String disp_str = " ---Other Options--- \n"
                       "                     \n"
-                      " 1) Nothing!!!       \n"
-                      "   (Really, nothing) \n\n"
+                      " 1)   EX Button      \n"
+                      "    Configuration    \n\n"
                       " 2) About DigiGurdy  \n\n"
                       " X or 3) Go Back     \n";
 
@@ -391,8 +391,7 @@ bool other_options_screen() {
     myXButton->update();
 
     if (my1Button->wasPressed()) {
-      // There is no crank detection right now...
-      done = false;
+      ex_btn_choice_screen();
 
     } else if (my2Button->wasPressed()) {
       options_about_screen();

@@ -13,6 +13,7 @@
 #include "default_tunings.h"
 #include "eeprom_values.h"
 #include "startup_screens.h"
+#include "ex_screens.h"
 
 void pause_screen();
 bool tuning();

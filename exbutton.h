@@ -3,6 +3,7 @@
 
 #include "gurdybutton.h"
 #include "exfunctions.h"
+#include "display.h"
 //#include "common.h"
 
 class ExButton: public GurdyButton {
@@ -17,6 +18,8 @@ class ExButton: public GurdyButton {
     void setFunc(int func);
 
     void doFunc();
+
+    void fn_choice_screen();
 };
 
 #endif
