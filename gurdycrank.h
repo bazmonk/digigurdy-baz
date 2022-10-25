@@ -2,6 +2,7 @@
 #define GURDYCRANK_H
 
 #include "buzzknob.h"
+#include "common.h"
 #include "simpleled.h"
 
 // class GurdyCrank controls the cranking mechanism, including the buzz triggers.
@@ -48,12 +49,14 @@ class GurdyCrank {
     elapsedMicros the_spoke_timer;
     elapsedMicros the_stop_timer;
     elapsedMillis the_buzz_timer;
+    elapsedMillis the_expression_timer;
 
   public:
     GurdyCrank(int s_pin, int buzz_pin, int led_pin);
 
     bool isDetected();
     void update();
+    void updateExpression();
     bool startedSpinning();
     bool stoppedSpinning();
     bool isSpinning();

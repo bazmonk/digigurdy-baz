@@ -2,7 +2,10 @@
 
 **Pre-compiled builds of the code will be made available from 1.7.99 and up.  See https://github.com/bazmonk/digigurdy-baz/wiki/install-by-hex for installation instructions.**
 
-**Check out version 1.9.4! (NEW)**
+**Check out version 1.9.7! (NEW)**
+
+* 1.9.7 -
+  * Velocity-based volume change of strings!
 
 * 1.9.6 -
   * Options menu now includes support for switching EX button functions.  There are 5 choices:

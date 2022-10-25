@@ -10,8 +10,8 @@
 // Comment this if you do not want to use the buzz LED feature
 #define LED_KNOB
 
-const String VERSION = "1.9.6";
-const String REL_DATE = "24 Oct, 2022, v" + VERSION;
+const String VERSION = "1.9.7";
+const String REL_DATE = "25 Oct, 2022, v" + VERSION;
 
 // VIBRATO: I use a long-delay, very slow vibrato on the melody strings.  This variable controls how
 // much vibrato (how much modulation like with a physical mod wheel on a MIDI keyboard) to send.
@@ -20,10 +20,10 @@ const int MELODY_VIBRATO = 16;
 
 // EXPRESSION:
 // Beyond EXPRESSION_VMAX RPMs, the volume will be at max.
-const float EXPRESSION_VMAX = 100.0;
+const float EXPRESSION_VMAX = 120.0;
 
 // At the slowest crank velocity, volume will start at this value (0 = silent, 127 = max)
-const int EXPRESSION_START = 50;
+const int EXPRESSION_START = 60;
 
 // Cranking and buzz behavior:
 

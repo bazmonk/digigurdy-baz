@@ -162,6 +162,32 @@ void GurdyCrank::update() {
 
     the_timer = 0;
   };
+
+  updateExpression();
+};
+
+void GurdyCrank::updateExpression() {
+  // Only do anything every 50ms (20x/sec)
+  if (the_expression_timer > 50) {
+
+    float cur_v = getVAvg();
+    if (cur_v > EXPRESSION_VMAX) {
+      cur_v = EXPRESSION_VMAX;
+    } else if (cur_v < V_THRESHOLD) {
+      cur_v = V_THRESHOLD;
+    }
+    int expression = int(((cur_v - V_THRESHOLD)/(EXPRESSION_VMAX - V_THRESHOLD)) * (127 - EXPRESSION_START) + EXPRESSION_START);
+
+    if (bigbutton->toggleOn()) {
+      expression = 90;
+    };
+    mystring->setExpression(expression);
+    mylowstring->setExpression(expression);
+    mytromp->setExpression(expression);
+    mydrone->setExpression(expression);
+    mybuzz->setExpression(expression);
+    the_expression_timer = 0;
+  };
 };
 
 bool GurdyCrank::startedSpinning() {

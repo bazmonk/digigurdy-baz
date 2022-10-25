@@ -30,6 +30,7 @@ class GurdyString {
     bool getMute();
     bool isPlaying();
     void setProgram(uint8_t program);
+    void setExpression(int exp);
 };
 
 #endif

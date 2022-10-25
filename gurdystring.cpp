@@ -80,3 +80,8 @@ void GurdyString::setProgram(uint8_t program) {
   usbMIDI.sendProgramChange(program, midi_channel);
   MIDI.sendProgramChange(program, midi_channel);
 };
+
+void GurdyString::setExpression(int exp) {
+      usbMIDI.sendControlChange(11, exp, midi_channel);
+      MIDI.sendControlChange(11, exp, midi_channel);
+};
