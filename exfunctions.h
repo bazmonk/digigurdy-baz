@@ -6,5 +6,7 @@
 
 void cycle_mel_mute();
 void cycle_drone_tromp_mute();
+void cycle_drone_mute();
+void cycle_tromp_mute();
 
 #endif

@@ -19,6 +19,10 @@ void ExButton::doFunc() {
     cycle_mel_mute();
   } else if (my_func == 3) {
     cycle_drone_tromp_mute();
+  } else if (my_func == 4) {
+    cycle_drone_mute();
+  } else if (my_func == 5) {
+    cycle_tromp_mute();
   }
   return;
 };
@@ -35,9 +39,9 @@ void ExButton::fn_choice_screen() {
                       " 1) Open Pause Menu  \n"
                       " 2) Cycle Mel. Mute  \n"
                       " 3) Cycle Dn/Tr. Mute\n"
-                      "                     \n"
-                      "                     \n"
-                      " X or 4) Go Back     \n";
+                      " 4) Toggle Drone Mute\n"
+                      " 5) Toggle Tromp Mute\n"
+                      " X or 6) Go Back     \n";
 
     print_screen(disp_str);
     delay(200);
@@ -46,6 +50,8 @@ void ExButton::fn_choice_screen() {
     my2Button->update();
     my3Button->update();
     my4Button->update();
+    my5Button->update();
+    my6Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {
@@ -60,7 +66,15 @@ void ExButton::fn_choice_screen() {
       setFunc(3);
 
       done = true;
-    } else if (my4Button->wasPressed() || myXButton->wasPressed()) {
+    } else if (my4Button->wasPressed()) {
+      setFunc(4);
+
+      done = true;
+    } else if (my5Button->wasPressed()) {
+      setFunc(5);
+
+      done = true;
+    } else if (my6Button->wasPressed() || myXButton->wasPressed()) {
       return;
     };
   };

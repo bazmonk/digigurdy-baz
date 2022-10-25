@@ -107,6 +107,9 @@ int drone_mode;
 // 2 = high off, low on
 int mel_mode;
 
+int d_mode;
+int t_mode;
+
 int play_screen_type;
 uint8_t scene_signal_type;
 
@@ -189,6 +192,9 @@ void setup() {
   // Default to all strings un-muted
   drone_mode = 0;
   mel_mode = 0;
+
+  d_mode = 0;
+  t_mode = 0;
 
   play_screen_type = 0;
   scene_signal_type = 0;

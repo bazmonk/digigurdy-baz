@@ -4,6 +4,15 @@
 
 **Check out version 1.9.4! (NEW)**
 
+* 1.9.6 -
+  * Options menu now includes support for switching EX button functions.  There are 5 choices:
+    * Toggle pause menu
+    * Cycle through mute/unmute of melody Strings
+    * Cycle through mute of drone/trompette strings (through all 4 combos)
+    * Toggle drone mute only
+    * Toggle trompette mute only
+  * Muting trompette also mutes buzz now.
+
 * 1.9.5 -
   * Internal support for exButton configurable actions.
   * Fix necessary to work around Teensyduino 1.57 (the latest) bug.
