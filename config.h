@@ -7,6 +7,12 @@
 #define WHITE_OLED
 //#define BLUE_OLED
 
+// ALL USERS!!! If you're hooking up to a WAV Trigger or Super Tsunami, uncomment one of these.
+// * This expects to transmit via pin 1, Serial1 Tx.
+// * This effectively disables Serial MIDI.  USB MIDI is still available.
+#define USE_TRIGGER
+// #define USE_TSUNAMI
+
 // Comment this if you do not want to use the buzz LED feature
 #define LED_KNOB
 

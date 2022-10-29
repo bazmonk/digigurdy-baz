@@ -12,6 +12,10 @@
 // I want to be able to interact with these objects across several files, so this is how
 // I'm doing it.  Is it proper?  Probably not, but it seems simple enough.
 
+#ifdef USE_TRIGGER
+  extern wavTrigger trigger_obj;
+#endif
+
 // As musical keys, these are referred to in the mygurdy object above.
 // This declaration of them is specifically for their use as navigational
 // buttons in the menu screens.  ok = O, back = X.

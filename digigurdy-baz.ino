@@ -26,7 +26,13 @@
 #include "pause_screens.h"   // The pause screen menus
 
 // As far as I can tell, this *has* to be done here or else you get spooooky runtime problems.
-MIDI_CREATE_DEFAULT_INSTANCE();
+#if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
+  MIDI_CREATE_DEFAULT_INSTANCE();
+#endif
+
+#ifdef USE_TRIGGER
+  wavTrigger  trigger_obj;
+#endif
 
 //
 // GLOBAL OBJECTS/VARIABLES
@@ -134,9 +140,22 @@ void setup() {
   // delay(500);
   // Serial.println("Hello.");
 
+
   // Start the Serial MIDI object (like for a bluetooth transmitter).
   // The usbMIDI object is available by Teensyduino magic that I don't know about.
-  MIDI.begin(MIDI_CHANNEL_OMNI);
+  #if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
+      MIDI.begin(MIDI_CHANNEL_OMNI);
+  #endif
+
+  #ifdef USE_TRIGGER
+    trigger_obj.start();
+    delay(10);
+
+    // Send a stop-all command and reset the sample-rate offset, in case we have
+    //  reset while the WAV Trigger was already playing.
+    trigger_obj.stopAllTracks();
+    trigger_obj.samplerateOffset(0);
+  #endif
 
   // Initialize the ADC object and the crank that will use it.
   adc = new ADC();
@@ -467,8 +486,10 @@ void loop() {
   };
 
   // Apparently we need to do this to discard incoming data.
-  while (MIDI.read()) {
-  };
+  #if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
+    while (MIDI.read()) {
+    };
+  #endif
   while (usbMIDI.read()) {
   };
 
