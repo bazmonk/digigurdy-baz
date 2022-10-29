@@ -20,13 +20,21 @@ void GurdyString::soundOn(int my_offset, int my_modulation) {
   note_being_played = open_note + my_offset;
   if (!mute_on) {
     usbMIDI.sendNoteOn(note_being_played, midi_volume, midi_channel);
+#if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
     MIDI.sendNoteOn(note_being_played, midi_volume, midi_channel);
+#elif defined(USE_TRIGGER)
+    trigger_obj.trackPlayPoly(note_being_played + (128 * (midi_channel - 1)), true);
+#elif defined(USE_TSUNAMI)
+    trigger_obj.trackPlayPoly(note_being_played + (128 * (midi_channel - 1)), 1, true);
+#endif
 
     // If modulation isn't zero, send that as a MIDI CC for this channel
     // This is meant to be configured to create a gentle vibrato.
     if (my_modulation > 0) {
       usbMIDI.sendControlChange(1, my_modulation, midi_channel);
+#if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
       MIDI.sendControlChange(1, my_modulation, midi_channel);
+#endif
     }
   }
   is_playing = true;
@@ -35,7 +43,11 @@ void GurdyString::soundOn(int my_offset, int my_modulation) {
 // soundOff gracefully turns off the playing note on the string.
 void GurdyString::soundOff() {
   usbMIDI.sendNoteOff(note_being_played, midi_volume, midi_channel);
+#if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
   MIDI.sendNoteOff(note_being_played, midi_volume, midi_channel);
+#else
+  trigger_obj.trackStop(note_being_played + (128 * (midi_channel - 1)));
+#endif
   is_playing = false;
 };
 
@@ -43,7 +55,11 @@ void GurdyString::soundOff() {
 // It does not need to know the note being played as it kills all of them.
 void GurdyString::soundKill() {
   usbMIDI.sendControlChange(123, 0, midi_channel);
+#if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
   MIDI.sendControlChange(123, 0, midi_channel);
+#else
+  trigger_obj.stopAllTracks();
+#endif
   is_playing = false;
 };
 
@@ -78,10 +94,14 @@ bool GurdyString::isPlaying() {
 
 void GurdyString::setProgram(uint8_t program) {
   usbMIDI.sendProgramChange(program, midi_channel);
+#if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
   MIDI.sendProgramChange(program, midi_channel);
+#endif
 };
 
 void GurdyString::setExpression(int exp) {
       usbMIDI.sendControlChange(11, exp, midi_channel);
+#if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
       MIDI.sendControlChange(11, exp, midi_channel);
+#endif
 };

@@ -1,11 +1,33 @@
 #ifndef GURDYSTRING_H
 #define GURDYSTRING_H
 
+#include "config.h"
+
 // https://www.pjrc.com/teensy/td_midi.html
 // https://www.pjrc.com/teensy/td_libs_MIDI.html
-#include <MIDI.h>
+#if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
+  #include <MIDI.h>
+#endif
 
-extern MIDI_NAMESPACE::MidiInterface<MIDI_NAMESPACE::SerialMIDI<HardwareSerial>> MIDI;
+#ifdef USE_TRIGGER
+  #include "wavTrigger.h"
+#endif
+
+#ifdef USE_TSUNAMI
+  #include "Tsunami.h"
+#endif
+
+#if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
+  extern MIDI_NAMESPACE::MidiInterface<MIDI_NAMESPACE::SerialMIDI<HardwareSerial>> MIDI;
+#endif
+
+#ifdef USE_TRIGGER
+  extern wavTrigger trigger_obj;
+#endif
+
+#ifdef USE_TSUNAMI
+  extern Tsunami trigger_obj;
+#endif
 
 class GurdyString {
   private:
