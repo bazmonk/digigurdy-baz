@@ -60,7 +60,7 @@ void about_screen() {
                     "   By Basil Lalli,   \n"
                     "Concept By J. Dingley\n"
                     + REL_DATE + "\n"
-                    "                     \n"
+                    + EXTRA_LINE + "\n"
                     "  shorturl.at/tuDY1  \n";
 
   display.println(disp_str);

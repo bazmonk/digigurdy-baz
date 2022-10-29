@@ -4,6 +4,12 @@
 
 **Check out version 1.9.8! (NEW)**
 
+* 1.9.85 -
+  * Some commits of what I was doing was and wasn't using voice-stealing lock on the tracks.
+  * This version, just to be clear, *does*.  On Trigger, you need firmware >= 1.30b for it to work!
+  * On Tsunami, over v1.0 should have voice lock.
+  * This fixes an issue where rapidly changing notes with the keybox (playing fast) would fool the "voice-stealing" algorithm of the Trigger/Tsunami into turning off "old" tracks... i.e. the drone/trompette.  I'm locking all sounds, as we're not using all the voices at all.
+
 * 1.9.8 -
   * Experimental WAV Trigger and Tsunami Support.
 
