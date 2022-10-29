@@ -23,7 +23,7 @@ void GurdyString::soundOn(int my_offset, int my_modulation) {
 #if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
     MIDI.sendNoteOn(note_being_played, midi_volume, midi_channel);
 #else
-    trigger_obj.trackPlayPoly(note_being_played * midi_channel);
+    trigger_obj.trackPlayPoly(note_being_played + (128 * (midi_channel - 1)));
 #endif
 
     // If modulation isn't zero, send that as a MIDI CC for this channel
@@ -44,7 +44,7 @@ void GurdyString::soundOff() {
 #if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
   MIDI.sendNoteOff(note_being_played, midi_volume, midi_channel);
 #else
-  trigger_obj.trackStop(note_being_played * midi_channel);
+  trigger_obj.trackStop(note_being_played + (128 * (midi_channel - 1)));
 #endif
   is_playing = false;
 };
