@@ -16,9 +16,11 @@
 // Comment this if you do not want to use the buzz LED feature
 #define LED_KNOB
 
-const String VERSION = "1.9.82";
+const String VERSION = "1.9.83";
 const String REL_DATE = "29 Oct, 2022, v" + VERSION;
-const String EXTRA_LINE = " ";
+//const String EXTRA_LINE = "TRIGGER - NO MIDI OUT";
+//const String EXTRA_LINE = "TSUNAMI - NO MIDI OUT";
+const String EXTRA_LINE = "    MIDI MODE        ";
 
 // VIBRATO: I use a long-delay, very slow vibrato on the melody strings.  This variable controls how
 // much vibrato (how much modulation like with a physical mod wheel on a MIDI keyboard) to send.

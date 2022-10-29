@@ -4,6 +4,10 @@
 
 **Check out version 1.9.8! (NEW)**
 
+* 1.9.83 -
+  * Lowered volume of tracks pre-master mix.
+  * Added builds for MIDI ("regular"), TSUNAMI, and TRIGGER versions.
+
 * 1.9.82 -
   * Enabled looping on all tracks.  On WAV Trigger, there's an unavoidable gap when this happens.
   * Added 0.2s fade-out on tracks to make it slightly less abrupt.
