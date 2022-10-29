@@ -10,14 +10,14 @@
 // ALL USERS!!! If you're hooking up to a WAV Trigger or Super Tsunami, uncomment one of these.
 // * This expects to transmit via pin 1, Serial1 Tx.
 // * This effectively disables Serial MIDI.  USB MIDI is still available.
-#define USE_TRIGGER
-// #define USE_TSUNAMI
+//#define USE_TRIGGER
+#define USE_TSUNAMI
 
 // Comment this if you do not want to use the buzz LED feature
 #define LED_KNOB
 
-const String VERSION = "1.9.7";
-const String REL_DATE = "25 Oct, 2022, v" + VERSION;
+const String VERSION = "1.9.8";
+const String REL_DATE = "28 Oct, 2022, v" + VERSION;
 
 // VIBRATO: I use a long-delay, very slow vibrato on the melody strings.  This variable controls how
 // much vibrato (how much modulation like with a physical mod wheel on a MIDI keyboard) to send.

@@ -34,6 +34,10 @@
   wavTrigger  trigger_obj;
 #endif
 
+#ifdef USE_TSUNAMI
+  Tsunami trigger_obj;
+#endif
+
 //
 // GLOBAL OBJECTS/VARIABLES
 //
@@ -136,18 +140,17 @@ void setup() {
 
   // Un-comment to print yourself debugging messages to the Teensyduino
   // serial console.
-  // Serial.begin(115200);
-  // delay(500);
-  // Serial.println("Hello.");
+  Serial.begin(115200);
+  delay(500);
+  Serial.println("Hello.");
 
 
   // Start the Serial MIDI object (like for a bluetooth transmitter).
   // The usbMIDI object is available by Teensyduino magic that I don't know about.
   #if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
       MIDI.begin(MIDI_CHANNEL_OMNI);
-  #endif
-
-  #ifdef USE_TRIGGER
+      
+  #elif defined(USE_TRIGGER)
     trigger_obj.start();
     delay(10);
 
@@ -155,6 +158,15 @@ void setup() {
     //  reset while the WAV Trigger was already playing.
     trigger_obj.stopAllTracks();
     trigger_obj.samplerateOffset(0);
+    
+  #elif defined(USE_TSUNAMI)
+    trigger_obj.start();
+    delay(10);
+
+    // Send a stop-all command and reset the sample-rate offset, in case we have
+    //  reset while the WAV Trigger was already playing.
+    trigger_obj.stopAllTracks();
+    trigger_obj.samplerateOffset(1, 0);
   #endif
 
   // Initialize the ADC object and the crank that will use it.
@@ -229,8 +241,8 @@ void setup() {
 bool first_loop = true;
 
 // This is for dev stuff when it breaks.
-// int test_count = 0;
-// int start_time = millis();
+int test_count = 0;
+int start_time = millis();
 
 int stopped_playing_time = 0;
 bool note_display_off = true;
@@ -493,18 +505,22 @@ void loop() {
   while (usbMIDI.read()) {
   };
 
-  // // My dev output stuff.
-  // test_count +=1;
-  // if (test_count > 100000) {
-  //   test_count = 0;
-  //   Serial.print("100,000 loop()s took: ");
-  //   Serial.print(millis() - start_time);
-  //   Serial.print("ms.  Avg Velocity: ");
-  //   Serial.print(mycrank->getVAvg());
-  //   Serial.print("rpm. Transitions: ");
-  //   Serial.print(mycrank->getCount());
-  //   Serial.print(", est. rev: ");
-  //   Serial.println(mycrank->getRev());
-  //   start_time = millis();
-  // }
+  #ifdef USE_TRIGGER
+    //delay(100);
+  #endif
+
+  // My dev output stuff.
+  test_count +=1;
+  if (test_count > 100) {
+    test_count = 0;
+    Serial.print("100,000 loop()s took: ");
+    Serial.print(millis() - start_time);
+    Serial.print("ms.  Avg Velocity: ");
+    Serial.print(mycrank->getVAvg());
+    Serial.print("rpm. Transitions: ");
+    Serial.print(mycrank->getCount());
+    Serial.print(", est. rev: ");
+    Serial.println(mycrank->getRev());
+    start_time = millis();
+  }
 };

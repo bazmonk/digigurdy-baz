@@ -16,6 +16,10 @@
   extern wavTrigger trigger_obj;
 #endif
 
+#ifdef USE_TSUNAMI
+  extern Tsunami trigger_obj;
+#endif
+
 // As musical keys, these are referred to in the mygurdy object above.
 // This declaration of them is specifically for their use as navigational
 // buttons in the menu screens.  ok = O, back = X.

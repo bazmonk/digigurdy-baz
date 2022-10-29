@@ -22,8 +22,10 @@ void GurdyString::soundOn(int my_offset, int my_modulation) {
     usbMIDI.sendNoteOn(note_being_played, midi_volume, midi_channel);
 #if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
     MIDI.sendNoteOn(note_being_played, midi_volume, midi_channel);
-#else
-    trigger_obj.trackPlayPoly(note_being_played + (128 * (midi_channel - 1)));
+#elif defined(USE_TRIGGER)
+    trigger_obj.trackPlayPoly(note_being_played + (128 * (midi_channel - 1)), true);
+#elif defined(USE_TSUNAMI)
+    trigger_obj.trackPlayPoly(note_being_played + (128 * (midi_channel - 1)), 1, true);
 #endif
 
     // If modulation isn't zero, send that as a MIDI CC for this channel
@@ -94,8 +96,6 @@ void GurdyString::setProgram(uint8_t program) {
   usbMIDI.sendProgramChange(program, midi_channel);
 #if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
   MIDI.sendProgramChange(program, midi_channel);
-#else
-  trigger_obj.stopAllTracks();
 #endif
 };
 
@@ -103,7 +103,5 @@ void GurdyString::setExpression(int exp) {
       usbMIDI.sendControlChange(11, exp, midi_channel);
 #if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
       MIDI.sendControlChange(11, exp, midi_channel);
-#else
-      trigger_obj.stopAllTracks();
 #endif
 };

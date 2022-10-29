@@ -13,6 +13,10 @@
   #include "wavTrigger.h"
 #endif
 
+#ifdef USE_TSUNAMI
+  #include "Tsunami.h"
+#endif
+
 #if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
   extern MIDI_NAMESPACE::MidiInterface<MIDI_NAMESPACE::SerialMIDI<HardwareSerial>> MIDI;
 #endif
@@ -21,6 +25,9 @@
   extern wavTrigger trigger_obj;
 #endif
 
+#ifdef USE_TSUNAMI
+  extern Tsunami trigger_obj;
+#endif
 
 class GurdyString {
   private:
