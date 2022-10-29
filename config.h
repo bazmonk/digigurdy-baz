@@ -16,7 +16,7 @@
 // Comment this if you do not want to use the buzz LED feature
 #define LED_KNOB
 
-const String VERSION = "1.9.85";
+const String VERSION = "1.9.82";
 const String REL_DATE = "29 Oct, 2022, v" + VERSION;
 const String EXTRA_LINE = "TRIGGER ENABLED";
 

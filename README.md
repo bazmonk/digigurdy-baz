@@ -4,7 +4,11 @@
 
 **Check out version 1.9.8! (NEW)**
 
-* 1.9.85 -
+* 1.9.82 -
+  * Enabled looping on all tracks.  On WAV Trigger, there's an unavoidable gap when this happens.
+  * Added 0.2s fade-out on tracks to make it slightly less abrupt.
+
+* 1.9.81 -
   * Some commits of what I was doing was and wasn't using voice-stealing lock on the tracks.
   * This version, just to be clear, *does*.  On Trigger, you need firmware >= 1.30b for it to work!
   * On Tsunami, over v1.0 should have voice lock.
