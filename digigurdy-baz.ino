@@ -149,7 +149,7 @@ void setup() {
   // The usbMIDI object is available by Teensyduino magic that I don't know about.
   #if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
       MIDI.begin(MIDI_CHANNEL_OMNI);
-      
+
   #elif defined(USE_TRIGGER)
     trigger_obj.start();
     delay(10);
@@ -158,7 +158,7 @@ void setup() {
     //  reset while the WAV Trigger was already playing.
     trigger_obj.stopAllTracks();
     trigger_obj.samplerateOffset(0);
-    
+
   #elif defined(USE_TSUNAMI)
     trigger_obj.start();
     delay(10);
@@ -511,7 +511,7 @@ void loop() {
 
   // My dev output stuff.
   test_count +=1;
-  if (test_count > 100) {
+  if (test_count > 100000) {
     test_count = 0;
     Serial.print("100,000 loop()s took: ");
     Serial.print(millis() - start_time);
