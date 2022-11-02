@@ -13,14 +13,17 @@
 //#define USE_TRIGGER
 //#define USE_TSUNAMI
 
-// Comment this if you do not want to use the buzz LED feature
+// Comment this out if you do not want to use the buzz LED feature
 #define LED_KNOB
 
-const String VERSION = "1.9.83";
-const String REL_DATE = "29 Oct, 2022, v" + VERSION;
+const String VERSION = "1.9.9";
+const String REL_DATE = "Nov 1, 2022, v" + VERSION;
+
+// Use one of these if you want, on the title/about screen
+//const String EXTRA_LINE = "                     ";
 //const String EXTRA_LINE = "TRIGGER - NO MIDI OUT";
 //const String EXTRA_LINE = "TSUNAMI - NO MIDI OUT";
-const String EXTRA_LINE = "    MIDI MODE        ";
+const String EXTRA_LINE = "White OLED, MIDI Mode";
 
 // VIBRATO: I use a long-delay, very slow vibrato on the melody strings.  This variable controls how
 // much vibrato (how much modulation like with a physical mod wheel on a MIDI keyboard) to send.
@@ -32,7 +35,7 @@ const int MELODY_VIBRATO = 16;
 const float EXPRESSION_VMAX = 120.0;
 
 // At the slowest crank velocity, volume will start at this value (0 = silent, 127 = max)
-const int EXPRESSION_START = 60;
+const int EXPRESSION_START = 90;
 
 // Cranking and buzz behavior:
 

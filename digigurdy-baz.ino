@@ -164,7 +164,7 @@ void setup() {
     delay(10);
 
     // Send a stop-all command and reset the sample-rate offset, in case we have
-    //  reset while the WAV Trigger was already playing.
+    //  reset while the Tsunami was already playing.
     trigger_obj.stopAllTracks();
     trigger_obj.samplerateOffset(1, 0);
   #endif

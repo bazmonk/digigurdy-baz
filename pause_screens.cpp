@@ -123,7 +123,7 @@ bool tuning() {
 
     print_screen(disp_str);
 
-    delay(250);
+    delay(150);
 
     // Check the 1 and 2 buttons
     my1Button->update();
@@ -167,7 +167,7 @@ bool tuning() {
 
   print_screen(disp_str);
 
-  delay(250);
+  delay(150);
 
   done = false;
   while (!done) {
@@ -205,7 +205,7 @@ bool load_tuning_screen() {
 
     print_screen(disp_str);
 
-    delay(250);
+    delay(150);
 
     // Check the 1 and 2 buttons
     my1Button->update();
@@ -249,6 +249,7 @@ bool check_save_tuning(int slot) {
                       " X or 2) Go Back     \n";
 
     print_screen(disp_str);
+    delay(150);
 
     bool done = false;
     while (!done) {
@@ -285,6 +286,7 @@ void save_tuning_screen() {
                       "      X) Go Back     \n";
 
     print_screen(disp_str);
+    delay(150);
 
     // Check the 1 and 2 buttons
     my1Button->update();
@@ -381,9 +383,10 @@ bool other_options_screen() {
                       " 1)   EX Button      \n"
                       "    Configuration    \n\n"
                       " 2) About DigiGurdy  \n\n"
-                      " X or 3) Go Back     \n";
+                      "  X or 3) Go Back    \n";
 
     print_screen(disp_str);
+    delay(150);
 
     my1Button->update();
     my2Button->update();
@@ -527,6 +530,7 @@ void tuning_hi_melody() {
               " A) Default (**)     \n";
 
   print_screen(disp_str);
+  delay(150);
 
   bool done = false;
 
@@ -584,6 +588,7 @@ void tuning_low_melody() {
                     "                     \n";
 
   print_screen(disp_str);
+  delay(150);
 
   bool done = false;
 
@@ -650,6 +655,7 @@ void tuning_drone() {
                     " A) Default (**)     \n";
 
   print_screen(disp_str);
+  delay(150);
 
   bool done = false;
 
@@ -718,6 +724,7 @@ void tuning_tromp() {
                     " A) Default (**)     \n";
 
   print_screen(disp_str);
+  delay(150);
 
   bool done = false;
 
@@ -791,6 +798,7 @@ bool view_slot_screen(int slot_num) {
              " X or 2) Go Back  \n";
 
   print_screen(disp_str);
+  delay(150);
 
   bool done = false;
   while (!done) {
@@ -838,6 +846,7 @@ bool view_preset_screen(int preset) {
              " X or 2) Go Back  \n";
 
   print_screen(disp_str);
+  delay(150);
 
   bool done = false;
   while (!done) {
@@ -877,6 +886,7 @@ bool load_saved_screen() {
                       "X or 5) Go Back      \n";
 
     print_screen(disp_str);
+    delay(150);
 
     // Check the 1 and 2 buttons
     my1Button->update();
@@ -921,6 +931,7 @@ bool load_preset_screen() {
                       " X or 5) Go Back     \n";
 
     print_screen(disp_str);
+    delay(150);
 
     // Check the 1 and 2 buttons
     my1Button->update();
@@ -961,6 +972,7 @@ void scene_options_screen() {
                       " X) Go Back          \n";
 
     print_screen(disp_str);
+    delay(150);
 
     // Check the buttons
     my1Button->update();
@@ -996,6 +1008,7 @@ void playing_options_screen() {
                       " X) Go Back          \n";
 
     print_screen(disp_str);
+    delay(150);
 
     // Check the 1 and 2 buttons
     my1Button->update();
@@ -1062,6 +1075,7 @@ void options_screen() {
                       " X) Go Back          \n";
 
     print_screen(disp_str);
+    delay(150);
 
     // Check the 1 and 2 buttons
     my1Button->update();
@@ -1115,6 +1129,7 @@ void welcome_screen() {
                       "                     \n";
 
     print_screen(disp_str);
+    delay(150);
 
     // Check the 1 and 2 buttons
     my1Button->update();
@@ -1216,6 +1231,7 @@ void manual_tuning_screen() {
                       " X or 6) Go Back     \n";
 
     print_screen(disp_str);
+    delay(150);
 
     // Check the 1 and 2 buttons
     my1Button->update();
@@ -1325,6 +1341,7 @@ void volume_screen() {
                       " X) Go Back     \n";
 
     print_screen(disp_str);
+    delay(150);
 
     // Check the 1 and 2 buttons
     my1Button->update();

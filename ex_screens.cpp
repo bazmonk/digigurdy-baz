@@ -15,7 +15,7 @@ void ex_btn_choice_screen() {
                       " X or 4) Go Back     \n";
 
     print_screen(disp_str);
-    delay(200);
+    delay(150);
 
     my1Button->update();
     my2Button->update();
