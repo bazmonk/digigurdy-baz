@@ -2,8 +2,12 @@
 
 **Pre-compiled builds of the code will be made available from 1.7.99 and up.  See https://github.com/bazmonk/digigurdy-baz/wiki/install-by-hex for installation instructions.**
 
-**Check out version 1.9.8! (NEW)**
+**Check out version 1.9.9! (NEW)**
 
+* 1.9.9 -
+  * Moved the tuning menus internally.
+  * Menu "button speed" standardized at 150ms across the menus.
+  * Beginning prep for 2.0 release candidates.
 * 1.9.83 -
   * Lowered volume of tracks pre-master mix.
   * Added builds for MIDI ("regular"), TSUNAMI, and TRIGGER versions.
