@@ -2,12 +2,21 @@
 
 **Pre-compiled builds of the code will be made available from 1.7.99 and up.  See https://github.com/bazmonk/digigurdy-baz/wiki/install-by-hex for installation instructions.**
 
-**Check out version 1.9.9! (NEW)**
+**Check out version 2.0 release candidate 1! (NEW)**
+
+* 2.0rc1 -
+  * Fixed EX button logic bug when using buttons other than EX1 for the pause screen.
+  * Added EEPROM slots for EX button preferences (they persist across reboots now).
+  * Added Pause->Options menu for turning the buzz LED on and off.
+    * Also has EEPROM slot, also persistent.
+    * This is distinct from disabling the LED in `config.h`, which prevents the object from being created at all.  This is for people that do have a buzz LED, but don't want it used for whatever reason.
+  * **CLEAR YOUR EEPROM WHEN YOU INSTALL THIS VERSION!**
 
 * 1.9.9 -
   * Moved the tuning menus internally.
   * Menu "button speed" standardized at 150ms across the menus.
   * Beginning prep for 2.0 release candidates.
+
 * 1.9.83 -
   * Lowered volume of tracks pre-master mix.
   * Added builds for MIDI ("regular"), TSUNAMI, and TRIGGER versions.
