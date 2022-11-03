@@ -495,8 +495,8 @@ bool view_preset_screen(int preset) {
   String disp_str = " ---Preset Tuning--- \n"
                     " Hi Melody: " + LongNoteNum[tunings[0]] + "  \n"
                     " Lo Melody: " + LongNoteNum[tunings[1]] + "  \n"
-                    " Drone:     " + LongNoteNum[tunings[2]] + "  \n"
                     " Trompette: " + LongNoteNum[tunings[3]] + "  \n"
+                    " Drone:     " + LongNoteNum[tunings[2]] + "  \n"
                     " Tpose: ";
 
   if (tunings[5] > 12) { disp_str += "+"; };
