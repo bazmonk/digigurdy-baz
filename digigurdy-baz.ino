@@ -214,7 +214,7 @@ void setup() {
   capo = new GurdyButton(23); // The capo button
   capo_offset = 0;
 
-  ex1Button = new ExButton(41);
+  ex1Button = new ExButton(41, 1);
   ex2Button = new ExButton(17, 2);
   ex3Button = new ExButton(14, 3);
 
@@ -395,12 +395,14 @@ void loop() {
     };
   };
 
-  // If ex2 is pressed during play, cycle through the melody string on/off options.
+  if (ex1Button->wasPressed()) {
+    ex1Button->doFunc();
+  }
+
   if (ex2Button->wasPressed()) {
     ex2Button->doFunc();
   };
 
-  // If ex3 is pressed during play, cycle thought the drone/trompette on/off options.
   if (ex3Button->wasPressed()) {
     ex3Button->doFunc();
   };

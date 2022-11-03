@@ -16,6 +16,9 @@
 // Comment this out if you do not want to use the buzz LED feature
 #define LED_KNOB
 
+// LED_PIN is the pin used for the buzz LED.
+const int LED_PIN = 40;
+
 const String VERSION = "1.9.9";
 const String REL_DATE = "Nov 1, 2022, v" + VERSION;
 
@@ -96,8 +99,5 @@ const int BUTTON_5_INDEX = 8;
 const int BUTTON_6_INDEX = 9;
 const int TPOSE_UP_INDEX = num_keys - 1;
 const int TPOSE_DN_INDEX = num_keys - 3;
-
-// LED_PIN is the pin used for
-const int LED_PIN = 40;
 
 #endif

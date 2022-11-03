@@ -42,4 +42,15 @@ static const int EEPROM_DISPLY_TYPE = 100;
 // ... Reserved for future use
 static const int EEPROM_SCENE_SIGNALLING = 101;
 
+// This int saved the LED on/off preference.
+// 0 = no buzz LED
+// 1 = LED buzz
+static const int EEPROM_BUZZ_LED = 102;
+
+// These three ints hold the last-chosen EX1/2/3 button functions.
+// See ExButton::fn_choice_screen() for the numbering used.
+static const int EEPROM_EX1 = 103;
+static const int EEPROM_EX2 = 104;
+static const int EEPROM_EX3 = 105;
+
 #endif

@@ -415,6 +415,11 @@ void clear_eeprom() {
   // Not much to say here... write 0 everywhere:
   for (int i = 0 ; i < EEPROM.length() ; i++ )
     EEPROM.write(i, 0);
+
+  // But now let's fill in the defaults:
+  EEPROM.write(EEPROM_BUZZ_LED, 1);
+  EEPROM.write(EEPROM_EX1, 1);
+  
 };
 
 // This screen is for viewing a save slot's settings.
