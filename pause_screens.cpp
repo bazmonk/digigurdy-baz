@@ -317,7 +317,9 @@ bool other_options_screen() {
       ex_btn_choice_screen();
 
     } else if (my2Button->wasPressed()) {
+      #ifdef LED_KNOB
       led_screen();
+      #endif
 
     } else if (my3Button->wasPressed()) {
       options_about_screen();
@@ -838,7 +840,7 @@ void led_screen() {
     if (my1Button->wasPressed()) {
       EEPROM.write(EEPROM_BUZZ_LED, 1);
       mycrank->enableLED();
-      
+
       disp_str =  " --Buzz LED On/Off-- \n"
                   " Select an Option:   \n"
                   "                     \n"
