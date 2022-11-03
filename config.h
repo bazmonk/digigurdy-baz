@@ -19,13 +19,13 @@
 // LED_PIN is the pin used for the buzz LED.
 const int LED_PIN = 40;
 
-const String VERSION = "1.9.9";
-const String REL_DATE = "Nov 1, 2022, v" + VERSION;
+const String VERSION = "2.0rc1";
+const String REL_DATE = "2022-11-02, v" + VERSION;
 
-// Use one of these if you want, on the title/about screen
+// Use one of these if you want, on the title/about screen.  Or make your own!
 //const String EXTRA_LINE = "                     ";
-//const String EXTRA_LINE = "TRIGGER - NO MIDI OUT";
-//const String EXTRA_LINE = "TSUNAMI - NO MIDI OUT";
+//const String EXTRA_LINE = "White OLED, Trigger  ";
+//const String EXTRA_LINE = "White OLED, Tsunami  ";
 const String EXTRA_LINE = "White OLED, MIDI Mode";
 
 // VIBRATO: I use a long-delay, very slow vibrato on the melody strings.  This variable controls how

@@ -24,13 +24,13 @@ void ex_btn_choice_screen() {
     myXButton->update();
 
     if (my1Button->wasPressed()) {
-      ex1Button->fn_choice_screen();
+      ex1Button->fn_choice_screen(1);
 
     } else if (my2Button->wasPressed()) {
-      ex2Button->fn_choice_screen();
+      ex2Button->fn_choice_screen(2);
 
     } else if (my3Button->wasPressed()) {
-      ex3Button->fn_choice_screen();
+      ex3Button->fn_choice_screen(3);
 
     } else if (my4Button->wasPressed() || myXButton->wasPressed()) {
       return;

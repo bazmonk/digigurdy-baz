@@ -29,7 +29,7 @@ void ExButton::doFunc() {
 
 // Trying to put this as a function with the menu screens was a big problem because
 // this class calls those functions and there was a circular definition problem.
-void ExButton::fn_choice_screen() {
+void ExButton::fn_choice_screen(int but_num) {
 
   bool done = false;
   while (!done) {
@@ -56,22 +56,38 @@ void ExButton::fn_choice_screen() {
 
     if (my1Button->wasPressed()) {
       setFunc(1);
+      // this is ugly, I know...
+      if (but_num == 1) { EEPROM.write(EEPROM_EX1, 1); };
+      if (but_num == 2) { EEPROM.write(EEPROM_EX2, 1); };
+      if (but_num == 3) { EEPROM.write(EEPROM_EX3, 1); };
 
       done = true;
     } else if (my2Button->wasPressed()) {
       setFunc(2);
+      if (but_num == 1) { EEPROM.write(EEPROM_EX1, 2); };
+      if (but_num == 2) { EEPROM.write(EEPROM_EX2, 2); };
+      if (but_num == 3) { EEPROM.write(EEPROM_EX3, 2); };
 
       done = true;
     } else if (my3Button->wasPressed()) {
       setFunc(3);
+      if (but_num == 1) { EEPROM.write(EEPROM_EX1, 3); };
+      if (but_num == 2) { EEPROM.write(EEPROM_EX2, 3); };
+      if (but_num == 3) { EEPROM.write(EEPROM_EX3, 3); };
 
       done = true;
     } else if (my4Button->wasPressed()) {
       setFunc(4);
+      if (but_num == 1) { EEPROM.write(EEPROM_EX1, 4); };
+      if (but_num == 2) { EEPROM.write(EEPROM_EX2, 4); };
+      if (but_num == 3) { EEPROM.write(EEPROM_EX3, 4); };
 
       done = true;
     } else if (my5Button->wasPressed()) {
       setFunc(5);
+      if (but_num == 1) { EEPROM.write(EEPROM_EX1, 5); };
+      if (but_num == 2) { EEPROM.write(EEPROM_EX2, 5); };
+      if (but_num == 3) { EEPROM.write(EEPROM_EX3, 5); };
 
       done = true;
     } else if (my6Button->wasPressed() || myXButton->wasPressed()) {

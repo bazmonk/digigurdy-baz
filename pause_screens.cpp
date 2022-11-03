@@ -9,7 +9,7 @@ void pause_screen() {
     String disp_str = " ----Pause  Menu---- \n"
                       " 1) Load    2) Save  \n"
                       " 3) Tuning  4) Other \n\n"
-                      " X, 5 or ex1) Go Back\n\n";
+                      "   X or 5) Go Back\n\n";
 
     if (drone_mode == 0) {
       disp_str += "A) Drone:On ,Trmp:On \n";
@@ -419,7 +419,10 @@ void clear_eeprom() {
   // But now let's fill in the defaults:
   EEPROM.write(EEPROM_BUZZ_LED, 1);
   EEPROM.write(EEPROM_EX1, 1);
-  
+  EEPROM.write(EEPROM_EX2, 2);
+  EEPROM.write(EEPROM_EX3, 3);
+  EEPROM.write(EEPROM_SCENE_SIGNALLING, 0);
+
 };
 
 // This screen is for viewing a save slot's settings.

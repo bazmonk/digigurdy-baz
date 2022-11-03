@@ -1,9 +1,13 @@
 #ifndef EXBUTTON_H
 #define EXBUTTON_H
 
+#include <Arduino.h>
+#include <EEPROM.h>
+
 #include "gurdybutton.h"
 #include "exfunctions.h"
 #include "display.h"
+#include "eeprom_values.h"
 //#include "common.h"
 
 class ExButton: public GurdyButton {
@@ -19,7 +23,7 @@ class ExButton: public GurdyButton {
 
     void doFunc();
 
-    void fn_choice_screen();
+    void fn_choice_screen(int but_num);
 };
 
 #endif

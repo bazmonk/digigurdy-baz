@@ -214,9 +214,9 @@ void setup() {
   capo = new GurdyButton(23); // The capo button
   capo_offset = 0;
 
-  ex1Button = new ExButton(41, 1);
-  ex2Button = new ExButton(17, 2);
-  ex3Button = new ExButton(14, 3);
+  ex1Button = new ExButton(41, EEPROM.read(EEPROM_EX1));
+  ex2Button = new ExButton(17, EEPROM.read(EEPROM_EX2));
+  ex3Button = new ExButton(14, EEPROM.read(EEPROM_EX3));
 
   scene_signal_type = EEPROM.read(EEPROM_SCENE_SIGNALLING);
 
@@ -264,6 +264,11 @@ void loop() {
 
     // This might have been reset above, so grab it now.
     play_screen_type = EEPROM.read(EEPROM_DISPLY_TYPE);
+
+    // First time users will find their stuff doesn't work if they cleared their EEPROM if we don't read it again.
+    ex1Button->setFunc(EEPROM.read(EEPROM_EX1));
+    ex2Button->setFunc(EEPROM.read(EEPROM_EX2));
+    ex3Button->setFunc(EEPROM.read(EEPROM_EX3));
 
     // Crank On! for half a sec.
     display.clearDisplay();
@@ -397,7 +402,7 @@ void loop() {
 
   if (ex1Button->wasPressed()) {
     ex1Button->doFunc();
-  }
+  };
 
   if (ex2Button->wasPressed()) {
     ex2Button->doFunc();
