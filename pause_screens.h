@@ -15,6 +15,9 @@
 #include "startup_screens.h"
 #include "ex_screens.h"
 #include "tuning_screens.h"
+#include "gurdycrank.h"
+
+extern GurdyCrank *mycrank;
 
 void pause_screen();
 void options_about_screen();
@@ -35,5 +38,6 @@ void scene_options_screen();
 void playing_options_screen();
 void options_screen();
 void welcome_screen();
+void led_screen();
 
 #endif

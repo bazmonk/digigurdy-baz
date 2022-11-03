@@ -299,9 +299,10 @@ bool other_options_screen() {
     String disp_str = " ---Other Options--- \n"
                       "                     \n"
                       " 1)   EX Button      \n"
-                      "    Configuration    \n\n"
-                      " 2) About DigiGurdy  \n\n"
-                      "  X or 3) Go Back    \n";
+                      "    Configuration    \n"
+                      " 2) Buzz LED         \n"
+                      " 3) About DigiGurdy  \n\n"
+                      "  X or 4) Go Back    \n";
 
     print_screen(disp_str);
     delay(150);
@@ -309,15 +310,19 @@ bool other_options_screen() {
     my1Button->update();
     my2Button->update();
     my3Button->update();
+    my4Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {
       ex_btn_choice_screen();
 
     } else if (my2Button->wasPressed()) {
+      led_screen();
+
+    } else if (my3Button->wasPressed()) {
       options_about_screen();
 
-    } else if (my3Button->wasPressed() || myXButton->wasPressed()) {
+    } else if (my4Button->wasPressed() || myXButton->wasPressed()) {
       return false;
     };
   };
@@ -803,6 +808,72 @@ void welcome_screen() {
     } else if (my4Button->wasPressed()) {
       options_screen();
       // Not done = true here, we'd want to get prompted again.
+    };
+  };
+};
+
+void led_screen() {
+
+  bool done = false;
+  while (!done) {
+
+    String disp_str = " --Buzz LED On/Off-- \n"
+                      " Select an Option:   \n"
+                      "                     \n"
+                      " 1) LED On           \n"
+                      " 2) LED Off          \n"
+                      "                     \n"
+                      " 3 or X) Go Back     \n"
+                      "                     \n";
+
+    print_screen(disp_str);
+    delay(150);
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    myXButton->update();
+
+    if (my1Button->wasPressed()) {
+      EEPROM.write(EEPROM_BUZZ_LED, 1);
+      mycrank->enableLED();
+      
+      disp_str =  " --Buzz LED On/Off-- \n"
+                  " Select an Option:   \n"
+                  "                     \n"
+                  "     LED ON SAVED    \n"
+                  "                     \n"
+                  "                     \n"
+                  "                     \n"
+                  "                     \n";
+
+      print_screen(disp_str);
+      delay(1000);
+
+      done = true;
+
+    } else if (my2Button->wasPressed()) {
+      EEPROM.write(EEPROM_BUZZ_LED, 0);
+      mycrank->disableLED();
+
+      disp_str =  " --Buzz LED On/Off-- \n"
+                  " Select an Option:   \n"
+                  "                     \n"
+                  "                     \n"
+                  "     LED OFF SAVED   \n"
+                  "                     \n"
+                  "                     \n"
+                  "                     \n";
+
+      print_screen(disp_str);
+      delay(1000);
+
+      done = true;
+
+    } else if (my3Button->wasPressed() || myXButton->wasPressed()) {
+      done = true;
+
     };
   };
 };

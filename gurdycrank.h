@@ -65,6 +65,8 @@ class GurdyCrank {
     double getVAvg();
     int getCount();
     double getRev();
+    void disableLED();
+    void enableLED();
 };
 
 #endif

@@ -268,3 +268,15 @@ int GurdyCrank::getCount() {
 double GurdyCrank::getRev() {
   return rev_count;
 };
+
+void GurdyCrank::disableLED() {
+  #ifdef LED_KNOB
+  myLED->disable();
+  #endif
+};
+
+void GurdyCrank::enableLED() {
+  #ifdef LED_KNOB
+  myLED->enable();
+  #endif
+};
