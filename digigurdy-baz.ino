@@ -270,6 +270,13 @@ void loop() {
     ex2Button->setFunc(EEPROM.read(EEPROM_EX2));
     ex3Button->setFunc(EEPROM.read(EEPROM_EX3));
 
+    // LED may have been reset, too... thanks John!
+    if (EEPROM.read(EEPROM_BUZZ_LED) == 1) {
+      #ifdef LED_KNOB
+        mycrank->enableLED();
+      #endif
+    };
+    
     // Crank On! for half a sec.
     display.clearDisplay();
     display.drawBitmap(0, 0, crank_on_logo, 128, 64, 1);
