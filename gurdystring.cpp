@@ -110,3 +110,10 @@ void GurdyString::setExpression(int exp) {
       MIDI.sendControlChange(11, exp, midi_channel);
 #endif
 };
+
+void GurdyString::setPitchBend(int bend) {
+  usbMIDI.sendPitchBend(bend, midi_channel);
+  #if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
+    MIDI.sendPitchBend(bend, midi_channel);
+  #endif
+};
