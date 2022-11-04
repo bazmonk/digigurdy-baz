@@ -2,7 +2,12 @@
 
 **Pre-compiled builds of the code will be made available from 1.7.99 and up.  See https://github.com/bazmonk/digigurdy-baz/wiki/install-by-hex for installation instructions.**
 
-**Check out version 2.0 release candidate 1! (NEW)**
+**Check out version 2.0 release candidate 2! (NEW)**
+
+* 2.0rc2 -
+  * Fixed long-standing error in the order the strings are displayed on a preset screen.
+  * Fixed bug where cleared EEPROM LED preference would not take effect until after an addition restart of the gurdy. (thanks John)
+  * Uploaded new Trigger/Tsunami wav zips with a 50ms fade-in on the buzz sounds to soften their attack (thanks John!)
 
 * 2.0rc1 -
   * Fixed EX button logic bug when using buttons other than EX1 for the pause screen.
