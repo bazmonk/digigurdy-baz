@@ -54,6 +54,7 @@ class GurdyString {
     void setProgram(uint8_t program);
     void setExpression(int exp);
     void setPitchBend(int bend);
+    void setVibrato(int vib);
 };
 
 #endif

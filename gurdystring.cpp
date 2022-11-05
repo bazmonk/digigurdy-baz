@@ -117,3 +117,13 @@ void GurdyString::setPitchBend(int bend) {
     MIDI.sendPitchBend(bend, midi_channel);
   #endif
 };
+
+// The value being changed here is CC1 the "mod wheel", between 0 and 127.
+// It can do lots of things depending on your MIDI synth, but the intended purpose here
+// is to generate a vibrato effect.
+void GurdyString::setVibrato(int vib) {
+  usbMIDI.sendControlChange(1, vib, midi_channel);
+#if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
+  MIDI.sendControlChange(1, vib, midi_channel);
+#endif
+};
