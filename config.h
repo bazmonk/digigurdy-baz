@@ -19,7 +19,7 @@
 // LED_PIN is the pin used for the buzz LED.
 const int LED_PIN = 40;
 
-const String VERSION = "2.0rc2";
+const String VERSION = "2.0rc3";
 const String REL_DATE = "2022-11-03, v" + VERSION;
 
 // Use one of these if you want, on the title/about screen.  Or make your own!

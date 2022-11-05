@@ -24,7 +24,11 @@ float BuzzKnob::getVoltage() {
   return (float)(knob_voltage);
 };
 
-// This returns a weighted value based off the voltage between 60 and 180.
+// This returns a weighted value based off the voltage between 60 and ~250,
+//  except at the top end it ramps way up as a "buzz off"
 float BuzzKnob::getThreshold() {
-  return (60 + (getVoltage() / 8.5));
+  if (getVoltage() > 975) {
+    return (60 + (getVoltage() / 2));
+  }
+  return (60 + (getVoltage() / 6));
 };
