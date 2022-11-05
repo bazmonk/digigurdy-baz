@@ -10,7 +10,7 @@ VibKnob::VibKnob(int v_pin) {
 };
 
 void VibKnob::update() {
-  if (vib_knob_timer > 50) {
+  if (vib_knob_timer > 100) {
     voltage = adc->adc0->analogReadContinuous();
 
     mystring->setVibrato(getVibrato());
