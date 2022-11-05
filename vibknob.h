@@ -11,7 +11,7 @@ extern ADC* adc;
 class VibKnob{
   private:
     int voltage_pin;
-    float max_voltage = 1021.0;
+    float max_voltage = 1022.0;
     int voltage;
 
     elapsedMillis vib_knob_timer;
