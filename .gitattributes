@@ -1,1 +1,4 @@
 soundfonts/vienna-alto-mod11.sf2 filter=lfs diff=lfs merge=lfs -text
+soundfonts/vienna-alto-mod14.sf2 filter=lfs diff=lfs merge=lfs -text
+*.sf2 filter=lfs diff=lfs merge=lfs -text
+*.zip filter=lfs diff=lfs merge=lfs -text

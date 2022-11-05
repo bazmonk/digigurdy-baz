@@ -1,3 +1,6 @@
+#ifndef NOTE_BITMAPS_H
+#define NOTE_BITMAPS_H
+
 // These are the bitmaps for producing the large notes on-screen.
 
 // These are the notes themselves.  0-12 is C - B chromatically.  They are 64x64
@@ -1112,3 +1115,5 @@ static const unsigned char PROGMEM sharp_num[10][512] = {
      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x06
    }
  };
+
+ #endif

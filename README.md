@@ -1,139 +1,144 @@
 # digigurdy-baz
 
-**NEW!  Check out version 1.0!** (first "stable" release... check out the "testing" branch for the latest development from now on!)
+**Pre-compiled builds of the code will be made available from 1.7.99 and up.  See https://github.com/bazmonk/digigurdy-baz/wiki/install-by-hex for installation instructions.**
 
-This is a rewrite of the digigurdy code (https://hackaday.io/project/165251-the-digi-gurdy-and-diginerdygurdy).
+**Check out version 2.0 release candidate 3! (NEW)**
 
-The code has been significantly streamlined (20% the size of the original source code, compiles to only 30% the teensy3.5's capacity), and there are several new features:
+* 2.0rc3 -
+  * LED stops if trompette/buzz are muted. (Thanks David!)
+  * Buzz knob now ranges from about 60rpm - 250rpm, and then ramps up to 500+.
 
-* A re-worked tuning menu, allowing a choice of G/C or D/G tuning, each with a selection (one each, four total) of:
-  * 4 high chanterelles (unison and fifths)
-  * 4 low chanterelles (unison and fifths)
-  * 6 drones
-  * 6 trompettes
-* The capo button allows **on-the-fly** toggling of 1 or 2 whole-note capos on the drone/trompette strings.
-* Two transpose buttons allow **on-the-fly** transposing of all strings up *or* down one octave in half-steps (12 up, 12 down)!
-  * Every tuning can be played in *any key* within an octave of it.
-* 4 pre-loaded default presets (matching John Dingley's orignal presets)
-* 4 _save slots_ for saving your favorite tunings!
-* Built-in EEPROM clearing feature for first-time installation
-* **On-Screen-Display** showing current string tunings, transpose and capo settings, as well as a read-out of the current note being played on the keybox.
-  * While playing, a [big pretty bitmap note](https://www.youtube.com/shorts/XOBMtSio8nA) or [a note + staff](https://www.youtube.com/shorts/KD5NucKWTos) now displays instead of the full settings.  They still show up when not playing.  This is adjustable in the startup menu.
-* Muting of both or either the drone/trompette strings directly from the pause menu.
+* 2.0rc2 -
+  * Fixed long-standing error in the order the strings are displayed on a preset screen.
+  * Fixed bug where cleared EEPROM LED preference would not take effect until after an addition restart of the gurdy. (thanks John)
+  * Uploaded new Trigger/Tsunami wav zips with a 50ms fade-in on the buzz sounds to soften their attack (thanks John!)
 
-## Installation
+* 2.0rc1 -
+  * Fixed EX button logic bug when using buttons other than EX1 for the pause screen.
+  * Added EEPROM slots for EX button preferences (they persist across reboots now).
+  * Added Pause->Options menu for turning the buzz LED on and off.
+    * Also has EEPROM slot, also persistent.
+    * This is distinct from disabling the LED in `config.h`, which prevents the object from being created at all.  This is for people that do have a buzz LED, but don't want it used for whatever reason.
+  * **CLEAR YOUR EEPROM WHEN YOU INSTALL THIS VERSION!**
 
-### OLED Display
-Your digigurdy may have an SSD1306 display (the "white OLED"), or the SH1106 display (the "blue OLED").  This code needs to be compiled for the correct display.
+* 1.9.9 -
+  * Moved the tuning menus internally.
+  * Menu "button speed" standardized at 150ms across the menus.
+  * Beginning prep for 2.0 release candidates.
 
-Near the very top of the code are two `#define` statements.  Uncomment the appropriate line to build for either display type.  The version on this repository is set to white (because that's the one I have).
+* 1.9.83 -
+  * Lowered volume of tracks pre-master mix.
+  * Added builds for MIDI ("regular"), TSUNAMI, and TRIGGER versions.
 
-For white OLEDs:
+* 1.9.82 -
+  * Enabled looping on all tracks.  On WAV Trigger, there's an unavoidable gap when this happens.
+  * Added 0.2s fade-out on tracks to make it slightly less abrupt.
 
-```
-#define WHITE_OLED
-//#define BLUE_OLED
-```
+* 1.9.81 -
+  * Some commits of what I was doing was and wasn't using voice-stealing lock on the tracks.
+  * This version, just to be clear, *does*.  On Trigger, you need firmware >= 1.30b for it to work!
+  * On Tsunami, over v1.0 should have voice lock.
+  * This fixes an issue where rapidly changing notes with the keybox (playing fast) would fool the "voice-stealing" algorithm of the Trigger/Tsunami into turning off "old" tracks... i.e. the drone/trompette.  I'm locking all sounds, as we're not using all the voices at all.
 
-For blue OLEDs:
+* 1.9.8 -
+  * Experimental WAV Trigger and Tsunami Support.
 
-```
-//#define WHITE_OLED
-#define BLUE_OLED
-```
+* 1.9.7 -
+  * Velocity-based volume change of strings!
 
-### Teensy4.1 Support
-Digigurdy-baz has preliminary Teensy4.1 support.  If you are using a Teensy4.1 unit, also near the top of the code is a `LOOP_DELAY` variable.  This variable needs to be adjusted for the faster processor.  I've included some suggestions in the comments for what the delay should be, but (CPU speed / 10) is a good starting point.
+* 1.9.6 -
+  * Options menu now includes support for switching EX button functions.  There are 5 choices:
+    * Toggle pause menu
+    * Cycle through mute/unmute of melody Strings
+    * Cycle through mute of drone/trompette strings (through all 4 combos)
+    * Toggle drone mute only
+    * Toggle trompette mute only
+  * Muting trompette also mutes buzz now.
 
-```
-// Teensy3.5 @ 120mHz ~ 15 microsec
-// Teensy4.1 @ 600mHz ~ 60 microsec
-// Teensy4.1 @ 150mHz ~ 12 microsec
-const int LOOP_DELAY = 15;
-```
+* 1.9.5 -
+  * Internal support for exButton configurable actions.
+  * Fix necessary to work around Teensyduino 1.57 (the latest) bug.
+    * https://forum.pjrc.com/threads/71359-EEPROM-h-doesn-t-include-String-library-on-its-own-now-that-it-has-String-support?p=314717#post314717
 
-### Compiling/Uploading
-After that, the steps are the same for the original digigurdy code.  You will need:
-  * Teensyduino, the IDE and build environment for the electronics
-  * The appropriate `Adafruit_[SSD1306 or SH1106]` library (see the whilte/blue display section above) for your gurdy installed within Teensyduino (`Sketch->Include Library->Manage Libraries...`).
-    * If it isn't already installed or doesn't install with the OLED library as a dependency, you also need the `Adafruit_GFX` general graphics library as well.
-    * If you have the SH1106 "blue" OLED, you need the SH1106 libraries here: https://github.com/wonho-maker/Adafruit_SH1106. Other versions will not work.
-  * The main `digigurdy-baz.ino` file along with the header files in a directory/folder named `digigurdy-baz`.  Teensyduino will offer to make this folder and move the file around if you don't.  The easiest way to make sure everything is in the right place is to simply clone this repository from github to your computer.  The repo itself is named the correct way for Teensyduino, and you can easily pull new updates later on if you want.
+* 1.9.4 -
+  * Using the MIDI object the right way
+  * Moved menu screen functions off to separate file
+  * Cleaned up header tree and general structure.
+  * Compiled code less than 50% of 1.7.99.
 
-With that in place, you should be able to open the `digigurdy-baz.ino` file in Teensyduino, and compile/upload it to your digigurdy.  Make sure to select the correct port for it and that the other settings look like this after plugging your gurdy to your computer:
+* 1.9.3 -
+  * I've been using the wrong `string` :-(  Migrated from `std::string` to `String`.
+  * Compiled code got about 40% smaller.
 
-![teensyduino settings](https://raw.githubusercontent.com/wiki/bazmonk/digigurdy-baz/teensyduino.png)
+* 1.9.2 -
+  * Further re-org.
 
-NOTE: Make sure in particular that the Teensy version is correct and that "USB Type" is "Serial + MIDI".  
+* 1.9.1 -
+  * The new "extra" buttons are (left-to-right) called ex1, ex2, ex3.
+    * ex1 toggles the pause menu (the "A+X" combo)
+    * ex2 toggles through the melody mute options (there's 3)
+    * ex3 toggles through the drone/trompette mute options (there's 4)
+    * (the second two work during play!)
+  * I've made the crank a little more sensitive to cutting off when cranking stops.
+  * I've made the minimum velocity for sound a tiny lower (about 1 rev per 5 seconds, pretty slow)
+  * Cleaned up some unused variables.
 
-After uploading, it should automatically restart and be ready-to-go!
 
-### Clear EEPROM for first-time installations
+* 1.9.0 -
+  * Reorganization of custom classes into separate files.  It's for my sanity... this makes the main file about 25% smaller, and enforces some best practices on my part.
+  * Introduction of precombiled builds for users.
 
-Testing has already shown that strange side-effects occur when the EEPROM (your digigurdy's memory) is filled with other stuff.  The start-up screen includes an `Other Options` selection, and inside is an option to clear your EEPROM.
+* 1.7.99 -
+  * Buzz Knob LED can be disabled in config.h if desired.  LED_PIN also a config variable.
+  * Buzz Knob LED implemented (~~or any LED you happen to connect to pin 40~~ see above)
+  * Timings of debounce button performance improved
+  * Taking average of last six readings now to determine voltage.
+  * Sampling is done as quick as possible, but the time to expect a sensor-change is determined based on the average times of the last several readings.
+  * There is now a BUZZ_MIN variable.  Buzz events will last at least this long (smoother buzz).
+* OPTICAL CRANK VERSION!  Versions above v1.5 will be for John's new IR-sensor based crank design.
+  * It's smooth!
+  * Buzzing acts better.
+  * The `config.h` file contains all-new parameters for adjusting the crank behavior.  There's less of them, and they're easier to understand in terms of what they actually do.
+  * This code expects to have the sensor hooked up to it directly, *not* through a TeensyLC.
+    * This will be explained [in a wiki page here soon](https://github.com/bazmonk/digigurdy-baz/wiki/optical_setup).
+    * Long story short, the OUT pin of the sensor goes straight to the same pin on the Teensy as the crank did before (that's pin 15, a.k.a. A1).  You need to run 3.3v (NOT 5v, do not do that) to the sensor.  I'm grabbing it off the voltage wire going to the buzz potentiometer because it's somewhat accessible on my unit w/o taking it all apart.
+  * **The motor-crank version of the code is still available in the [v1.4.1 branch of this repo](https://github.com/bazmonk/digigurdy-baz/tree/v1.4.1).**  It will continue to get bug fixes and any UI improvements that carry over from future versions.
+  * This code has only been tested on Teensy4.1, Adafruit ("WHITE") screen.  The BLUE screen isn't tested and likely doesn't work.  Teensy3.5 is untested, but likely does work just fine.
 
-First-time users of this codebase should do this before continuing.  It only needs to be done once.
+Other "testing" branch changes since v1.0:
 
-Regular users can utilize it to effectively clear their save slots and reset the display style.
+* bs16i scene switching with tuning change!
+  * When enabled, if you have scenes (bs16i "presets") set up and assigned to numbers, this will tell bs16i to automatically switch scenes when you change to a preset or saved tuning slot.  The first four bs16i scenes go with the four preset tunings, and the next four go with the save slots.  [More info below.](https://github.com/bazmonk/digigurdy-baz/tree/testing#bs16i-scene-switching)
+* **Manual volume control of all channels!**
+  * Volume saves with tuning in save slots.
+  * Gurdy starts up with an even volume on all channels (like before).  Presets do *not* carry volume info.
+* Chanter/melody string on/off control!
+* Renaming of the O/OK key and Capo key (the key next to it) to A and B respectively
+  * This is both for clarity, and because the keys no longer stick to those functions.
+* Basic voltage compensation!
+  * Should let you lower your `V_THRESHOLD` and get better crank performance.
+* **Configuration variables are now in a config.h file**
+* Tweaked spin algorithm and values for use with reversible cranks.  Should still work fine with normal cranks!
+  * Lower `SPIN_DECAY` if you find it too sensitive at slow speeds before trying to mess with other values.  It'll give you a good place to start.
+  * Raise `V_THRESHOLD` if you get "phantom" cranking.  I *strongly recommend* you slightly modify your crank motor by grounding it to the negative wire somehow.  In my tests it significantly elminates a lot of the noise from the crank sampling and allows you to have a hair-trigger crank and great responsiveness.
+  * Raise `BUZZ_SMOOTHING` to make coups smoother, lower it to allow you to make coups faster.  Buzzing is separate from the `SPIN_` variables entirely so don't adjust them in an attempt to influence the buzz.  Because you can adjust the buzz voltage on-the-fly with the knob, this shouldn't require much adjustment.  
+* Cranking uses a rolling average to calculate voltage now.
+* No need to manually edit display library header file to specify resolution (for white OLEDs)
+  * Stock Adafruit_SSD1306 library works out-of-the-box, no weird half-screen.
+* Formatting/look-n-feel tweaks.
+* **Manual free-tuning of _each_ string!**
+* Ability to remove/attach crank during play.
+* Tuninig preset names are easily-adjustable with the tuning itself.
+* Warns before overwriting occupied save slot.
+* A re-worked analog polling mechanism giving better crank performance
+* Set this if you want the melody strings to send any modulation (usually used as vibrato).
+  * Setting it to zero disables the feature (I'll leave it this way in the repository).
+* Added a new bs-16i "Scene" profile that uses this feature.
+* https://www.youtube.com/watch?v=lreQdIwvJE4 - Example of using `MELODY_VIBRATO = 16`
 
-### Connecting to a Synthesizer
+## About
 
-The DigiGurdy is just a MIDI controller in a hurdy-gurdy-like shape.  It gives out *instructions* on how to make notes, but it has to be connected to a synthsizer to actually *interpret* those into music.
-
-DigiGurdy supports both SerialMIDI over USB, and a powered, standard MIDI-out jack, which can be used with a Bluetooth MIDI transmitter, for example.  Both are ready upon startup with no extra setup necessary on the controller end.
-
-The closest thing to a "standard" recommendation for a synth is bs-16i, a MIDI app for iOS.  It works great, it can be connected into Garageband or other apps in your workflow, etc.  If you go with this option, there's a couple presets in this repository for you to try.
-
-#### Soundfonts
-
-In addition to a synthesizer, it needs samples of hurdy gurdy sounds to work with.  I've hosted the soundfont file that comes with DigiGurdies here as well for your downloading convenience.  **Big shout-out to the MIDIgurdy project** which created most of these sounds and were kind enough to release them open-source for our mutual benefit.
-
-https://github.com/bazmonk/digigurdy-baz/blob/main/soundfonts/vienna-alto-mod11.sf2
-
-## Operation, Setup, and Play
-
-Here's a quick video explaining the controls:
-
-https://www.youtube.com/watch?v=yC0skMH7qog
-
-The keys for navigating the menus work much like John Dingley's code.  The bottom row represent number choices in menus, 1-6 starting from the left.  The "OK" or "O" button is the top right, and the "Back" or X button is the top left:
-
-![keybox pic](https://raw.githubusercontent.com/wiki/bazmonk/digigurdy-baz/keys-full.jpeg)
-
-During play, these are all the "hidden" keycombos:
-* "X" + "O" = Pause menu: save/load/change tuning, turn drones on/off
-* "X" + "Capo" = Toggle through capos (just like the button on newer ones)
-* "1" + Tpose Down or Tpose Up = Transpose up and down (just like the buttons on newer ones)
-
-### Startup
-
-After showing the Adafruit logo (represent!) and a title screen, crank detection will silently work in the background for about 5 seconds.
-
-* **DO NOT TURN THE CRANK DURING CRANK DETECTION!**  It's ok if you do, but you may fool the digigurdy into thinking there is no crank installed (yes, that does sound backwards, but it's the truth).  If you do this accidentally, just unpower and power back up the digigurdy.  It'll forgive you and forget it ever even happened.
-
-From there, you will be shown the Startup Menu.  There's options here to load one of the included presets, load a tuning you've saved before, set up a new tuning, and other options.
-
-**New Users**: the four preset options are for you!  Each one is a reasonable combination, and they're good starting points while you experiment with making others.
-
-#### Other Options
-The "Other Options" menu is only available at startup.  It allows you to clear your EEPROM, and choose whether you want playing notes to display as a large note letter, or a letter + staff/scale image.  Your display preference is persistent and doesn't need to be adjusted each time.
-
-### Play
-
-Once you select a tuning, you'll get the "Crank On!" screen briefly, and your digigurdy is ready to play!  You can activate the drones and keybox with either the large arcade button on the front of the keybox, or (if you have one connected) the crank.  The knob next to the arcade button adjusts the buzz sensitivity like it did before.
-
-At any time during play (even if you're not acutally making sound right now), you can use the two "extra" (these used to be for octave up/down in the old digigurdy code) buttons on the digigurdy (if you have these buttons... I'm sorry if you don't, there's no way for you to access these features yet) to transpose all of the strings up or down.  You'll see the display show the updated tunings and how far you've transposed it from the default tuning.
-
-The third "extra" button toggles between a whole-note or two-whole-note capo on the drone/trompette strings, much like how a capo would work on a physical hurdy gurdy.  This is in addition to any transposing, letting you apply capos to any of the transposed tunings as you may be already used to on a real gurdy.
-
-### Re-Tuning, Saving
-
-At any time during play, pressing the X and O (top left and right keys) at the same time brings up the Pause Menu.  This is a lot like the Startup Menu, except here you have an option to save your current tuning instead of the startup options.
-
-There are four save slots available to you.  They preserve the tunings and capo/transpose settings.
-
-Hitting the 'O' button in the Pause Menu toggles through muting options on the drone and trompette strings.  Your current mute settings will be reflected on the main screen.
-  * Drone/trompette mute settings are not part of the save settings and must be set every play session.
+This is the software repository for the digigurdy code (https://digigurdy.com).
 
 ## I tried it and I don't like it.  Now what?
 
@@ -157,4 +162,4 @@ I haven't really thought of how I'll handle a bunch of competing pull requests b
 
 ## Acknowledgements
 
-HUGE credit to John Dingley, his amazing creation (the DigiGurdy itself), and the original codebase that he wrote.  Everything I've done here is what he did, just written down differently.  
+HUGE credit to John Dingley, his amazing creation (the DigiGurdy itself), and the original codebase that he wrote.  He worked out the display, the way the original crank worked, the interaction with the MIDI subsystem... I'm standing on his shoulders.

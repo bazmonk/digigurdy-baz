@@ -1,3 +1,6 @@
+#ifndef EEPROM_VALUES_H
+#define EEPROM_VALUES_H
+
 // This file holds memory addresses within the EEPROM used by digigurdy-baz.
 //
 // EEPROM memory is rated for at least 100,000 writes (reads are harmless).
@@ -23,6 +26,31 @@ static const int EEPROM_TROMP = 3;
 static const int EEPROM_BUZZ = 4;
 static const int EEPROM_TPOSE = 5;
 static const int EEPROM_CAPO = 6;
+static const int EEPROM_HI_MEL_VOL = 7;
+static const int EEPROM_LOW_MEL_VOL = 8;
+static const int EEPROM_DRONE_VOL = 9;
+static const int EEPROM_TROMP_VOL = 10;
+static const int EEPROM_BUZZ_VOL = 11;
+static const int EEPROM_KEYCLICK_VOL = 12;
 
 // This int saves the play screen type.  0 = note + staff, 1 = note only;
 static const int EEPROM_DISPLY_TYPE = 100;
+
+// This int saves how saved tunings are conveyed to the midi controller.
+// 0 = nothing is done (default and old style)
+// 1 = Conveyed as a Program Control message on channel 1
+// ... Reserved for future use
+static const int EEPROM_SCENE_SIGNALLING = 101;
+
+// This int saved the LED on/off preference.
+// 0 = no buzz LED
+// 1 = LED buzz
+static const int EEPROM_BUZZ_LED = 102;
+
+// These three ints hold the last-chosen EX1/2/3 button functions.
+// See ExButton::fn_choice_screen() for the numbering used.
+static const int EEPROM_EX1 = 103;
+static const int EEPROM_EX2 = 104;
+static const int EEPROM_EX3 = 105;
+
+#endif
