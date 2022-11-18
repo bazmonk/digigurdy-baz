@@ -7,10 +7,11 @@ VibKnob::VibKnob(int v_pin) {
 
   vib_knob_timer = 0;
   voltage = 0;
+  enabled = false;
 };
 
 void VibKnob::update() {
-  if (vib_knob_timer > 100) {
+  if (enabled && vib_knob_timer > 100) {
     voltage = adc->adc0->analogReadContinuous();
 
     mystring->setVibrato(getVibrato());
@@ -34,4 +35,12 @@ int VibKnob::getVibrato() {
   } else {
     return (int)(adj_value);
   };
+};
+
+void VibKnob::enable() {
+  enabled = true;
+};
+
+void VibKnob::disable() {
+  enabled = false;
 };

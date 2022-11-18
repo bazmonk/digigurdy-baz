@@ -175,7 +175,7 @@ void setup() {
   // Initialize the ADC object and the crank that will use it.
   adc = new ADC();
   mycrank = new GurdyCrank(15, A2, LED_PIN);
-  myvibknob = new VibKnob(A2);
+  myvibknob = new VibKnob(40);
 
   // The keybox arrangement is decided by pin_array, which is up in the CONFIG SECTION
   // of this file.  Make adjustments there.
