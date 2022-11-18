@@ -2,7 +2,11 @@
 
 **Pre-compiled builds of the code will be made available from 1.7.99 and up.  See https://github.com/bazmonk/digigurdy-baz/wiki/install-by-hex for installation instructions.**
 
-**Check out version 2.0 release candidate 2! (NEW)**
+**Check out version 2.0 release candidate 3! (NEW)**
+
+* 2.0rc3 -
+  * LED stops if trompette/buzz are muted. (Thanks David!)
+  * Buzz knob now ranges from about 60rpm - 250rpm, and then ramps up to 500+.
 
 * 2.0rc2 -
   * Fixed long-standing error in the order the strings are displayed on a preset screen.

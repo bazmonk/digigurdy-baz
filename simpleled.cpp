@@ -10,7 +10,7 @@ SimpleLED::SimpleLED(int pin) {
 };
 
 void SimpleLED::on() {
-  if (enabled == 1) {
+  if (enabled == 1 && (mytromp->getMute() == false)) {
     digitalWrite(led_pin, HIGH);
   };
 };

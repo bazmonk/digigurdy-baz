@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include <EEPROM.h>
 
+#include "common.h"
 #include "eeprom_values.h"
 
 // class SimpleLED is for controlling LED lights wired up to a given pin on the Teensy (and ground)
