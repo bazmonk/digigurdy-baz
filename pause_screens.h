@@ -16,8 +16,10 @@
 #include "ex_screens.h"
 #include "tuning_screens.h"
 #include "gurdycrank.h"
+#include "vibknob.h"
 
 extern GurdyCrank *mycrank;
+extern VibKnob *myvibknob;
 
 void pause_screen();
 void options_about_screen();
@@ -39,5 +41,6 @@ void playing_options_screen();
 void options_screen();
 void welcome_screen();
 void led_screen();
+void vib_screen();
 
 #endif

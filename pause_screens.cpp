@@ -297,12 +297,12 @@ bool other_options_screen() {
   while (!done) {
 
     String disp_str = " ---Other Options--- \n"
-                      "                     \n"
                       " 1)   EX Button      \n"
                       "    Configuration    \n"
                       " 2) Buzz LED         \n"
-                      " 3) About DigiGurdy  \n\n"
-                      "  X or 4) Go Back    \n";
+                      " 3) Vibrato Pedal    \n"
+                      " 4) About DigiGurdy  \n\n"
+                      "  X or 5) Go Back    \n";
 
     print_screen(disp_str);
     delay(150);
@@ -311,6 +311,7 @@ bool other_options_screen() {
     my2Button->update();
     my3Button->update();
     my4Button->update();
+    my5Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {
@@ -322,9 +323,12 @@ bool other_options_screen() {
       #endif
 
     } else if (my3Button->wasPressed()) {
+      vib_screen();
+
+    } else if (my4Button->wasPressed()) {
       options_about_screen();
 
-    } else if (my4Button->wasPressed() || myXButton->wasPressed()) {
+    } else if (my5Button->wasPressed() || myXButton->wasPressed()) {
       return false;
     };
   };
@@ -864,6 +868,70 @@ void led_screen() {
                   "                     \n"
                   "                     \n"
                   "     LED OFF SAVED   \n"
+                  "                     \n"
+                  "                     \n"
+                  "                     \n";
+
+      print_screen(disp_str);
+      delay(1000);
+
+      done = true;
+
+    } else if (my3Button->wasPressed() || myXButton->wasPressed()) {
+      done = true;
+
+    };
+  };
+};
+
+void vib_screen() {
+
+  bool done = false;
+  while (!done) {
+
+    String disp_str = " ---Vibrato Pedal--- \n"
+                      " Select an Option:   \n"
+                      "                     \n"
+                      " 1) Pedal On         \n"
+                      " 2) Pedal Off        \n"
+                      "                     \n"
+                      " 3 or X) Go Back     \n"
+                      "                     \n";
+
+    print_screen(disp_str);
+    delay(150);
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    myXButton->update();
+
+    if (my1Button->wasPressed()) {
+      myvibknob->enable();
+
+      disp_str =  " ---Vibrato Pedal--- \n"
+                  " Select an Option:   \n"
+                  "                     \n"
+                  "   PEDAL ON SAVED    \n"
+                  "                     \n"
+                  "                     \n"
+                  "                     \n"
+                  "                     \n";
+
+      print_screen(disp_str);
+      delay(1000);
+
+      done = true;
+
+    } else if (my2Button->wasPressed()) {
+      myvibknob->disable();
+
+      disp_str =  " ---Vibrato Pedal--- \n"
+                  " Select an Option:   \n"
+                  "                     \n"
+                  "                     \n"
+                  "   PEDAL OFF SAVED   \n"
                   "                     \n"
                   "                     \n"
                   "                     \n";

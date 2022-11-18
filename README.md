@@ -4,6 +4,10 @@
 
 **Check out version 2.0 release candidate 3! (NEW)**
 
+* 2.04c4 -
+  * Vibrato "accessory pedal" support.
+    * This runs on the same pin as the Buzz LED.  Don't attempt to use both unless you find new pins.
+
 * 2.0rc3 -
   * LED stops if trompette/buzz are muted. (Thanks David!)
   * Buzz knob now ranges from about 60rpm - 250rpm, and then ramps up to 500+.

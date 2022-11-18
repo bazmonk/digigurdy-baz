@@ -18,6 +18,7 @@
 #include "gurdycrank.h"
 #include "hurdygurdy.h"
 #include "togglebutton.h"
+#include "vibknob.h"
 
 // These are all about the display
 #include "display.h"         // Intializes our display object
@@ -49,6 +50,8 @@ ADC* adc;
 HurdyGurdy *mygurdy;
 ToggleButton *bigbutton;
 GurdyCrank *mycrank;
+
+VibKnob *myvibknob;
 
 // As musical keys, these are referred to in the mygurdy object above.
 // This declaration of them is specifically for their use as navigational
@@ -172,6 +175,7 @@ void setup() {
   // Initialize the ADC object and the crank that will use it.
   adc = new ADC();
   mycrank = new GurdyCrank(15, A2, LED_PIN);
+  myvibknob = new VibKnob(40);
 
   // The keybox arrangement is decided by pin_array, which is up in the CONFIG SECTION
   // of this file.  Make adjustments there.
@@ -276,7 +280,7 @@ void loop() {
         mycrank->enableLED();
       #endif
     };
-    
+
     // Crank On! for half a sec.
     display.clearDisplay();
     display.drawBitmap(0, 0, crank_on_logo, 128, 64, 1);
@@ -291,6 +295,9 @@ void loop() {
   myoffset = mygurdy->getMaxOffset();  // This covers the keybox buttons.
   bigbutton->update();
   mycrank->update();
+
+  myvibknob->update();
+
   tpose_up->update();
   tpose_down->update();
   capo->update();
@@ -536,5 +543,8 @@ void loop() {
     Serial.print(", est. rev: ");
     Serial.println(mycrank->getRev());
     start_time = millis();
+    Serial.println(String("") + "\nKNOB_V = " + myvibknob->getVoltage());
+    Serial.println(String("") + "KNOB_VIB = " + myvibknob->getVibrato());
+
   }
 };
