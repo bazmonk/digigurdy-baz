@@ -3,30 +3,46 @@
 
 #include <Arduino.h>
 
-// ALL USERS!!! Uncomment one of these lines depending on what kind of OLED screen you have.
-#define WHITE_OLED
-//#define BLUE_OLED
-
-// ALL USERS!!! If you're hooking up to a WAV Trigger or Super Tsunami, uncomment one of these.
-// * This expects to transmit via pin 1, Serial1 Tx.
-// * This effectively disables Serial MIDI.  USB MIDI is still available.
-//#define USE_TRIGGER
-//#define USE_TSUNAMI
-
-// Comment this out if you do not want to use the buzz LED feature
-// #define LED_KNOB
-
-// LED_PIN is the pin used for the buzz LED.
-const int LED_PIN = 40;
-
-const String VERSION = "2.0rc4";
-const String REL_DATE = "2022-11-18, v" + VERSION;
+const String VERSION = "2.0rc5";
+const String REL_DATE = "2022-11-20, v" + VERSION;
 
 // Use one of these if you want, on the title/about screen.  Or make your own!
 //const String EXTRA_LINE = "                     ";
 //const String EXTRA_LINE = "White OLED, Trigger  ";
 //const String EXTRA_LINE = "White OLED, Tsunami  ";
 const String EXTRA_LINE = "White OLED, MIDI Mode";
+
+// ALL USERS!!! Uncomment one of these lines depending on what kind of OLED screen you have.
+#define WHITE_OLED
+//#define BLUE_OLED
+
+// ALL USERS!!! If you're hooking up to a WAV Trigger or Super Tsunami, uncomment one of these.
+// * These expect to transmit via pin 1, Serial1 Tx.
+// * These effectively disables Serial MIDI.  USB MIDI is still available.
+//#define USE_TRIGGER
+//#define USE_TSUNAMI
+
+// PEDAL and LED knob support:
+//
+// If you got your gurdy from John or made yours like he did, pin 40 was variously used for both
+// an LED buzz indicator, or a vibrato pedal accessory socket.  You probably can't use both features
+// below and should enable only one.
+
+// Comment this out if you do not want to use the buzz LED feature
+#define LED_KNOB
+
+// LED_PIN is the pin used for the buzz LED.
+const int LED_PIN = 40;
+
+// Comment this out if you do not want to use the vibrato accessory pedal
+//#define USE_PEDAL
+
+// PEDAL_PIN is the pin used for the pedal accessory.
+const int PEDAL_PIN = 40;
+
+// PEDA_MAX_V should be set near (doesn't need to be exact) the max voltage your pedal will output.
+// 1023 = 3.3v, so (1023/3.3) * [Your voltage] = the value you want here.
+const float PEDAL_MAX_V = 658.0;
 
 // VIBRATO: I use a long-delay, very slow vibrato on the melody strings.  This variable controls how
 // much vibrato (how much modulation like with a physical mod wheel on a MIDI keyboard) to send.
