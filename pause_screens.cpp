@@ -298,11 +298,21 @@ bool other_options_screen() {
 
     String disp_str = " ---Other Options--- \n"
                       " 1)   EX Button      \n"
-                      "    Configuration    \n"
-                      " 2) Buzz LED         \n"
-                      " 3) Vibrato Pedal    \n"
-                      " 4) About DigiGurdy  \n\n"
-                      "  X or 5) Go Back    \n";
+                      "    Configuration    \n";
+    #ifdef LED_KNOB
+    disp_str = disp_str + " 2) Buzz LED         \n";
+    #else
+    disp_str = disp_str + "\n";
+    #endif
+
+    #ifdef USE_PEDAL
+    disp_str = disp_str + " 3) Vibrato Pedal    \n";
+    #else
+    disp_str = disp_str + "\n";
+    #endif
+
+    disp_str = disp_str + " 4) About DigiGurdy  \n\n"
+                          "  X or 5) Go Back    \n";
 
     print_screen(disp_str);
     delay(150);
@@ -323,7 +333,9 @@ bool other_options_screen() {
       #endif
 
     } else if (my3Button->wasPressed()) {
+      #ifdef USE_PEDAL
       vib_screen();
+      #endif
 
     } else if (my4Button->wasPressed()) {
       options_about_screen();

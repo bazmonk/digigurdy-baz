@@ -4,7 +4,11 @@
 
 **Check out version 2.0 release candidate 3! (NEW)**
 
-* 2.04c4 -
+* 2.0rc5 -
+  * `config.h` options to enable/disable the accessory pedal.
+  * Menu options for LED and accessory pedal won't display if disabled at compile time.
+
+* 2.0rc4 -
   * Vibrato "accessory pedal" support.
     * This runs on the same pin as the Buzz LED.  Don't attempt to use both unless you find new pins.
 
