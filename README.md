@@ -1,5 +1,7 @@
 # digigurdy-baz
 
+See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more documentation.
+
 **Pre-compiled builds of the code will be made available from 1.7.99 and up.  See https://github.com/bazmonk/digigurdy-baz/wiki/install-by-hex for installation instructions.**
 
 **Check out version 2.0 release candidate 3! (NEW)**
