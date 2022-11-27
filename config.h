@@ -3,14 +3,15 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.0rc5";
-const String REL_DATE = "2022-11-20, v" + VERSION;
+const String VERSION = "2.0.0";
+const String REL_DATE = "2022-11-27, v" + VERSION;
 
 // Use one of these if you want, on the title/about screen.  Or make your own!
 //const String EXTRA_LINE = "                     ";
-//const String EXTRA_LINE = "White OLED, Trigger  ";
-//const String EXTRA_LINE = "White OLED, Tsunami  ";
-const String EXTRA_LINE = "White OLED, MIDI Mode";
+const String EXTRA_LINE = " MIDI-OUT - LED KNOB ";
+//const String EXTRA_LINE = "  MIDI-OUT - PEDAL   ";
+//const String EXTRA_LINE = " TRIGGER - LED KNOB  ";
+//const String EXTRA_LINE = " TSUNAMI - LED KNOB  ";
 
 // ALL USERS!!! Uncomment one of these lines depending on what kind of OLED screen you have.
 #define WHITE_OLED
