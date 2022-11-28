@@ -210,3 +210,38 @@ void print_message_2(String title, String opt1, String opt2) {
 
   u8g2.sendBuffer();
 };
+
+void print_menu_4_nobk(String title, String opt1, String opt2, String opt3, String opt4) {
+
+  // Clear the screen, set overlay font mode (don't draw background)
+  // FontMode 1 requires a t* font
+  u8g2.clearBuffer();
+  u8g2.setFontMode(1);
+  u8g2.setFont(u8g2_font_finderskeepers_tf);
+
+  // Print a pretty 3-stripe line "around" the title
+  u8g2.drawHLine(0, 2, 61 - (u8g2.getStrWidth(title.c_str()) / 2));
+  u8g2.drawHLine(0, 4, 61 - (u8g2.getStrWidth(title.c_str()) / 2));
+  u8g2.drawHLine(0, 6, 61 - (u8g2.getStrWidth(title.c_str()) / 2));
+  u8g2.drawHLine(67 + (u8g2.getStrWidth(title.c_str()) / 2), 2, 64);
+  u8g2.drawHLine(67 + (u8g2.getStrWidth(title.c_str()) / 2), 4, 64);
+  u8g2.drawHLine(67 + (u8g2.getStrWidth(title.c_str()) / 2), 6, 64);
+
+  // Print the title centered on the top "line"
+  u8g2.drawStr(64 - (u8g2.getStrWidth(title.c_str()) / 2), 8, title.c_str());
+
+  // Draw all six numbers
+  u8g2.drawStr(15 - u8g2.getStrWidth("1) "), 20, "1) ");
+  u8g2.drawStr(15 - u8g2.getStrWidth("2) "), 34, "2) ");
+  u8g2.drawStr(15 - u8g2.getStrWidth("3) "), 48, "3) ");
+  u8g2.drawStr(15 - u8g2.getStrWidth("4) "), 62, "4) ");
+
+  // Draw all six options
+  u8g2.drawStr(13, 20, opt1.c_str());
+  u8g2.drawStr(13, 34, opt2.c_str());
+  u8g2.drawStr(13, 48, opt3.c_str());
+  u8g2.drawStr(13, 64, opt4.c_str());
+
+
+  u8g2.sendBuffer();
+};

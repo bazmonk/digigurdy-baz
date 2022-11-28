@@ -553,16 +553,7 @@ bool load_saved_screen() {
   bool done = false;
   while (!done) {
 
-    String disp_str = " --Load Saved Slot-- \n"
-                      " Select for Preview: \n"
-                      "                     \n"
-                      "     1) Slot 1       \n"
-                      "     2) Slot 2       \n"
-                      "     3) Slot 3       \n"
-                      "     4) Slot 4       \n"
-                      "X or 5) Go Back      \n";
-
-    print_screen(disp_str);
+    print_menu_4("Load Saved Tuning", "Slot 1", "Slot 2", "Slot 3", "Slot 4");
     delay(150);
 
     // Check the 1 and 2 buttons
@@ -598,16 +589,9 @@ bool load_preset_screen() {
   bool done = false;
   while (!done) {
 
-    String disp_str = " ---Load A Preset--- \n"
-                      " Select a Preset:    \n"
-                      "                     \n"
-                      " 1) " + PRESET1_NAME + "\n"
-                      " 2) " + PRESET2_NAME + "\n"
-                      " 3) " + PRESET3_NAME + "\n"
-                      " 4) " + PRESET4_NAME + "\n"
-                      " X or 5) Go Back     \n";
-
-    print_screen(disp_str);
+    print_menu_4("Select Tuning Preset",
+                 PRESET1_NAME, PRESET2_NAME,
+                 PRESET3_NAME, PRESET4_NAME);
     delay(150);
 
     // Check the 1 and 2 buttons
@@ -640,20 +624,13 @@ void scene_options_screen() {
   bool done = false;
   while (!done) {
 
-    String disp_str = " -Scene Signalliing- \n"
-                      " Select an Option:   \n"
-                      "                     \n"
-                      " 1) None             \n"
-                      " 2) Prog Chg, Ch. 1  \n"
-                      "                     \n"
-                      " X) Go Back          \n";
-
-    print_screen(disp_str);
+    print_menu_2("Scene Signaling", "None", "Prog Chg, Ch. 1");
     delay(150);
 
     // Check the buttons
     my1Button->update();
     my2Button->update();
+    my3Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {
@@ -664,7 +641,7 @@ void scene_options_screen() {
       scene_signal_type = 1;
       EEPROM.write(EEPROM_SCENE_SIGNALLING, scene_signal_type);
       done = true;
-    } else if (myXButton->wasPressed()) {
+    } else if (my3Button->wasPressed() || myXButton->wasPressed()) {
       done = true;
     }
   }
@@ -675,21 +652,13 @@ void playing_options_screen() {
   bool done = false;
   while (!done) {
 
-    String disp_str = " -Choose Play Screen-\n"
-                      " Select an Option:   \n"
-                      "                     \n"
-                      " 1) Big Note + Staff \n"
-                      "                     \n"
-                      " 2) Big Note         \n"
-                      "                     \n"
-                      " X) Go Back          \n";
-
-    print_screen(disp_str);
+    print_menu_2("Choose Play Screen", "Big Note + Staff", "Big Note");
     delay(150);
 
     // Check the 1 and 2 buttons
     my1Button->update();
     my2Button->update();
+    my3Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {
@@ -697,17 +666,7 @@ void playing_options_screen() {
       play_screen_type = 0;
       EEPROM.write(EEPROM_DISPLY_TYPE, 0);
 
-      display.clearDisplay();
-      display.setTextSize(2);
-      display.setTextColor(WHITE);
-      display.setCursor(0, 0);
-      String disp_str = ""
-      "  DISPLAY  \n"
-      "  \n"
-      "  SAVED \n";
-
-      display.print(disp_str);
-      display.display();
+      print_message_2("Choose Play Screen", "Note + Staff Screen", "Saved to EEPROM");
       delay(750);
       done = true;
 
@@ -716,20 +675,10 @@ void playing_options_screen() {
       play_screen_type = 1;
       EEPROM.write(EEPROM_DISPLY_TYPE, 1);
 
-      display.clearDisplay();
-      display.setTextSize(2);
-      display.setTextColor(WHITE);
-      display.setCursor(0, 0);
-      String disp_str = ""
-      "  DISPLAY  \n"
-      "  \n"
-      "   SAVED  \n";
-
-      display.print(disp_str);
-      display.display();
+      print_message_2("Choose Play Screen", "Big Note Screen", "Saved to EEPROM");
       delay(750);
       done = true;
-    } else if (myXButton->wasPressed()) {
+    } else if (my3Button->wasPressed() || myXButton->wasPressed()) {
       done = true;
     };
   };
@@ -742,16 +691,7 @@ void options_screen() {
   bool done = false;
   while (!done) {
 
-    String disp_str = " ------Options------ \n"
-                      " Select an Option:   \n"
-                      "                     \n"
-                      " 1) Clear EEPROM     \n"
-                      " 2) Playing Screen   \n"
-                      " 3) Scene Control    \n"
-                      "                     \n"
-                      " X) Go Back          \n";
-
-    print_screen(disp_str);
+    print_menu_3("Options", "Clear EEPROM", "Playing Screen", "Scene Control");
     delay(150);
 
     // Check the 1 and 2 buttons
@@ -764,17 +704,7 @@ void options_screen() {
 
       clear_eeprom();
 
-      display.clearDisplay();
-      display.setTextSize(2);
-      display.setTextColor(WHITE);
-      display.setCursor(0, 0);
-      String disp_str = ""
-      "  EEPROM  \n"
-      "  \n"
-      "  CLEARED \n";
-
-      display.print(disp_str);
-      display.display();
+      print_message_2("Clear EEPROM", "EEPROM Cleared,", "(Defaults Reset)");
       delay(750);
       done = true;
 
@@ -796,16 +726,8 @@ void welcome_screen() {
   bool done = false;
   while (!done) {
 
-    String disp_str = " -----DigiGurdy----- \n"
-                      " Select an Option:   \n"
-                      "                     \n"
-                      " 1) Load Preset      \n"
-                      " 2) Load Save Slot   \n"
-                      " 3) New Tuning Setup \n"
-                      " 4) Other Options    \n"
-                      "                     \n";
-
-    print_screen(disp_str);
+    print_menu_4_nobk("Digi-Gurdy", "Load Preset", "Load Save Slot",
+                      "New Tuning Setup", "Other Options");
     delay(150);
 
     // Check the 1 and 2 buttons
@@ -835,16 +757,7 @@ void led_screen() {
   bool done = false;
   while (!done) {
 
-    String disp_str = " --Buzz LED On/Off-- \n"
-                      " Select an Option:   \n"
-                      "                     \n"
-                      " 1) LED On           \n"
-                      " 2) LED Off          \n"
-                      "                     \n"
-                      " 3 or X) Go Back     \n"
-                      "                     \n";
-
-    print_screen(disp_str);
+    print_menu_2("Buzz LED On/Off", "Enable Buzz LED (On)", "Disable Buzz LED (Off)");
     delay(150);
 
     // Check the 1 and 2 buttons
@@ -857,16 +770,7 @@ void led_screen() {
       EEPROM.write(EEPROM_BUZZ_LED, 1);
       mycrank->enableLED();
 
-      disp_str =  " --Buzz LED On/Off-- \n"
-                  " Select an Option:   \n"
-                  "                     \n"
-                  "     LED ON SAVED    \n"
-                  "                     \n"
-                  "                     \n"
-                  "                     \n"
-                  "                     \n";
-
-      print_screen(disp_str);
+      print_message_2("Buzz LED On/Off", "Buzz LED On", "Saved to EEPROM");
       delay(1000);
 
       done = true;
@@ -875,16 +779,7 @@ void led_screen() {
       EEPROM.write(EEPROM_BUZZ_LED, 0);
       mycrank->disableLED();
 
-      disp_str =  " --Buzz LED On/Off-- \n"
-                  " Select an Option:   \n"
-                  "                     \n"
-                  "                     \n"
-                  "     LED OFF SAVED   \n"
-                  "                     \n"
-                  "                     \n"
-                  "                     \n";
-
-      print_screen(disp_str);
+      print_message_2("Buzz LED On/Off", "Buzz LED Off", "Saved to EEPROM");
       delay(1000);
 
       done = true;
@@ -901,16 +796,7 @@ void vib_screen() {
   bool done = false;
   while (!done) {
 
-    String disp_str = " ---Vibrato Pedal--- \n"
-                      " Select an Option:   \n"
-                      "                     \n"
-                      " 1) Pedal On         \n"
-                      " 2) Pedal Off        \n"
-                      "                     \n"
-                      " 3 or X) Go Back     \n"
-                      "                     \n";
-
-    print_screen(disp_str);
+    print_menu_2("Vibrato Pedal", "Enable Pedal (On)", "Disable Pedal (Off)");
     delay(150);
 
     // Check the 1 and 2 buttons
@@ -922,16 +808,7 @@ void vib_screen() {
     if (my1Button->wasPressed()) {
       myvibknob->enable();
 
-      disp_str =  " ---Vibrato Pedal--- \n"
-                  " Select an Option:   \n"
-                  "                     \n"
-                  "   PEDAL ON SAVED    \n"
-                  "                     \n"
-                  "                     \n"
-                  "                     \n"
-                  "                     \n";
-
-      print_screen(disp_str);
+      print_message_2("Vibrato Pedal", "Pedal On", "Saved to EEPROM");
       delay(1000);
 
       done = true;
@@ -939,16 +816,7 @@ void vib_screen() {
     } else if (my2Button->wasPressed()) {
       myvibknob->disable();
 
-      disp_str =  " ---Vibrato Pedal--- \n"
-                  " Select an Option:   \n"
-                  "                     \n"
-                  "                     \n"
-                  "   PEDAL OFF SAVED   \n"
-                  "                     \n"
-                  "                     \n"
-                  "                     \n";
-
-      print_screen(disp_str);
+      print_message_2("Vibrato Pedal", "Pedal Off", "Saved to EEPROM");
       delay(1000);
 
       done = true;
