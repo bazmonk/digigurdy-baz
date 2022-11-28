@@ -27,5 +27,6 @@ void print_menu_5(String title, String opt1, String opt2, String opt3, String op
 void print_menu_4(String title, String opt1, String opt2, String opt3, String opt4);
 void print_menu_3(String title, String opt1, String opt2, String opt3);
 void print_menu_2(String title, String opt1, String opt2);
+void print_message_2(String title, String opt1, String opt2);
 
 #endif
