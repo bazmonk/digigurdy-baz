@@ -1,9 +1,6 @@
-#include "display.h"
-#include "config.h"
-#include "bitmaps.h"
 #include "startup_screens.h"
 
-void startup_screen_sqeuence() {
+void startup_screen_sequence() {
 
   // Clear the buffer.
   display.clearDisplay();

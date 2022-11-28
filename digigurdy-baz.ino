@@ -139,7 +139,7 @@ void setup() {
 
   // Display some startup animations for the user.
   start_display();
-  startup_screen_sqeuence();
+  startup_screen_sequence();
 
   // Un-comment to print yourself debugging messages to the Teensyduino
   // serial console.
