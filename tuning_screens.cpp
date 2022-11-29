@@ -5,17 +5,7 @@ bool tuning() {
   bool done = false;
   while (!done) {
 
-    String disp_str = " ----Tuning Menu---- \n"
-                      "  1) G/C, Guided     \n"
-                      "  2) D/G, Guided     \n"
-                      "  3) Manual Setup    \n"
-                      "                     \n"
-                      "  4) Volume Control  \n"
-                      "                     \n"
-                      "  X or 5) Go Back    \n";
-
-    print_screen(disp_str);
-
+    print_menu_4("Tuning Menu", "G/C, Guided", "D/G, Guided", "Manual Setup", "Volume Control");
     delay(150);
 
     // Check the 1 and 2 buttons

@@ -13,8 +13,6 @@
 #define OLED_CS 12
 #define OLED_RESET 13
 
-// Initiate (declare?  Not sure why this works in the header) the correct kind of
-// display object based on OLED type
 #ifdef WHITE_OLED
   extern U8G2_SSD1306_128X64_NONAME_F_4W_SW_SPI u8g2;
 #endif

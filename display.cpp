@@ -1,10 +1,12 @@
 #include "display.h"
 
+// The first argument here (U8G2_R0) determines the orientation, FYI.  Useful if you put one in
+// upside-down.
 #ifdef WHITE_OLED
-  U8G2_SSD1306_128X64_NONAME_F_4W_SW_SPI u8g2(U8G2_R0, 10, 9, 12, 11, 13);
+  U8G2_SSD1306_128X64_NONAME_F_4W_SW_SPI u8g2(U8G2_R0, OLED_CLK, OLED_MOSI, OLED_CS, OLED_DC, OLED_RESET);
 #endif
 #ifdef BLUE_OLED
-  U8G2_SH1106_128X64_NONAME_F_4W_SW_SPI u8g2(U8G2_R0, 10, 9, 12, 11, 13);
+  U8G2_SH1106_128X64_NONAME_F_4W_SW_SPI u8g2(U8G2_R0, OLED_CLK, OLED_MOSI, OLED_CS, OLED_DC, OLED_RESET);
 #endif
 
 void start_display() {
