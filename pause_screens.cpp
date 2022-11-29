@@ -5,31 +5,25 @@ void pause_screen() {
 
   bool done = false;
   while (!done) {
+    String d_str = "On";
+    String t_str = "On";
+    String h_str = "On";
+    String l_str = "On";
 
-    String disp_str = " ----Pause  Menu---- \n"
-                      " 1) Load    2) Save  \n"
-                      " 3) Tuning  4) Other \n\n"
-                      "   X or 5) Go Back\n\n";
-
-    if (drone_mode == 0) {
-      disp_str += "A) Drone:On ,Trmp:On \n";
-    } else if (drone_mode == 1) {
-      disp_str += "A) Drone:Off,Trmp:Off\n";
-    } else if (drone_mode == 2) {
-      disp_str += "A) Drone:On, Trmp:Off\n";
-    } else if (drone_mode == 3) {
-      disp_str += "A) Drone:Off,Trmp:On \n";
+    if (drone_mode == 1 || drone_mode == 2) {
+      t_str = "OFF";
+    };
+    if (drone_mode == 1 || drone_mode == 3) {
+      d_str = "OFF";
+    };
+    if (mel_mode == 1) {
+      l_str = "OFF";
+    };
+    if (mel_mode == 2) {
+      h_str = "OFF";
     };
 
-    if (mel_mode == 0) {
-      disp_str += "B) High:On ,  Low:On \n";
-    } else if (mel_mode == 1) {
-      disp_str += "B) High:On ,  Low:Off\n";
-    } else if (mel_mode == 2) {
-      disp_str += "B) High:Off,  Low:On \n";
-    };
-
-    print_screen(disp_str);
+    print_pause_screen(d_str, t_str, h_str, l_str);
 
     delay(150);
 
@@ -101,9 +95,9 @@ void pause_screen() {
   };
 
   // Crank On! for half a sec.
-  display.clearDisplay();
-  display.drawBitmap(0, 0, crank_on_logo, 128, 64, 1);
-  display.display();
+  u8g2.clearBuffer();
+  u8g2.drawBitmap(0, 0, 16, 64, crank_on_logo);
+  u8g2.sendBuffer();
   delay(500);
 };
 
@@ -114,15 +108,7 @@ bool load_tuning_screen() {
   bool done = false;
   while (!done) {
 
-    String disp_str = " ----Load Tuning---- \n"
-                      "                     \n"
-                      " 1) Preset Tuning    \n"
-                      "                     \n"
-                      " 2) Saved Tuning     \n\n"
-                      " X or 3) Go Back     \n";
-
-    print_screen(disp_str);
-
+    print_menu_2("Load Tuning", "Preset Tuning", "Saved Tuning");
     delay(150);
 
     // Check the 1 and 2 buttons
@@ -157,16 +143,7 @@ bool check_save_tuning(int slot) {
     return true;
   } else {
 
-    String disp_str = " ----Save Tuning---- \n"
-                      "                     \n"
-                      " Save slot is full,  \n"
-                      "    Save anyway?     \n"
-                      "                     \n"
-                      " 1) Overwrite        \n"
-                      "                     \n"
-                      " X or 2) Go Back     \n";
-
-    print_screen(disp_str);
+    print_confirm_screen("Save Tuning", "Save slot is full...", "Save anyway?", "Overwrite");
     delay(150);
 
     bool done = false;
@@ -194,16 +171,7 @@ void save_tuning_screen() {
   int slot = 0;
   while (!done) {
 
-    String disp_str = " ----Save Tuning---- \n"
-                      " Choose a Save Slot: \n"
-                      "                     \n"
-                      "      1) Slot 1      \n"
-                      "      2) Slot 2      \n"
-                      "      3) Slot 3      \n"
-                      "      4) Slot 4      \n"
-                      "      X) Go Back     \n";
-
-    print_screen(disp_str);
+    print_menu_4("Save Tuning", "Use Slot 1", "Use Slot 2", "Use Slot 3", "Use Slot 4");
     delay(150);
 
     // Check the 1 and 2 buttons
@@ -248,14 +216,7 @@ void save_tuning_screen() {
   };
 
   // Display a confirmation message
-  display.clearDisplay();
-  display.setTextSize(2);
-  display.setTextColor(WHITE);
-  display.setCursor(0,0);
-  display.print("\n  Slot ");
-  display.print(slot);
-  display.print("\n  Saved!");
-  display.display();
+  print_message_2("Save Tuning", "Slot " + slot, "Saved to EEPROM");
   delay(500);
 };
 
@@ -271,24 +232,25 @@ void options_about_screen() {
     };
   };
 
-  String disp_str = "      DigiGurdy      \n"
-                    "---------------------\n"
-                    "Special Thanks:      \n"
-                    "                     \n"
-                    "John Dingley         \n"
-                    "David Jacobs         \n"
-                    "lune36400            \n"
-                    "SalusaSecondus       ";
-
-  print_screen(disp_str);
-
-  while (true) {
-    myXButton->update();
-
-    if(myXButton->wasPressed()) {
-      break;
-    };
-  };
+  // BAZ - FIX THIS LATER
+  // String disp_str = "      DigiGurdy      \n"
+  //                   "---------------------\n"
+  //                   "Special Thanks:      \n"
+  //                   "                     \n"
+  //                   "John Dingley         \n"
+  //                   "David Jacobs         \n"
+  //                   "lune36400            \n"
+  //                   "SalusaSecondus       ";
+  //
+  // print_screen(disp_str);
+  //
+  // while (true) {
+  //   myXButton->update();
+  //
+  //   if(myXButton->wasPressed()) {
+  //     break;
+  //   };
+  // };
 };
 
 bool other_options_screen() {
@@ -296,25 +258,16 @@ bool other_options_screen() {
   bool done = false;
   while (!done) {
 
-    String disp_str = " ---Other Options--- \n"
-                      " 1)   EX Button      \n"
-                      "    Configuration    \n";
+    String opt2 = "";
+    String opt3 = "";
     #ifdef LED_KNOB
-    disp_str = disp_str + " 2) Buzz LED         \n";
-    #else
-    disp_str = disp_str + "\n";
+    String opt2 = "Buzz LED On/Off";
     #endif
-
     #ifdef USE_PEDAL
-    disp_str = disp_str + " 3) Vibrato Pedal    \n";
-    #else
-    disp_str = disp_str + "\n";
+    String opt3 = "Vibrato Pedal On/Off";
     #endif
 
-    disp_str = disp_str + " 4) About DigiGurdy  \n\n"
-                          "  X or 5) Go Back    \n";
-
-    print_screen(disp_str);
+    print_menu_4("Other Options", "EX Button Config", opt2, opt3, "About Digi-Gurdy");
     delay(150);
 
     my1Button->update();
@@ -459,22 +412,20 @@ bool view_slot_screen(int slot_num) {
   if (slot_num == 3) { slot = EEPROM_SLOT3; };
   if (slot_num == 4) { slot = EEPROM_SLOT4; };
 
-  String disp_str = " -Saved Slot Tuning- \n"
-                    " Hi Melody: " + LongNoteNum[EEPROM.read(slot + EEPROM_HI_MEL)] + "  \n"
-                    " Lo Melody: " + LongNoteNum[EEPROM.read(slot + EEPROM_LO_MEL)] + "  \n"
-                    " Drone:     " + LongNoteNum[EEPROM.read(slot + EEPROM_DRONE)] + "  \n"
-                    " Trompette: " + LongNoteNum[EEPROM.read(slot + EEPROM_TROMP)] + "  \n"
-                    " Tpose: ";
+  String t_str = "";
+  if (EEPROM.read(slot + EEPROM_TPOSE) > 12) { t_str += "+"; };
+  t_str = t_str + ((EEPROM.read(slot + EEPROM_TPOSE))-12);
 
-  if (EEPROM.read(slot + EEPROM_TPOSE) > 12) { disp_str += "+"; };
-  disp_str = disp_str + ((EEPROM.read(slot + EEPROM_TPOSE))-12) + "  Capo: ";
+  String cap_str = "";
+  if (EEPROM.read(slot + EEPROM_CAPO) > 0) { cap_str += "+"; };
+  cap_str = cap_str + (EEPROM.read(slot + EEPROM_CAPO));
 
-  if (EEPROM.read(slot + EEPROM_CAPO) > 0) { disp_str += "+"; };
-  disp_str = disp_str + (EEPROM.read(slot + EEPROM_CAPO)) + "\n"
-             " A or 1) Accept \n"
-             " X or 2) Go Back  \n";
-
-  print_screen(disp_str);
+  print_tuning("Saved Slot Tuning",
+               LongNoteNum[EEPROM.read(slot + EEPROM_HI_MEL)],
+               LongNoteNum[EEPROM.read(slot + EEPROM_LO_MEL)],
+               LongNoteNum[EEPROM.read(slot + EEPROM_DRONE)],
+               LongNoteNum[EEPROM.read(slot + EEPROM_TROMP)],
+               t_str, cap_str);
   delay(150);
 
   bool done = false;
@@ -508,21 +459,20 @@ bool view_preset_screen(int preset) {
   if (preset == 3) { tunings = PRESET3; };
   if (preset == 4) { tunings = PRESET4; };
 
-  String disp_str = " ---Preset Tuning--- \n"
-                    " Hi Melody: " + LongNoteNum[tunings[0]] + "  \n"
-                    " Lo Melody: " + LongNoteNum[tunings[1]] + "  \n"
-                    " Trompette: " + LongNoteNum[tunings[3]] + "  \n"
-                    " Drone:     " + LongNoteNum[tunings[2]] + "  \n"
-                    " Tpose: ";
+  String t_str = "";
+  if (tunings[5] > 12) { t_str += "+"; };
+  t_str = t_str + tunings[5];
 
-  if (tunings[5] > 12) { disp_str += "+"; };
-  disp_str = disp_str + tunings[5] + "  Capo: ";
-  if (tunings[6] > 0) { disp_str += "+"; };
-  disp_str = disp_str + tunings[6] + "\n"
-             " A or 1) Accept  \n"
-             " X or 2) Go Back  \n";
+  String cap_str = "";
+  if (tunings[6] > 0) { cap_str += "+"; };
+  cap_str = cap_str + tunings[6];
 
-  print_screen(disp_str);
+  print_tuning("Preset Tuning",
+               LongNoteNum[tunings[0]],
+               LongNoteNum[tunings[1]],
+               LongNoteNum[tunings[2]],
+               LongNoteNum[tunings[3]],
+               t_str, cap_str);
   delay(150);
 
   bool done = false;

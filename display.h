@@ -1,6 +1,7 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
+#include <Arduino.h>
 #include <SPI.h>
 #include <U8g2lib.h>
 #include "config.h"
@@ -27,10 +28,10 @@ void print_menu_5(String title, String opt1, String opt2, String opt3, String op
 void print_menu_4(String title, String opt1, String opt2, String opt3, String opt4);
 void print_menu_3(String title, String opt1, String opt2, String opt3);
 void print_menu_2(String title, String opt1, String opt2);
-
 void print_message_2(String title, String opt1, String opt2);
-
 void print_menu_4_nobk(String title, String opt1, String opt2, String opt3, String opt4);
-
+void print_pause_screen(String d_string, String t_string, String h_string, String l_string);
+void print_confirm_screen(String title, String msg1, String msg2, String opt1);
+void print_tuning(String title, String hi_note, String low_note, String drone_note, String tromp_note, String tpose_str, String capo_str);
 
 #endif

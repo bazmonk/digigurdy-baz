@@ -245,3 +245,112 @@ void print_menu_4_nobk(String title, String opt1, String opt2, String opt3, Stri
 
   u8g2.sendBuffer();
 };
+
+void print_pause_screen(String d_string, String t_string, String h_string, String l_string) {
+  // Clear the screen, set overlay font mode (don't draw background)
+  // FontMode 1 requires a t* font
+  u8g2.clearBuffer();
+  u8g2.setFontMode(1);
+  u8g2.setFont(u8g2_font_finderskeepers_tf);
+
+  String title = "Pause Menu";
+
+  // Print a pretty 3-stripe line "around" the title
+  u8g2.drawHLine(0, 2, 61 - (u8g2.getStrWidth(title.c_str()) / 2));
+  u8g2.drawHLine(0, 4, 61 - (u8g2.getStrWidth(title.c_str()) / 2));
+  u8g2.drawHLine(0, 6, 61 - (u8g2.getStrWidth(title.c_str()) / 2));
+  u8g2.drawHLine(67 + (u8g2.getStrWidth(title.c_str()) / 2), 2, 64);
+  u8g2.drawHLine(67 + (u8g2.getStrWidth(title.c_str()) / 2), 4, 64);
+  u8g2.drawHLine(67 + (u8g2.getStrWidth(title.c_str()) / 2), 6, 64);
+
+  // Print the title centered on the top "line"
+  u8g2.drawStr(64 - (u8g2.getStrWidth(title.c_str()) / 2), 8, title.c_str());
+
+  u8g2.drawStr(25 - u8g2.getStrWidth("1) "), 18, "1) Load");
+  u8g2.drawStr(89 - u8g2.getStrWidth("2) "), 18, "2) Save");
+  u8g2.drawStr(25 - u8g2.getStrWidth("3) "), 28, "3) Tuning");
+  u8g2.drawStr(89 - u8g2.getStrWidth("4) "), 28, "4) Other");
+  u8g2.drawStr(64 - (u8g2.getStrWidth("5 or X) Go Back") / 2), 39, "5 or X) Go Back");
+
+  // Divider line between mute options and menu choices
+  u8g2.drawHLine(0, 42, 128);
+  u8g2.drawHLine(0, 41, 128);
+
+  String a_string = String("A) Drone: ") + d_string + ", Tromp: " + t_string;
+  String b_string = String("B) High: ") + h_string + ", Low: " + l_string;
+
+  u8g2.drawStr(64 - (u8g2.getStrWidth(a_string.c_str()) / 2), 52, a_string.c_str());
+  u8g2.drawStr(64 - (u8g2.getStrWidth(b_string.c_str()) / 2), 62, b_string.c_str());
+
+  u8g2.sendBuffer();
+};
+
+void print_confirm_screen(String title, String msg1, String msg2, String opt1) {
+
+  // Clear the screen, set overlay font mode (don't draw background)
+  // FontMode 1 requires a t* font
+  u8g2.clearBuffer();
+  u8g2.setFontMode(1);
+  u8g2.setFont(u8g2_font_finderskeepers_tf);
+
+  // Print a pretty 3-stripe line "around" the title
+  u8g2.drawHLine(0, 2, 61 - (u8g2.getStrWidth(title.c_str()) / 2));
+  u8g2.drawHLine(0, 4, 61 - (u8g2.getStrWidth(title.c_str()) / 2));
+  u8g2.drawHLine(0, 6, 61 - (u8g2.getStrWidth(title.c_str()) / 2));
+  u8g2.drawHLine(67 + (u8g2.getStrWidth(title.c_str()) / 2), 2, 64);
+  u8g2.drawHLine(67 + (u8g2.getStrWidth(title.c_str()) / 2), 4, 64);
+  u8g2.drawHLine(67 + (u8g2.getStrWidth(title.c_str()) / 2), 6, 64);
+
+  // Print the title centered on the top "line"
+  u8g2.drawStr(64 - (u8g2.getStrWidth(title.c_str()) / 2), 8, title.c_str());
+
+  u8g2.drawStr(64 - (u8g2.getStrWidth(msg1.c_str()) / 2), 20, msg1.c_str());
+  u8g2.drawStr(64 - (u8g2.getStrWidth(msg2.c_str()) / 2), 30, msg2.c_str());
+
+  String this_line = "1) " + opt1;
+
+  u8g2.drawStr(64 - (u8g2.getStrWidth(this_line.c_str()) / 2), 46, this_line.c_str());
+
+  u8g2.drawStr(64 - (u8g2.getStrWidth("2 or X) Go Back") / 2), 60, "2 or X) Go Back");
+
+  u8g2.sendBuffer();
+};
+
+void print_tuning(String title, String hi_note, String low_note, String drone_note, String tromp_note, String tpose_str, String capo_str) {
+
+  // Clear the screen, set overlay font mode (don't draw background)
+  // FontMode 1 requires a t* font
+  u8g2.clearBuffer();
+  u8g2.setFontMode(1);
+  u8g2.setFont(u8g2_font_finderskeepers_tf);
+
+  // Print a pretty 3-stripe line "around" the title
+  u8g2.drawHLine(0, 2, 61 - (u8g2.getStrWidth(title.c_str()) / 2));
+  u8g2.drawHLine(0, 4, 61 - (u8g2.getStrWidth(title.c_str()) / 2));
+  u8g2.drawHLine(0, 6, 61 - (u8g2.getStrWidth(title.c_str()) / 2));
+  u8g2.drawHLine(67 + (u8g2.getStrWidth(title.c_str()) / 2), 2, 64);
+  u8g2.drawHLine(67 + (u8g2.getStrWidth(title.c_str()) / 2), 4, 64);
+  u8g2.drawHLine(67 + (u8g2.getStrWidth(title.c_str()) / 2), 6, 64);
+
+  // Print the title centered on the top "line"
+  u8g2.drawStr(64 - (u8g2.getStrWidth(title.c_str()) / 2), 8, title.c_str());
+
+  // Draw all six options
+  u8g2.drawStr(64 - u8g2.getStrWidth("Hi Melody: "), 18, "Hi Melody: ");
+  u8g2.drawStr(64 - u8g2.getStrWidth("Lo Melody: "), 27, "Lo Melody: ");
+  u8g2.drawStr(64 - u8g2.getStrWidth("Drone: "), 36, "Drone: ");
+  u8g2.drawStr(64 - u8g2.getStrWidth("Trompette: "), 45, "Trompette: ");
+  u8g2.drawStr(44 - u8g2.getStrWidth("Tpose: "), 54, "Tpose: ");
+  u8g2.drawStr(105 - u8g2.getStrWidth("Capo: "), 54, "Capo: ");
+
+  u8g2.drawStr(96 - (u8g2.getStrWidth(hi_note.c_str()) / 2), 18, hi_note.c_str());
+  u8g2.drawStr(96 - (u8g2.getStrWidth(low_note.c_str()) / 2), 27, low_note.c_str());
+  u8g2.drawStr(96 - (u8g2.getStrWidth(drone_note.c_str()) / 2), 36, drone_note.c_str());
+  u8g2.drawStr(96 - (u8g2.getStrWidth(tromp_note.c_str()) / 2), 45, tromp_note.c_str());
+  u8g2.drawStr(44, 54, tpose_str.c_str());
+  u8g2.drawStr(105, 54, tpose_str.c_str());
+
+  u8g2.drawStr(64 - (u8g2.getStrWidth("1) OK  2 or X) Go Back") / 2), 64, "1) OK  2 or X) Go Back");
+
+  u8g2.sendBuffer();
+};
