@@ -1,57 +1,56 @@
 #include "play_screens.h"
-#include "note_bitmaps.h"
-#include "staff_bitmaps.h"
-#include "notes.h"
 
 void draw_note(int note, int x_offset) {
   int octave = (note / 12 ) - 1;
   int note_pos = (note % 12);
 
-  display.drawXBitmap(x_offset,0, letter[note_pos], 64, 64, 1);
+  // Draw the letter
+  u8g2.drawXBM(x_offset, 0, 64, 64, letter[note_pos]);
 
   if (octave >=0) {
     // If we're making a regular note...
     if (note_pos == 0 || note_pos == 2 || note_pos == 4 || note_pos == 5 ||
         note_pos == 7 || note_pos == 9 || note_pos == 11) {
 
-      display.drawXBitmap(x_offset + 52,43, octave_num[octave], 14, 21, 1);
+      u8g2.drawXBM(x_offset + 52, 43, 16, 21, octave_num[octave]);
     // If we're making a sharp/flat...
     } else {
-      display.drawXBitmap(x_offset,0, sharp_num[octave], 64, 64, 1);
+      u8g2.drawXBM(x_offset, 0, 64, 64, sharp_num[octave]);
     };
   };
-
-  display.display();
-
 };
 
 void draw_staff(int note, int x_offset) {
   if (dot_pos[note] >= 0) {
-    display.drawXBitmap(x_offset,0, staffs[staff_index[note]], 64, 64, 1);
+    u8g2.drawXBM(x_offset, 0, 64, 64, staffs[staff_index[note]]);
 
-    display.drawXBitmap(x_offset + 29, dot_pos[note], dot, 7, 7, 1);
+    u8g2.drawXBM(x_offset + 29, dot_pos[note], 8, 7, dot);
 
     if (va_marker[note] == 2) {
-      display.drawXBitmap(x_offset + 42, 36, va15, 20, 10, 1);
+      u8g2.drawXBM(x_offset + 42, 36, 24, 10, va15);
     } else if (va_marker[note] == 1) {
-      display.drawXBitmap(x_offset + 42, 36, va8, 20, 10, 1);
+      u8g2.drawXBM(x_offset + 42, 36, 24, 10, va8);
     } else if (va_marker[note] == 3) {
-      display.drawXBitmap(x_offset + 42, 10, va8, 20, 10, 1);
+      u8g2.drawXBM(x_offset + 42, 10, 24, 10, va8);
     } else if (va_marker[note] == 4) {
-      display.drawXBitmap(x_offset + 42, 10, va15, 20, 10, 1);
+      u8g2.drawXBM(x_offset + 42, 10, 24, 10, va15);
     }
   };
-  display.display();
 };
 
 void draw_play_screen(int note, int screen_type) {
-  display.clearDisplay();
+
+  u8g2.clearBuffer();
+  u8g2.setBitmapMode(1); // this lets you overlay bitmaps transparently
+
   if (screen_type == 0) {
     draw_note(note, 0);
     draw_staff(note, 64);
   } else {
     draw_note(note, 32);
   };
+
+  u8g2.sendBuffer();
 };
 
 void print_display(int mel1, int mel2, int drone, int tromp, int tpose, int cap, int offset, bool hi_mute, bool lo_mute, bool drone_mute, bool tromp_mute) {

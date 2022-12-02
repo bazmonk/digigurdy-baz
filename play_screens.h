@@ -2,6 +2,9 @@
 #define PLAY_SCREENS_H
 
 #include "display.h"
+#include "note_bitmaps.h"
+#include "staff_bitmaps.h"
+#include "notes.h"
 
 // true = G/C tuning, false = D/G.  For the menus.
 extern bool gc_or_dg;
