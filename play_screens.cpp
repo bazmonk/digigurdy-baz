@@ -55,40 +55,66 @@ void draw_play_screen(int note, int screen_type) {
 
 void print_display(int mel1, int mel2, int drone, int tromp, int tpose, int cap, int offset, bool hi_mute, bool lo_mute, bool drone_mute, bool tromp_mute) {
 
-  // This whole thing could be written more clearly...
+  u8g2.clearBuffer();
+  u8g2.setFontMode(1);
+  u8g2.setFont(u8g2_font_finderskeepers_tf);
 
-  String disp_str = "";
-
-  disp_str = "\n Tpose: ";
+  String tpose_str = "Transpose: ";
   if (tpose > 0) {
-    disp_str += "+";
+    tpose_str += "+";
   };
-  disp_str = disp_str + tpose + "  Capo: ";
+  tpose_str = tpose_str + tpose;
+
+  String capo_str = "Capo: ";
   if (cap > 0) {
-    disp_str += "+";
+    capo_str += "+";
   };
-  disp_str = disp_str + cap + "\n\n";
+  capo_str = capo_str + cap;
+
+  u8g2.drawStr(48 - (u8g2.getStrWidth("Transpose:")), 8, tpose_str.c_str());
+  u8g2.drawStr(96 - (u8g2.getStrWidth("Capo:")), 8, capo_str.c_str());
+
+  u8g2.drawHLine(0, 12, 128);
+  u8g2.drawHLine(0, 13, 128);
+
+  u8g2.drawStr(64 - u8g2.getStrWidth("Hi Melody:"), 24, "Hi Melody:");
+
+  u8g2.drawHLine(8, 26, 110);
+
+  u8g2.drawStr(64 - u8g2.getStrWidth("Low Melody:"), 35, "Low Melody:");
+
+  u8g2.drawHLine(0, 39, 128);
+  u8g2.drawHLine(0, 40, 128);
+
+  u8g2.drawStr(64 - u8g2.getStrWidth("Trompette:"), 51, "Trompette:");
+
+  u8g2.drawHLine(8, 55, 110);
+
+  u8g2.drawStr(64 - u8g2.getStrWidth("Drone:"), 64, "Drone:");
 
   if (!hi_mute) {
-    disp_str += "  Hi Melody: " + LongNoteNum[mel1 + tpose] + "\n";
+    u8g2.drawStr(96 - (u8g2.getStrWidth(LongNoteNum[mel1 + tpose].c_str()) / 2), 24, LongNoteNum[mel1 + tpose].c_str());
   } else {
-    disp_str += "  Hi Melody:   MUTE \n";
-  };
-  if (!lo_mute) {
-    disp_str += " Low Melody: " + LongNoteNum[mel2 + tpose] + "\n\n";
-  } else {
-    disp_str += " Low Melody:   MUTE \n\n";
-  };
-  if (!tromp_mute) {
-    disp_str += "  Trompette: " + LongNoteNum[tromp + tpose + cap] + "\n";
-  } else {
-    disp_str += "  Trompette:   MUTE \n";
-  };
-  if (!drone_mute) {
-    disp_str += "      Drone: " + LongNoteNum[drone + tpose + cap] + "\n\n";
-  } else {
-    disp_str += "      Drone:   MUTE \n";
+    u8g2.drawStr(96 - (u8g2.getStrWidth("MUTE") / 2), 24, "MUTE");
   };
 
-  print_screen(disp_str);
+  if (!lo_mute) {
+    u8g2.drawStr(96 - (u8g2.getStrWidth(LongNoteNum[mel2 + tpose].c_str()) / 2), 35, LongNoteNum[mel2 + tpose].c_str());
+  } else {
+    u8g2.drawStr(96 - (u8g2.getStrWidth("MUTE") / 2), 35, "MUTE");
+  };
+
+  if (!tromp_mute) {
+    u8g2.drawStr(96 - (u8g2.getStrWidth(LongNoteNum[tromp + tpose + cap].c_str()) / 2), 51, LongNoteNum[tromp + tpose + cap].c_str());
+  } else {
+    u8g2.drawStr(96 - (u8g2.getStrWidth("MUTE") / 2), 51, "MUTE");
+  };
+
+  if (!drone_mute) {
+    u8g2.drawStr(96 - (u8g2.getStrWidth(LongNoteNum[drone + tpose + cap].c_str()) / 2), 64, LongNoteNum[drone + tpose + cap].c_str());
+  } else {
+    u8g2.drawStr(96 - (u8g2.getStrWidth("MUTE") / 2), 64, "MUTE");
+  };
+
+  u8g2.sendBuffer();
 };
