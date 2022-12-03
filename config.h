@@ -8,7 +8,7 @@ const String REL_DATE = "2022-12-02, v" + VERSION;
 
 // Use one of these if you want, on the title/about screen.  Or make your own!
 //const String EXTRA_LINE = "                     ";
-const String EXTRA_LINE = " MIDI, LED, U8G2 DEV ";
+const String EXTRA_LINE = "    MIDI-OUT, LED    ";
 //const String EXTRA_LINE = "  MIDI-OUT - PEDAL   ";
 //const String EXTRA_LINE = " TRIGGER - LED KNOB  ";
 //const String EXTRA_LINE = " TSUNAMI - LED KNOB  ";
