@@ -38,18 +38,8 @@ bool tuning() {
   tuning_drone();
   tuning_tromp();
 
-  // SUMMARY
-  String disp_str = " -----Summary:------ \n"
-                    "  High Melody:   " + NoteNum[mystring->getOpenNote()] + "  \n"
-                    "   Low Melody:   " + NoteNum[mylowstring->getOpenNote()] + "  \n"
-                    "        Drone:   " + NoteNum[mydrone->getOpenNote()] + "  \n"
-                    "    Trompette:   " + NoteNum[mytromp->getOpenNote()] + "  \n"
-                    "                     \n"
-                    "A or 1) Accept     \n"
-                    "X or 2) Go Back    \n";
-
-  print_screen(disp_str);
-
+  void print_tuning_summary(mystring->getOpenNote(), mylowstring->getOpenNote()
+                            mytromp->getOpenNote(), mydrone->getOpenNote());
   delay(150);
 
   done = false;
@@ -95,15 +85,7 @@ void tuning_hi_melody() {
   choice3 = base_note;
   choice4 = base_note + 5;
 
-  disp_str += " Choose High Melody: \n"
-              "                     \n"
-              " 1) " + NoteNum[choice1] + " **  2) " + NoteNum[choice2] + "     \n"
-              " 3) " + NoteNum[choice3] + "     4) " + NoteNum[choice4] + "     \n"
-              "                     \n"
-              "                     \n"
-              " A) Default (**)     \n";
-
-  print_screen(disp_str);
+  print_tuning_choice_4("Choose Hi Melody", choice1, choice2, choice3, choice4);
   delay(150);
 
   bool done = false;
@@ -151,17 +133,7 @@ void tuning_low_melody() {
   choice3 = base_note - 12;
   choice4 = base_note - 19;
 
-  String disp_str = " High Melody:   " + NoteNum[mystring->getOpenNote()] + "   \n"
-                    " Choose Low Melody:  \n"
-                    "                     \n"
-                    " 1) " + NoteNum[choice1] + " **  2) " + NoteNum[choice2] + "     \n"
-                    " 3) " + NoteNum[choice3] + "     4) " + NoteNum[choice4] + "     \n"
-                    "                     \n"
-                    "                     \n"
-                    " A) Default (**)     \n"
-                    "                     \n";
-
-  print_screen(disp_str);
+  print_tuning_choice_4("Choose Low Melody", choice1, choice2, choice3, choice4);
   delay(150);
 
   bool done = false;
@@ -219,16 +191,7 @@ void tuning_drone() {
     choice6 = base_note;
   };
 
-  String disp_str = " Hi/Lo Melody: " + NoteNum[mystring->getOpenNote()] + "/" + NoteNum[mylowstring->getOpenNote()] + " \n"
-                    "    Choose Drone:    \n"
-                    " 1) " + NoteNum[choice1] + "     2) " + NoteNum[choice2] + "     \n"
-                    " 3) " + NoteNum[choice3] + " **  4) " + NoteNum[choice4] + "     \n"
-                    " 5) " + NoteNum[choice5] + "     6) " + NoteNum[choice6] + "     \n"
-                    "                     \n"
-                    "                     \n"
-                    " A) Default (**)     \n";
-
-  print_screen(disp_str);
+  print_tuning_choice_6("Choose Drone", choice1, choice2, choice3, choice4, choice5, choice6, 3);
   delay(150);
 
   bool done = false;
@@ -288,16 +251,7 @@ void tuning_tromp() {
   choice5 = base_note - 19;
   choice6 = base_note - 12;
 
-  String disp_str = " Hi/Lo Melody: " + NoteNum[mystring->getOpenNote()] + "/" + NoteNum[mylowstring->getOpenNote()] + " \n"
-                    " Drone: " + NoteNum[mydrone->getOpenNote()] + "           \n"
-                    "  Choose Trompette:  \n"
-                    " 1) " + NoteNum[choice1] + " **  2) " + NoteNum[choice2] + "     \n"
-                    " 3) " + NoteNum[choice3] + "     4) " + NoteNum[choice4] + "     \n"
-                    " 5) " + NoteNum[choice5] + "     6) " + NoteNum[choice6] + "     \n"
-                    "                     \n"
-                    " A) Default (**)     \n";
-
-  print_screen(disp_str);
+  print_tuning_choice_6("Choose Trompette", choice1, choice2, choice3, choice4, choice5, choice6, 1);
   delay(150);
 
   bool done = false;
@@ -350,16 +304,12 @@ void manual_tuning_screen() {
 
   while (true) {
 
-    String disp_str = " ---Manual Tuning--- \n"
-                      " Choose a string:    \n"
-                      " 1) Hi Mel.- " + NoteNum[mystring->getOpenNote()] + " \n"
-                      " 2) Lo Mel.- " + NoteNum[mylowstring->getOpenNote()] + " \n"
-                      " 3) Drone. - " + NoteNum[mydrone->getOpenNote()] + " \n"
-                      " 4) Tromp. - " + NoteNum[mytromp->getOpenNote()] + " \n"
-                      " 5) Buzz   - " + NoteNum[mybuzz->getOpenNote()] + "  \n"
-                      " X or 6) Go Back     \n";
-
-    print_screen(disp_str);
+    print_menu_5("Manual Tuning",
+                 String("Hi Melody - ") + LongNoteNum[mystring->getOpenNote()],
+                 String("Low Melody - ") + LongNoteNum[mylowstring->getOpenNote()],
+                 String("Trompette - ") + LongNoteNum[mytromp->getOpenNote()],
+                 String("Drone - ") + LongNoteNum[mydrone->getOpenNote()],
+                 String("Buzz - ") + LongNoteNum[mybuzz->getOpenNote()]);
     delay(150);
 
     // Check the 1 and 2 buttons
@@ -401,30 +351,7 @@ void tune_string_screen(GurdyString *this_string) {
   delay(300);
   while (!done) {
 
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 0);
-    String disp_str = ""
-    " ---String Tuning--- \n"
-    " 1) Tune Down        \n"
-    " 2) Tune Up          \n\n";
-
-    display.print(disp_str);
-
-    display.setTextSize(2);
-    disp_str = ""
-    "  " + LongNoteNum[new_note] + "\n";
-
-    display.print(disp_str);
-
-    display.setTextSize(1);
-    disp_str = "\n"
-    " X) Done / Go Back   \n";
-
-    display.print(disp_str);
-
-    display.display();
+    print_value_selection("String Tuning", LongNoteNum[new_note]);
 
     my1Button->update();
     my2Button->update();
@@ -462,17 +389,13 @@ void volume_screen() {
 
   while (true) {
 
-    String disp_str = String("") +
-                      " ------Volume------- \n"
-                      " 1) Hi Mel.- " + mystring->getVolume() + " \n"
-                      " 2) Lo Mel.- " + mylowstring->getVolume() + " \n"
-                      " 3) Drone. - " + mydrone->getVolume() + " \n"
-                      " 4) Tromp. - " + mytromp->getVolume() + " \n"
-                      " 5) Buzz   - " + mybuzz->getVolume() + " \n"
-                      " 6) Click  - " + mykeyclick->getVolume() + " \n"
-                      " X) Go Back     \n";
-
-    print_screen(disp_str);
+    print_menu_6("Volume",
+                 String("Hi Melody - ") + mystring->getVolume(),
+                 String("Low Melody - ") + mylowstring->getVolume(),
+                 String("Trompette - ") + mytromp->getVolume(),
+                 String("Drone - ") + mydrone->getVolume(),
+                 String("Buzz - ") + mybuzz->getVolume(),
+                 String("Click - ") + mykeyclick->getVolume());
     delay(150);
 
     // Check the 1 and 2 buttons
@@ -516,28 +439,7 @@ void change_volume_screen(GurdyString *this_string) {
   delay(300);
   while (!done) {
 
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 0);
-    String disp_str = " ---String Volume--- \n"
-                      " 1) Volume Down      \n"
-                      " 2) Volume Up        \n\n";
-
-    display.print(disp_str);
-
-    display.setTextSize(2);
-    disp_str = String("   ") + new_vol + "\n";
-
-    display.print(disp_str);
-
-    display.setTextSize(1);
-    disp_str = "\n"
-    " X) Done / Go Back   \n";
-
-    display.print(disp_str);
-
-    display.display();
+    print_value_selection("String Volume", new_vol);
 
     my1Button->update();
     my2Button->update();

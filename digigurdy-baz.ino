@@ -285,9 +285,9 @@ void loop() {
     };
 
     // Crank On! for half a sec.
-    display.clearDisplay();
-    display.drawBitmap(0, 0, crank_on_logo, 128, 64, 1);
-    display.display();
+    u8g2.clearBuffer();
+    u8g2.drawBitmap(0, 0, 16, 64, crank_on_logo);
+    u8g2.sendBuffer();
     delay(750);
 
     print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
