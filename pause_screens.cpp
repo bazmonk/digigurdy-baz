@@ -261,10 +261,10 @@ bool other_options_screen() {
     String opt2 = "";
     String opt3 = "";
     #ifdef LED_KNOB
-    String opt2 = "Buzz LED On/Off";
+    opt2 = "Buzz LED On/Off";
     #endif
     #ifdef USE_PEDAL
-    String opt3 = "Vibrato Pedal On/Off";
+    opt3 = "Vibrato Pedal On/Off";
     #endif
 
     print_menu_4("Other Options", "EX Button Config", opt2, opt3, "About Digi-Gurdy");

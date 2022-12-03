@@ -242,7 +242,7 @@ void print_menu_4_nobk(String title, String opt1, String opt2, String opt3, Stri
   u8g2.drawStr(13, 20, opt1.c_str());
   u8g2.drawStr(13, 34, opt2.c_str());
   u8g2.drawStr(13, 48, opt3.c_str());
-  u8g2.drawStr(13, 64, opt4.c_str());
+  u8g2.drawStr(13, 62, opt4.c_str());
 
 
   u8g2.sendBuffer();

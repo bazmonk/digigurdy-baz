@@ -6,6 +6,9 @@ See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more docu
 
 **Check out version 2.1.0! (NEW)**
 
+* 2.1.1 -
+  * Working build with U8G2.  Brings back Blue OLED support.
+
 * 2.1.0 -
   * Beginning of conversion to U8G2.  Display.cpp done, starup_screens done.
 

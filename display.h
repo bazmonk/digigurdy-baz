@@ -5,6 +5,7 @@
 #include <SPI.h>
 #include <U8g2lib.h>
 #include "config.h"
+#include "notes.h"
 
 // These are the Teensy pins wired up for the OLED.
 #define OLED_MOSI 9

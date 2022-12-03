@@ -38,8 +38,8 @@ bool tuning() {
   tuning_drone();
   tuning_tromp();
 
-  void print_tuning_summary(mystring->getOpenNote(), mylowstring->getOpenNote()
-                            mytromp->getOpenNote(), mydrone->getOpenNote());
+  print_tuning_summary(mystring->getOpenNote(), mylowstring->getOpenNote(),
+                       mytromp->getOpenNote(), mydrone->getOpenNote());
   delay(150);
 
   done = false;
@@ -328,10 +328,10 @@ void manual_tuning_screen() {
       tune_string_screen(mylowstring);
 
     } else if (my3Button->wasPressed()) {
-      tune_string_screen(mydrone);
+      tune_string_screen(mytromp);
 
     } else if (my4Button->wasPressed()) {
-      tune_string_screen(mytromp);
+      tune_string_screen(mydrone);
 
     } else if (my5Button->wasPressed()) {
       tune_string_screen(mybuzz);
@@ -414,10 +414,10 @@ void volume_screen() {
       change_volume_screen(mylowstring);
 
     } else if (my3Button->wasPressed()) {
-      change_volume_screen(mydrone);
+      change_volume_screen(mytromp);
 
     } else if (my4Button->wasPressed()) {
-      change_volume_screen(mytromp);
+      change_volume_screen(mydrone);
 
     } else if (my5Button->wasPressed()) {
       change_volume_screen(mybuzz);
