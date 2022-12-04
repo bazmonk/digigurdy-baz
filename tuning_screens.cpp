@@ -305,11 +305,11 @@ void manual_tuning_screen() {
   while (true) {
 
     print_menu_5("Manual Tuning",
-                 String("Hi Melody - ") + LongNoteNum[mystring->getOpenNote()],
-                 String("Low Melody - ") + LongNoteNum[mylowstring->getOpenNote()],
-                 String("Trompette - ") + LongNoteNum[mytromp->getOpenNote()],
-                 String("Drone - ") + LongNoteNum[mydrone->getOpenNote()],
-                 String("Buzz - ") + LongNoteNum[mybuzz->getOpenNote()]);
+                 String("Hi Melody - ") + getLongNoteNum(mystring->getOpenNote()),
+                 String("Low Melody - ") + getLongNoteNum(mylowstring->getOpenNote()),
+                 String("Trompette - ") + getLongNoteNum(mytromp->getOpenNote()),
+                 String("Drone - ") + getLongNoteNum(mydrone->getOpenNote()),
+                 String("Buzz - ") + getLongNoteNum(mybuzz->getOpenNote()));
     delay(150);
 
     // Check the 1 and 2 buttons
@@ -351,7 +351,7 @@ void tune_string_screen(GurdyString *this_string) {
   delay(300);
   while (!done) {
 
-    print_value_selection("Tuning - " + this_string->getName(), LongNoteNum[new_note]);
+    print_value_selection("Tuning - " + this_string->getName(), getLongNoteNum(new_note));
 
     my1Button->update();
     my2Button->update();

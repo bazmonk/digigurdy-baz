@@ -106,25 +106,25 @@ void print_display(int mel1, int mel2, int drone, int tromp, int tpose, int cap,
   u8g2.drawStr(64 - u8g2.getStrWidth("Drone:"), 64, "Drone:");
 
   if (!hi_mute) {
-    u8g2.drawStr(96 - (u8g2.getStrWidth(LongNoteNum[mel1 + tpose].c_str()) / 2), 24, LongNoteNum[mel1 + tpose].c_str());
+    u8g2.drawStr(96 - (u8g2.getStrWidth(getLongNoteNum(mel1 + tpose).c_str()) / 2), 24, getLongNoteNum(mel1 + tpose).c_str());
   } else {
     u8g2.drawStr(96 - (u8g2.getStrWidth("MUTE") / 2), 24, "MUTE");
   };
 
   if (!lo_mute) {
-    u8g2.drawStr(96 - (u8g2.getStrWidth(LongNoteNum[mel2 + tpose].c_str()) / 2), 35, LongNoteNum[mel2 + tpose].c_str());
+    u8g2.drawStr(96 - (u8g2.getStrWidth(getLongNoteNum(mel2 + tpose).c_str()) / 2), 35, getLongNoteNum(mel2 + tpose).c_str());
   } else {
     u8g2.drawStr(96 - (u8g2.getStrWidth("MUTE") / 2), 35, "MUTE");
   };
 
   if (!tromp_mute) {
-    u8g2.drawStr(96 - (u8g2.getStrWidth(LongNoteNum[tromp + tpose + cap].c_str()) / 2), 51, LongNoteNum[tromp + tpose + cap].c_str());
+    u8g2.drawStr(96 - (u8g2.getStrWidth(getLongNoteNum(tromp + tpose + cap).c_str()) / 2), 51, getLongNoteNum(tromp + tpose + cap).c_str());
   } else {
     u8g2.drawStr(96 - (u8g2.getStrWidth("MUTE") / 2), 51, "MUTE");
   };
 
   if (!drone_mute) {
-    u8g2.drawStr(96 - (u8g2.getStrWidth(LongNoteNum[drone + tpose + cap].c_str()) / 2), 64, LongNoteNum[drone + tpose + cap].c_str());
+    u8g2.drawStr(96 - (u8g2.getStrWidth(getLongNoteNum(drone + tpose + cap).c_str()) / 2), 64, getLongNoteNum(drone + tpose + cap).c_str());
   } else {
     u8g2.drawStr(96 - (u8g2.getStrWidth("MUTE") / 2), 64, "MUTE");
   };

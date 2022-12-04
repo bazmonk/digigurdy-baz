@@ -6,6 +6,8 @@ See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more docu
 
 **Check out version 2.1.x! (NEW)**
 
+* 2.1.5 - DoReMi support
+
 * 2.1.4 - Cut down on excessive expression changes
   * Expression-based volume was being sampled and updated about 20 times a second.
   * By only sending changes (even tiny ones), this cuts down on a lot of idle MIDI messages.

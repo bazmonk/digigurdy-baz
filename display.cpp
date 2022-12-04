@@ -385,10 +385,10 @@ void print_tuning_summary(int hi, int lo, int tromp, int drone) {
   u8g2.drawStr(64 - (u8g2.getStrWidth("1 or A) Accept") / 2), 55, "1 or A) Accept");
   u8g2.drawStr(64 - (u8g2.getStrWidth("2 or X) Go Back") / 2), 64, "2 or X) Go Back");
 
-  u8g2.drawStr(96 - (u8g2.getStrWidth(LongNoteNum[hi].c_str()) / 2), 19, LongNoteNum[hi].c_str());
-  u8g2.drawStr(96 - (u8g2.getStrWidth(LongNoteNum[lo].c_str()) / 2), 27, LongNoteNum[lo].c_str());
-  u8g2.drawStr(96 - (u8g2.getStrWidth(LongNoteNum[tromp].c_str()) / 2), 35, LongNoteNum[tromp].c_str());
-  u8g2.drawStr(96 - (u8g2.getStrWidth(LongNoteNum[drone].c_str()) / 2), 43, LongNoteNum[drone].c_str());
+  u8g2.drawStr(96 - (u8g2.getStrWidth(getLongNoteNum(hi).c_str()) / 2), 19, getLongNoteNum(hi).c_str());
+  u8g2.drawStr(96 - (u8g2.getStrWidth(getLongNoteNum(lo).c_str()) / 2), 27, getLongNoteNum(lo).c_str());
+  u8g2.drawStr(96 - (u8g2.getStrWidth(getLongNoteNum(tromp).c_str()) / 2), 35, getLongNoteNum(tromp).c_str());
+  u8g2.drawStr(96 - (u8g2.getStrWidth(getLongNoteNum(drone).c_str()) / 2), 43, getLongNoteNum(drone).c_str());
 
   u8g2.sendBuffer();
 };
@@ -421,10 +421,10 @@ void print_tuning_choice_4(String title, int opt1, int opt2, int opt3, int opt4)
   u8g2.drawStr(64 - (u8g2.getStrWidth("A) Default (**)") / 2), 64, "A) Default (**)");
 
   // Draw all six options
-  u8g2.drawStr(23, 25, LongNoteNum[opt1].c_str());
-  u8g2.drawStr(77, 25, LongNoteNum[opt2].c_str());
-  u8g2.drawStr(23, 41, LongNoteNum[opt3].c_str());
-  u8g2.drawStr(77, 41, LongNoteNum[opt4].c_str());
+  u8g2.drawStr(23, 25, getLongNoteNum(opt1).c_str());
+  u8g2.drawStr(77, 25, getLongNoteNum(opt2).c_str());
+  u8g2.drawStr(23, 41, getLongNoteNum(opt3).c_str());
+  u8g2.drawStr(77, 41, getLongNoteNum(opt4).c_str());
 
   u8g2.sendBuffer();
 };
@@ -459,12 +459,12 @@ void print_tuning_choice_6(String title, int opt1, int opt2, int opt3, int opt4,
   u8g2.drawStr(64 - (u8g2.getStrWidth(("A) Default = " + String("") + def_opt).c_str()) / 2), 64, ("A) Default = " + String("") + def_opt).c_str());
 
   // Draw all six options
-  u8g2.drawStr(23, 22, LongNoteNum[opt1].c_str());
-  u8g2.drawStr(77, 22, LongNoteNum[opt2].c_str());
-  u8g2.drawStr(23, 34, LongNoteNum[opt3].c_str());
-  u8g2.drawStr(77, 34, LongNoteNum[opt4].c_str());
-  u8g2.drawStr(23, 46, LongNoteNum[opt5].c_str());
-  u8g2.drawStr(77, 46, LongNoteNum[opt6].c_str());
+  u8g2.drawStr(23, 22, getLongNoteNum(opt1).c_str());
+  u8g2.drawStr(77, 22, getLongNoteNum(opt2).c_str());
+  u8g2.drawStr(23, 34, getLongNoteNum(opt3).c_str());
+  u8g2.drawStr(77, 34, getLongNoteNum(opt4).c_str());
+  u8g2.drawStr(23, 46, getLongNoteNum(opt5).c_str());
+  u8g2.drawStr(77, 46, getLongNoteNum(opt6).c_str());
 
   u8g2.sendBuffer();
 };

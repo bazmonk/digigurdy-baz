@@ -268,7 +268,7 @@ bool other_options_screen() {
     opt3 = "Vibrato Pedal On/Off";
     #endif
 
-    print_menu_5("Other Options", "EX Button Config", "Playing Screen Config", opt2, opt3, "About Digi-Gurdy");
+    print_menu_5("Other Options", "EX Button Config", "Screen Configuration", opt2, opt3, "About Digi-Gurdy");
     delay(150);
 
     my1Button->update();
@@ -403,6 +403,7 @@ void clear_eeprom() {
   EEPROM.write(EEPROM_EX2, 2);
   EEPROM.write(EEPROM_EX3, 3);
   EEPROM.write(EEPROM_SCENE_SIGNALLING, 0);
+  EEPROM.write(EEPROM_USE_SOLFEGE, false);
 
 };
 
@@ -426,10 +427,10 @@ bool view_slot_screen(int slot_num) {
   cap_str = cap_str + (EEPROM.read(slot + EEPROM_CAPO));
 
   print_tuning("Saved Slot Tuning",
-               LongNoteNum[EEPROM.read(slot + EEPROM_HI_MEL)],
-               LongNoteNum[EEPROM.read(slot + EEPROM_LO_MEL)],
-               LongNoteNum[EEPROM.read(slot + EEPROM_DRONE)],
-               LongNoteNum[EEPROM.read(slot + EEPROM_TROMP)],
+               getLongNoteNum(EEPROM.read(slot + EEPROM_HI_MEL)),
+               getLongNoteNum(EEPROM.read(slot + EEPROM_LO_MEL)),
+               getLongNoteNum(EEPROM.read(slot + EEPROM_DRONE)),
+               getLongNoteNum(EEPROM.read(slot + EEPROM_TROMP)),
                t_str, cap_str);
   delay(150);
 
@@ -473,10 +474,10 @@ bool view_preset_screen(int preset) {
   cap_str = cap_str + tunings[6];
 
   print_tuning("Preset Tuning",
-               LongNoteNum[tunings[0]],
-               LongNoteNum[tunings[1]],
-               LongNoteNum[tunings[2]],
-               LongNoteNum[tunings[3]],
+               getLongNoteNum(tunings[0]),
+               getLongNoteNum(tunings[1]),
+               getLongNoteNum(tunings[2]),
+               getLongNoteNum(tunings[3]),
                t_str, cap_str);
   delay(150);
 
@@ -807,7 +808,7 @@ void playing_config_screen() {
   bool done = false;
   while (!done) {
 
-    print_menu_3("Play Screen Options", "Enable Buzz Indicator", "Disable Buzz Indicator", "Choose Play Screen");
+    print_menu_4("Screen Configuration", "Notation (ABC/DoReMi)", "Enable Buzz Indicator", "Disable Buzz Indicator", "Choose Play Screen");
     delay(150);
 
     // Check the 1 and 2 buttons
@@ -815,9 +816,13 @@ void playing_config_screen() {
     my2Button->update();
     my3Button->update();
     my4Button->update();
+    my5Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {
+      notation_config_screen();
+
+    } else if (my2Button->wasPressed()) {
       play_screen_type = 10 + (play_screen_type % 10);
       EEPROM.write(EEPROM_DISPLY_TYPE, play_screen_type);
 
@@ -825,7 +830,7 @@ void playing_config_screen() {
       delay(750);
       done = true;
 
-    } else if (my2Button->wasPressed()) {
+    } else if (my3Button->wasPressed()) {
 
       play_screen_type = play_screen_type % 10;
       EEPROM.write(EEPROM_DISPLY_TYPE, play_screen_type);
@@ -833,10 +838,47 @@ void playing_config_screen() {
       print_message_2("Play Screen Options", "Buzz Indicator Disabled", "Saved to EEPROM");
       delay(750);
       done = true;
-    } else if (my3Button->wasPressed()) {
+    } else if (my4Button->wasPressed()) {
       playing_scr_screen();
 
-    } else if (my4Button->wasPressed() || myXButton->wasPressed()) {
+    } else if (my5Button->wasPressed() || myXButton->wasPressed()) {
+      done = true;
+    };
+  };
+};
+
+void notation_config_screen() {
+  bool done = false;
+  while (!done) {
+
+    print_menu_2("Note Notation", "Scientific (ABC)", "Solfege (DoReMi)");
+    delay(150);
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    myXButton->update();
+
+    if (my1Button->wasPressed()) {
+
+      EEPROM.write(EEPROM_USE_SOLFEGE, false);
+      use_solfege = false;
+
+      print_message_2("Note Notation", "Scientific (ABC)", "Saved to EEPROM");
+      delay(750);
+      done = true;
+
+    } else if (my2Button->wasPressed()) {
+
+      EEPROM.write(EEPROM_USE_SOLFEGE, true);
+      use_solfege = true;
+
+      print_message_2("Note Notation", "Solfrege (DoReMi)", "Saved to EEPROM");
+      delay(750);
+      done = true;
+
+    } else if (my3Button->wasPressed() || myXButton->wasPressed()) {
       done = true;
     };
   };

@@ -128,6 +128,8 @@ uint8_t scene_signal_type;
 
 bool gc_or_dg;
 
+bool use_solfege;
+
 //
 // SETUP
 //
@@ -239,6 +241,8 @@ void setup() {
 
   max_tpose = 12;
   max_capo = 4;
+
+  use_solfege = EEPROM.read(EEPROM_USE_SOLFEGE);
 };
 
 //
@@ -276,6 +280,8 @@ void loop() {
     ex1Button->setFunc(EEPROM.read(EEPROM_EX1));
     ex2Button->setFunc(EEPROM.read(EEPROM_EX2));
     ex3Button->setFunc(EEPROM.read(EEPROM_EX3));
+
+    use_solfege = EEPROM.read(EEPROM_USE_SOLFEGE);
 
     // LED may have been reset, too... thanks John!
     if (EEPROM.read(EEPROM_BUZZ_LED) == 1) {
