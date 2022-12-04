@@ -29,7 +29,7 @@ void cycle_mel_mute() {
     };
   };
   if (mystring->isPlaying()) {
-    draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
+    draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
   } else {
     print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
   };
@@ -78,7 +78,7 @@ void cycle_drone_tromp_mute() {
     };
   };
   if (mystring->isPlaying()) {
-    draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
+    draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
   } else {
     print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
   };
@@ -101,7 +101,7 @@ void cycle_drone_mute() {
     };
   };
   if (mystring->isPlaying()) {
-    draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
+    draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
   } else {
     print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
   };
@@ -126,7 +126,7 @@ void cycle_tromp_mute() {
     };
   };
   if (mystring->isPlaying()) {
-    draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
+    draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
   } else {
     print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
   };

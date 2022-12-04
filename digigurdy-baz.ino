@@ -363,7 +363,7 @@ void loop() {
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
 
-      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
     } else {
       print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
                  tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
@@ -389,7 +389,7 @@ void loop() {
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
 
-      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
     } else {
       print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
                    tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
@@ -412,7 +412,7 @@ void loop() {
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
 
-      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
     } else {
       print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
                    tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
@@ -447,14 +447,14 @@ void loop() {
       mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
-      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
 
     } else if (mycrank->startedSpinning() && !bigbutton->toggleOn()) {
       mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
       mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
-      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
 
     // Turn off the previous notes and turn on the new one with a click if new key this cycle.
     // NOTE: I'm not touching the drone/trompette.  Just leave it on if it's a key change.
@@ -466,16 +466,18 @@ void loop() {
       mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
       mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
       mykeyclick->soundOn(tpose_offset);
-      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
     };
 
     // Whenever we're playing, check for buzz.
     if (mycrank->startedBuzzing()) {
       mybuzz->soundOn(tpose_offset + capo_offset);
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, true);
     };
 
     if (mycrank->stoppedBuzzing()) {
       mybuzz->soundOff();
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
     };
 
   // If the toggle came off and the crank is off, turn off sound.

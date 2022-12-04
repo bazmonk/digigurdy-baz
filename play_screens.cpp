@@ -38,18 +38,27 @@ void draw_staff(int note, int x_offset) {
   };
 };
 
-void draw_play_screen(int note, int screen_type) {
+void draw_play_screen(int note, int screen_type, bool draw_buzz) {
 
   u8g2.clearBuffer();
   u8g2.setBitmapMode(1); // this lets you overlay bitmaps transparently
 
-  if (screen_type == 0) {
+  // BUZZ INDICATOR TEST
+  //if (draw_buzz && screen_type / 10 == 1) {
+  if (draw_buzz) {
+    u8g2.drawHLine(0, 0, 128);
+    u8g2.drawHLine(0, 63, 128);
+    u8g2.drawVLine(0, 0, 64);
+    u8g2.drawVLine(127, 0, 64);
+  };
+
+  if (screen_type % 10 == 0) {
     draw_note(note, 0);
     draw_staff(note, 64);
-  } else if (screen_type == 1) {
+  } else if (screen_type % 10 == 1) {
     draw_staff(note, 0);
     draw_note(note, 64);
-  } else if (screen_type == 2) {
+  } else if (screen_type % 10 == 2) {
     draw_note(note, 32);
   } else {
     draw_staff(note, 32);
