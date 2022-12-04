@@ -4,7 +4,12 @@ See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more docu
 
 **Pre-compiled builds of the code will be made available from 1.7.99 and up.  See https://github.com/bazmonk/digigurdy-baz/wiki/install-by-hex for installation instructions.**
 
-**Check out version 2.1.0! (NEW)**
+**Check out version 2.1.x! (NEW)**
+
+* 2.1.2 -
+  * Several formatting typos fixed.
+  * Playing screen adjustment moved to pause screen (not at startup)
+  
 
 * 2.1.1 -
   * Working build with U8G2.  Brings back Blue OLED support.

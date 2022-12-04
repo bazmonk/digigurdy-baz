@@ -46,8 +46,13 @@ void draw_play_screen(int note, int screen_type) {
   if (screen_type == 0) {
     draw_note(note, 0);
     draw_staff(note, 64);
-  } else {
+  } else if (screen_type == 1) {
+    draw_staff(note, 0);
+    draw_note(note, 64);
+  } else if (screen_type == 2) {
     draw_note(note, 32);
+  } else {
+    draw_staff(note, 32);
   };
 
   u8g2.sendBuffer();

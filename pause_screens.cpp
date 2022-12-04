@@ -179,6 +179,7 @@ void save_tuning_screen() {
     my2Button->update();
     my3Button->update();
     my4Button->update();
+    my5Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {
@@ -209,14 +210,14 @@ void save_tuning_screen() {
         done = true;
       };
 
-    } else if (myXButton->wasPressed()) {
+    } else if (myXButton->wasPressed() || my5Button->wasPressed()) {
       // Just return.
       return;
     };
   };
 
   // Display a confirmation message
-  print_message_2("Save Tuning", "Slot " + slot, "Saved to EEPROM");
+  print_message_2("Save Tuning", String("Slot ") + slot, "Saved to EEPROM");
   delay(500);
 };
 
@@ -258,8 +259,8 @@ bool other_options_screen() {
   bool done = false;
   while (!done) {
 
-    String opt2 = "";
-    String opt3 = "";
+    String opt2 = "This Option Disabled";
+    String opt3 = "This Option Disabled";
     #ifdef LED_KNOB
     opt2 = "Buzz LED On/Off";
     #endif
@@ -267,7 +268,7 @@ bool other_options_screen() {
     opt3 = "Vibrato Pedal On/Off";
     #endif
 
-    print_menu_4("Other Options", "EX Button Config", opt2, opt3, "About Digi-Gurdy");
+    print_menu_5("Other Options", "EX Button Config", "Playing Screen Config", opt2, opt3, "About Digi-Gurdy");
     delay(150);
 
     my1Button->update();
@@ -275,25 +276,29 @@ bool other_options_screen() {
     my3Button->update();
     my4Button->update();
     my5Button->update();
+    my6Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {
       ex_btn_choice_screen();
 
     } else if (my2Button->wasPressed()) {
+      playing_options_screen();
+
+    } else if (my3Button->wasPressed()) {
       #ifdef LED_KNOB
       led_screen();
       #endif
 
-    } else if (my3Button->wasPressed()) {
+    } else if (my4Button->wasPressed()) {
       #ifdef USE_PEDAL
       vib_screen();
       #endif
 
-    } else if (my4Button->wasPressed()) {
+    } else if (my5Button->wasPressed()) {
       options_about_screen();
 
-    } else if (my5Button->wasPressed() || myXButton->wasPressed()) {
+    } else if (my6Button->wasPressed() || myXButton->wasPressed()) {
       return false;
     };
   };
@@ -602,13 +607,15 @@ void playing_options_screen() {
   bool done = false;
   while (!done) {
 
-    print_menu_2("Choose Play Screen", "Big Note + Staff", "Big Note");
+    print_menu_4("Choose Play Screen", "Big Note + Staff", "Staff + Big Note", "Big Note Only", "Staff Only");
     delay(150);
 
     // Check the 1 and 2 buttons
     my1Button->update();
     my2Button->update();
     my3Button->update();
+    my4Button->update();
+    my5Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {
@@ -625,10 +632,27 @@ void playing_options_screen() {
       play_screen_type = 1;
       EEPROM.write(EEPROM_DISPLY_TYPE, 1);
 
+      print_message_2("Choose Play Screen", "Staff + Note Screen", "Saved to EEPROM");
+      delay(750);
+      done = true;
+    } else if (my3Button->wasPressed()) {
+
+      play_screen_type = 2;
+      EEPROM.write(EEPROM_DISPLY_TYPE, 2);
+
       print_message_2("Choose Play Screen", "Big Note Screen", "Saved to EEPROM");
       delay(750);
       done = true;
-    } else if (my3Button->wasPressed() || myXButton->wasPressed()) {
+    } else if (my4Button->wasPressed()) {
+
+      play_screen_type = 3;
+      EEPROM.write(EEPROM_DISPLY_TYPE, 3);
+
+      print_message_2("Choose Play Screen", "Staff Only Screen", "Saved to EEPROM");
+      delay(750);
+      done = true;
+
+    } else if (my5Button->wasPressed() || myXButton->wasPressed()) {
       done = true;
     };
   };
@@ -641,13 +665,14 @@ void options_screen() {
   bool done = false;
   while (!done) {
 
-    print_menu_3("Options", "Clear EEPROM", "Playing Screen", "Scene Control");
+    print_menu_3("Options", "Clear EEPROM", "Scene Control", "About Digi-Gurdy");
     delay(150);
 
     // Check the 1 and 2 buttons
     my1Button->update();
     my2Button->update();
     my3Button->update();
+    my4Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {
@@ -659,12 +684,12 @@ void options_screen() {
       done = true;
 
     } else if (my2Button->wasPressed()) {
-      playing_options_screen();
-      done = true;
-    } else if (my3Button->wasPressed()) {
       scene_options_screen();
       done = true;
-    } else if (myXButton->wasPressed()) {
+    } else if (my3Button->wasPressed()) {
+      options_about_screen();
+      done = true;
+    } else if (myXButton->wasPressed() || my4Button->wasPressed()) {
       done = true;
     };
   };
