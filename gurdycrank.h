@@ -36,6 +36,8 @@ class GurdyCrank {
     bool was_spinning = false;
     bool was_buzzing = false;
 
+    int expression;
+
     BuzzKnob* myKnob;
 
     #ifdef LED_KNOB
