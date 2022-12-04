@@ -44,8 +44,7 @@ void draw_play_screen(int note, int screen_type, bool draw_buzz) {
   u8g2.setBitmapMode(1); // this lets you overlay bitmaps transparently
 
   // BUZZ INDICATOR TEST
-  //if (draw_buzz && screen_type / 10 == 1) {
-  if (draw_buzz) {
+  if (draw_buzz && screen_type / 10 == 1) {
     u8g2.drawHLine(0, 0, 128);
     u8g2.drawHLine(0, 63, 128);
     u8g2.drawVLine(0, 0, 64);

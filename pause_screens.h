@@ -37,10 +37,11 @@ bool view_preset_screen(int preset);
 bool load_saved_screen();
 bool load_preset_screen();
 void scene_options_screen();
-void playing_options_screen();
+void playing_scr_screen();
 void options_screen();
 void welcome_screen();
 void led_screen();
 void vib_screen();
+void playing_config_screen();
 
 #endif

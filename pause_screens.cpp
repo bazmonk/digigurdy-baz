@@ -283,7 +283,7 @@ bool other_options_screen() {
       ex_btn_choice_screen();
 
     } else if (my2Button->wasPressed()) {
-      playing_options_screen();
+      playing_config_screen();
 
     } else if (my3Button->wasPressed()) {
       #ifdef LED_KNOB
@@ -603,7 +603,7 @@ void scene_options_screen() {
 }
 
 // This screen lets you choose what kind of display you want.
-void playing_options_screen() {
+void playing_scr_screen() {
   bool done = false;
   while (!done) {
 
@@ -620,8 +620,8 @@ void playing_options_screen() {
 
     if (my1Button->wasPressed()) {
 
-      play_screen_type = 0;
-      EEPROM.write(EEPROM_DISPLY_TYPE, 0);
+      play_screen_type = ((play_screen_type / 10) * 10) + 0;
+      EEPROM.write(EEPROM_DISPLY_TYPE, play_screen_type);
 
       print_message_2("Choose Play Screen", "Note + Staff Screen", "Saved to EEPROM");
       delay(750);
@@ -629,24 +629,24 @@ void playing_options_screen() {
 
     } else if (my2Button->wasPressed()) {
 
-      play_screen_type = 1;
-      EEPROM.write(EEPROM_DISPLY_TYPE, 1);
+      play_screen_type = ((play_screen_type / 10) * 10) + 1;
+      EEPROM.write(EEPROM_DISPLY_TYPE, play_screen_type);
 
       print_message_2("Choose Play Screen", "Staff + Note Screen", "Saved to EEPROM");
       delay(750);
       done = true;
     } else if (my3Button->wasPressed()) {
 
-      play_screen_type = 2;
-      EEPROM.write(EEPROM_DISPLY_TYPE, 2);
+      play_screen_type = ((play_screen_type / 10) * 10) + 2;
+      EEPROM.write(EEPROM_DISPLY_TYPE, play_screen_type);
 
       print_message_2("Choose Play Screen", "Big Note Screen", "Saved to EEPROM");
       delay(750);
       done = true;
     } else if (my4Button->wasPressed()) {
 
-      play_screen_type = 3;
-      EEPROM.write(EEPROM_DISPLY_TYPE, 3);
+      play_screen_type = ((play_screen_type / 10) * 10) + 3;
+      EEPROM.write(EEPROM_DISPLY_TYPE, play_screen_type);
 
       print_message_2("Choose Play Screen", "Staff Only Screen", "Saved to EEPROM");
       delay(750);
@@ -799,6 +799,45 @@ void vib_screen() {
     } else if (my3Button->wasPressed() || myXButton->wasPressed()) {
       done = true;
 
+    };
+  };
+};
+
+void playing_config_screen() {
+  bool done = false;
+  while (!done) {
+
+    print_menu_3("Play Screen Options", "Enable Buzz Indicator", "Disable Buzz Indicator", "Choose Play Screen");
+    delay(150);
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    my4Button->update();
+    myXButton->update();
+
+    if (my1Button->wasPressed()) {
+      play_screen_type = 10 + (play_screen_type % 10);
+      EEPROM.write(EEPROM_DISPLY_TYPE, play_screen_type);
+
+      print_message_2("Play Screen Options", "Buzz Indicator Enabled", "Saved to EEPROM");
+      delay(750);
+      done = true;
+
+    } else if (my2Button->wasPressed()) {
+
+      play_screen_type = play_screen_type % 10;
+      EEPROM.write(EEPROM_DISPLY_TYPE, play_screen_type);
+
+      print_message_2("Play Screen Options", "Buzz Indicator Disabled", "Saved to EEPROM");
+      delay(750);
+      done = true;
+    } else if (my3Button->wasPressed()) {
+      playing_scr_screen();
+
+    } else if (my4Button->wasPressed() || myXButton->wasPressed()) {
+      done = true;
     };
   };
 };

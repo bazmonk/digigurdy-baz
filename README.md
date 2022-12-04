@@ -6,6 +6,11 @@ See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more docu
 
 **Check out version 2.1.x! (NEW)**
 
+* 2.1.3 - On-screen Buzz indicator
+  * This can be enabled/disabled in the pause menu (Pause->Other->Playing Screen Config)
+  * Option saves to EEPROM independent of save slot
+  * Draws a thin rectangle around the play screen when you buzz!
+
 * 2.1.2 -
   * Several formatting typos fixed.
   * Playing screen adjustment moved to pause screen (not at startup)
