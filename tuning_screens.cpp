@@ -35,8 +35,8 @@ bool tuning() {
 
   tuning_hi_melody();
   tuning_low_melody();
-  tuning_drone();
   tuning_tromp();
+  tuning_drone();
 
   print_tuning_summary(mystring->getOpenNote(), mylowstring->getOpenNote(),
                        mytromp->getOpenNote(), mydrone->getOpenNote());
@@ -351,7 +351,7 @@ void tune_string_screen(GurdyString *this_string) {
   delay(300);
   while (!done) {
 
-    print_value_selection("String Tuning", LongNoteNum[new_note]);
+    print_value_selection("Tuning - " + this_string->getName(), LongNoteNum[new_note]);
 
     my1Button->update();
     my2Button->update();
@@ -395,7 +395,7 @@ void volume_screen() {
                  String("Trompette - ") + mytromp->getVolume(),
                  String("Drone - ") + mydrone->getVolume(),
                  String("Buzz - ") + mybuzz->getVolume(),
-                 String("Click - ") + mykeyclick->getVolume());
+                 String("Key Click - ") + mykeyclick->getVolume());
     delay(150);
 
     // Check the 1 and 2 buttons
@@ -439,7 +439,7 @@ void change_volume_screen(GurdyString *this_string) {
   delay(300);
   while (!done) {
 
-    print_value_selection("String Volume", new_vol);
+    print_value_selection("Volume - " + this_string->getName(), new_vol);
 
     my1Button->update();
     my2Button->update();

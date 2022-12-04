@@ -9,7 +9,12 @@ See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more docu
 * 2.1.2 -
   * Several formatting typos fixed.
   * Playing screen adjustment moved to pause screen (not at startup)
-  
+  * Added two new playing screen options.
+  * Fixed several cases of the "# or X) Go Back" not having the # updated.
+    * Now that this is standardized, I've probably missed it more.
+  * Added name function to GurdyString
+  * Removed unused "7" button message from menu_6
+  * Tuning and volume screen show string name
 
 * 2.1.1 -
   * Working build with U8G2.  Brings back Blue OLED support.

@@ -39,7 +39,7 @@ void print_menu_6(String title, String opt1, String opt2, String opt3, String op
   u8g2.drawStr(15 - u8g2.getStrWidth("4) "), 40, "4) ");
   u8g2.drawStr(15 - u8g2.getStrWidth("5) "), 48, "5) ");
   u8g2.drawStr(15 - u8g2.getStrWidth("6) "), 56, "6) ");
-  u8g2.drawStr(64 - (u8g2.getStrWidth("7 or X) Go Back") / 2), 64, "7 or X) Go Back");
+  u8g2.drawStr(64 - (u8g2.getStrWidth("X) Go Back") / 2), 64, "X) Go Back");
 
   // Draw all six options
   u8g2.drawStr(13, 16, opt1.c_str());

@@ -207,12 +207,12 @@ void setup() {
   // preset, a saved tuning, or a created one.  The menu shouldn't let you actually
   // end up with this, but I have to initialize them with something, so might as well
   // be a working tuning.
-  mystring = new GurdyString(1, Note(g4));
-  mylowstring = new GurdyString(2, Note(g3));
-  mytromp = new GurdyString(3, Note(c3));
-  mydrone = new GurdyString(4, Note(c2));
-  mybuzz = new GurdyString(5,Note(c3));
-  mykeyclick = new GurdyString(6, Note(b5));
+  mystring = new GurdyString(1, Note(g4), "Hi Melody");
+  mylowstring = new GurdyString(2, Note(g3), "Low Melody");
+  mytromp = new GurdyString(3, Note(c3), "Trompette");
+  mydrone = new GurdyString(4, Note(c2), "Drone");
+  mybuzz = new GurdyString(5,Note(c3), "Buzz");
+  mykeyclick = new GurdyString(6, Note(b5), "Key Click");
 
   tpose_up = new GurdyButton(22);   // A.k.a. the button formerly known as octave-up
   tpose_down = new GurdyButton(21); // A.k.a. the button formerly known as octave-down
