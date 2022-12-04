@@ -128,7 +128,7 @@ uint8_t scene_signal_type;
 
 bool gc_or_dg;
 
-bool use_solfege;
+int use_solfege;
 
 //
 // SETUP

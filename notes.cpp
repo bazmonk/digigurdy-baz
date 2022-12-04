@@ -32,6 +32,20 @@ String NoteNumDRM[] = {
   "DO9", "DO#9", "RE9", "MIb9", "MI9", "FA9", "FA#9", "SOL9"
 };
 
+String NoteNumCOMBO[] = {
+  "DO-1", "DO#-1", "RE-1", "MIb-1", "MI-1", "FA-1", "#FA-1", "SOL-1", "SOL#-1", "LA-1", "LA-1", "SI-1",
+  "DO0", "DO#0", "RE0", "MIb0", "MI0", "FA0", "FA#0", "SOL0", "SOL#0", "LA0", "SIb0", "SI0",
+  "DO1", "DO#1", "RE1", "MIb1", "MI1", "FA1", "FA#1", "SOL1", "SOL#1", "LA1", "SIb1", "SI1",
+  "DO2", "DO#2", "RE2", "MIb2", "MI2", "FA2", "FA#2", "SOL2", "SOL#2", "LA2", "SIb2", "SI2",
+  "DO3", "DO#3", "RE3", "MIb3", "MI3", "FA3", "FA#3", "SOL3", "SOL#3", "LA3", "SIb3", "SI3",
+  "DO4", "DO#4", "RE4", "MIb4", "MI4", "FA4", "FA#4", "SOL4", "SOL#4", "LA4", "SIb4", "SI4",
+  "DO5", "DO#5", "RE5", "MIb5", "MI5", "FA5", "FA#5", "SOL5", "SOL#5", "LA5", "SIb5", "SI5",
+  "DO6", "DO#6", "RE6", "MIb6", "MI6", "FA6", "FA#6", "SOL6", "SOL#6", "LA6", "SIb6", "SI6",
+  "DO7", "DO#7", "RE7", "MIb7", "MI7", "FA7", "FA#7", "SOL7", "SOL#7", "LA7", "SIb7", "SI7",
+  "DO8", "DO#8", "RE8", "MIb8", "MI8", "FA8", "FA#8", "SOL8", "SOL#8", "LA8", "SIb8", "SI8",
+  "DO9", "DO#9", "RE9", "MIb9", "MI9", "FA9", "FA#9", "SOL9"
+};
+
 // This is a version of the above but with flats listed as well.
 String LongNoteNumABC[] = {
   "EMPTY", "C#-1/Db-1", "D-1", "D#-1/Eb-1", "E-1", "F-1", "F#-1/Gb-1", "G-1", "G#-1/Ab-1", "A-1", "A#-1/Bb-1", "B-1",
@@ -61,16 +75,36 @@ String LongNoteNumDRM[] = {
   "DO9", "DO#9/REb9", "RE9", "RE#9/MIb9", "MI9", "FA9", "FA#9/SOLb9", "SOL9"
 };
 
+String LongNoteNumCOMBO[] = {
+  "EMPTY", "C#-1/DO#-1", "D-1/RE-1", "Eb-1/MIb-1", "E-1/MI-1", "F-1/FA-1", "F#-1/FA#-1", "G-1/SOL-1", "G#-1/SOL#-1", "A-1/LA-1", "Bb-1/SIb-1", "B-1/SI-1",
+  "C0/DO0", "C#0/DO#0", "D0/RE0", "Eb0/MIb0", "E0/MI0", "F0/FA0", "F#0/FA#0", "G0/SOL0", "G#0/SOL#0", "A0/LA0", "Bb0/SIb0", "B0/SI0",
+  "C1/DO1", "C#1/DO#1", "D1/RE1", "Eb1/MIb1", "E1/MI1", "F1/FA1", "F#1/FA#1", "G1/SOL1", "G#1/SOL#1", "A1/LA1", "Bb1/SIb1", "B0/SI1",
+  "C2/DO2", "C#2/DO#2", "D2/RE2", "Eb2/MIb2", "E2/MI2", "F2/FA2", "F#2/FA#2", "G2/SOL2", "G#2/SOL#2", "A2/LA2", "Bb2/SIb2", "B0/SI2",
+  "C3/DO3", "C#3/DO#3", "D3/RE3", "Eb3/MIb3", "E3/MI3", "F3/FA3", "F#3/FA#3", "G3/SOL3", "G#3/SOL#3", "A3/LA3", "Bb3/SIb3", "B0/SI3",
+  "C4/DO4", "C#4/DO#4", "D4/RE4", "Eb4/MIb4", "E4/MI4", "F4/FA4", "F#4/FA#4", "G4/SOL4", "G#4/SOL#4", "A4/LA4", "Bb4/SIb4", "B0/SI4",
+  "C5/DO5", "C#5/DO#5", "D5/RE5", "Eb5/MIb5", "E5/MI5", "F5/FA5", "F#5/FA#5", "G5/SOL5", "G#5/SOL#5", "A5/LA5", "Bb5/SIb5", "B0/SI5",
+  "C6/DO6", "C#6/DO#6", "D6/RE6", "Eb6/MIb6", "E6/MI6", "F6/FA6", "F#6/FA#6", "G6/SOL6", "G#6/SOL#6", "A6/LA6", "Bb6/SIb6", "B0/SI6",
+  "C7/DO7", "C#7/DO#7", "D7/RE7", "Eb7/MIb7", "E7/MI7", "F7/FA7", "F#7/FA#7", "G7/SOL7", "G#7/SOL#7", "A7/LA7", "Bb7/SIb7", "B0/SI7",
+  "C8/DO8", "C#8/DO#8", "D8/RE8", "Eb8/MIb8", "E8/MI8", "F8/FA8", "F#8/FA#8", "G8/SOL8", "G#8/SOL#8", "A8/LA8", "Bb8/SIb8", "B0/SI8",
+  "C9/DO9", "C#9/DO#9", "D9/RE9", "Eb9/MIb9", "E9/MI9", "F9/FA9", "F#9/FA#9", "G9/SOL9"
+};
+
 String getNoteNum(int num) {
-  if (use_solfege) {
+  if (use_solfege == 0) {
+    return NoteNumABC[num];
+  } else if (use_solfege == 1) {
     return NoteNumDRM[num];
+  } else {
+    return NoteNumCOMBO[num];
   };
-  return NoteNumABC[num];
 };
 
 String getLongNoteNum(int num) {
-  if (use_solfege) {
+  if (use_solfege == 0) {
+    return LongNoteNumABC[num];
+  } else if (use_solfege == 1) {
     return LongNoteNumDRM[num];
+  } else {
+    return LongNoteNumCOMBO[num];
   };
-  return LongNoteNumABC[num];
 };

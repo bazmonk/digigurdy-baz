@@ -403,7 +403,7 @@ void clear_eeprom() {
   EEPROM.write(EEPROM_EX2, 2);
   EEPROM.write(EEPROM_EX3, 3);
   EEPROM.write(EEPROM_SCENE_SIGNALLING, 0);
-  EEPROM.write(EEPROM_USE_SOLFEGE, false);
+  EEPROM.write(EEPROM_USE_SOLFEGE, 0);
 
 };
 
@@ -723,6 +723,10 @@ void welcome_screen() {
 
     } else if (my4Button->wasPressed()) {
       options_screen();
+
+      // Need to re-check use_solfege in case it changed...
+      use_solfege = EEPROM.read(EEPROM_USE_SOLFEGE);
+
       // Not done = true here, we'd want to get prompted again.
     };
   };
@@ -851,19 +855,20 @@ void notation_config_screen() {
   bool done = false;
   while (!done) {
 
-    print_menu_2("Note Notation", "Scientific (ABC)", "Solfege (DoReMi)");
+    print_menu_3("Note Notation", "Scientific (ABC)", "Solfege (DoReMi)", "Combination (C/Do)");
     delay(150);
 
     // Check the 1 and 2 buttons
     my1Button->update();
     my2Button->update();
     my3Button->update();
+    my4Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {
 
-      EEPROM.write(EEPROM_USE_SOLFEGE, false);
-      use_solfege = false;
+      EEPROM.write(EEPROM_USE_SOLFEGE, 0);
+      use_solfege = 0;
 
       print_message_2("Note Notation", "Scientific (ABC)", "Saved to EEPROM");
       delay(750);
@@ -871,14 +876,23 @@ void notation_config_screen() {
 
     } else if (my2Button->wasPressed()) {
 
-      EEPROM.write(EEPROM_USE_SOLFEGE, true);
-      use_solfege = true;
+      EEPROM.write(EEPROM_USE_SOLFEGE, 1);
+      use_solfege = 1;
 
       print_message_2("Note Notation", "Solfrege (DoReMi)", "Saved to EEPROM");
       delay(750);
       done = true;
 
-    } else if (my3Button->wasPressed() || myXButton->wasPressed()) {
+    } else if (my3Button->wasPressed()) {
+
+      EEPROM.write(EEPROM_USE_SOLFEGE, 2);
+      use_solfege = 2;
+
+      print_message_2("Note Notation", "Combination (C/Do)", "Saved to EEPROM");
+      delay(750);
+      done = true;
+
+    } else if (my4Button->wasPressed() || myXButton->wasPressed()) {
       done = true;
     };
   };

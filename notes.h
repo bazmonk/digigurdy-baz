@@ -25,7 +25,7 @@ extern String NoteNumDRM[];
 extern String LongNoteNumABC[];
 extern String LongNoteNumDRM[];
 
-extern bool use_solfege;
+extern int use_solfege;
 
 String getNoteNum(int num);
 String getLongNoteNum(int num);

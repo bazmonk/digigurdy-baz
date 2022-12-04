@@ -4,7 +4,7 @@
 #include "common.h"
 #include "notes.h"
 
-extern bool use_solfege;
+extern int use_solfege;
 
 bool tuning();
 
