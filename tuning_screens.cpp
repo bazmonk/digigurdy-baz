@@ -5,7 +5,11 @@ bool tuning() {
   bool done = false;
   while (!done) {
 
-    print_menu_4("Tuning Menu", "G/C, Guided", "D/G, Guided", "Manual Setup", "Volume Control");
+    if (use_solfege) {
+      print_menu_4("Tuning Menu", "Sol/Do, Guided", "Re/Sol, Guided", "Manual Setup", "Volume Control");
+    } else {
+      print_menu_4("Tuning Menu", "G/C, Guided", "D/G, Guided", "Manual Setup", "Volume Control");
+    };
     delay(150);
 
     // Check the 1 and 2 buttons
@@ -71,13 +75,10 @@ void tuning_hi_melody() {
   int choice3;
   int choice4;
 
-  String disp_str = "         ";
   if (gc_or_dg) {
     base_note = Note(g4);
-    disp_str += "G/C         \n";
   } else {
     base_note = Note(d4);
-    disp_str += "D/G         \n";
   };
 
   choice1 = base_note + 12;
