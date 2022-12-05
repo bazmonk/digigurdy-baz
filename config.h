@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.1.6";
+const String VERSION = "2.1.7";
 const String REL_DATE = "2022-12-04, v" + VERSION;
 
 // Use one of these if you want, on the title/about screen.  Or make your own!

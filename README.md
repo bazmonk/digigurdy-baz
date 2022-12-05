@@ -6,6 +6,11 @@ See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more docu
 
 **Check out version 2.1.x! (NEW)**
 
+* 2.1.7 - Created a printed note play screen and options
+  * For DoReMi support.
+
+* 2.1.6 - Created a ABC/DoReMi "Combo" option
+
 * 2.1.5 - DoReMi support
   * Enabled/disabled in Pause->Other-Playing Screen Config
 

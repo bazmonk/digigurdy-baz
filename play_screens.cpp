@@ -38,12 +38,82 @@ void draw_staff(int note, int x_offset) {
   };
 };
 
+void print_note(String note_str, int x_offset) {
+
+  String note = "";
+  String acc = "";
+  String oct = "";
+  String first_str = "";
+  String second_str = "";
+
+  //u8g2.setFont(u8g2_font_elispe_tr);
+  //u8g2.setFont(u8g2_font_crox4hb_tf);
+  u8g2.setFont(u8g2_font_timB14_tf);
+  u8g2.setFontMode(1);
+
+  int slash_idx = note_str.indexOf("/");
+  if (slash_idx != -1) {
+    first_str = note_str.substring(0, slash_idx);
+    second_str = note_str.substring(slash_idx + 1);
+  } else {
+    first_str = note_str;
+  };
+
+  if (first_str.indexOf("b") != -1) {
+    int acc_idx = first_str.indexOf("b");
+    acc = "b";
+    note = first_str.substring(0, acc_idx);
+    oct = first_str.substring(acc_idx + 1);
+
+  } else if (first_str.indexOf("#") != -1) {
+    int acc_idx = first_str.indexOf("#");
+    acc = "#";
+    note = first_str.substring(0, acc_idx);
+    oct = first_str.substring(acc_idx + 1);
+  } else {
+    oct = first_str.substring(first_str.length() - 1);
+    note = first_str.substring(0, first_str.length() - 1);
+  };
+
+  if (second_str.length() == 0) {
+
+    u8g2.drawStr(x_offset + 26 - (u8g2.getStrWidth(String(note + oct).c_str()) / 2), 38, note.c_str());
+    u8g2.drawStr(x_offset + 24 + (u8g2.getStrWidth(note.c_str()) / 2), 30, acc.c_str());
+    u8g2.drawStr(x_offset + 24 + (u8g2.getStrWidth(note.c_str()) / 2), 46, oct.c_str());
+
+  } else {
+
+    u8g2.drawStr(x_offset + 26 - (u8g2.getStrWidth(String(note + oct).c_str()) / 2), 20, note.c_str());
+    u8g2.drawStr(x_offset + 24 + (u8g2.getStrWidth(note.c_str()) / 2), 12, acc.c_str());
+    u8g2.drawStr(x_offset + 24 + (u8g2.getStrWidth(note.c_str()) / 2), 28, oct.c_str());
+
+    if (second_str.indexOf("b") != -1) {
+      int acc_idx = second_str.indexOf("b");
+      acc = "b";
+      note = second_str.substring(0, acc_idx);
+      oct = second_str.substring(acc_idx + 1);
+
+    } else if (second_str.indexOf("#") != -1) {
+      int acc_idx = second_str.indexOf("#");
+      acc = "#";
+      note = second_str.substring(0, acc_idx);
+      oct = second_str.substring(acc_idx + 1);
+    } else {
+      oct = second_str.substring(second_str.length() - 1);
+      note = second_str.substring(0, second_str.length() - 1);
+    };
+
+    u8g2.drawStr(x_offset + 26 - (u8g2.getStrWidth(String(note + oct).c_str()) / 2), 56, note.c_str());
+    u8g2.drawStr(x_offset + 24 + (u8g2.getStrWidth(note.c_str()) / 2), 48, acc.c_str());
+    u8g2.drawStr(x_offset + 24 + (u8g2.getStrWidth(note.c_str()) / 2), 64, oct.c_str());
+  };
+};
+
 void draw_play_screen(int note, int screen_type, bool draw_buzz) {
 
   u8g2.clearBuffer();
   u8g2.setBitmapMode(1); // this lets you overlay bitmaps transparently
 
-  // BUZZ INDICATOR TEST
   if (draw_buzz && screen_type / 10 == 1) {
     u8g2.drawHLine(0, 0, 128);
     u8g2.drawHLine(0, 63, 128);
@@ -55,12 +125,16 @@ void draw_play_screen(int note, int screen_type, bool draw_buzz) {
     draw_note(note, 0);
     draw_staff(note, 64);
   } else if (screen_type % 10 == 1) {
-    draw_staff(note, 0);
-    draw_note(note, 64);
+    print_note(getLongNoteNum(note), 0);
+    draw_staff(note, 64);
   } else if (screen_type % 10 == 2) {
     draw_note(note, 32);
-  } else {
+  } else if (screen_type % 10 == 3) {
+    print_note(getLongNoteNum(note), 32);
+  } else if (screen_type % 10 == 4) {
     draw_staff(note, 32);
+  } else {
+    ;
   };
 
   u8g2.sendBuffer();

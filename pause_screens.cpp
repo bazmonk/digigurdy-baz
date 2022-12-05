@@ -608,7 +608,7 @@ void playing_scr_screen() {
   bool done = false;
   while (!done) {
 
-    print_menu_4("Choose Play Screen", "Big Note + Staff", "Staff + Big Note", "Big Note Only", "Staff Only");
+    print_menu_6("Choose Play Screen", "Note Bitmap + Staff", "Printed Note + Staff", "Note Bitmap Only", "Printed Note Only", "Staff Only", "Blank");
     delay(150);
 
     // Check the 1 and 2 buttons
@@ -617,6 +617,7 @@ void playing_scr_screen() {
     my3Button->update();
     my4Button->update();
     my5Button->update();
+    my6Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {
@@ -624,7 +625,7 @@ void playing_scr_screen() {
       play_screen_type = ((play_screen_type / 10) * 10) + 0;
       EEPROM.write(EEPROM_DISPLY_TYPE, play_screen_type);
 
-      print_message_2("Choose Play Screen", "Note + Staff Screen", "Saved to EEPROM");
+      print_message_2("Choose Play Screen", "Note Bitmap + Staff", "Saved to EEPROM");
       delay(750);
       done = true;
 
@@ -633,27 +634,47 @@ void playing_scr_screen() {
       play_screen_type = ((play_screen_type / 10) * 10) + 1;
       EEPROM.write(EEPROM_DISPLY_TYPE, play_screen_type);
 
-      print_message_2("Choose Play Screen", "Staff + Note Screen", "Saved to EEPROM");
+      print_message_2("Choose Play Screen", "Printed Note + Staff", "Saved to EEPROM");
       delay(750);
       done = true;
+
     } else if (my3Button->wasPressed()) {
 
       play_screen_type = ((play_screen_type / 10) * 10) + 2;
       EEPROM.write(EEPROM_DISPLY_TYPE, play_screen_type);
 
-      print_message_2("Choose Play Screen", "Big Note Screen", "Saved to EEPROM");
+      print_message_2("Choose Play Screen", "Note Bitmap Only", "Saved to EEPROM");
       delay(750);
       done = true;
+
     } else if (my4Button->wasPressed()) {
 
       play_screen_type = ((play_screen_type / 10) * 10) + 3;
+      EEPROM.write(EEPROM_DISPLY_TYPE, play_screen_type);
+
+      print_message_2("Choose Play Screen", "Printed Note Only", "Saved to EEPROM");
+      delay(750);
+      done = true;
+
+    } else if (my5Button->wasPressed()) {
+
+      play_screen_type = ((play_screen_type / 10) * 10) + 4;
+      EEPROM.write(EEPROM_DISPLY_TYPE, play_screen_type);
+
+      print_message_2("Choose Play Screen", "Blank Play Screen", "Saved to EEPROM");
+      delay(750);
+      done = true;
+
+    } else if (my6Button->wasPressed()) {
+
+      play_screen_type = ((play_screen_type / 10) * 10) + 5;
       EEPROM.write(EEPROM_DISPLY_TYPE, play_screen_type);
 
       print_message_2("Choose Play Screen", "Staff Only Screen", "Saved to EEPROM");
       delay(750);
       done = true;
 
-    } else if (my5Button->wasPressed() || myXButton->wasPressed()) {
+    } else if (myXButton->wasPressed()) {
       done = true;
     };
   };

@@ -5,10 +5,12 @@ bool tuning() {
   bool done = false;
   while (!done) {
 
-    if (use_solfege) {
+    if (use_solfege == 0) {
+      print_menu_4("Tuning Menu", "G/C, Guided", "D/G, Guided", "Manual Setup", "Volume Control");
+    } else if (use_solfege == 1) {
       print_menu_4("Tuning Menu", "Sol/Do, Guided", "Re/Sol, Guided", "Manual Setup", "Volume Control");
     } else {
-      print_menu_4("Tuning Menu", "G/C, Guided", "D/G, Guided", "Manual Setup", "Volume Control");
+      print_menu_4("Tuning Menu", "G/C (Sol/Do), Guided", "D/G (Re/Sol), Guided", "Manual Setup", "Volume Control");
     };
     delay(150);
 
