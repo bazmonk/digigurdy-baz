@@ -661,7 +661,7 @@ void playing_scr_screen() {
       play_screen_type = ((play_screen_type / 10) * 10) + 4;
       EEPROM.write(EEPROM_DISPLY_TYPE, play_screen_type);
 
-      print_message_2("Choose Play Screen", "Blank Play Screen", "Saved to EEPROM");
+      print_message_2("Choose Play Screen", "Staff Only Screen", "Saved to EEPROM");
       delay(750);
       done = true;
 
@@ -670,7 +670,7 @@ void playing_scr_screen() {
       play_screen_type = ((play_screen_type / 10) * 10) + 5;
       EEPROM.write(EEPROM_DISPLY_TYPE, play_screen_type);
 
-      print_message_2("Choose Play Screen", "Staff Only Screen", "Saved to EEPROM");
+      print_message_2("Choose Play Screen", "Blank Play Screen", "Saved to EEPROM");
       delay(750);
       done = true;
 
