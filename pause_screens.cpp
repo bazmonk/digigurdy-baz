@@ -833,7 +833,12 @@ void playing_config_screen() {
   bool done = false;
   while (!done) {
 
-    print_menu_4("Screen Configuration", "Notation (ABC/DoReMi)", "Enable Buzz Indicator", "Disable Buzz Indicator", "Choose Play Screen");
+    if (play_screen_type / 10 > 0) {
+      print_menu_3("Screen Configuration", "Notation (ABC/DoReMi)", "Disable Buzz Indicator", "Choose Play Screen");
+    } else {
+      print_menu_3("Screen Configuration", "Notation (ABC/DoReMi)", "Enable Buzz Indicator", "Choose Play Screen");
+    };
+
     delay(150);
 
     // Check the 1 and 2 buttons
@@ -841,36 +846,37 @@ void playing_config_screen() {
     my2Button->update();
     my3Button->update();
     my4Button->update();
-    my5Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {
       notation_config_screen();
 
     } else if (my2Button->wasPressed()) {
-      play_screen_type = 10 + (play_screen_type % 10);
-      EEPROM.write(EEPROM_DISPLY_TYPE, play_screen_type);
 
-      print_message_2("Play Screen Options", "Buzz Indicator Enabled", "Saved to EEPROM");
-      delay(750);
-      done = true;
+      if (play_screen_type / 10 > 0) {
+        play_screen_type = play_screen_type % 10;
+        EEPROM.write(EEPROM_DISPLY_TYPE, play_screen_type);
+
+        print_message_2("Play Screen Options", "Buzz Indicator Disabled", "Saved to EEPROM");
+        delay(750);
+      } else {
+        play_screen_type = 10 + (play_screen_type % 10);
+        EEPROM.write(EEPROM_DISPLY_TYPE, play_screen_type);
+
+        print_message_2("Play Screen Options", "Buzz Indicator Enabled", "Saved to EEPROM");
+        delay(750);
+      };
 
     } else if (my3Button->wasPressed()) {
-
-      play_screen_type = play_screen_type % 10;
-      EEPROM.write(EEPROM_DISPLY_TYPE, play_screen_type);
-
-      print_message_2("Play Screen Options", "Buzz Indicator Disabled", "Saved to EEPROM");
-      delay(750);
-      done = true;
-    } else if (my4Button->wasPressed()) {
       playing_scr_screen();
 
-    } else if (my5Button->wasPressed() || myXButton->wasPressed()) {
+    } else if (my4Button->wasPressed() || myXButton->wasPressed()) {
       done = true;
     };
   };
 };
+
+
 
 void notation_config_screen() {
   bool done = false;
