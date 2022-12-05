@@ -340,15 +340,15 @@ void print_tuning(String title, String hi_note, String low_note, String drone_no
   // Draw all six options
   u8g2.drawStr(64 - u8g2.getStrWidth("Hi Melody: "), 18, "Hi Melody: ");
   u8g2.drawStr(64 - u8g2.getStrWidth("Lo Melody: "), 27, "Lo Melody: ");
-  u8g2.drawStr(64 - u8g2.getStrWidth("Drone: "), 36, "Drone: ");
-  u8g2.drawStr(64 - u8g2.getStrWidth("Trompette: "), 45, "Trompette: ");
+  u8g2.drawStr(64 - u8g2.getStrWidth("Trompette: "), 36, "Trompette: ");
+  u8g2.drawStr(64 - u8g2.getStrWidth("Drone: "), 45, "Drone: ");
   u8g2.drawStr(44 - u8g2.getStrWidth("Tpose: "), 54, "Tpose: ");
   u8g2.drawStr(105 - u8g2.getStrWidth("Capo: "), 54, "Capo: ");
 
   u8g2.drawStr(96 - (u8g2.getStrWidth(hi_note.c_str()) / 2), 18, hi_note.c_str());
   u8g2.drawStr(96 - (u8g2.getStrWidth(low_note.c_str()) / 2), 27, low_note.c_str());
-  u8g2.drawStr(96 - (u8g2.getStrWidth(drone_note.c_str()) / 2), 36, drone_note.c_str());
-  u8g2.drawStr(96 - (u8g2.getStrWidth(tromp_note.c_str()) / 2), 45, tromp_note.c_str());
+  u8g2.drawStr(96 - (u8g2.getStrWidth(drone_note.c_str()) / 2), 36, tromp_note.c_str());
+  u8g2.drawStr(96 - (u8g2.getStrWidth(tromp_note.c_str()) / 2), 45, drone_note.c_str());
   u8g2.drawStr(44, 54, tpose_str.c_str());
   u8g2.drawStr(105, 54, tpose_str.c_str());
 
