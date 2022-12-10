@@ -32,7 +32,7 @@ void ex_btn_choice_screen() {
     } else if (my3Button->wasPressed()) {
       ex3Button->fn_choice_screen(3);
 
-      print_message_2("EX Buttons", "EX2 Button", "Saved!");
+      print_message_2("EX Buttons", "EX3 Button", "Saved!");
       delay(1000);
 
     } else if (my4Button->wasPressed() || myXButton->wasPressed()) {
