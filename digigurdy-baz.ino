@@ -128,6 +128,8 @@ uint8_t scene_signal_type;
 
 bool gc_or_dg;
 
+int use_solfege;
+
 //
 // SETUP
 //
@@ -139,7 +141,7 @@ void setup() {
 
   // Display some startup animations for the user.
   start_display();
-  startup_screen_sqeuence();
+  startup_screen_sequence();
 
   // Un-comment to print yourself debugging messages to the Teensyduino
   // serial console.
@@ -207,12 +209,12 @@ void setup() {
   // preset, a saved tuning, or a created one.  The menu shouldn't let you actually
   // end up with this, but I have to initialize them with something, so might as well
   // be a working tuning.
-  mystring = new GurdyString(1, Note(g4));
-  mylowstring = new GurdyString(2, Note(g3));
-  mytromp = new GurdyString(3, Note(c3));
-  mydrone = new GurdyString(4, Note(c2));
-  mybuzz = new GurdyString(5,Note(c3));
-  mykeyclick = new GurdyString(6, Note(b5));
+  mystring = new GurdyString(1, Note(g4), "Hi Melody");
+  mylowstring = new GurdyString(2, Note(g3), "Low Melody");
+  mytromp = new GurdyString(3, Note(c3), "Trompette");
+  mydrone = new GurdyString(4, Note(c2), "Drone");
+  mybuzz = new GurdyString(5,Note(c3), "Buzz");
+  mykeyclick = new GurdyString(6, Note(b5), "Key Click");
 
   tpose_up = new GurdyButton(22);   // A.k.a. the button formerly known as octave-up
   tpose_down = new GurdyButton(21); // A.k.a. the button formerly known as octave-down
@@ -239,6 +241,8 @@ void setup() {
 
   max_tpose = 12;
   max_capo = 4;
+
+  use_solfege = EEPROM.read(EEPROM_USE_SOLFEGE);
 };
 
 //
@@ -277,6 +281,8 @@ void loop() {
     ex2Button->setFunc(EEPROM.read(EEPROM_EX2));
     ex3Button->setFunc(EEPROM.read(EEPROM_EX3));
 
+    use_solfege = EEPROM.read(EEPROM_USE_SOLFEGE);
+
     // LED may have been reset, too... thanks John!
     if (EEPROM.read(EEPROM_BUZZ_LED) == 1) {
       #ifdef LED_KNOB
@@ -285,9 +291,9 @@ void loop() {
     };
 
     // Crank On! for half a sec.
-    display.clearDisplay();
-    display.drawBitmap(0, 0, crank_on_logo, 128, 64, 1);
-    display.display();
+    u8g2.clearBuffer();
+    u8g2.drawBitmap(0, 0, 16, 64, crank_on_logo);
+    u8g2.sendBuffer();
     delay(750);
 
     print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
@@ -363,7 +369,7 @@ void loop() {
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
 
-      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
     } else {
       print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
                  tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
@@ -389,7 +395,7 @@ void loop() {
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
 
-      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
     } else {
       print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
                    tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
@@ -412,7 +418,7 @@ void loop() {
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
 
-      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
     } else {
       print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
                    tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
@@ -447,14 +453,14 @@ void loop() {
       mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
-      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
 
     } else if (mycrank->startedSpinning() && !bigbutton->toggleOn()) {
       mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
       mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
-      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
 
     // Turn off the previous notes and turn on the new one with a click if new key this cycle.
     // NOTE: I'm not touching the drone/trompette.  Just leave it on if it's a key change.
@@ -466,16 +472,18 @@ void loop() {
       mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
       mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
       mykeyclick->soundOn(tpose_offset);
-      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
     };
 
     // Whenever we're playing, check for buzz.
     if (mycrank->startedBuzzing()) {
       mybuzz->soundOn(tpose_offset + capo_offset);
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, true);
     };
 
     if (mycrank->stoppedBuzzing()) {
       mybuzz->soundOff();
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
     };
 
   // If the toggle came off and the crank is off, turn off sound.

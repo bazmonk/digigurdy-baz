@@ -53,4 +53,6 @@ static const int EEPROM_EX1 = 103;
 static const int EEPROM_EX2 = 104;
 static const int EEPROM_EX3 = 105;
 
+static const bool EEPROM_USE_SOLFEGE = 106;
+
 #endif

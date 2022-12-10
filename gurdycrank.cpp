@@ -25,6 +25,7 @@ GurdyCrank::GurdyCrank(int s_pin, int buzz_pin, int led_pin) {
   sensor_pin = s_pin;
   pinMode(sensor_pin, INPUT_PULLUP);
   last_event = digitalRead(sensor_pin);
+  expression = 0;
 };
 
 // This had a use, and may just go away...
@@ -176,17 +177,21 @@ void GurdyCrank::updateExpression() {
     } else if (cur_v < V_THRESHOLD) {
       cur_v = V_THRESHOLD;
     }
-    int expression = int(((cur_v - V_THRESHOLD)/(EXPRESSION_VMAX - V_THRESHOLD)) * (127 - EXPRESSION_START) + EXPRESSION_START);
-
+    int new_expression = int(((cur_v - V_THRESHOLD)/(EXPRESSION_VMAX - V_THRESHOLD)) * (127 - EXPRESSION_START) + EXPRESSION_START);
     if (bigbutton->toggleOn()) {
-      expression = 90;
+      new_expression = 90;
     };
-    mystring->setExpression(expression);
-    mylowstring->setExpression(expression);
-    mytromp->setExpression(expression);
-    mydrone->setExpression(expression);
-    mybuzz->setExpression(expression);
-    the_expression_timer = 0;
+
+    if (expression != new_expression) {
+      Serial.println("EXPRESS LESS");
+      expression = new_expression;
+      mystring->setExpression(expression);
+      mylowstring->setExpression(expression);
+      mytromp->setExpression(expression);
+      mydrone->setExpression(expression);
+      mybuzz->setExpression(expression);
+      the_expression_timer = 0;
+    };
   };
 };
 

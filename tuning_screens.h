@@ -4,6 +4,8 @@
 #include "common.h"
 #include "notes.h"
 
+extern int use_solfege;
+
 bool tuning();
 
 void tuning_hi_melody();

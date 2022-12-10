@@ -2,8 +2,9 @@
 
 // GurdyString manages turning "strings" on and off and determining their note.
 // It abstracts the interactions with the MIDI layer.
-GurdyString::GurdyString(int my_channel, int my_note, int my_vol) {
+GurdyString::GurdyString(int my_channel, int my_note, String my_name, int my_vol) {
   midi_channel = my_channel;
+  name = my_name;
   open_note = my_note;
   midi_volume = my_vol;
   note_being_played = open_note;
@@ -126,4 +127,8 @@ void GurdyString::setVibrato(int vib) {
 #if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
   MIDI.sendControlChange(1, vib, midi_channel);
 #endif
+};
+
+String GurdyString::getName() {
+  return name;
 };

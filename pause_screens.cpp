@@ -5,31 +5,25 @@ void pause_screen() {
 
   bool done = false;
   while (!done) {
+    String d_str = "On";
+    String t_str = "On";
+    String h_str = "On";
+    String l_str = "On";
 
-    String disp_str = " ----Pause  Menu---- \n"
-                      " 1) Load    2) Save  \n"
-                      " 3) Tuning  4) Other \n\n"
-                      "   X or 5) Go Back\n\n";
-
-    if (drone_mode == 0) {
-      disp_str += "A) Drone:On ,Trmp:On \n";
-    } else if (drone_mode == 1) {
-      disp_str += "A) Drone:Off,Trmp:Off\n";
-    } else if (drone_mode == 2) {
-      disp_str += "A) Drone:On, Trmp:Off\n";
-    } else if (drone_mode == 3) {
-      disp_str += "A) Drone:Off,Trmp:On \n";
+    if (drone_mode == 1 || drone_mode == 2) {
+      t_str = "OFF";
+    };
+    if (drone_mode == 1 || drone_mode == 3) {
+      d_str = "OFF";
+    };
+    if (mel_mode == 1) {
+      l_str = "OFF";
+    };
+    if (mel_mode == 2) {
+      h_str = "OFF";
     };
 
-    if (mel_mode == 0) {
-      disp_str += "B) High:On ,  Low:On \n";
-    } else if (mel_mode == 1) {
-      disp_str += "B) High:On ,  Low:Off\n";
-    } else if (mel_mode == 2) {
-      disp_str += "B) High:Off,  Low:On \n";
-    };
-
-    print_screen(disp_str);
+    print_pause_screen(d_str, t_str, h_str, l_str);
 
     delay(150);
 
@@ -101,9 +95,9 @@ void pause_screen() {
   };
 
   // Crank On! for half a sec.
-  display.clearDisplay();
-  display.drawBitmap(0, 0, crank_on_logo, 128, 64, 1);
-  display.display();
+  u8g2.clearBuffer();
+  u8g2.drawBitmap(0, 0, 16, 64, crank_on_logo);
+  u8g2.sendBuffer();
   delay(500);
 };
 
@@ -114,15 +108,7 @@ bool load_tuning_screen() {
   bool done = false;
   while (!done) {
 
-    String disp_str = " ----Load Tuning---- \n"
-                      "                     \n"
-                      " 1) Preset Tuning    \n"
-                      "                     \n"
-                      " 2) Saved Tuning     \n\n"
-                      " X or 3) Go Back     \n";
-
-    print_screen(disp_str);
-
+    print_menu_2("Load Tuning", "Preset Tuning", "Saved Tuning");
     delay(150);
 
     // Check the 1 and 2 buttons
@@ -157,16 +143,7 @@ bool check_save_tuning(int slot) {
     return true;
   } else {
 
-    String disp_str = " ----Save Tuning---- \n"
-                      "                     \n"
-                      " Save slot is full,  \n"
-                      "    Save anyway?     \n"
-                      "                     \n"
-                      " 1) Overwrite        \n"
-                      "                     \n"
-                      " X or 2) Go Back     \n";
-
-    print_screen(disp_str);
+    print_confirm_screen("Save Tuning", "Save slot is full...", "Save anyway?", "Overwrite");
     delay(150);
 
     bool done = false;
@@ -194,16 +171,7 @@ void save_tuning_screen() {
   int slot = 0;
   while (!done) {
 
-    String disp_str = " ----Save Tuning---- \n"
-                      " Choose a Save Slot: \n"
-                      "                     \n"
-                      "      1) Slot 1      \n"
-                      "      2) Slot 2      \n"
-                      "      3) Slot 3      \n"
-                      "      4) Slot 4      \n"
-                      "      X) Go Back     \n";
-
-    print_screen(disp_str);
+    print_menu_4("Save Tuning", "Use Slot 1", "Use Slot 2", "Use Slot 3", "Use Slot 4");
     delay(150);
 
     // Check the 1 and 2 buttons
@@ -211,6 +179,7 @@ void save_tuning_screen() {
     my2Button->update();
     my3Button->update();
     my4Button->update();
+    my5Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {
@@ -241,21 +210,14 @@ void save_tuning_screen() {
         done = true;
       };
 
-    } else if (myXButton->wasPressed()) {
+    } else if (myXButton->wasPressed() || my5Button->wasPressed()) {
       // Just return.
       return;
     };
   };
 
   // Display a confirmation message
-  display.clearDisplay();
-  display.setTextSize(2);
-  display.setTextColor(WHITE);
-  display.setCursor(0,0);
-  display.print("\n  Slot ");
-  display.print(slot);
-  display.print("\n  Saved!");
-  display.display();
+  print_message_2("Save Tuning", String("Slot ") + slot, "Saved to EEPROM");
   delay(500);
 };
 
@@ -271,24 +233,25 @@ void options_about_screen() {
     };
   };
 
-  String disp_str = "      DigiGurdy      \n"
-                    "---------------------\n"
-                    "Special Thanks:      \n"
-                    "                     \n"
-                    "John Dingley         \n"
-                    "David Jacobs         \n"
-                    "lune36400            \n"
-                    "SalusaSecondus       ";
-
-  print_screen(disp_str);
-
-  while (true) {
-    myXButton->update();
-
-    if(myXButton->wasPressed()) {
-      break;
-    };
-  };
+  // BAZ - FIX THIS LATER
+  // String disp_str = "      DigiGurdy      \n"
+  //                   "---------------------\n"
+  //                   "Special Thanks:      \n"
+  //                   "                     \n"
+  //                   "John Dingley         \n"
+  //                   "David Jacobs         \n"
+  //                   "lune36400            \n"
+  //                   "SalusaSecondus       ";
+  //
+  // print_screen(disp_str);
+  //
+  // while (true) {
+  //   myXButton->update();
+  //
+  //   if(myXButton->wasPressed()) {
+  //     break;
+  //   };
+  // };
 };
 
 bool other_options_screen() {
@@ -296,25 +259,16 @@ bool other_options_screen() {
   bool done = false;
   while (!done) {
 
-    String disp_str = " ---Other Options--- \n"
-                      " 1)   EX Button      \n"
-                      "    Configuration    \n";
+    String opt2 = "This Option Disabled";
+    String opt3 = "This Option Disabled";
     #ifdef LED_KNOB
-    disp_str = disp_str + " 2) Buzz LED         \n";
-    #else
-    disp_str = disp_str + "\n";
+    opt2 = "Buzz LED On/Off";
     #endif
-
     #ifdef USE_PEDAL
-    disp_str = disp_str + " 3) Vibrato Pedal    \n";
-    #else
-    disp_str = disp_str + "\n";
+    opt3 = "Vibrato Pedal On/Off";
     #endif
 
-    disp_str = disp_str + " 4) About DigiGurdy  \n\n"
-                          "  X or 5) Go Back    \n";
-
-    print_screen(disp_str);
+    print_menu_5("Other Options", "EX Button Config", "Screen Configuration", opt2, opt3, "About Digi-Gurdy");
     delay(150);
 
     my1Button->update();
@@ -322,25 +276,29 @@ bool other_options_screen() {
     my3Button->update();
     my4Button->update();
     my5Button->update();
+    my6Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {
       ex_btn_choice_screen();
 
     } else if (my2Button->wasPressed()) {
+      playing_config_screen();
+
+    } else if (my3Button->wasPressed()) {
       #ifdef LED_KNOB
       led_screen();
       #endif
 
-    } else if (my3Button->wasPressed()) {
+    } else if (my4Button->wasPressed()) {
       #ifdef USE_PEDAL
       vib_screen();
       #endif
 
-    } else if (my4Button->wasPressed()) {
+    } else if (my5Button->wasPressed()) {
       options_about_screen();
 
-    } else if (my5Button->wasPressed() || myXButton->wasPressed()) {
+    } else if (my6Button->wasPressed() || myXButton->wasPressed()) {
       return false;
     };
   };
@@ -445,6 +403,7 @@ void clear_eeprom() {
   EEPROM.write(EEPROM_EX2, 2);
   EEPROM.write(EEPROM_EX3, 3);
   EEPROM.write(EEPROM_SCENE_SIGNALLING, 0);
+  EEPROM.write(EEPROM_USE_SOLFEGE, 0);
 
 };
 
@@ -459,22 +418,20 @@ bool view_slot_screen(int slot_num) {
   if (slot_num == 3) { slot = EEPROM_SLOT3; };
   if (slot_num == 4) { slot = EEPROM_SLOT4; };
 
-  String disp_str = " -Saved Slot Tuning- \n"
-                    " Hi Melody: " + LongNoteNum[EEPROM.read(slot + EEPROM_HI_MEL)] + "  \n"
-                    " Lo Melody: " + LongNoteNum[EEPROM.read(slot + EEPROM_LO_MEL)] + "  \n"
-                    " Drone:     " + LongNoteNum[EEPROM.read(slot + EEPROM_DRONE)] + "  \n"
-                    " Trompette: " + LongNoteNum[EEPROM.read(slot + EEPROM_TROMP)] + "  \n"
-                    " Tpose: ";
+  String t_str = "";
+  if (EEPROM.read(slot + EEPROM_TPOSE) > 12) { t_str += "+"; };
+  t_str = t_str + ((EEPROM.read(slot + EEPROM_TPOSE))-12);
 
-  if (EEPROM.read(slot + EEPROM_TPOSE) > 12) { disp_str += "+"; };
-  disp_str = disp_str + ((EEPROM.read(slot + EEPROM_TPOSE))-12) + "  Capo: ";
+  String cap_str = "";
+  if (EEPROM.read(slot + EEPROM_CAPO) > 0) { cap_str += "+"; };
+  cap_str = cap_str + (EEPROM.read(slot + EEPROM_CAPO));
 
-  if (EEPROM.read(slot + EEPROM_CAPO) > 0) { disp_str += "+"; };
-  disp_str = disp_str + (EEPROM.read(slot + EEPROM_CAPO)) + "\n"
-             " A or 1) Accept \n"
-             " X or 2) Go Back  \n";
-
-  print_screen(disp_str);
+  print_tuning("Saved Slot Tuning",
+               getLongNoteNum(EEPROM.read(slot + EEPROM_HI_MEL)),
+               getLongNoteNum(EEPROM.read(slot + EEPROM_LO_MEL)),
+               getLongNoteNum(EEPROM.read(slot + EEPROM_DRONE)),
+               getLongNoteNum(EEPROM.read(slot + EEPROM_TROMP)),
+               t_str, cap_str);
   delay(150);
 
   bool done = false;
@@ -508,21 +465,20 @@ bool view_preset_screen(int preset) {
   if (preset == 3) { tunings = PRESET3; };
   if (preset == 4) { tunings = PRESET4; };
 
-  String disp_str = " ---Preset Tuning--- \n"
-                    " Hi Melody: " + LongNoteNum[tunings[0]] + "  \n"
-                    " Lo Melody: " + LongNoteNum[tunings[1]] + "  \n"
-                    " Trompette: " + LongNoteNum[tunings[3]] + "  \n"
-                    " Drone:     " + LongNoteNum[tunings[2]] + "  \n"
-                    " Tpose: ";
+  String t_str = "";
+  if (tunings[5] > 12) { t_str += "+"; };
+  t_str = t_str + tunings[5];
 
-  if (tunings[5] > 12) { disp_str += "+"; };
-  disp_str = disp_str + tunings[5] + "  Capo: ";
-  if (tunings[6] > 0) { disp_str += "+"; };
-  disp_str = disp_str + tunings[6] + "\n"
-             " A or 1) Accept  \n"
-             " X or 2) Go Back  \n";
+  String cap_str = "";
+  if (tunings[6] > 0) { cap_str += "+"; };
+  cap_str = cap_str + tunings[6];
 
-  print_screen(disp_str);
+  print_tuning("Preset Tuning",
+               getLongNoteNum(tunings[0]),
+               getLongNoteNum(tunings[1]),
+               getLongNoteNum(tunings[2]),
+               getLongNoteNum(tunings[3]),
+               t_str, cap_str);
   delay(150);
 
   bool done = false;
@@ -553,16 +509,7 @@ bool load_saved_screen() {
   bool done = false;
   while (!done) {
 
-    String disp_str = " --Load Saved Slot-- \n"
-                      " Select for Preview: \n"
-                      "                     \n"
-                      "     1) Slot 1       \n"
-                      "     2) Slot 2       \n"
-                      "     3) Slot 3       \n"
-                      "     4) Slot 4       \n"
-                      "X or 5) Go Back      \n";
-
-    print_screen(disp_str);
+    print_menu_4("Load Saved Tuning", "Slot 1", "Slot 2", "Slot 3", "Slot 4");
     delay(150);
 
     // Check the 1 and 2 buttons
@@ -598,16 +545,9 @@ bool load_preset_screen() {
   bool done = false;
   while (!done) {
 
-    String disp_str = " ---Load A Preset--- \n"
-                      " Select a Preset:    \n"
-                      "                     \n"
-                      " 1) " + PRESET1_NAME + "\n"
-                      " 2) " + PRESET2_NAME + "\n"
-                      " 3) " + PRESET3_NAME + "\n"
-                      " 4) " + PRESET4_NAME + "\n"
-                      " X or 5) Go Back     \n";
-
-    print_screen(disp_str);
+    print_menu_4("Select Tuning Preset",
+                 PRESET1_NAME, PRESET2_NAME,
+                 PRESET3_NAME, PRESET4_NAME);
     delay(150);
 
     // Check the 1 and 2 buttons
@@ -640,20 +580,13 @@ void scene_options_screen() {
   bool done = false;
   while (!done) {
 
-    String disp_str = " -Scene Signalliing- \n"
-                      " Select an Option:   \n"
-                      "                     \n"
-                      " 1) None             \n"
-                      " 2) Prog Chg, Ch. 1  \n"
-                      "                     \n"
-                      " X) Go Back          \n";
-
-    print_screen(disp_str);
+    print_menu_2("Scene Signaling", "None", "Prog Chg, Ch. 1");
     delay(150);
 
     // Check the buttons
     my1Button->update();
     my2Button->update();
+    my3Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {
@@ -664,71 +597,83 @@ void scene_options_screen() {
       scene_signal_type = 1;
       EEPROM.write(EEPROM_SCENE_SIGNALLING, scene_signal_type);
       done = true;
-    } else if (myXButton->wasPressed()) {
+    } else if (my3Button->wasPressed() || myXButton->wasPressed()) {
       done = true;
     }
   }
 }
 
 // This screen lets you choose what kind of display you want.
-void playing_options_screen() {
+void playing_scr_screen() {
   bool done = false;
   while (!done) {
 
-    String disp_str = " -Choose Play Screen-\n"
-                      " Select an Option:   \n"
-                      "                     \n"
-                      " 1) Big Note + Staff \n"
-                      "                     \n"
-                      " 2) Big Note         \n"
-                      "                     \n"
-                      " X) Go Back          \n";
-
-    print_screen(disp_str);
+    print_menu_6("Choose Play Screen", "Note Bitmap + Staff", "Printed Note + Staff", "Note Bitmap Only", "Printed Note Only", "Staff Only", "Blank");
     delay(150);
 
     // Check the 1 and 2 buttons
     my1Button->update();
     my2Button->update();
+    my3Button->update();
+    my4Button->update();
+    my5Button->update();
+    my6Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {
 
-      play_screen_type = 0;
-      EEPROM.write(EEPROM_DISPLY_TYPE, 0);
+      play_screen_type = ((play_screen_type / 10) * 10) + 0;
+      EEPROM.write(EEPROM_DISPLY_TYPE, play_screen_type);
 
-      display.clearDisplay();
-      display.setTextSize(2);
-      display.setTextColor(WHITE);
-      display.setCursor(0, 0);
-      String disp_str = ""
-      "  DISPLAY  \n"
-      "  \n"
-      "  SAVED \n";
-
-      display.print(disp_str);
-      display.display();
+      print_message_2("Choose Play Screen", "Note Bitmap + Staff", "Saved to EEPROM");
       delay(750);
       done = true;
 
     } else if (my2Button->wasPressed()) {
 
-      play_screen_type = 1;
-      EEPROM.write(EEPROM_DISPLY_TYPE, 1);
+      play_screen_type = ((play_screen_type / 10) * 10) + 1;
+      EEPROM.write(EEPROM_DISPLY_TYPE, play_screen_type);
 
-      display.clearDisplay();
-      display.setTextSize(2);
-      display.setTextColor(WHITE);
-      display.setCursor(0, 0);
-      String disp_str = ""
-      "  DISPLAY  \n"
-      "  \n"
-      "   SAVED  \n";
-
-      display.print(disp_str);
-      display.display();
+      print_message_2("Choose Play Screen", "Printed Note + Staff", "Saved to EEPROM");
       delay(750);
       done = true;
+
+    } else if (my3Button->wasPressed()) {
+
+      play_screen_type = ((play_screen_type / 10) * 10) + 2;
+      EEPROM.write(EEPROM_DISPLY_TYPE, play_screen_type);
+
+      print_message_2("Choose Play Screen", "Note Bitmap Only", "Saved to EEPROM");
+      delay(750);
+      done = true;
+
+    } else if (my4Button->wasPressed()) {
+
+      play_screen_type = ((play_screen_type / 10) * 10) + 3;
+      EEPROM.write(EEPROM_DISPLY_TYPE, play_screen_type);
+
+      print_message_2("Choose Play Screen", "Printed Note Only", "Saved to EEPROM");
+      delay(750);
+      done = true;
+
+    } else if (my5Button->wasPressed()) {
+
+      play_screen_type = ((play_screen_type / 10) * 10) + 4;
+      EEPROM.write(EEPROM_DISPLY_TYPE, play_screen_type);
+
+      print_message_2("Choose Play Screen", "Staff Only Screen", "Saved to EEPROM");
+      delay(750);
+      done = true;
+
+    } else if (my6Button->wasPressed()) {
+
+      play_screen_type = ((play_screen_type / 10) * 10) + 5;
+      EEPROM.write(EEPROM_DISPLY_TYPE, play_screen_type);
+
+      print_message_2("Choose Play Screen", "Blank Play Screen", "Saved to EEPROM");
+      delay(750);
+      done = true;
+
     } else if (myXButton->wasPressed()) {
       done = true;
     };
@@ -742,49 +687,31 @@ void options_screen() {
   bool done = false;
   while (!done) {
 
-    String disp_str = " ------Options------ \n"
-                      " Select an Option:   \n"
-                      "                     \n"
-                      " 1) Clear EEPROM     \n"
-                      " 2) Playing Screen   \n"
-                      " 3) Scene Control    \n"
-                      "                     \n"
-                      " X) Go Back          \n";
-
-    print_screen(disp_str);
+    print_menu_3("Options", "Clear EEPROM", "Scene Control", "About Digi-Gurdy");
     delay(150);
 
     // Check the 1 and 2 buttons
     my1Button->update();
     my2Button->update();
     my3Button->update();
+    my4Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {
 
       clear_eeprom();
 
-      display.clearDisplay();
-      display.setTextSize(2);
-      display.setTextColor(WHITE);
-      display.setCursor(0, 0);
-      String disp_str = ""
-      "  EEPROM  \n"
-      "  \n"
-      "  CLEARED \n";
-
-      display.print(disp_str);
-      display.display();
+      print_message_2("Clear EEPROM", "EEPROM Cleared,", "(Defaults Reset)");
       delay(750);
       done = true;
 
     } else if (my2Button->wasPressed()) {
-      playing_options_screen();
-      done = true;
-    } else if (my3Button->wasPressed()) {
       scene_options_screen();
       done = true;
-    } else if (myXButton->wasPressed()) {
+    } else if (my3Button->wasPressed()) {
+      options_about_screen();
+      done = true;
+    } else if (myXButton->wasPressed() || my4Button->wasPressed()) {
       done = true;
     };
   };
@@ -796,16 +723,8 @@ void welcome_screen() {
   bool done = false;
   while (!done) {
 
-    String disp_str = " -----DigiGurdy----- \n"
-                      " Select an Option:   \n"
-                      "                     \n"
-                      " 1) Load Preset      \n"
-                      " 2) Load Save Slot   \n"
-                      " 3) New Tuning Setup \n"
-                      " 4) Other Options    \n"
-                      "                     \n";
-
-    print_screen(disp_str);
+    print_menu_4_nobk("Digi-Gurdy", "Load Preset", "Load Save Slot",
+                      "New Tuning Setup", "Other Options");
     delay(150);
 
     // Check the 1 and 2 buttons
@@ -825,6 +744,10 @@ void welcome_screen() {
 
     } else if (my4Button->wasPressed()) {
       options_screen();
+
+      // Need to re-check use_solfege in case it changed...
+      use_solfege = EEPROM.read(EEPROM_USE_SOLFEGE);
+
       // Not done = true here, we'd want to get prompted again.
     };
   };
@@ -835,16 +758,7 @@ void led_screen() {
   bool done = false;
   while (!done) {
 
-    String disp_str = " --Buzz LED On/Off-- \n"
-                      " Select an Option:   \n"
-                      "                     \n"
-                      " 1) LED On           \n"
-                      " 2) LED Off          \n"
-                      "                     \n"
-                      " 3 or X) Go Back     \n"
-                      "                     \n";
-
-    print_screen(disp_str);
+    print_menu_2("Buzz LED On/Off", "Enable Buzz LED (On)", "Disable Buzz LED (Off)");
     delay(150);
 
     // Check the 1 and 2 buttons
@@ -857,16 +771,7 @@ void led_screen() {
       EEPROM.write(EEPROM_BUZZ_LED, 1);
       mycrank->enableLED();
 
-      disp_str =  " --Buzz LED On/Off-- \n"
-                  " Select an Option:   \n"
-                  "                     \n"
-                  "     LED ON SAVED    \n"
-                  "                     \n"
-                  "                     \n"
-                  "                     \n"
-                  "                     \n";
-
-      print_screen(disp_str);
+      print_message_2("Buzz LED On/Off", "Buzz LED On", "Saved to EEPROM");
       delay(1000);
 
       done = true;
@@ -875,16 +780,7 @@ void led_screen() {
       EEPROM.write(EEPROM_BUZZ_LED, 0);
       mycrank->disableLED();
 
-      disp_str =  " --Buzz LED On/Off-- \n"
-                  " Select an Option:   \n"
-                  "                     \n"
-                  "                     \n"
-                  "     LED OFF SAVED   \n"
-                  "                     \n"
-                  "                     \n"
-                  "                     \n";
-
-      print_screen(disp_str);
+      print_message_2("Buzz LED On/Off", "Buzz LED Off", "Saved to EEPROM");
       delay(1000);
 
       done = true;
@@ -901,16 +797,7 @@ void vib_screen() {
   bool done = false;
   while (!done) {
 
-    String disp_str = " ---Vibrato Pedal--- \n"
-                      " Select an Option:   \n"
-                      "                     \n"
-                      " 1) Pedal On         \n"
-                      " 2) Pedal Off        \n"
-                      "                     \n"
-                      " 3 or X) Go Back     \n"
-                      "                     \n";
-
-    print_screen(disp_str);
+    print_menu_2("Vibrato Pedal", "Enable Pedal (On)", "Disable Pedal (Off)");
     delay(150);
 
     // Check the 1 and 2 buttons
@@ -922,16 +809,7 @@ void vib_screen() {
     if (my1Button->wasPressed()) {
       myvibknob->enable();
 
-      disp_str =  " ---Vibrato Pedal--- \n"
-                  " Select an Option:   \n"
-                  "                     \n"
-                  "   PEDAL ON SAVED    \n"
-                  "                     \n"
-                  "                     \n"
-                  "                     \n"
-                  "                     \n";
-
-      print_screen(disp_str);
+      print_message_2("Vibrato Pedal", "Pedal On", "Saved to EEPROM");
       delay(1000);
 
       done = true;
@@ -939,16 +817,7 @@ void vib_screen() {
     } else if (my2Button->wasPressed()) {
       myvibknob->disable();
 
-      disp_str =  " ---Vibrato Pedal--- \n"
-                  " Select an Option:   \n"
-                  "                     \n"
-                  "                     \n"
-                  "   PEDAL OFF SAVED   \n"
-                  "                     \n"
-                  "                     \n"
-                  "                     \n";
-
-      print_screen(disp_str);
+      print_message_2("Vibrato Pedal", "Pedal Off", "Saved to EEPROM");
       delay(1000);
 
       done = true;
@@ -956,6 +825,102 @@ void vib_screen() {
     } else if (my3Button->wasPressed() || myXButton->wasPressed()) {
       done = true;
 
+    };
+  };
+};
+
+void playing_config_screen() {
+  bool done = false;
+  while (!done) {
+
+    if (play_screen_type / 10 > 0) {
+      print_menu_3("Screen Configuration", "Notation (ABC/DoReMi)", "Disable Buzz Indicator", "Choose Play Screen");
+    } else {
+      print_menu_3("Screen Configuration", "Notation (ABC/DoReMi)", "Enable Buzz Indicator", "Choose Play Screen");
+    };
+
+    delay(150);
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    my4Button->update();
+    myXButton->update();
+
+    if (my1Button->wasPressed()) {
+      notation_config_screen();
+
+    } else if (my2Button->wasPressed()) {
+
+      if (play_screen_type / 10 > 0) {
+        play_screen_type = play_screen_type % 10;
+        EEPROM.write(EEPROM_DISPLY_TYPE, play_screen_type);
+
+        print_message_2("Play Screen Options", "Buzz Indicator Disabled", "Saved to EEPROM");
+        delay(750);
+      } else {
+        play_screen_type = 10 + (play_screen_type % 10);
+        EEPROM.write(EEPROM_DISPLY_TYPE, play_screen_type);
+
+        print_message_2("Play Screen Options", "Buzz Indicator Enabled", "Saved to EEPROM");
+        delay(750);
+      };
+
+    } else if (my3Button->wasPressed()) {
+      playing_scr_screen();
+
+    } else if (my4Button->wasPressed() || myXButton->wasPressed()) {
+      done = true;
+    };
+  };
+};
+
+
+
+void notation_config_screen() {
+  bool done = false;
+  while (!done) {
+
+    print_menu_3("Note Notation", "Scientific (ABC)", "Solfege (DoReMi)", "Combination (C/Do)");
+    delay(150);
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    my4Button->update();
+    myXButton->update();
+
+    if (my1Button->wasPressed()) {
+
+      EEPROM.write(EEPROM_USE_SOLFEGE, 0);
+      use_solfege = 0;
+
+      print_message_2("Note Notation", "Scientific (ABC)", "Saved to EEPROM");
+      delay(750);
+      done = true;
+
+    } else if (my2Button->wasPressed()) {
+
+      EEPROM.write(EEPROM_USE_SOLFEGE, 1);
+      use_solfege = 1;
+
+      print_message_2("Note Notation", "Solfege (DoReMi)", "Saved to EEPROM");
+      delay(750);
+      done = true;
+
+    } else if (my3Button->wasPressed()) {
+
+      EEPROM.write(EEPROM_USE_SOLFEGE, 2);
+      use_solfege = 2;
+
+      print_message_2("Note Notation", "Combination (C/Do)", "Saved to EEPROM");
+      delay(750);
+      done = true;
+
+    } else if (my4Button->wasPressed() || myXButton->wasPressed()) {
+      done = true;
     };
   };
 };

@@ -1,68 +1,55 @@
-#include "display.h"
-#include "config.h"
-#include "bitmaps.h"
 #include "startup_screens.h"
 
-void startup_screen_sqeuence() {
+void about_screen() {
 
-  // Clear the buffer.
-  display.clearDisplay();
+  u8g2.clearBuffer();
+  u8g2.setFontMode(1);
+  u8g2.setFont(u8g2_font_elispe_tr);
 
-  // Intro animated sequence
-  // display.clearDisplay();
-  display.drawBitmap(0, 0, logos[0], 128, 64, 1);
-  display.display();
-  delay(800);
-  display.clearDisplay();
-  display.drawBitmap(0, 0, logos[1], 128, 64, 1);
-  display.display();
-  delay(110);
-  display.clearDisplay();
-  display.drawBitmap(0, 0, logos[2], 128, 64, 1);
-  display.display();
-  delay(110);
-  display.clearDisplay();
-  display.drawBitmap(0, 0, logos[3], 128, 64, 1);
-  display.display();
-  delay(110);
-  display.clearDisplay();
-  display.drawBitmap(0, 0, logos[4], 128, 64, 1);
-  display.display();
-  delay(110);
-  display.clearDisplay();
-  display.drawBitmap(0, 0, logos[5], 128, 64, 1);
-  display.display();
-  delay(110);
-  display.clearDisplay();
-  display.drawBitmap(0, 0, logos[6], 128, 64, 1);
-  display.display();
-  delay(110);
-  display.clearDisplay();
-  display.drawBitmap(0, 0, logos[7], 128, 64, 1);
-  display.display();
+  u8g2.drawStr(64 - (u8g2.getStrWidth("Digi-Gurdy") / 2), 14, "Digi-Gurdy");
 
-  display.clearDisplay();
+  // Print a pretty 3-stripe line "around" the title
+  u8g2.drawHLine(0, 3, 62 - (u8g2.getStrWidth("Digi-Gurdy") / 2));
+  u8g2.drawHLine(0, 4, 62 - (u8g2.getStrWidth("Digi-Gurdy") / 2));
+  u8g2.drawHLine(0, 7, 62 - (u8g2.getStrWidth("Digi-Gurdy") / 2));
+  u8g2.drawHLine(0, 8, 62 - (u8g2.getStrWidth("Digi-Gurdy") / 2));
+  u8g2.drawHLine(0, 11, 62 - (u8g2.getStrWidth("Digi-Gurdy") / 2));
+  u8g2.drawHLine(0, 12, 62 - (u8g2.getStrWidth("Digi-Gurdy") / 2));
 
-  // Display the about screen
-  about_screen();
-  delay(1000);
+  u8g2.drawHLine(66 + (u8g2.getStrWidth("Digi-Gurdy") / 2), 3, 64);
+  u8g2.drawHLine(66 + (u8g2.getStrWidth("Digi-Gurdy") / 2), 4, 64);
+  u8g2.drawHLine(66 + (u8g2.getStrWidth("Digi-Gurdy") / 2), 7, 64);
+  u8g2.drawHLine(66 + (u8g2.getStrWidth("Digi-Gurdy") / 2), 8, 64);
+  u8g2.drawHLine(66 + (u8g2.getStrWidth("Digi-Gurdy") / 2), 11, 64);
+  u8g2.drawHLine(66 + (u8g2.getStrWidth("Digi-Gurdy") / 2), 12, 64);
+
+  u8g2.setFont(u8g2_font_finderskeepers_tf);
+
+  u8g2.drawStr(64 - (u8g2.getStrWidth("By Basil Lalli") / 2), 28, "By Basil Lalli");
+  u8g2.drawStr(64 - (u8g2.getStrWidth("Concept By John Dingley") / 2), 37, "Concept By John Dingley");
+  u8g2.drawStr(64 - (u8g2.getStrWidth(REL_DATE.c_str()) / 2), 46, REL_DATE.c_str());
+  u8g2.drawStr(64 - (u8g2.getStrWidth(EXTRA_LINE.c_str()) / 2), 55, EXTRA_LINE.c_str());
+  u8g2.drawStr(64 - (u8g2.getStrWidth("shorturl.at/tuDY1") / 2), 64, "shorturl.at/tuDY1");
+
+  u8g2.sendBuffer();
 };
 
-void about_screen() {
-  display.clearDisplay();
-  display.setTextSize(2);
-  display.setTextColor(WHITE);
-  display.setCursor(0, 0);
-  display.println(" DigiGurdy");
-  display.setTextSize(1);
+void startup_screen_sequence() {
 
-  String disp_str = "---------------------\n"
-                    "   By Basil Lalli,   \n"
-                    "Concept By J. Dingley\n"
-                    + REL_DATE + "\n"
-                    + EXTRA_LINE + "\n"
-                    "  shorturl.at/tuDY1  \n";
-
-  display.println(disp_str);
-  display.display();
+  for (int x = 0; x < 8; x++) {
+    // Clear the buffer.
+    u8g2.clearBuffer();
+    u8g2.drawBitmap(0, 0, 16, 64, logos[x]);
+    u8g2.sendBuffer();
+    if (x == 0) {
+      delay(800);
+    } else if (x > 6) {
+      delay(500);
+    } else {
+      delay(120);
+    };
+  };
+  // Display the about screen
+  about_screen();
+  delay(2500);
 };

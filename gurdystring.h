@@ -31,6 +31,7 @@
 
 class GurdyString {
   private:
+    String name;
     int open_note;          // This string's base note
     int midi_channel;       // This string's MIDI channel (1-8)
     int midi_volume;        // 0-127, I'm using 56 everywhere right now
@@ -40,7 +41,7 @@ class GurdyString {
                             // This is necessary to turn off notes before turning on new ones.
 
   public:
-    GurdyString(int my_channel, int my_note, int my_vol = 70);
+    GurdyString(int my_channel, int my_note, String my_name, int my_vol = 70);
     void soundOn(int my_offset = 0, int my_modulation = 0);
     void soundOff();
     void soundKill();
@@ -55,6 +56,7 @@ class GurdyString {
     void setExpression(int exp);
     void setPitchBend(int bend);
     void setVibrato(int vib);
+    String getName();
 };
 
 #endif

@@ -29,7 +29,7 @@ void cycle_mel_mute() {
     };
   };
   if (mystring->isPlaying()) {
-    draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
+    draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
   } else {
     print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
   };
@@ -78,22 +78,30 @@ void cycle_drone_tromp_mute() {
     };
   };
   if (mystring->isPlaying()) {
-    draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
+    draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
   } else {
     print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
   };
 };
 
 void cycle_drone_mute() {
-  if (drone_mode == 0) {
-    drone_mode = 1; // 1 == off
+  if (drone_mode == 0 || drone_mode == 2) {
+    if (drone_mode == 0) {
+      drone_mode = 3;
+    } else {
+      drone_mode = 1;
+    };
     mydrone->setMute(true);
     if (mydrone->isPlaying()) {
       mydrone->soundOff();
       mydrone->soundOn();
     };
-  } else if (drone_mode == 1) {
-    drone_mode = 0; // 0 = On
+  } else if (drone_mode == 1 || drone_mode == 3) {
+    if (drone_mode == 1) {
+      drone_mode = 2;
+    } else {
+      drone_mode = 0; // 0 = On
+    };
     mydrone->setMute(false);
     if (mydrone->isPlaying()) {
       mydrone->soundOff();
@@ -101,7 +109,7 @@ void cycle_drone_mute() {
     };
   };
   if (mystring->isPlaying()) {
-    draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
+    draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
   } else {
     print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
   };
@@ -126,7 +134,7 @@ void cycle_tromp_mute() {
     };
   };
   if (mystring->isPlaying()) {
-    draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type);
+    draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
   } else {
     print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
   };

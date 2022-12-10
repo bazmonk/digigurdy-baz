@@ -34,16 +34,8 @@ void ExButton::fn_choice_screen(int but_num) {
   bool done = false;
   while (!done) {
 
-    String disp_str = " --EX Button Func.-- \n"
-                      " Choose EX  Function:\n"
-                      " 1) Open Pause Menu  \n"
-                      " 2) Cycle Mel. Mute  \n"
-                      " 3) Cycle Dn/Tr. Mute\n"
-                      " 4) Toggle Drone Mute\n"
-                      " 5) Toggle Tromp Mute\n"
-                      " X or 6) Go Back     \n";
-
-    print_screen(disp_str);
+    print_menu_5("Ex Button Func.", "Open Pause Menu", "Cycle Mel. Mute", "Cycle Dn/Tr. Mute",
+                 "Toggle Drone Mute", "Toggle Trompette Mute");
     delay(200);
 
     my1Button->update();

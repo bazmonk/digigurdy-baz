@@ -4,7 +4,55 @@ See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more docu
 
 **Pre-compiled builds of the code will be made available from 1.7.99 and up.  See https://github.com/bazmonk/digigurdy-baz/wiki/install-by-hex for installation instructions.**
 
-**Check out version 2.0.0! (NEW)**
+**Check out version 2.2.0! (NEW)**
+
+* 2.2.0 - Typos plus all the 2.1.x changes below
+  * Graphics overhaul to transition to U8G2.
+  * Solfege support
+  * A combined ABC/solfege notation Support
+  * New play screen options
+  * On-screen buzz indicator
+  * MIDI performance improvements
+  * Numerous typos fixed
+  * Streamlined guided tuning menu with more intelligent default choices.
+
+* 2.1.9 - Streamlined tuning menu (2.1.8 was a screen typo)
+  * Will be 2.2.0 if I can't find a bug.
+
+* 2.1.75 - Turned Buzz indicator menu into a toggle instead of two separate on/off options.
+
+* 2.1.7 - Created a printed note play screen and options
+  * For DoReMi support.
+
+* 2.1.6 - Created a ABC/DoReMi "Combo" option
+
+* 2.1.5 - DoReMi support
+  * Enabled/disabled in Pause->Other-Playing Screen Config
+
+* 2.1.4 - Cut down on excessive expression changes
+  * Expression-based volume was being sampled and updated about 20 times a second.
+  * By only sending changes (even tiny ones), this cuts down on a lot of idle MIDI messages.
+
+* 2.1.3 - On-screen Buzz indicator
+  * This can be enabled/disabled in the pause menu (Pause->Other->Playing Screen Config)
+  * Option saves to EEPROM independent of save slot
+  * Draws a thin rectangle around the play screen when you buzz!
+
+* 2.1.2 -
+  * Several formatting typos fixed.
+  * Playing screen adjustment moved to pause screen (not at startup)
+  * Added two new playing screen options.
+  * Fixed several cases of the "# or X) Go Back" not having the # updated.
+    * Now that this is standardized, I've probably missed it more.
+  * Added name function to GurdyString
+  * Removed unused "7" button message from menu_6
+  * Tuning and volume screen show string name
+
+* 2.1.1 -
+  * Working build with U8G2.  Brings back Blue OLED support.
+
+* 2.1.0 -
+  * Beginning of conversion to U8G2.  Display.cpp done, starup_screens done.
 
 * 2.0.0 -
   * Same as 2.0rc5.
