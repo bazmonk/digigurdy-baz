@@ -3,13 +3,13 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.1.9";
+const String VERSION = "2.2.0";
 const String REL_DATE = "2022-12-09, v" + VERSION;
 
 // Use one of these if you want, on the title/about screen.  Or make your own!
 //const String EXTRA_LINE = "                     ";
-const String EXTRA_LINE = "    MIDI-OUT, LED    ";
-//const String EXTRA_LINE = "  MIDI-OUT - PEDAL   ";
+//const String EXTRA_LINE = "    MIDI-OUT, LED    ";
+const String EXTRA_LINE = "  MIDI-OUT - PEDAL   ";
 //const String EXTRA_LINE = " TRIGGER - LED KNOB  ";
 //const String EXTRA_LINE = " TSUNAMI - LED KNOB  ";
 
@@ -30,13 +30,13 @@ const String EXTRA_LINE = "    MIDI-OUT, LED    ";
 // below and should enable only one.
 
 // Comment this out if you do not want to use the buzz LED feature
-#define LED_KNOB
+//#define LED_KNOB
 
 // LED_PIN is the pin used for the buzz LED.
 const int LED_PIN = 40;
 
 // Comment this out if you do not want to use the vibrato accessory pedal
-//#define USE_PEDAL
+#define USE_PEDAL
 
 // PEDAL_PIN is the pin used for the pedal accessory.
 const int PEDAL_PIN = 40;

@@ -4,7 +4,17 @@ See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more docu
 
 **Pre-compiled builds of the code will be made available from 1.7.99 and up.  See https://github.com/bazmonk/digigurdy-baz/wiki/install-by-hex for installation instructions.**
 
-**Check out version 2.1.x! (NEW)**
+**Check out version 2.2.0! (NEW)**
+
+* 2.2.0 - Typos plus all the 2.1.x changes below
+  * Graphics overhaul to transition to U8G2.
+  * Solfege support
+  * A combined ABC/solfege notation Support
+  * New play screen options
+  * On-screen buzz indicator
+  * MIDI performance improvements
+  * Numerous typos fixed
+  * Streamlined guided tuning menu with more intelligent default choices.
 
 * 2.1.9 - Streamlined tuning menu (2.1.8 was a screen typo)
   * Will be 2.2.0 if I can't find a bug.
