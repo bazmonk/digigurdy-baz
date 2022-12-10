@@ -906,7 +906,7 @@ void notation_config_screen() {
       EEPROM.write(EEPROM_USE_SOLFEGE, 1);
       use_solfege = 1;
 
-      print_message_2("Note Notation", "Solfrege (DoReMi)", "Saved to EEPROM");
+      print_message_2("Note Notation", "Solfege (DoReMi)", "Saved to EEPROM");
       delay(750);
       done = true;
 
