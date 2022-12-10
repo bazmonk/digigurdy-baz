@@ -6,6 +6,9 @@ See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more docu
 
 **Check out version 2.1.x! (NEW)**
 
+* 2.1.9 - Streamlined tuning menu (2.1.8 was a screen typo)
+  * Will be 2.2.0 if I can't find a bug.
+
 * 2.1.75 - Turned Buzz indicator menu into a toggle instead of two separate on/off options.
 
 * 2.1.7 - Created a printed note play screen and options
