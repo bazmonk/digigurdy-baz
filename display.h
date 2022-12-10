@@ -33,8 +33,7 @@ void print_pause_screen(String d_string, String t_string, String h_string, Strin
 void print_confirm_screen(String title, String msg1, String msg2, String opt1);
 void print_tuning(String title, String hi_note, String low_note, String drone_note, String tromp_note, String tpose_str, String capo_str);
 void print_tuning_summary(int hi, int lo, int tromp, int drone);
-void print_tuning_choice_4(String title, int opt1, int opt2, int opt3, int opt4);
-void print_tuning_choice_6(String title, int opt1, int opt2, int opt3, int opt4, int opt5, int opt6, int def_opt);
+void print_tuning_choice_3(String title, int opt1, int opt2, int opt3);
 void print_value_selection(String title, String value);
 
 #endif

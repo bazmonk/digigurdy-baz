@@ -393,8 +393,7 @@ void print_tuning_summary(int hi, int lo, int tromp, int drone) {
   u8g2.sendBuffer();
 };
 
-
-void print_tuning_choice_4(String title, int opt1, int opt2, int opt3, int opt4) {
+void print_tuning_choice_3(String title, int opt1, int opt2, int opt3) {
 
   // Clear the screen, set overlay font mode (don't draw background)
   // FontMode 1 requires a t* font
@@ -413,58 +412,16 @@ void print_tuning_choice_4(String title, int opt1, int opt2, int opt3, int opt4)
   // Print the title centered on the top "line"
   u8g2.drawStr(64 - (u8g2.getStrWidth(title.c_str()) / 2), 8, title.c_str());
 
-  // Draw all six numbers
-  u8g2.drawStr(25 - u8g2.getStrWidth("**1) "), 25, "**1) ");
-  u8g2.drawStr(75 - u8g2.getStrWidth("2) "), 25, "2) ");
-  u8g2.drawStr(25 - u8g2.getStrWidth("3) "), 41, "3) ");
-  u8g2.drawStr(75 - u8g2.getStrWidth("4) "), 41, "4) ");
+
+  u8g2.drawStr(25 - u8g2.getStrWidth("**1) "), 20, "**1) ");
+  u8g2.drawStr(25 - u8g2.getStrWidth("2) "), 34, "2) ");
+  u8g2.drawStr(25 - u8g2.getStrWidth("3) "), 48, "3) ");
+
   u8g2.drawStr(64 - (u8g2.getStrWidth("A) Default (**)") / 2), 64, "A) Default (**)");
 
-  // Draw all six options
-  u8g2.drawStr(23, 25, getLongNoteNum(opt1).c_str());
-  u8g2.drawStr(77, 25, getLongNoteNum(opt2).c_str());
-  u8g2.drawStr(23, 41, getLongNoteNum(opt3).c_str());
-  u8g2.drawStr(77, 41, getLongNoteNum(opt4).c_str());
-
-  u8g2.sendBuffer();
-};
-
-void print_tuning_choice_6(String title, int opt1, int opt2, int opt3, int opt4, int opt5, int opt6, int def_opt) {
-
-  // Clear the screen, set overlay font mode (don't draw background)
-  // FontMode 1 requires a t* font
-  u8g2.clearBuffer();
-  u8g2.setFontMode(1);
-  u8g2.setFont(u8g2_font_finderskeepers_tf);
-
-  // Print a pretty 3-stripe line "around" the title
-  u8g2.drawHLine(0, 2, 61 - (u8g2.getStrWidth(title.c_str()) / 2));
-  u8g2.drawHLine(0, 4, 61 - (u8g2.getStrWidth(title.c_str()) / 2));
-  u8g2.drawHLine(0, 6, 61 - (u8g2.getStrWidth(title.c_str()) / 2));
-  u8g2.drawHLine(67 + (u8g2.getStrWidth(title.c_str()) / 2), 2, 64);
-  u8g2.drawHLine(67 + (u8g2.getStrWidth(title.c_str()) / 2), 4, 64);
-  u8g2.drawHLine(67 + (u8g2.getStrWidth(title.c_str()) / 2), 6, 64);
-
-  // Print the title centered on the top "line"
-  u8g2.drawStr(64 - (u8g2.getStrWidth(title.c_str()) / 2), 8, title.c_str());
-
-  // Draw all six numbers
-  u8g2.drawStr(25 - u8g2.getStrWidth("1) "), 22, "1) ");
-  u8g2.drawStr(75 - u8g2.getStrWidth("2) "), 22, "2) ");
-  u8g2.drawStr(25 - u8g2.getStrWidth("3) "), 34, "3) ");
-  u8g2.drawStr(75 - u8g2.getStrWidth("4) "), 34, "4) ");
-  u8g2.drawStr(25 - u8g2.getStrWidth("5) "), 46, "5) ");
-  u8g2.drawStr(75 - u8g2.getStrWidth("6) "), 46, "6) ");
-
-  u8g2.drawStr(64 - (u8g2.getStrWidth(("A) Default = " + String("") + def_opt).c_str()) / 2), 64, ("A) Default = " + String("") + def_opt).c_str());
-
-  // Draw all six options
-  u8g2.drawStr(23, 22, getLongNoteNum(opt1).c_str());
-  u8g2.drawStr(77, 22, getLongNoteNum(opt2).c_str());
-  u8g2.drawStr(23, 34, getLongNoteNum(opt3).c_str());
-  u8g2.drawStr(77, 34, getLongNoteNum(opt4).c_str());
-  u8g2.drawStr(23, 46, getLongNoteNum(opt5).c_str());
-  u8g2.drawStr(77, 46, getLongNoteNum(opt6).c_str());
+  u8g2.drawStr(25, 20, getLongNoteNum(opt1).c_str());
+  u8g2.drawStr(25, 34, getLongNoteNum(opt2).c_str());
+  u8g2.drawStr(25, 48, getLongNoteNum(opt3).c_str());
 
   u8g2.sendBuffer();
 };

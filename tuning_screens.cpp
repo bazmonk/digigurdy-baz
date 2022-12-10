@@ -75,20 +75,18 @@ void tuning_hi_melody() {
   int choice1;
   int choice2;
   int choice3;
-  int choice4;
 
   if (gc_or_dg) {
-    base_note = Note(g4);
+    base_note = Note(g3);
   } else {
-    base_note = Note(d4);
+    base_note = Note(d3);
   };
 
-  choice1 = base_note + 12;
-  choice2 = base_note + 17;
-  choice3 = base_note;
-  choice4 = base_note + 5;
+  choice1 = base_note;
+  choice2 = base_note + 12;
+  choice3 = base_note + 24;
 
-  print_tuning_choice_4("Choose Hi Melody", choice1, choice2, choice3, choice4);
+  print_tuning_choice_3("Choose Hi Melody", choice2, choice3, choice1);
   delay(150);
 
   bool done = false;
@@ -98,20 +96,16 @@ void tuning_hi_melody() {
     my1Button->update();
     my2Button->update();
     my3Button->update();
-    my4Button->update();
     myAButton->update();
 
     if (my1Button->wasPressed() || myAButton->wasPressed()) {
-      mystring->setOpenNote(choice1);
-      done = true;
-    } else if (my2Button->wasPressed()) {
       mystring->setOpenNote(choice2);
       done = true;
-    } else if (my3Button->wasPressed()) {
+    } else if (my2Button->wasPressed()) {
       mystring->setOpenNote(choice3);
       done = true;
-    } else if (my4Button->wasPressed()) {
-      mystring->setOpenNote(choice4);
+    } else if (my3Button->wasPressed()) {
+      mystring->setOpenNote(choice1);
       done = true;
     };
   };
@@ -119,24 +113,12 @@ void tuning_hi_melody() {
 
 void tuning_low_melody() {
 
-  int base_note;
-  int choice1;
-  int choice2;
-  int choice3;
-  int choice4;
+  int base_note = mystring->getOpenNote();
+  int choice1 = base_note - 12;
+  int choice2 = base_note;
+  int choice3 = base_note - 7;
 
-  if (gc_or_dg) {
-    base_note = Note(g4);
-  } else {
-    base_note = Note(d4);
-  };
-
-  choice1 = base_note;
-  choice2 = base_note - 7;
-  choice3 = base_note - 12;
-  choice4 = base_note - 19;
-
-  print_tuning_choice_4("Choose Low Melody", choice1, choice2, choice3, choice4);
+  print_tuning_choice_3("Choose Low Melody", choice1, choice2, choice3);
   delay(150);
 
   bool done = false;
@@ -146,7 +128,6 @@ void tuning_low_melody() {
     my1Button->update();
     my2Button->update();
     my3Button->update();
-    my4Button->update();
     myAButton->update();
 
     if (my1Button->wasPressed() || myAButton->wasPressed()) {
@@ -158,103 +139,19 @@ void tuning_low_melody() {
     } else if (my3Button->wasPressed()) {
       mylowstring->setOpenNote(choice3);
       done = true;
-    } else if (my4Button->wasPressed()) {
-      mylowstring->setOpenNote(choice4);
-      done = true;
-    };
-  };
-};
-
-void tuning_drone() {
-
-  int base_note;
-  int choice1;
-  int choice2;
-  int choice3;
-  int choice4;
-  int choice5;
-  int choice6;
-
-  if (gc_or_dg) {
-    base_note = Note(g4);
-    choice1 = base_note - 31;
-    choice2 = base_note - 24;
-    choice3 = base_note - 19;
-    choice4 = base_note - 12;
-    choice5 = base_note - 7;
-    choice6 = base_note;
-
-  } else {
-    base_note = Note(d4);
-    choice1 = base_note - 19;
-    choice2 = base_note - 24;
-    choice3 = base_note - 7;
-    choice4 = base_note - 12;
-    choice5 = base_note + 5;
-    choice6 = base_note;
-  };
-
-  print_tuning_choice_6("Choose Drone", choice1, choice2, choice3, choice4, choice5, choice6, 3);
-  delay(150);
-
-  bool done = false;
-
-  while (!done) {
-
-    my1Button->update();
-    my2Button->update();
-    my3Button->update();
-    my4Button->update();
-    my5Button->update();
-    my6Button->update();
-    myAButton->update();
-
-    if (my1Button->wasPressed()) {
-      mydrone->setOpenNote(choice1);
-      done = true;
-    } else if (my2Button->wasPressed()) {
-      mydrone->setOpenNote(choice2);
-      done = true;
-    } else if (my3Button->wasPressed() || myAButton->wasPressed()) {
-      mydrone->setOpenNote(choice3);
-      done = true;
-    } else if (my4Button->wasPressed()) {
-      mydrone->setOpenNote(choice4);
-      done = true;
-    } else if (my5Button->wasPressed()) {
-      mydrone->setOpenNote(choice5);
-      done = true;
-    } else if (my6Button->wasPressed()) {
-      mydrone->setOpenNote(choice6);
-      done = true;
     };
   };
 };
 
 void tuning_tromp() {
 
-  int base_note;
-  int choice1;
-  int choice2;
-  int choice3;
-  int choice4;
-  int choice5;
-  int choice6;
+  int base_note = mystring->getOpenNote() - 12;
+  
+  int choice1 = base_note;
+  int choice2 = base_note + 12;
+  int choice3 = base_note - 7;
 
-  if (gc_or_dg) {
-    base_note = Note(g4);
-  } else {
-    base_note = Note(d4);
-  };
-
-  choice1 = base_note + 5;
-  choice2 = base_note + 12;
-  choice3 = base_note - 7;
-  choice4 = base_note;
-  choice5 = base_note - 19;
-  choice6 = base_note - 12;
-
-  print_tuning_choice_6("Choose Trompette", choice1, choice2, choice3, choice4, choice5, choice6, 1);
+  print_tuning_choice_3("Choose Trompette", choice1, choice2, choice3);
   delay(150);
 
   bool done = false;
@@ -264,9 +161,6 @@ void tuning_tromp() {
     my1Button->update();
     my2Button->update();
     my3Button->update();
-    my4Button->update();
-    my5Button->update();
-    my6Button->update();
     myAButton->update();
 
     if (my1Button->wasPressed() || myAButton->wasPressed()) {
@@ -277,15 +171,6 @@ void tuning_tromp() {
       done = true;
     } else if (my3Button->wasPressed()) {
       mytromp->setOpenNote(choice3);
-      done = true;
-    } else if (my4Button->wasPressed()) {
-      mytromp->setOpenNote(choice4);
-      done = true;
-    } else if (my5Button->wasPressed()) {
-      mytromp->setOpenNote(choice5);
-      done = true;
-    } else if (my6Button->wasPressed()) {
-      mytromp->setOpenNote(choice6);
       done = true;
     };
 
@@ -299,6 +184,38 @@ void tuning_tromp() {
       buzz_note += 12;
     };
     mybuzz->setOpenNote(buzz_note);
+  };
+};
+
+void tuning_drone() {
+
+  int base_note = mystring->getOpenNote() - 12;
+  int choice1 = base_note - 12;
+  int choice2 = base_note - 19;
+  int choice3 = base_note - 7;
+
+  print_tuning_choice_3("Choose Drone", choice1, choice2, choice3);
+  delay(150);
+
+  bool done = false;
+
+  while (!done) {
+
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    myAButton->update();
+
+    if (my1Button->wasPressed() || myAButton->wasPressed()) {
+      mydrone->setOpenNote(choice1);
+      done = true;
+    } else if (my2Button->wasPressed()) {
+      mydrone->setOpenNote(choice2);
+      done = true;
+    } else if (my3Button->wasPressed()) {
+      mydrone->setOpenNote(choice3);
+      done = true;
+    };
   };
 };
 
