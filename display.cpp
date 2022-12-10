@@ -350,7 +350,7 @@ void print_tuning(String title, String hi_note, String low_note, String drone_no
   u8g2.drawStr(96 - (u8g2.getStrWidth(drone_note.c_str()) / 2), 36, tromp_note.c_str());
   u8g2.drawStr(96 - (u8g2.getStrWidth(tromp_note.c_str()) / 2), 45, drone_note.c_str());
   u8g2.drawStr(44, 54, tpose_str.c_str());
-  u8g2.drawStr(105, 54, tpose_str.c_str());
+  u8g2.drawStr(105, 54, capo_str.c_str());
 
   u8g2.drawStr(64 - (u8g2.getStrWidth("1) OK  2 or X) Go Back") / 2), 64, "1) OK  2 or X) Go Back");
 
