@@ -145,9 +145,9 @@ void setup() {
 
   // Un-comment to print yourself debugging messages to the Teensyduino
   // serial console.
-  Serial.begin(115200);
-  delay(500);
-  Serial.println("Hello.");
+   Serial.begin(115200);
+   delay(500);
+   Serial.println("Hello.");
 
 
   // Start the Serial MIDI object (like for a bluetooth transmitter).
@@ -547,19 +547,19 @@ void loop() {
   test_count +=1;
   if (test_count > 100000) {
     test_count = 0;
-    Serial.print("100,000 loop()s took: ");
-    Serial.print(millis() - start_time);
-    Serial.print("ms.  Avg Velocity: ");
-    Serial.print(mycrank->getVAvg());
-    Serial.print("rpm. Transitions: ");
-    Serial.print(mycrank->getCount());
-    Serial.print(", est. rev: ");
-    Serial.println(mycrank->getRev());
-    start_time = millis();
-    #ifdef USE_PEDAL
-      Serial.println(String("") + "\nKNOB_V = " + myvibknob->getVoltage());
-      Serial.println(String("") + "KNOB_VIB = " + myvibknob->getVibrato());
-    #endif
+     Serial.print("100,000 loop()s took: ");
+     Serial.print(millis() - start_time);
+     Serial.print("ms.  Avg Velocity: ");
+     Serial.print(mycrank->getVAvg());
+     Serial.print("rpm. Transitions: ");
+     Serial.print(mycrank->getCount());
+     Serial.print(", est. rev: ");
+     Serial.println(mycrank->getRev());
+     start_time = millis();
+     #ifdef USE_PEDAL
+       Serial.println(String("") + "\nKNOB_V = " + myvibknob->getVoltage());
+       Serial.println(String("") + "KNOB_VIB = " + myvibknob->getVibrato());
+     #endif
 
   }
 };
