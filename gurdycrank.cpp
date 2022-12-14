@@ -183,15 +183,15 @@ void GurdyCrank::updateExpression() {
     };
 
     if (expression != new_expression) {
-      Serial.println("EXPRESS LESS");
+      //Serial.println("EXPRESS LESS");
       expression = new_expression;
       mystring->setExpression(expression);
       mylowstring->setExpression(expression);
       mytromp->setExpression(expression);
       mydrone->setExpression(expression);
       mybuzz->setExpression(expression);
-      the_expression_timer = 0;
     };
+    the_expression_timer = 0;
   };
 };
 

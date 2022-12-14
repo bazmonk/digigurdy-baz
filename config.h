@@ -3,13 +3,13 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.2.0";
-const String REL_DATE = "2022-12-09, v" + VERSION;
+const String VERSION = "2.2.1";
+const String REL_DATE = "2022-12-13, v" + VERSION;
 
 // Use one of these if you want, on the title/about screen.  Or make your own!
-//const String EXTRA_LINE = "                     ";
-//const String EXTRA_LINE = "    MIDI-OUT, LED    ";
-const String EXTRA_LINE = "  MIDI-OUT - PEDAL   ";
+//const String EXTRA_LINE = "      3.5 TEST       ";
+const String EXTRA_LINE = "MIDI-OUT,PEDAL, HWSPI";
+//const String EXTRA_LINE = " MIDI-OUT, LED, SWSPI";
 //const String EXTRA_LINE = " TRIGGER - LED KNOB  ";
 //const String EXTRA_LINE = " TSUNAMI - LED KNOB  ";
 
@@ -72,6 +72,7 @@ const float V_THRESHOLD = 5.5;
 
 // This is how long (in microseconds, 1000us = 1ms = 0.001s) the code waits in between reading the
 // crank.  This determines the resolution, not how long we're waiting to detect movement.
+//const int SAMPLE_RATE = 100;
 const int SAMPLE_RATE = 100;
 
 // How long we wait for potential movement of the crank changes dynamically, but not longer than
