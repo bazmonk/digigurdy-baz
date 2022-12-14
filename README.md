@@ -6,7 +6,11 @@ See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more docu
 
 **Check out version 2.2.0! (NEW)**
 
-* 2.3.0 - HW SPI testing...
+* 2.2.1 - Hardware SPI support/requirement
+  * Necessary after testing discovered screen draw time was interrupting crank performance.
+  * Using the teensy unit's hardware SPI controller fixes this nicely, and brings overall speed and
+    responsiveness improvements.
+  * However, this requires rewiring your screen!  See the wiki for more info.
 
 * 2.2.0 - Typos plus all the 2.1.x changes below
   * Graphics overhaul to transition to U8G2.

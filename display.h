@@ -8,18 +8,23 @@
 #include "notes.h"
 
 // These are the Teensy pins wired up for the OLED.
-#define OLED_MOSI 9
-#define OLED_CLK 10
-#define OLED_DC 11
-#define OLED_CS 12
-#define OLED_RESET 13
+// 2.2.1 - changes for HW SPI
+#define OLED_MOSI 11
+#define OLED_CLK 13
+#define OLED_DC 9
+#define OLED_CS 10
+#define OLED_RESET 38
 
 #ifdef WHITE_OLED
   extern U8G2_SSD1306_128X64_NONAME_F_4W_HW_SPI u8g2;
+
+  // This is just here for my reference/testing
+  // when I want to see how bad SW SPI speed is.
   // extern U8G2_SSD1306_128X64_NONAME_F_4W_SW_SPI u8g2;
 #endif
 #ifdef BLUE_OLED
-  extern U8G2_SH1106_128X64_NONAME_F_4W_SW_SPI u8g2;
+  extern U8G2_SH1106_128X64_NONAME_F_4W_HW_SPI u8g2;
+  //extern U8G2_SH1106_128X64_NONAME_F_4W_SW_SPI u8g2;
 #endif
 
 void start_display();
