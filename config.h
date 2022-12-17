@@ -3,8 +3,8 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.2.1";
-const String REL_DATE = "2022-12-13, v" + VERSION;
+const String VERSION = "2.2.2";
+const String REL_DATE = "2022-12-16, v" + VERSION;
 
 // Use one of these if you want, on the title/about screen.  Or make your own!
 //const String EXTRA_LINE = "      3.5 TEST       ";

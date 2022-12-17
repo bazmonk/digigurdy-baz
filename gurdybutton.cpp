@@ -4,10 +4,10 @@
 //   This class is for generic buttons like the octave/tpose ones, which are
 //   press-on, release-off but otherwise generic in purpose.
 
-GurdyButton::GurdyButton(int my_pin) {
+GurdyButton::GurdyButton(int my_pin, int interval) {
   // The 5 is 5ms wait for events to complete.
   // Recommended from the Bounce webpage for "good" buttons.
-  bounce_obj = new Bounce(my_pin, 5);
+  bounce_obj = new Bounce(my_pin, interval);
 
   // In John's code the non-keybox buttons weren't using Bounce.
   // I'm taking a guess that INPUT_PULLUP is what I want to use here but I think so.

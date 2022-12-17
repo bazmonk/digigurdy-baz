@@ -15,7 +15,7 @@ class ExButton: public GurdyButton {
     int my_func;
 
   public:
-    ExButton(int my_pin, int func = 1);
+    ExButton(int my_pin, int func, int interval);
 
     int getFunc();
 
