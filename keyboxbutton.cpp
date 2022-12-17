@@ -5,9 +5,7 @@
 //   * Button type is press-on, release-off
 //   * Button has an offset that it raises notes to on a string.
 
-KeyboxButton::KeyboxButton(int my_pin, int my_offset) : GurdyButton(my_pin) {
-  bounce_obj = new Bounce(my_pin, 5);
-  pinMode(my_pin, INPUT_PULLUP);
+KeyboxButton::KeyboxButton(int my_pin, int my_offset) : GurdyButton(my_pin, 5) {
   note_offset = my_offset;
 };
 
