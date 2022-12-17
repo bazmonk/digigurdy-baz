@@ -5,9 +5,7 @@
 //   * Pressing and releasing once activates it.
 //   * Pressing and releasing again deactivates it.
 
-ToggleButton::ToggleButton(int my_pin) : GurdyButton(my_pin) {
-  bounce_obj = new Bounce(my_pin, 10);
-  pinMode(my_pin, INPUT_PULLUP);
+ToggleButton::ToggleButton(int my_pin, int interval) : GurdyButton(my_pin, interval) {
   toggled = false;
 };
 

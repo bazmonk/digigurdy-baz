@@ -9,7 +9,7 @@ class GurdyButton {
     Bounce* bounce_obj;
     bool being_pressed;
   public:
-    GurdyButton(int my_pin);
+    GurdyButton(int my_pin, int interval);
 
     void update();
     bool beingPressed();

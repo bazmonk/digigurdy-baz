@@ -4,7 +4,11 @@ See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more docu
 
 **Pre-compiled builds of the code will be made available from 1.7.99 and up.  See https://github.com/bazmonk/digigurdy-baz/wiki/install-by-hex for installation instructions.**
 
-**Check out version 2.2.0! (NEW)**
+**Check out version 2.2.2! (NEW)**
+
+* 2.2.2 - Button debouncing
+  * Big button debounce interval bumped up to 250ms.
+  * EX/tpose/capo buttons up to 200ms (maybe higher than needed).
 
 * 2.2.1 - Hardware SPI support/requirement
   * Necessary after testing discovered screen draw time was interrupting crank performance.
