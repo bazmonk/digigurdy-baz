@@ -183,7 +183,7 @@ void setup() {
   // The keybox arrangement is decided by pin_array, which is up in the CONFIG SECTION
   // of this file.  Make adjustments there.
   mygurdy = new HurdyGurdy(pin_array, num_keys);
-  bigbutton = new ToggleButton(39);
+  bigbutton = new ToggleButton(39, 250);
 
   // These indices are defined in config.h
   myXButton = mygurdy->keybox[X_INDEX];
@@ -214,16 +214,16 @@ void setup() {
   mybuzz = new GurdyString(5,Note(c3));
   mykeyclick = new GurdyString(6, Note(b5));
 
-  tpose_up = new GurdyButton(22);   // A.k.a. the button formerly known as octave-up
-  tpose_down = new GurdyButton(21); // A.k.a. the button formerly known as octave-down
+  tpose_up = new GurdyButton(22, 200);   // A.k.a. the button formerly known as octave-up
+  tpose_down = new GurdyButton(21, 200); // A.k.a. the button formerly known as octave-down
   tpose_offset = 0;
 
-  capo = new GurdyButton(23); // The capo button
+  capo = new GurdyButton(23, 299); // The capo button
   capo_offset = 0;
 
-  ex1Button = new ExButton(41, EEPROM.read(EEPROM_EX1));
-  ex2Button = new ExButton(17, EEPROM.read(EEPROM_EX2));
-  ex3Button = new ExButton(14, EEPROM.read(EEPROM_EX3));
+  ex1Button = new ExButton(41, EEPROM.read(EEPROM_EX1), 200);
+  ex2Button = new ExButton(17, EEPROM.read(EEPROM_EX2), 200);
+  ex3Button = new ExButton(14, EEPROM.read(EEPROM_EX3), 200);
 
   scene_signal_type = EEPROM.read(EEPROM_SCENE_SIGNALLING);
 

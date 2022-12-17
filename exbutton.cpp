@@ -1,6 +1,6 @@
 #include "exbutton.h"
 
-ExButton::ExButton(int my_pin, int func) : GurdyButton(my_pin) {
+ExButton::ExButton(int my_pin, int func, int interval) : GurdyButton(my_pin, interval) {
   my_func = func;
 };
 
