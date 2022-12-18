@@ -1,9 +1,3 @@
-#include <ADC.h>
-#include <Arduino.h>
-
-#include "config.h"
-#include "buzzknob.h"
-#include "simpleled.h"
 #include "gurdycrank.h"
 
 // class GurdyCrank controls the cranking mechanism, including the buzz triggers.
@@ -25,6 +19,7 @@ GurdyCrank::GurdyCrank(int s_pin, int buzz_pin, int led_pin) {
   sensor_pin = s_pin;
   pinMode(sensor_pin, INPUT_PULLUP);
   last_event = digitalRead(sensor_pin);
+  expression = 0;
 };
 
 // This had a use, and may just go away...
@@ -49,9 +44,6 @@ void GurdyCrank::update() {
       trans_count += 1;
       rev_count = trans_count / (NUM_SPOKES * 2);
 
-      // Rotate our last four velocity values
-      // v_8 = v_7;
-      // v_7 = v_6;
       v_6 = v_5;
       v_5 = v_4;
       v_4 = v_3;
@@ -71,12 +63,6 @@ void GurdyCrank::update() {
 
       v_avg = (v_smooth + v_2 + v_3 + v_4 + v_5 + v_6) / 6.0;
 
-      // if (v_smooth - v_2 < 0) {
-      //   v_avg = v_avg + ((v_smooth - v_2) / 2.0);
-      // };
-
-      //v_avg = (0.8 * ((v_2 + v_3 + v_4) / 3)) + (0.2 * v_smooth);
-
       // Rotate our last times
       lt_8 = lt_7;
       lt_7 = lt_6;
@@ -93,27 +79,11 @@ void GurdyCrank::update() {
       // Calculate the standard deviation of the last four times.
       lt_stdev = sqrt((pow((lt_1 - lt_avg), 2) + pow((lt_2 - lt_avg), 2) + pow((lt_3 - lt_avg), 2) + pow((lt_4 - lt_avg), 2) + pow((lt_5 - lt_avg), 2) + pow((lt_6 - lt_avg), 2) + pow((lt_7 - lt_avg), 2) + pow((lt_8 - lt_avg), 2)) / 8.0);
 
-      // Serial.print("MOVED,");
-      // Serial.print(v_smooth);
-      // Serial.print(",");
-      // Serial.print(v_avg);
-      // Serial.print(",");
-      // Serial.print(lt_1);
-      // Serial.print(",");
-      // Serial.print(lt_avg);
-      // Serial.print(",");
-      // Serial.print(lt_stdev);
-      // Serial.print(",");
-      // Serial.println((lt_stdev + lt_avg));
-
       the_stop_timer = 0;
       the_spoke_timer = 0;
 
     } else if (the_stop_timer > (lt_avg + (lt_stdev * 3.0)) || the_stop_timer > MAX_WAIT_TIME) {
 
-      // Rotate our last four velocity values
-      // v_8 = v_7;
-      // v_7 = v_6;
       v_6 = v_5;
       v_5 = v_4;
       v_4 = v_3;
@@ -123,9 +93,6 @@ void GurdyCrank::update() {
       v_smooth = v_smooth * DECAY_FACTOR;
       v_avg = (v_smooth + v_2 + v_3 + v_4 + v_5 + v_6) / 6.0;
 
-      // if (v_smooth - v_2 < 0) {
-      //   v_avg = v_avg + ((v_smooth - v_2) / 1.5);
-      // };
 
       // Rotate our last times
       lt_8 = lt_7;
@@ -142,20 +109,6 @@ void GurdyCrank::update() {
 
       // Calculate the standard deviation of the last four times.
       lt_stdev = sqrt((pow((lt_1 - lt_avg), 2) + pow((lt_2 - lt_avg), 2) + pow((lt_3 - lt_avg), 2) + pow((lt_4 - lt_avg), 2) + pow((lt_5 - lt_avg), 2) + pow((lt_6 - lt_avg), 2) + pow((lt_7 - lt_avg), 2) + pow((lt_8 - lt_avg), 2)) / 8.0);
-
-
-      // Serial.print("DECAY,");
-      // Serial.print(v_smooth);
-      // Serial.print(",");
-      // Serial.print(v_avg);
-      // Serial.print(",");
-      // Serial.print(lt_1);
-      // Serial.print(",");
-      // Serial.print(lt_avg);
-      // Serial.print(",");
-      // Serial.print(lt_stdev);
-      // Serial.print(",");
-      // Serial.println((lt_stdev + lt_avg));
 
       the_stop_timer = 0;
     }
@@ -176,16 +129,20 @@ void GurdyCrank::updateExpression() {
     } else if (cur_v < V_THRESHOLD) {
       cur_v = V_THRESHOLD;
     }
-    int expression = int(((cur_v - V_THRESHOLD)/(EXPRESSION_VMAX - V_THRESHOLD)) * (127 - EXPRESSION_START) + EXPRESSION_START);
-
+    int new_expression = int(((cur_v - V_THRESHOLD)/(EXPRESSION_VMAX - V_THRESHOLD)) * (127 - EXPRESSION_START) + EXPRESSION_START);
     if (bigbutton->toggleOn()) {
-      expression = 90;
+      new_expression = 90;
     };
-    mystring->setExpression(expression);
-    mylowstring->setExpression(expression);
-    mytromp->setExpression(expression);
-    mydrone->setExpression(expression);
-    mybuzz->setExpression(expression);
+
+    if (expression != new_expression) {
+      //Serial.println("EXPRESS LESS");
+      expression = new_expression;
+      mystring->setExpression(expression);
+      mylowstring->setExpression(expression);
+      mytromp->setExpression(expression);
+      mydrone->setExpression(expression);
+      mybuzz->setExpression(expression);
+    };
     the_expression_timer = 0;
   };
 };
@@ -252,9 +209,8 @@ bool GurdyCrank::stoppedBuzzing() {
     } else {
       return false;
     }
-  } else {
-    return false;
-  }
+  };
+  return false;
 };
 
 double GurdyCrank::getVAvg() {

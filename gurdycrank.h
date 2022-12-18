@@ -1,6 +1,9 @@
 #ifndef GURDYCRANK_H
 #define GURDYCRANK_H
 
+#include <ADC.h>
+#include <Arduino.h>
+
 #include "buzzknob.h"
 #include "common.h"
 #include "simpleled.h"
@@ -35,6 +38,8 @@ class GurdyCrank {
     bool this_event;
     bool was_spinning = false;
     bool was_buzzing = false;
+
+    int expression;
 
     BuzzKnob* myKnob;
 

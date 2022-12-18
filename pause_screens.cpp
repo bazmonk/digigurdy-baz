@@ -855,7 +855,9 @@ void led_screen() {
 
     if (my1Button->wasPressed()) {
       EEPROM.write(EEPROM_BUZZ_LED, 1);
-      mycrank->enableLED();
+      #ifndef USE_GEARED_CRANK
+        mycrank->enableLED();
+      #endif
 
       disp_str =  " --Buzz LED On/Off-- \n"
                   " Select an Option:   \n"
@@ -873,8 +875,9 @@ void led_screen() {
 
     } else if (my2Button->wasPressed()) {
       EEPROM.write(EEPROM_BUZZ_LED, 0);
-      mycrank->disableLED();
-
+      #ifndef USE_GEARED_CRANK
+        mycrank->disableLED();
+      #endif
       disp_str =  " --Buzz LED On/Off-- \n"
                   " Select an Option:   \n"
                   "                     \n"

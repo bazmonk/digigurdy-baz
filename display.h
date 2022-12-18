@@ -21,6 +21,13 @@
 #define OLED_CS 12
 #define OLED_RESET 13
 
+// FOR HW SCREENS
+//#define OLED_MOSI 11
+//#define OLED_CLK 13
+//#define OLED_DC 9
+//#define OLED_CS 10
+//#define OLED_RESET 38
+
 // Initiate (declare?  Not sure why this works in the header) the correct kind of
 // display object based on OLED type
 #ifdef WHITE_OLED
