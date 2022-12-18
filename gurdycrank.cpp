@@ -1,9 +1,3 @@
-#include <ADC.h>
-#include <Arduino.h>
-
-#include "config.h"
-#include "buzzknob.h"
-#include "simpleled.h"
 #include "gurdycrank.h"
 
 // class GurdyCrank controls the cranking mechanism, including the buzz triggers.
@@ -215,9 +209,8 @@ bool GurdyCrank::stoppedBuzzing() {
     } else {
       return false;
     }
-  } else {
-    return false;
-  }
+  };
+  return false;
 };
 
 double GurdyCrank::getVAvg() {

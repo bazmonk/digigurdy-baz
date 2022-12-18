@@ -15,7 +15,12 @@
 #include "exbutton.h"
 #include "common.h"
 
-#include "gurdycrank.h"
+#ifdef USE_GEARED_CRANK
+  #include "gearcrank.h"
+#else
+  #include "gurdycrank.h"
+#endif
+
 #include "hurdygurdy.h"
 #include "togglebutton.h"
 #include "vibknob.h"
@@ -49,7 +54,12 @@ ADC* adc;
 // Declare the "keybox" and buttons.
 HurdyGurdy *mygurdy;
 ToggleButton *bigbutton;
-GurdyCrank *mycrank;
+
+#ifdef USE_GEARED_CRANK
+  GearCrank *mycrank;
+#else
+  GurdyCrank *mycrank;
+#endif
 
 VibKnob *myvibknob;
 
@@ -176,7 +186,13 @@ void setup() {
 
   // Initialize the ADC object and the crank that will use it.
   adc = new ADC();
-  mycrank = new GurdyCrank(15, A2, LED_PIN);
+
+  #ifdef USE_GEARED_CRANK
+    mycrank = new GearCrank(15, A2);
+    mycrank->beginPolling();
+  #else
+    mycrank = new GurdyCrank(15, A2, LED_PIN);
+  #endif
 
   #ifdef USE_PEDAL
     myvibknob = new VibKnob(PEDAL_PIN);
@@ -539,27 +555,23 @@ void loop() {
   while (usbMIDI.read()) {
   };
 
-  #ifdef USE_TRIGGER
-    //delay(100);
-  #endif
-
   // My dev output stuff.
   test_count +=1;
   if (test_count > 100000) {
     test_count = 0;
      Serial.print("100,000 loop()s took: ");
      Serial.print(millis() - start_time);
-     Serial.print("ms.  Avg Velocity: ");
-     Serial.print(mycrank->getVAvg());
-     Serial.print("rpm. Transitions: ");
-     Serial.print(mycrank->getCount());
-     Serial.print(", est. rev: ");
-     Serial.println(mycrank->getRev());
+     // Serial.print("ms.  Avg Velocity: ");
+     // Serial.print(mycrank->getVAvg());
+     // Serial.print("rpm. Transitions: ");
+     // Serial.print(mycrank->getCount());
+     // Serial.print(", est. rev: ");
+     // Serial.println(mycrank->getRev());
      start_time = millis();
      #ifdef USE_PEDAL
        Serial.println(String("") + "\nKNOB_V = " + myvibknob->getVoltage());
        Serial.println(String("") + "KNOB_VIB = " + myvibknob->getVibrato());
      #endif
-
   }
+
 };

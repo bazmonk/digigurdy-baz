@@ -15,10 +15,21 @@
 #include "startup_screens.h"
 #include "ex_screens.h"
 #include "tuning_screens.h"
-#include "gurdycrank.h"
+
+#ifdef USE_GEARED_CRANK
+  #include "gearcrank.h"
+#else
+  #include "gurdycrank.h"
+#endif
+
 #include "vibknob.h"
 
-extern GurdyCrank *mycrank;
+#ifdef USE_GEARED_CRANK
+  extern GearCrank *mycrank;
+#else
+  extern GurdyCrank *mycrank;
+#endif
+
 extern VibKnob *myvibknob;
 
 void pause_screen();

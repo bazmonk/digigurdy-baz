@@ -769,7 +769,10 @@ void led_screen() {
 
     if (my1Button->wasPressed()) {
       EEPROM.write(EEPROM_BUZZ_LED, 1);
-      mycrank->enableLED();
+
+      #ifndef USE_GEARED_CRANK
+        mycrank->enableLED();
+      #endif
 
       print_message_2("Buzz LED On/Off", "Buzz LED On", "Saved to EEPROM");
       delay(1000);
@@ -778,8 +781,11 @@ void led_screen() {
 
     } else if (my2Button->wasPressed()) {
       EEPROM.write(EEPROM_BUZZ_LED, 0);
-      mycrank->disableLED();
 
+      #ifndef USE_GEARED_CRANK
+        mycrank->disableLED();
+      #endif
+      
       print_message_2("Buzz LED On/Off", "Buzz LED Off", "Saved to EEPROM");
       delay(1000);
 

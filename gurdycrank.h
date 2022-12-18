@@ -1,6 +1,9 @@
 #ifndef GURDYCRANK_H
 #define GURDYCRANK_H
 
+#include <ADC.h>
+#include <Arduino.h>
+
 #include "buzzknob.h"
 #include "common.h"
 #include "simpleled.h"
