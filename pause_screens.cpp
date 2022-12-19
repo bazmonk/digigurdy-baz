@@ -296,9 +296,16 @@ bool other_options_screen() {
   bool done = false;
   while (!done) {
 
+    #ifndef USE_GEARED_CRANK
     String disp_str = " ---Other Options--- \n"
                       " 1)   EX Button      \n"
                       "    Configuration    \n";
+    #else
+    String disp_str = " ---Other Options--- \n"
+                      " 1)     Crank        \n"
+                      "      Detection      \n";
+    #endif
+
     #ifdef LED_KNOB
     disp_str = disp_str + " 2) Buzz LED         \n";
     #else
@@ -325,7 +332,30 @@ bool other_options_screen() {
     myXButton->update();
 
     if (my1Button->wasPressed()) {
-      ex_btn_choice_screen();
+
+      #ifndef USE_GEARED_CRANK
+        ex_btn_choice_screen();
+      #else
+        mycrank->detect();
+        display.clearDisplay();
+        display.setTextSize(2);
+        display.setTextColor(WHITE);
+        display.setCursor(0, 0);
+        display.println(" DigiGurdy");
+        display.setTextSize(1);
+        display.println(" --------------------");
+        display.setTextSize(2);
+        display.println("   Crank  ");
+      #endif
+
+    if (mycrank->isDetected()) {
+    display.println(" Detected ");
+    } else {
+    display.println("   Absent ");
+    };
+
+    display.display();
+    delay(1000);
 
     } else if (my2Button->wasPressed()) {
       #ifdef LED_KNOB

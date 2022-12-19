@@ -34,6 +34,7 @@ class GurdyString {
     int open_note;          // This string's base note
     int midi_channel;       // This string's MIDI channel (1-8)
     int midi_volume;        // 0-127, I'm using 56 everywhere right now
+    int trigger_volume;
     bool mute_on = false;   // Controls the mute feature
     bool is_playing = false;
     int note_being_played;  // The note being sounded (base note + key offset)

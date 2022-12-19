@@ -6,6 +6,7 @@ GurdyString::GurdyString(int my_channel, int my_note, int my_vol) {
   midi_channel = my_channel;
   open_note = my_note;
   midi_volume = my_vol;
+  trigger_volume = int((my_vol)/128.0 * 80 - 70);
   note_being_played = open_note;
 };
 
@@ -23,11 +24,11 @@ void GurdyString::soundOn(int my_offset, int my_modulation) {
 #if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
     MIDI.sendNoteOn(note_being_played, midi_volume, midi_channel);
 #elif defined(USE_TRIGGER)
-    trigger_obj.trackGain(note_being_played + (128 * (midi_channel - 1)), -10);
+    trigger_obj.trackGain(note_being_played + (128 * (midi_channel - 1)), trigger_volume);
     trigger_obj.trackPlayPoly(note_being_played + (128 * (midi_channel - 1)), true);
     trigger_obj.trackLoop(note_being_played + (128 * (midi_channel - 1)), true);
 #elif defined(USE_TSUNAMI)
-    trigger_obj.trackGain(note_being_played + (128 * (midi_channel - 1)), -10);
+    trigger_obj.trackGain(note_being_played + (128 * (midi_channel - 1)), trigger_volume);
     trigger_obj.trackPlayPoly(note_being_played + (128 * (midi_channel - 1)), TSUNAMI_OUT, true);
     trigger_obj.trackLoop(note_being_played + (128 * (midi_channel - 1)), true);
 #endif
@@ -79,6 +80,7 @@ void GurdyString::setOpenNote(int new_note) {
 // MIDI volume is an integer between 0 (off) and 127 (full volume).
 void GurdyString::setVolume(int vol) {
   midi_volume = vol;
+  trigger_volume = int((vol)/128.0 * 80 - 70);
 };
 
 int GurdyString::getVolume() {

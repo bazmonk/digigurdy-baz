@@ -188,6 +188,27 @@ void setup() {
   #ifdef USE_GEARED_CRANK
     mycrank = new GearCrank(15, A2);
     mycrank->beginPolling();
+
+    mycrank->detect();
+    display.clearDisplay();
+    display.setTextSize(2);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 0);
+    display.println(" DigiGurdy");
+    display.setTextSize(1);
+    display.println(" --------------------");
+    display.setTextSize(2);
+    display.println("   Crank  ");
+
+    if (mycrank->isDetected()) {
+    display.println(" Detected ");
+    } else {
+    display.println("   Absent ");
+    };
+
+    display.display();
+    delay(1000);
+    
   #else
     mycrank = new GurdyCrank(15, A2, LED_PIN);
   #endif
