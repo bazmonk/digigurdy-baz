@@ -4,7 +4,14 @@ See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more docu
 
 **Pre-compiled builds of the code will be made available from 1.7.99 and up.  See https://github.com/bazmonk/digigurdy-baz/wiki/install-by-hex for installation instructions.**
 
-**Check out version 2.3.0! (NEW)**
+**Check out version 2.3.1! (NEW)**
+
+* 2.3.1 -
+  * Added TSUNAMI-OUT variable, made def channel 0
+  * Linked trigger/tsunami volume to MIDI volume.  MIDI 112 = line-level wav out.
+  * Geared crank detection:
+    * If using geared crank, crank detection routine runs at startup.
+    * EX config menu is also replaced with a option to trigger crank-redetection.
 
 * 2.3.0 - Geared Crank Support!
   * Remember, in this branch you must have rewired your screen.

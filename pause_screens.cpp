@@ -268,7 +268,12 @@ bool other_options_screen() {
     opt3 = "Vibrato Pedal On/Off";
     #endif
 
+    #ifndef USE_GEARED_CRANK
     print_menu_5("Other Options", "EX Button Config", "Screen Configuration", opt2, opt3, "About Digi-Gurdy");
+    #else
+    print_menu_5("Other Options", "Crank Detection", "Screen Configuration", opt2, opt3, "About Digi-Gurdy");
+    #endif
+
     delay(150);
 
     my1Button->update();
@@ -280,8 +285,23 @@ bool other_options_screen() {
     myXButton->update();
 
     if (my1Button->wasPressed()) {
+      
+      #ifndef USE_GEARED_CRANK
       ex_btn_choice_screen();
 
+      #else
+      print_message_2("Crank Detection", "Crank is detecting,", "Please wait...");
+      mycrank->detect();
+      if (mycrank->isDetected()) {
+        print_message_2("Crank Detection", "Crank is detecting,", "CRANK DETECTED!");
+        delay(1000);
+      } else {
+        print_message_2("Crank Detection", "Crank is detecting,", "CRANK NOT FOUND.");
+        delay(1000);
+      };
+      
+      #endif
+      
     } else if (my2Button->wasPressed()) {
       playing_config_screen();
 

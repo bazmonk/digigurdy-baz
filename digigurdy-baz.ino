@@ -190,6 +190,17 @@ void setup() {
   #ifdef USE_GEARED_CRANK
     mycrank = new GearCrank(15, A2);
     mycrank->beginPolling();
+    
+    print_message_2("Crank Detection", "Crank is detecting,", "Please wait...");
+    mycrank->detect();
+    if (mycrank->isDetected()) {
+      print_message_2("Crank Detection", "Crank is detecting,", "CRANK DETECTED!");
+      delay(1000);
+    } else {
+      print_message_2("Crank Detection", "Crank is detecting,", "CRANK NOT FOUND.");
+      delay(1000);
+    };
+
   #else
     mycrank = new GurdyCrank(15, A2, LED_PIN);
   #endif

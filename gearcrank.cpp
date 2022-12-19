@@ -66,8 +66,8 @@ void GearCrank::detect() {
 };
 
 bool GearCrank::isDetected() {
-  // return (deviations < 10);
-  return true;
+  return (deviations < 10);
+  //return true;
 };
 
 void GearCrank::refreshBuzz() {
