@@ -52,7 +52,11 @@ void GurdyString::soundOff() {
 #if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
   MIDI.sendNoteOff(note_being_played, midi_volume, midi_channel);
 #else
-  trigger_obj.trackFade(note_being_played + (128 * (midi_channel - 1)), -20, 200, true);
+  if (trigger_volume > -50) {
+    trigger_obj.trackFade(note_being_played + (128 * (midi_channel - 1)), trigger_volume - 20, 200, true);
+  } else {
+    trigger_obj.trackFade(note_being_played + (128 * (midi_channel - 1)), -70, 200, true);
+  }
   //trigger_obj.trackStop(note_being_played + (128 * (midi_channel - 1)));
 #endif
   is_playing = false;
