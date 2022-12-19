@@ -3,8 +3,8 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.3.0";
-const String REL_DATE = "2022-12-18, v" + VERSION;
+const String VERSION = "2.3.1";
+const String REL_DATE = "2022-12-19, v" + VERSION;
 
 // Use one of these if you want, on the title/about screen.  Or make your own!
 //const String EXTRA_LINE = "      3.5 TEST       ";
@@ -23,6 +23,9 @@ const String EXTRA_LINE = "MIDI-OUT, HWSPI, GEAR";
 //#define USE_TRIGGER
 //#define USE_TSUNAMI
 
+// This is the Tsunami out channel (they have multiple).  Adjsut this if you're not using the first
+// one.
+const int TSUNAMI_OUT = 0;
 
 #define USE_GEARED_CRANK
 

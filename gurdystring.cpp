@@ -29,7 +29,7 @@ void GurdyString::soundOn(int my_offset, int my_modulation) {
     trigger_obj.trackLoop(note_being_played + (128 * (midi_channel - 1)), true);
 #elif defined(USE_TSUNAMI)
     trigger_obj.trackGain(note_being_played + (128 * (midi_channel - 1)), -10);
-    trigger_obj.trackPlayPoly(note_being_played + (128 * (midi_channel - 1)), 1, true);
+    trigger_obj.trackPlayPoly(note_being_played + (128 * (midi_channel - 1)), TSUNAMI_OUT, true);
     trigger_obj.trackLoop(note_being_played + (128 * (midi_channel - 1)), true);
 #endif
 
