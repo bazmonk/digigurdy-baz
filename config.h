@@ -25,7 +25,7 @@ const String EXTRA_LINE = " MIDI-OUT - OPTICAL ";
 
 // This is the Tsunami out channel (they have multiple).  Adjsut this if you're not using the first
 // one.
-const in TSUNAMI_OUT = 0;
+const int TSUNAMI_OUT = 0;
 
 //#define USE_GEARED_CRANK
 

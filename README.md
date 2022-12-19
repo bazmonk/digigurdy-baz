@@ -6,7 +6,7 @@ See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more docu
 
 **Check out version 2.0.2! (NEW)**
 
-* 2.0.3 -
+* 2.0.21 -
   * GEARED CRANK support backported from 2.2 branch!
 
 * 2.0.1 -
