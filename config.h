@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.0.2";
+const String VERSION = "2.0.21";
 const String REL_DATE = "2022-12-18, v" + VERSION;
 
 // Use one of these if you want, on the title/about screen.  Or make your own!
@@ -23,8 +23,12 @@ const String EXTRA_LINE = " MIDI-OUT - OPTICAL ";
 //#define USE_TRIGGER
 //#define USE_TSUNAMI
 
+// This is the Tsunami out channel (they have multiple).  Adjsut this if you're not using the first
+// one.
+const in TSUNAMI_OUT = 0;
 
 //#define USE_GEARED_CRANK
+
 
 
 // PEDAL and LED knob support:
