@@ -8,7 +8,7 @@ const String REL_DATE = "2022-12-19, v" + VERSION;
 
 // Use one of these if you want, on the title/about screen.  Or make your own!
 //const String EXTRA_LINE = "                     ";
-const String EXTRA_LINE = "BLUE,MIDI-OUT,GEARED";
+const String EXTRA_LINE = " BLUE,TSUNAMI,GEARED ";
 //const String EXTRA_LINE = "  MIDI-OUT - PEDAL   ";
 //const String EXTRA_LINE = " TRIGGER - LED KNOB  ";
 //const String EXTRA_LINE = " TSUNAMI - LED KNOB  ";
@@ -21,7 +21,7 @@ const String EXTRA_LINE = "BLUE,MIDI-OUT,GEARED";
 // * These expect to transmit via pin 1, Serial1 Tx.
 // * These effectively disables Serial MIDI.  USB MIDI is still available.
 //#define USE_TRIGGER
-// #define USE_TSUNAMI
+#define USE_TSUNAMI
 
 // This is the Tsunami out channel (they have multiple).  Adjsut this if you're not using the first
 // one.

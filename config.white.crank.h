@@ -8,14 +8,14 @@ const String REL_DATE = "2022-12-19, v" + VERSION;
 
 // Use one of these if you want, on the title/about screen.  Or make your own!
 //const String EXTRA_LINE = "                     ";
-const String EXTRA_LINE = "BLUE,MIDI-OUT,GEARED";
+const String EXTRA_LINE = "WHITE,MIDI-OUT,GEARED";
 //const String EXTRA_LINE = "  MIDI-OUT - PEDAL   ";
 //const String EXTRA_LINE = " TRIGGER - LED KNOB  ";
 //const String EXTRA_LINE = " TSUNAMI - LED KNOB  ";
 
 // ALL USERS!!! Uncomment one of these lines depending on what kind of OLED screen you have.
-//#define WHITE_OLED
-#define BLUE_OLED
+#define WHITE_OLED
+// #define BLUE_OLED
 
 // ALL USERS!!! If you're hooking up to a WAV Trigger or Super Tsunami, uncomment one of these.
 // * These expect to transmit via pin 1, Serial1 Tx.
