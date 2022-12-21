@@ -3,12 +3,12 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.3.1";
-const String REL_DATE = "2022-12-19, v" + VERSION;
+const String VERSION = "2.3.1x";
+const String REL_DATE = "2022-12-21, v" + VERSION;
 
 // Use one of these if you want, on the title/about screen.  Or make your own!
 //const String EXTRA_LINE = "      3.5 TEST       ";
-const String EXTRA_LINE = "MIDI-OUT/HWSPI/PEDAL";
+const String EXTRA_LINE = "PITCHBEND  TEST  VER.";
 //const String EXTRA_LINE = " MIDI-OUT, LED, SWSPI";
 //const String EXTRA_LINE = " TRIGGER - LED KNOB  ";
 //const String EXTRA_LINE = " TSUNAMI - LED KNOB  ";

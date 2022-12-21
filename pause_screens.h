@@ -22,7 +22,8 @@
   #include "gurdycrank.h"
 #endif
 
-#include "vibknob.h"
+//#include "vibknob.h"
+#include "pitchknob.h"
 
 #ifdef USE_GEARED_CRANK
   extern GearCrank *mycrank;
@@ -30,7 +31,8 @@
   extern GurdyCrank *mycrank;
 #endif
 
-extern VibKnob *myvibknob;
+//extern VibKnob *myvibknob;
+extern PitchKnob *myvibknob;
 
 void pause_screen();
 void options_about_screen();

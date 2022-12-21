@@ -23,7 +23,9 @@
 
 #include "hurdygurdy.h"
 #include "togglebutton.h"
-#include "vibknob.h"
+
+//#include "vibknob.h"
+#include "pitchknob.h"
 
 // These are all about the display
 #include "display.h"         // Intializes our display object
@@ -61,7 +63,8 @@ ToggleButton *bigbutton;
   GurdyCrank *mycrank;
 #endif
 
-VibKnob *myvibknob;
+// VibKnob *myvibknob;
+PitchKnob *myvibknob;
 
 // As musical keys, these are referred to in the mygurdy object above.
 // This declaration of them is specifically for their use as navigational
@@ -206,7 +209,8 @@ void setup() {
   #endif
 
   #ifdef USE_PEDAL
-    myvibknob = new VibKnob(PEDAL_PIN);
+    // myvibknob = new VibKnob(PEDAL_PIN);
+    myvibknob = new PitchKnob(PEDAL_PIN);
   #endif
 
   // The keybox arrangement is decided by pin_array, which is up in the CONFIG SECTION
@@ -580,8 +584,8 @@ void loop() {
      // Serial.println(mycrank->getRev());
      start_time = millis();
      #ifdef USE_PEDAL
-       Serial.println(String("") + "\nKNOB_V = " + myvibknob->getVoltage());
-       Serial.println(String("") + "KNOB_VIB = " + myvibknob->getVibrato());
+       //Serial.println(String("") + "\nPITCH_V = " + myvibknob->getPitch());
+       //Serial.println(String("") + "KNOB_VIB = " + myvibknob->getVibrato());
      #endif
   }
 

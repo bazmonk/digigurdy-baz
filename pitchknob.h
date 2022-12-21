@@ -10,8 +10,9 @@ extern ADC* adc;
 class PitchKnob{
   private:
     int voltage_pin;
-    int max_voltage = 1023;
+    int max_voltage = PEDAL_MAX_V;
     int voltage;
+    bool enabled;
 
     elapsedMillis pitch_knob_timer;
 
@@ -21,5 +22,7 @@ class PitchKnob{
     void update();
     int getVoltage();
     int getPitch();
+    void enable();
+    void disable();
 };
 #endif

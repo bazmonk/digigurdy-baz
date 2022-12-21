@@ -7,6 +7,7 @@ PitchKnob::PitchKnob(int v_pin) {
 
   pitch_knob_timer = 0;
   voltage = 0;
+  enabled = false;
 };
 
 void PitchKnob::update() {
@@ -34,4 +35,12 @@ int PitchKnob::getPitch() {
   //John: for 2.2v, change the multiplier from 8 to 11 or 12
     return 16384 + (8 * voltage);
   };
+};
+
+void PitchKnob::enable() {
+  enabled = true;
+};
+
+void PitchKnob::disable() {
+  enabled = false;
 };
