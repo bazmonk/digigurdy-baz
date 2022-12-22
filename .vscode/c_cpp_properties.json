@@ -3,12 +3,16 @@
         {
             "name": "Mac",
             "includePath": [
-                "${workspaceFolder}**",
-                "~/Documents/Arduino/libraries/**",
-                "./**",
-                "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/**"
+                "${workspaceFolder}/**",
+                "/Users/bdlalli/Documents/Arduino/libraries/**",
+                "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/libraries/**",
+                "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/cores/teensy4/**"
             ],
-            "defines": [],
+            "defines": [
+                "USBCON",
+                "ARDUINO_TEENSY41",
+                "USB_MIDI_SERIAL"
+            ],
             "macFrameworkPath": [
                 "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks"
             ],
