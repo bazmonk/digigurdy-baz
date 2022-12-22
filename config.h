@@ -6,96 +6,123 @@
 const String VERSION = "2.3.1";
 const String REL_DATE = "2022-12-19, v" + VERSION;
 
-// Use one of these if you want, on the title/about screen.  Or make your own!
-//const String EXTRA_LINE = "      3.5 TEST       ";
+/// @brief This is a freeform line displayed on the About screen
 const String EXTRA_LINE = "MIDI-OUT/HWSPI/PEDAL";
+//const String EXTRA_LINE = "      3.5 TEST       ";
 //const String EXTRA_LINE = " MIDI-OUT, LED, SWSPI";
 //const String EXTRA_LINE = " TRIGGER - LED KNOB  ";
 //const String EXTRA_LINE = " TSUNAMI - LED KNOB  ";
 
-// ALL USERS!!! Uncomment one of these lines depending on what kind of OLED screen you have.
+// This block here is for documentation purposes of macros that may be
+// commented out.
+#ifdef _DOXYGEN_
+  /// @brief Enables SD1306 display support, do not use with BLUE_OLED.
+  #define WHITE_OLED
+  /// @brief Enables SSH1106 display support, do not use with WHITE_OLED.
+  #define BLUE_OLED
+  /// @brief Enables WAV Trigger support, effectively disables MIDI-OUT.
+  /// @details Cannot be used with USE_TSUNAMI simultaneously
+  #define USE_TRIGGER
+  /// @brief Enables Tsunami support, effectively disables MIDI-OUT.
+  /// @details Cannot be used with USE_TRIGGER simultaneously
+  #define USE_TSUNAMI
+  /// @brief Enables geared-crank support.
+  /// @details Disable for optical-crank support
+  #define USE_GEARED_CRANK
+  /// @brief Enables an LED buzz indicator on LED_PIN.
+  #define LED_KNOB
+  /// @brief Enables the accessory/vibrato pedal on PEDAL_PIN.
+  #define USE_PEDAL
+#endif
+
+// One of these OLED options must be enabled.
 #define WHITE_OLED
 //#define BLUE_OLED
 
-// ALL USERS!!! If you're hooking up to a WAV Trigger or Super Tsunami, uncomment one of these.
-// * These expect to transmit via pin 1, Serial1 Tx.
-// * These effectively disables Serial MIDI.  USB MIDI is still available.
+//#define USE_GEARED_CRANK
+
 //#define USE_TRIGGER
 //#define USE_TSUNAMI
 
-// This is the Tsunami out channel (they have multiple).  Adjsut this if you're not using the first
-// one.
+/// @brief The audio output channel used by the Tsunami unit.
+/// @details 0 == 1L, 1 == 1R, etc.
 const int TSUNAMI_OUT = 0;
 
-//#define USE_GEARED_CRANK
 
-
-// PEDAL and LED knob support:
-//
-// If you got your gurdy from John or made yours like he did, pin 40 was variously used for both
-// an LED buzz indicator, or a vibrato pedal accessory socket.  You probably can't use both features
-// below and should enable only one.
-
-// Comment this out if you do not want to use the buzz LED feature
 //#define LED_KNOB
 
-// LED_PIN is the pin used for the buzz LED.
+/// @brief Pin used for the LED buzz indicator, if LED_KNOB is enabled.
 const int LED_PIN = 40;
 
-// Comment this out if you do not want to use the vibrato accessory pedal
+
 #define USE_PEDAL
 
-// PEDAL_PIN is the pin used for the pedal accessory.
+/// @brief Pin used for the accessory pedal, if USE_PEDAL is enabled.
 const int PEDAL_PIN = 40;
 
-// PEDA_MAX_V should be set near (doesn't need to be exact) the max voltage your pedal will output.
-// 1023 = 3.3v, so (1023/3.3) * [Your voltage] = the value you want here.
+/// @brief The max voltage reported by the accessory pedal.
+/// @details 
+/// This should be set to the max voltage your pedal will output.
+/// * Value need not be exact
+/// * Value is on a 0-1023 scale: 1023 = 3.3V
 const float PEDAL_MAX_V = 658.0;
 
-// VIBRATO: I use a long-delay, very slow vibrato on the melody strings.  This variable controls how
-// much vibrato (how much modulation like with a physical mod wheel on a MIDI keyboard) to send.
-// Setting it to 0 sends no modulation.  Max is 127.  I use 16...
+
+/// @brief Amount of modulation to apply to the melody strings.
+/// @details
+/// * Meant to give a slight vibrato effect
+/// * Intensity 0 = no modulation, 127 = full modulation
+/// * Actual modulation behavior is controlled by the MIDI sampler/synthesizer.  This only controls the intensity of it.
 const int MELODY_VIBRATO = 16;
 
 
-// OPTICAL CRANK OPTIONS
+/// @defgroup optical Optical Crank Configuration Variables
+/// These are configuration variables that only apply to optical-crank models. 
+/// USE_GEAR_CRANK must be disabled for these to have effect.
 
-
-// EXPRESSION:
-// Beyond EXPRESSION_VMAX RPMs, the volume will be at max.
+/// @ingroup optical
+/// @brief The crank speed in RPMs at which expression volume will max out.
 const float EXPRESSION_VMAX = 120.0;
 
-// At the slowest crank velocity, volume will start at this value (0 = silent, 127 = max)
+/// @ingroup optical
+/// @brief The minimum expression volume.
+/// @details
+/// * Expression (MIDI CC11) value will be at least this much.
+/// * Silent = 0, Max = 127 
 const int EXPRESSION_START = 90;
 
-// Cranking and buzz behavior:
-
-// NEW FOR OPTICAL CRANKS:
-//
-// The crank algorithm works in terms of the crank's actual velocity and acceleration.  Thus it is
-// necessary to know how many slots there are in a revolution.
-//
-// This is a count of the black/blocking bars on your wheel, not the number of transitions.
+/// @ingroup optical
+/// @brief The number of "spokes" on the optical crank wheel.
+/// @details * This is the number of black/blocking bars on the wheel, not the number of transitions.
 const int NUM_SPOKES = 80;
 
-// This is the minimum velocity that produces sound.  This is actual crank rpm (rev/minute).
+/// @ingroup optical
+/// @brief The crank speed at which sound begins to play in RPMs.
 const float V_THRESHOLD = 5.5;
 
-// This is how long (in microseconds, 1000us = 1ms = 0.001s) the code waits in between reading the
-// crank.  This determines the resolution, not how long we're waiting to detect movement.
-//const int SAMPLE_RATE = 100;
+/// @ingroup optical
+/// @brief The delay between crank samples in microseconds.
+/// @details
+/// * Code will cycle though at least this long between samples.
+/// * This is not how long the code waits for movement, just how often it checks.
 const int SAMPLE_RATE = 100;
 
-// How long we wait for potential movement of the crank changes dynamically, but not longer than
-// this time in microseconds.
+/// @ingroup optical
+/// @brief The maximum amount of time in microseconds to wait for crank movement.
+/// @details * The actual wait time changes dynamically, but will not exceed this value.
 const int MAX_WAIT_TIME = 40000;
 
-// Once the crank has stopped (after the DECAY_RATE above), we multiply the last velocity by this.
-// E.g. 0.2 means if the velocity was 60, once we stop we consider the current velocity to be 12,
-// then 2.4, then 0.48, etc.  This gets averaged in to give us a "smooth" spin-down.
+/// @ingroup optical
+/// @brief The multiplier applied to the velocity when no movement is detected.
+/// @details * Smaller values cause sound to cut out more quickly once crank motion stop.
 const float DECAY_FACTOR = 0.00;
 
 // This is how long in milliseconds to buzz *at least* once it starts.
+/// @ingroup optical
+/// @brief The minimum duration of buzz sounds.
+/// @details 
+/// * Increase this if buzzing feels too "jittery" or rapid.
+/// * Decrease if buzzing feels sluggish or unresponsive.
 const int BUZZ_MIN = 100;
 
 
