@@ -20,6 +20,7 @@ void ExButton::setFunc(int func) {
   my_func = func;
 };
 
+/// @brief Execute the button's configured fucntion
 void ExButton::doFunc() {
   if (my_func == 1) {
     return;
@@ -35,12 +36,13 @@ void ExButton::doFunc() {
   return;
 };
 
-// Trying to put this as a function with the menu screens was a big problem because
-// this class calls those functions and there was a circular definition problem.
-
 /// @brief Prompt user to choose the button function
 /// @param but_num an int, 1-3, corresponding to the left-to-right button being configured
 void ExButton::fn_choice_screen(int but_num) {
+
+  // Trying to put this as a function with the menu screens was a big problem because
+  // this class calls those functions and there was a circular definition problem.
+
 
   bool done = false;
   while (!done) {
