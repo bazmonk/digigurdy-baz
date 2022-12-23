@@ -8,6 +8,9 @@ int ExButton::getFunc() {
   return my_func;
 };
 
+/// @brief Set the function to be called when this button is pressed.
+/// @param func 
+/// The function to be called.  See ExButton::doFunc() to determine the internal numbering of the functions.
 void ExButton::setFunc(int func) {
   my_func = func;
 };

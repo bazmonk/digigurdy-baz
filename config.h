@@ -141,42 +141,40 @@ const int BUZZ_MIN = 100;
 /// * Teensy4.1 @ 150Mhz ~ 1150  <-- seems fine, fast enough, but why do this?
 const int SPIN_SAMPLES = 700;
 
-// This is the high voltage mark.  It determines how easily the crank makes the drones start.
-// With my crank, I can go as low as 2, but it gets ridiculously sensitive (bumping into your gurdy
-// agitates the crank enough to register).  It doesn't need to be very high, though, unless you want
-// you crank to have a "minmum speed limit" before it starts sounding.
-//
-// Especially if you are using a bridge rectifier to have a 2-way crank, you'll want this **as low as you can.**
+/// @ingroup gear
+/// @brief The lower voltage threshold for the crank to register motion.
+/// @details 
+/// * Voltage values are reported between 0-1023, with 0 = 0V and 1023 being 3.3V.
+/// * This should generally be set as low as possible to be sensitive but not register "phantom" cranking.
 const int VOL_THRESHOLD = 5;
 
-// (the equivalent of V_THRESHOLD for buzzing is what the knob does, so there's no variable for it).
-
-// The crank uses an internal "spin" counter to make it continue to play through the inconsistent
-// raw voltage the crank produces.  Each high voltage read increases the counter by SPIN_WEIGHT,
-// up to MAX_SPIN.  While low voltage is being read, spin decreases by SPIN_DECAY.  While spin is
-// greater than SPIN_THRESHOLD, it makes sound.
-//
-// A larger MAX_SPIN versus the SPIN_DECAY make the cranking more consistent at very low speeds,
-// at the expense of responding quickly when you stop cranking.  A higher SPIN_WEIGHT influences
-// how quickly the crank kicks on when you start spinning, and should be at least a few times larger
-// than the SPIN_DECAY.  SPIN_THRESHOLD influences how quickly the noise cuts off after you stop
-// spinning.
+/// @ingroup gear
+/// @brief The maximum "spin" value.
+/// @details Gear crank behavior uses a "spin" number to determine motion, which is added to when cranking is detected, and subtracted from when cranking stops.
+/// This is the maximum spin value the counter will allow.
 const int MAX_SPIN = 7600;
+
+/// @ingroup gear
+/// @brief The amount of spin to add when motion is detected.
+/// @details Every cycle that cranking is detected, this amount is added to the spin value, up to the MAX_SPIN.
 const int SPIN_WEIGHT = 2500;
 
-// I think I've got good values for everything else... in my opinion at least, users should try adjusting just
-// the SPIN_DECAY at first to change responsiveness.  Lower values make notes last longer over jitters in the
-// crank voltage.  Higher values make it run down spin faster overall, increasing how quickly you can
-// play staccato.
-//
-// Users using a rectifier for two-way cranking, you'll want to fiddle with this for personal feel.
-// Users using a normal crank like John does it, you'll just want to increase if your crank is jittery at low
-// speeds.  You don't need to adjust it much to hear a diffrence (try +- 20 at first).
+/// @ingroup gear
+/// @brief The amount of spin to subtract when motion is not detected.
+/// @details Every cycle that cranking is not detected, this amount is subtracted from the spin value, down to zero.
+/// * This should be significantly less than SPIN_WEIGHT in order to give a smoothing effect, as the geared cranks induce a voltage in steps, not smoothly.
+/// * If you have a rectifier on your crank to register motion in both directions, you also don't want it to be too low as to smooth over direction changes entierly.
 const int SPIN_DECAY = 200;
 
-// This is the point notes start:
+/// @ingroup gear
+/// @brief The amount of spin necessary to make sound.
+/// @details Ultimately, sound will be produced when spin is above this value.
 const int SPIN_THRESHOLD = 5001;
-// This is the point they stop:
+
+/// @ingroup gear
+/// @brief the amount of spin below which sound stops.
+/// @details Sound will stop when spin is below this value.
+/// * Note that it is signficantly lower than SPIN_THRESHOLD.
 const int SPIN_STOP_THRESHOLD = 1000;
 
 // Buzzing works sort of the same way except the buzz counter jumps immediately to the
@@ -187,23 +185,32 @@ const int SPIN_STOP_THRESHOLD = 1000;
 // but make it harder to make separate coups rapidly.  Adjust this to find the sweet spot between
 // how easy you want it to buzz and how quickly/consistently you can work a crank.  Players much
 // better than me may want a smaller value.  ***THE SPIN VALUES DON'T AFFECT BUZZ**
+/// @ingroup gear
+/// @brief The amount of buzz "smoothing" to start with when buzzing registers.
+/// @details * When the crank voltage registers higer than the buzz knob's voltage, buzzing registers.
+/// * Buzz is set to this value when buzzing registers and decays.
+/// * The buzzing effect continues as long as this smoothing value is positive
 const int BUZZ_SMOOTHING = 250;
+/// @ingroup gear
+/// @brief The amount of buzz "smoothing" to subtract when buzzing is not registering.
+/// @details Buzz smoothing is subtracted by this amount every cycle that buzz does not register.
+/// * This produces a set delay for buzzing to stop, as well as a minimum buzz duration.
 const int BUZZ_DECAY = 1;
 
 
-
-// KEYBOX VARIABLES:
-// The pin_array[] index here represents the MIDI note offset, and the value is the corresponding
-// teensy pin.  This defines which physical keys are part of the "keybox" and what order they're in.
-//
-// NOTE: There's no key that produces 0 offset (an "open" string),
-// so the first element is bogus.  It gets skipped entirely.
+/// @brief The ordered layout of the keybox keys/buttons.
+/// @details * This both determines which Teensy pins compose the keybox, and the order they are in.
+/// * index 0 is unused and would theoretically not affect the note being played.
+/// * index 1 raises the note played by 1 semitone, index 2 by 2 semitones, etc.
+/// * pin_array can be extended or shortened for larger/smaller keyboxes
 const int pin_array[] = {-1, 2, 24, 3, 25, 26, 4, 27, 5, 28, 29, 6, 30,
                    7, 31, 8, 32, 33, 18, 34, 19, 35, 36, 20, 37};
 
 // This is literally just the size of the above array minus one.  I need this as a const to
 // declare the KeyboxButton array later on... or I just don't know enough C++ to know how to
 // *not* need it ;-)
+/// @brief The number of keys on the keybox.
+/// @details This must/should be set to the length of pin_array[] - 1.
 const int num_keys = 24;
 
 // These control which buttons on the keybox have the roles of the X, A/B, 1-6, etc. buttons.
@@ -211,16 +218,49 @@ const int num_keys = 24;
 //
 // These are array indexes, so if you count chromatically up your keybox and then subtract 1,
 // that is its index.
+/// @brief The position of the "X" key on the keybox.
+/// @details * This is intended to be the upper leftmost key.
+/// * Note that the first key position is 0.  This is the index in pin_array - 1!
 const int X_INDEX = 0;
+
+/// @brief The position of the "A" key on the keybox.
+/// @details This is intended to be the upper key second from the right.
 const int A_INDEX = num_keys - 2;
+
+/// @brief The position of the "B" key on the keybox.
+/// @details This is intended to be the upper rightmost key.
 const int B_INDEX = num_keys - 5;
+
+/// @brief The position of the "1" key on the keybox.
+/// @details This is intended to be the leftmost key on the bottom.
 const int BUTTON_1_INDEX = 1;
+
+/// @brief The position of the "2" key on the keybox.
+/// @details This is intended to be the 2nd key from the left on the bottom.
 const int BUTTON_2_INDEX = 3;
+
+/// @brief The position of the "3" key on the keybox.
+/// @details This is intended to be the 3rd key from the left on the bottom.
 const int BUTTON_3_INDEX = 4;
+
+/// @brief The position of the "4" key on the keybox.
+/// @details This is intended to be the 4th key from the left on the bottom.
 const int BUTTON_4_INDEX = 6;
+
+/// @brief The position of the "5" key on the keybox.
+/// @details This is intended to be the 5th key from the left on the bottom.
 const int BUTTON_5_INDEX = 8;
+
+/// @brief The position of the "6" key on the keybox.
+/// @details This is intended to be the 6th key from the left on the bottom.
 const int BUTTON_6_INDEX = 9;
+
+/// @brief The position of the "T-UP" key on the keybox.
+/// @details This is intended to be the bottom right key.
 const int TPOSE_UP_INDEX = num_keys - 1;
+
+/// @brief The position of the "T-DOWN" key on the keybox.
+/// @details This is intended to be the bottom second key from the right.
 const int TPOSE_DN_INDEX = num_keys - 3;
 
 #endif
