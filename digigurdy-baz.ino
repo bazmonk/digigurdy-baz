@@ -145,6 +145,8 @@ int use_solfege;
 /// * Initializes display, runs startup animation.
 /// * Initializes MIDI/Tsunami/Serial objects.
 /// * Initializes gurdy button/string/crank/knob objects.
+/// * Pin assignments which no one tends to change around (crank, bigButton) are hardcoded here.
+/// * The MIDI channel assignments of the strings are hardcoded here.
 void setup() {
 
   // Display some startup animations for the user.

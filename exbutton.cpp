@@ -1,16 +1,21 @@
 #include "exbutton.h"
 
+/// @brief Constructor for ExButton
+/// @param my_pin The digital pin this button is connected to
+/// @param func The beginning function for this button (See ExButton::doFunc for the numbering)
+/// @param interval The debounce interval for this button in milliseconds
 ExButton::ExButton(int my_pin, int func, int interval) : GurdyButton(my_pin, interval) {
   my_func = func;
 };
 
+/// @brief Return the current function number of the button
+/// @return the current function number
 int ExButton::getFunc() {
   return my_func;
 };
 
 /// @brief Set the function to be called when this button is pressed.
-/// @param func 
-/// The function to be called.  See ExButton::doFunc() to determine the internal numbering of the functions.
+/// @param func The function to be called.  See ExButton::doFunc() to determine the internal numbering of the functions.
 void ExButton::setFunc(int func) {
   my_func = func;
 };
@@ -32,6 +37,9 @@ void ExButton::doFunc() {
 
 // Trying to put this as a function with the menu screens was a big problem because
 // this class calls those functions and there was a circular definition problem.
+
+/// @brief Prompt user to choose the button function
+/// @param but_num an int, 1-3, corresponding to the left-to-right button being configured
 void ExButton::fn_choice_screen(int but_num) {
 
   bool done = false;
