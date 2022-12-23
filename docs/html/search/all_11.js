@@ -2,7 +2,7 @@ var searchData=
 [
   ['t_5fmode_0',['t_mode',['../digigurdy-baz_8ino.html#a211f415f6b74ad104a50f04c9d5d6aca',1,'t_mode():&#160;digigurdy-baz.ino'],['../common_8h.html#a211f415f6b74ad104a50f04c9d5d6aca',1,'t_mode():&#160;digigurdy-baz.ino']]],
   ['test_5fcount_1',['test_count',['../digigurdy-baz_8ino.html#a125a07facfdab18ee2d8495d4f8c9d5b',1,'digigurdy-baz.ino']]],
-  ['these_20files_20aren_27t_20used_20in_20the_20digigurdy_20build_2',['These files aren&apos;t used in the digigurdy build',['../md___users_bdlalli__documents_git_digigurdy_baz_bitmaps__r_e_a_d_m_e.html',1,'']]],
+  ['these_20files_20aren_27t_20used_20in_20the_20digigurdy_20build_2',['These files aren&apos;t used in the digigurdy build',['../md_bitmaps__r_e_a_d_m_e.html',1,'']]],
   ['togglebutton_3',['ToggleButton',['../class_toggle_button.html',1,'ToggleButton'],['../class_toggle_button.html#aba618b255980a019d60a2f1d73ef6ecc',1,'ToggleButton::ToggleButton()']]],
   ['togglebutton_2ecpp_4',['togglebutton.cpp',['../togglebutton_8cpp.html',1,'']]],
   ['togglebutton_2eh_5',['togglebutton.h',['../togglebutton_8h.html',1,'']]],
