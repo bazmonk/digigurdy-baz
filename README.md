@@ -2,6 +2,8 @@
 
 See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more documentation.
 
+See [the code documentation here](https://bazmonk.github.io/digigurdy-baz/html/index.html).
+
 **Pre-compiled builds of the code will be made available from 1.7.99 and up.  See https://github.com/bazmonk/digigurdy-baz/wiki/install-by-hex for installation instructions.**
 
 **Check out version 2.3.1! (NEW)**
