@@ -126,16 +126,19 @@ const float DECAY_FACTOR = 0.00;
 const int BUZZ_MIN = 100;
 
 
-// GEAR CRANK OPTIONS
+/// @defgroup gear Gear-Motor Crank Configuration Variables
+/// These are configuration variables that only apply to gear-motor-crank models.
+///
+/// USE_GEAR_CRANK must be enabled for these to have effect.
 
-
-// Currently, the rest of the settings assume "1,000 loop()s took: 139ms" per the Serial Monitor output.
-// Teensy3.5 @ 120MHz = 700   <-- full 3.5 speed
-// Teensy3.5 @  72Mhz = 240   <-- this seems to work fine...
-// Teensy3.5 @  48Mhz = 100   <-- more like 160ms... this is so-so-stable.
-// Teensy4.1 @ 600MHz ~ 3850  <-- full 4.1 speed... seems unnecessary
-// Teensy4.1 @ 150Mhz ~ 1150  <-- seems fine
-
+/// @ingroup gear
+/// @brief The number of voltage samples per update.
+/// @details This is used to slow down how fast the code runs and avoid timing issues.  Choose based on your Teensy unit:
+/// * Teensy3.5 @ 120MHz = 700   <-- full 3.5 speed
+/// * Teensy3.5 @  72Mhz = 240   <-- probably too slow now
+/// * Teensy3.5 @  48Mhz = 100   <-- probably too slow now
+/// * Teensy4.1 @ 600MHz ~ 3850  <-- full 4.1 speed
+/// * Teensy4.1 @ 150Mhz ~ 1150  <-- seems fine, fast enough, but why do this?
 const int SPIN_SAMPLES = 700;
 
 // This is the high voltage mark.  It determines how easily the crank makes the drones start.

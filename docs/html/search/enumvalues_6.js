@@ -1,0 +1,24 @@
+var searchData=
+[
+  ['g0_0',['g0',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6cea08df24319cd150b5028e4c05e88b02e5',1,'notes.h']]],
+  ['g0s_1',['g0s',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6cea5749559b99c4cc3d294e11e3062174c1',1,'notes.h']]],
+  ['g1_2',['g1',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6cea4d08431d3bdd5cb73430859e78d83232',1,'notes.h']]],
+  ['g1s_3',['g1s',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6cea9297191e60d9e2129b58c77533936c1d',1,'notes.h']]],
+  ['g2_4',['g2',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6ceae71c5c35fe80c8996612d5abfb4e38ac',1,'notes.h']]],
+  ['g2s_5',['g2s',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6cea9d9476e3652ae0f15aa20576bc9d5dc7',1,'notes.h']]],
+  ['g3_6',['g3',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6ceacb801e9d38e421af875e4253a69593d6',1,'notes.h']]],
+  ['g3s_7',['g3s',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6cea78af11d08e268f2bfe149ee515ea8631',1,'notes.h']]],
+  ['g4_8',['g4',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6cea0d69364b3ffb37bc53e5e7bb484f44b9',1,'notes.h']]],
+  ['g4s_9',['g4s',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6ceaf98ce1f0ff1077bf35d61d39d22def7f',1,'notes.h']]],
+  ['g5_10',['g5',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6cea9e996b66aaa5a77a7d650fd681f053d1',1,'notes.h']]],
+  ['g5s_11',['g5s',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6ceaa956ca11d10666d4a7edc9807914453e',1,'notes.h']]],
+  ['g6_12',['g6',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6ceacd345458c624f75232c82a2dc92d2d2d',1,'notes.h']]],
+  ['g6s_13',['g6s',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6cea3a173bc1ed0e734c9407c52a28166283',1,'notes.h']]],
+  ['g7_14',['g7',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6cea0a7de76932600551143727abc79c4379',1,'notes.h']]],
+  ['g7s_15',['g7s',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6cead358cd4b1ee3e057166fe8224eb38812',1,'notes.h']]],
+  ['g8_16',['g8',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6ceaa012180909f4a99c45f8b35e3241f2c0',1,'notes.h']]],
+  ['g8s_17',['g8s',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6cead2a03fef93e464ab03e6422a22d62c53',1,'notes.h']]],
+  ['g9_18',['g9',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6cea17855e27405f8a7b1a0f05716e40f168',1,'notes.h']]],
+  ['g_5f1_19',['g_1',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6cea7b1bb11f38d6249082060c464852d758',1,'notes.h']]],
+  ['g_5f1s_20',['g_1s',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6cea786ea7d566c51a89fdf668c3a9df1454',1,'notes.h']]]
+];
