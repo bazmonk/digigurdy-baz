@@ -93,8 +93,10 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a4fc01d736fe50cf5b977f755b675f11d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digigurdy-baz_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">setup</a> ()</td></tr>
+<tr class="memdesc:a4fc01d736fe50cf5b977f755b675f11d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The main setup function.  <a href="digigurdy-baz_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">More...</a><br /></td></tr>
 <tr class="separator:a4fc01d736fe50cf5b977f755b675f11d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe461d27b9c48d5921c00d521181f12f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digigurdy-baz_8ino.html#afe461d27b9c48d5921c00d521181f12f">loop</a> ()</td></tr>
+<tr class="memdesc:afe461d27b9c48d5921c00d521181f12f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The main loop function.  <a href="digigurdy-baz_8ino.html#afe461d27b9c48d5921c00d521181f12f">More...</a><br /></td></tr>
 <tr class="separator:afe461d27b9c48d5921c00d521181f12f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
@@ -212,6 +214,11 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>The main loop function. </p>
+<p >Arduino/Teensy sketches run this function in a continuous loop.</p><ul>
+<li>The overall high-level logic (e.g. when crank-&gt;isSpinning(), make sound) is contained here. </li>
+</ul>
+
 </div>
 </div>
 <a id="a4fc01d736fe50cf5b977f755b675f11d" name="a4fc01d736fe50cf5b977f755b675f11d"></a>
@@ -228,6 +235,13 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>The main setup function. </p>
+<p >Arduinio/Teensy sketches run this function once upon startup.</p><ul>
+<li>Initializes display, runs startup animation.</li>
+<li>Initializes MIDI/Tsunami/Serial objects.</li>
+<li>Initializes gurdy button/string/crank/knob objects. </li>
+</ul>
 
 </div>
 </div>

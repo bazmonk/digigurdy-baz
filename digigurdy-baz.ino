@@ -140,13 +140,11 @@ bool gc_or_dg;
 
 int use_solfege;
 
-//
-// SETUP
-//
-
-// Teensy and Arduino units start by running setup() once after powering up.
-// Here we establish how the "gurdy" is setup, what strings to use, and we also
-// start the MIDI communication.
+/// @brief The main setup function.
+/// @details Arduinio/Teensy sketches run this function once upon startup.
+/// * Initializes display, runs startup animation.
+/// * Initializes MIDI/Tsunami/Serial objects.
+/// * Initializes gurdy button/string/crank/knob objects.
 void setup() {
 
   // Display some startup animations for the user.
@@ -288,14 +286,10 @@ bool note_display_off = true;
 // The loop() function is repeatedly run by the Teensy unit after setup() completes.
 // This is the main logic of the program and defines how the strings, keys, click, buzz,
 // and buttons acutally behave during play.
+/// @brief The main loop function.
+/// @details Arduino/Teensy sketches run this function in a continuous loop.
+/// * The overall high-level logic (e.g. when crank->isSpinning(), make sound) is contained here.
 void loop() {
-  // loop() actually runs too fast and gets ahead of hardware calls if it's allowed to run freely.
-  // This was noticeable in older versions when the crank got "stuck" and would not buzz and took
-  // oddly long to stop playing when the crank stopped moving.
-  //
-  // A microsecond delay here lets everything keep up with itself.  The exactly delay is set at
-  // the top in the config section.
-  //delayMicroseconds(LOOP_DELAY);
 
   if (first_loop) {
     welcome_screen();

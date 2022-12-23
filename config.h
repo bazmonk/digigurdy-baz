@@ -172,7 +172,7 @@ const int SPIN_DECAY = 200;
 const int SPIN_THRESHOLD = 5001;
 
 /// @ingroup gear
-/// @brief the amount of spin below which sound stops.
+/// @brief The amount of spin below which sound stops.
 /// @details Sound will stop when spin is below this value.
 /// * Note that it is signficantly lower than SPIN_THRESHOLD.
 const int SPIN_STOP_THRESHOLD = 1000;
