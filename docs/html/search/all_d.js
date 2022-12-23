@@ -10,5 +10,6 @@ var searchData=
   ['optical_20crank_20configuration_20variables_7',['Optical Crank Configuration Variables',['../group__optical.html',1,'']]],
   ['options_5fabout_5fscreen_8',['options_about_screen',['../pause__screens_8cpp.html#a4f4a2145f317d826ecaf5ef136f67fb6',1,'options_about_screen():&#160;pause_screens.cpp'],['../pause__screens_8h.html#a4f4a2145f317d826ecaf5ef136f67fb6',1,'options_about_screen():&#160;pause_screens.cpp']]],
   ['options_5fscreen_9',['options_screen',['../pause__screens_8cpp.html#a1cc38fd9115a67257b2328f679da238a',1,'options_screen():&#160;pause_screens.cpp'],['../pause__screens_8h.html#a1cc38fd9115a67257b2328f679da238a',1,'options_screen():&#160;pause_screens.cpp']]],
-  ['other_5foptions_5fscreen_10',['other_options_screen',['../pause__screens_8cpp.html#a9db9d1c2152a0d2be32012320356ac6b',1,'other_options_screen():&#160;pause_screens.cpp'],['../pause__screens_8h.html#a9db9d1c2152a0d2be32012320356ac6b',1,'other_options_screen():&#160;pause_screens.cpp']]]
+  ['other_5foptions_5fscreen_10',['other_options_screen',['../pause__screens_8cpp.html#a9db9d1c2152a0d2be32012320356ac6b',1,'other_options_screen():&#160;pause_screens.cpp'],['../pause__screens_8h.html#a9db9d1c2152a0d2be32012320356ac6b',1,'other_options_screen():&#160;pause_screens.cpp']]],
+  ['readme_2emd_11',['README.md',['../other_2_r_e_a_d_m_e_8md.html',1,'']]]
 ];

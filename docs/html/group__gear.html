@@ -82,7 +82,8 @@ Variables</h2></td></tr>
 <tr class="separator:gaa22b9f98e352fffc59cb4454ca2bd222"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p >These are configuration variables that only apply to gear-motor-crank models. USE_GEAR_CRANK must be enabled for these to have effect. </p>
+<p >These are configuration variables that only apply to gear-motor-crank models.</p>
+<p >USE_GEAR_CRANK must be enabled for these to have effect. </p>
 <h2 class="groupheader">Variable Documentation</h2>
 <a id="gaa22b9f98e352fffc59cb4454ca2bd222" name="gaa22b9f98e352fffc59cb4454ca2bd222"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gaa22b9f98e352fffc59cb4454ca2bd222">&#9670;&#160;</a></span>SPIN_SAMPLES</h2>
@@ -99,10 +100,10 @@ Variables</h2></td></tr>
 <p>The number of voltage samples per update. </p>
 <p >This is used to slow down how fast the code runs and avoid timing issues. Choose based on your Teensy unit:</p><ul>
 <li>Teensy3.5 @ 120MHz = 700 &lt;&ndash; full 3.5 speed</li>
-<li>Teensy3.5 @ 72Mhz = 240 &lt;&ndash; this seems to work fine...</li>
-<li>Teensy3.5 @ 48Mhz = 100 &lt;&ndash; more like 160ms... this is so-so-stable.</li>
-<li>Teensy4.1 @ 600MHz ~ 3850 &lt;&ndash; full 4.1 speed... seems unnecessary</li>
-<li>Teensy4.1 @ 150Mhz ~ 1150 &lt;&ndash; seems fine </li>
+<li>Teensy3.5 @ 72Mhz = 240 &lt;&ndash; probably too slow now</li>
+<li>Teensy3.5 @ 48Mhz = 100 &lt;&ndash; probably too slow now</li>
+<li>Teensy4.1 @ 600MHz ~ 3850 &lt;&ndash; full 4.1 speed</li>
+<li>Teensy4.1 @ 150Mhz ~ 1150 &lt;&ndash; seems fine, fast enough, but why do this? </li>
 </ul>
 
 </div>
