@@ -84,11 +84,11 @@ $(function() {
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#ifdef USE_TRIGGER</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">  #include &quot;wavTrigger.h&quot;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">  #include &quot;<a class="code" href="wav_trigger_8h.html">wavTrigger.h</a>&quot;</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#ifdef USE_TSUNAMI</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">  #include &quot;Tsunami.h&quot;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">  #include &quot;<a class="code" href="_tsunami_8h.html">Tsunami.h</a>&quot;</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#if !defined(USE_TRIGGER) &amp;&amp; !defined(USE_TSUNAMI)</span></div>
@@ -96,11 +96,11 @@ $(function() {
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#ifdef USE_TRIGGER</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  <span class="keyword">extern</span> wavTrigger <a class="code hl_variable" href="gurdystring_8h.html#a4793725486a721fd3f9ddff12435bf70">trigger_obj</a>;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  <span class="keyword">extern</span> <a class="code hl_class" href="classwav_trigger.html">wavTrigger</a> <a class="code hl_variable" href="gurdystring_8h.html#a4793725486a721fd3f9ddff12435bf70">trigger_obj</a>;</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#ifdef USE_TSUNAMI</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="gurdystring_8h.html#a4793725486a721fd3f9ddff12435bf70">   29</a></span>  <span class="keyword">extern</span> Tsunami <a class="code hl_variable" href="gurdystring_8h.html#a4793725486a721fd3f9ddff12435bf70">trigger_obj</a>;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="gurdystring_8h.html#a4793725486a721fd3f9ddff12435bf70">   29</a></span>  <span class="keyword">extern</span> <a class="code hl_class" href="class_tsunami.html">Tsunami</a> <a class="code hl_variable" href="gurdystring_8h.html#a4793725486a721fd3f9ddff12435bf70">trigger_obj</a>;</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="class_gurdy_string.html">   32</a></span><span class="keyword">class </span><a class="code hl_class" href="class_gurdy_string.html">GurdyString</a> {</div>
@@ -135,6 +135,7 @@ $(function() {
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>};</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="a_tsunami_8h_html"><div class="ttname"><a href="_tsunami_8h.html">Tsunami.h</a></div></div>
 <div class="ttc" id="aclass_gurdy_string_html"><div class="ttname"><a href="class_gurdy_string.html">GurdyString</a></div><div class="ttdef"><b>Definition:</b> gurdystring.h:32</div></div>
 <div class="ttc" id="aclass_gurdy_string_html_a1886876dfc67e54ca08f6929b03ae8e1"><div class="ttname"><a href="class_gurdy_string.html#a1886876dfc67e54ca08f6929b03ae8e1">GurdyString::setVibrato</a></div><div class="ttdeci">void setVibrato(int vib)</div><div class="ttdef"><b>Definition:</b> gurdystring.cpp:131</div></div>
 <div class="ttc" id="aclass_gurdy_string_html_a2071d75a9b936cbbb6442b68f3a028a2"><div class="ttname"><a href="class_gurdy_string.html#a2071d75a9b936cbbb6442b68f3a028a2">GurdyString::isPlaying</a></div><div class="ttdeci">bool isPlaying()</div><div class="ttdef"><b>Definition:</b> gurdystring.cpp:103</div></div>
@@ -151,8 +152,11 @@ $(function() {
 <div class="ttc" id="aclass_gurdy_string_html_aba7e0b28418827feb07f3e3a3818b0b0"><div class="ttname"><a href="class_gurdy_string.html#aba7e0b28418827feb07f3e3a3818b0b0">GurdyString::getOpenNote</a></div><div class="ttdeci">int getOpenNote()</div><div class="ttdef"><b>Definition:</b> gurdystring.cpp:77</div></div>
 <div class="ttc" id="aclass_gurdy_string_html_ad10f22beee507bbd504c760f0e500d22"><div class="ttname"><a href="class_gurdy_string.html#ad10f22beee507bbd504c760f0e500d22">GurdyString::setPitchBend</a></div><div class="ttdeci">void setPitchBend(int bend)</div><div class="ttdef"><b>Definition:</b> gurdystring.cpp:121</div></div>
 <div class="ttc" id="aclass_gurdy_string_html_adc1da3772c15a6e49d1314b3759ff137"><div class="ttname"><a href="class_gurdy_string.html#adc1da3772c15a6e49d1314b3759ff137">GurdyString::soundKill</a></div><div class="ttdeci">void soundKill()</div><div class="ttdef"><b>Definition:</b> gurdystring.cpp:67</div></div>
+<div class="ttc" id="aclass_tsunami_html"><div class="ttname"><a href="class_tsunami.html">Tsunami</a></div><div class="ttdef"><b>Definition:</b> Tsunami.h:118</div></div>
+<div class="ttc" id="aclasswav_trigger_html"><div class="ttname"><a href="classwav_trigger.html">wavTrigger</a></div><div class="ttdef"><b>Definition:</b> wavTrigger.h:114</div></div>
 <div class="ttc" id="aconfig_8h_html"><div class="ttname"><a href="config_8h.html">config.h</a></div></div>
 <div class="ttc" id="agurdystring_8h_html_a4793725486a721fd3f9ddff12435bf70"><div class="ttname"><a href="gurdystring_8h.html#a4793725486a721fd3f9ddff12435bf70">trigger_obj</a></div><div class="ttdeci">wavTrigger trigger_obj</div><div class="ttdef"><b>Definition:</b> gurdystring.h:29</div></div>
+<div class="ttc" id="awav_trigger_8h_html"><div class="ttname"><a href="wav_trigger_8h.html">wavTrigger.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

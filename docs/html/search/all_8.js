@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['isdetected_0',['isDetected',['../class_gear_crank.html#a2628e056369e3eb941ff68d7281d8adf',1,'GearCrank::isDetected()'],['../class_gurdy_crank.html#a0e0188b3d5254af9ee8a2aa680b87736',1,'GurdyCrank::isDetected()']]],
-  ['isplaying_1',['isPlaying',['../class_gurdy_string.html#a2071d75a9b936cbbb6442b68f3a028a2',1,'GurdyString']]],
-  ['isspinning_2',['isSpinning',['../class_gear_crank.html#a7584297be92d4c1bf8536f0993ecb83f',1,'GearCrank::isSpinning()'],['../class_gurdy_crank.html#a7ced515520c968954570c9fa201e4f19',1,'GurdyCrank::isSpinning()']]]
+  ['higherkeypressed_0',['higherKeyPressed',['../class_hurdy_gurdy.html#a50112086b18683ef0aeb7630bb7685e2',1,'HurdyGurdy']]],
+  ['hurdygurdy_1',['HurdyGurdy',['../class_hurdy_gurdy.html',1,'HurdyGurdy'],['../class_hurdy_gurdy.html#a72fbf86d3c0ab69e42905ce8946f4e92',1,'HurdyGurdy::HurdyGurdy()']]],
+  ['hurdygurdy_2ecpp_2',['hurdygurdy.cpp',['../hurdygurdy_8cpp.html',1,'']]],
+  ['hurdygurdy_2eh_3',['hurdygurdy.h',['../hurdygurdy_8h.html',1,'']]]
 ];

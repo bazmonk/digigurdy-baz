@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['led_5fknob_0',['LED_KNOB',['../config_8h.html#a99ed1ce0eb57dcab8b4943aac388b319',1,'LED_KNOB():&#160;config.h'],['../config_8white_8led_8h.html#a99ed1ce0eb57dcab8b4943aac388b319',1,'LED_KNOB():&#160;config.white.led.h']]]
+  ['blue_5foled_0',['BLUE_OLED',['../config_8h.html#aabd0795a6e969570c69db607fa48c59c',1,'config.h']]]
 ];

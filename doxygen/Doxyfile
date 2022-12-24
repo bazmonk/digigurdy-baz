@@ -1010,9 +1010,7 @@ RECURSIVE              = YES
 # Note that relative paths are relative to the directory from which doxygen is
 # run.
 
-EXCLUDE                = /Users/bdlalli/Documents/git/digigurdy-baz/wavTrigger.h \
-                         /Users/bdlalli/Documents/git/digigurdy-baz/wavTrigger.cpp \
-                         /Users/bdlalli/Documents/git/digigurdy-baz/Tsunami.h \
+EXCLUDE                = /Users/bdlalli/Documents/git/digigurdy-baz/wavTrigger.cpp \
                          /Users/bdlalli/Documents/git/digigurdy-baz/Tsunami.cpp
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or

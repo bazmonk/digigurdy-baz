@@ -5,6 +5,7 @@
 //     Comments: Robertsonics Tsunami serial control library
 //
 // Programmers: Jamie Robertson, info@robertsonics.com
+// Hacked by: @bazmonk
 //
 // **************************************************************
 
@@ -13,20 +14,7 @@
 
 #define TSUNAMI_NUM_OUTPUTS	8
 
-// ==================================================================
-// The following defines are used to control which serial class is
-//  used. Uncomment only the one you wish to use. If all of them are
-//  commented out, the library will use Hardware Serial
-#define __TSUNAMI_USE_SERIAL1__
-//#define __TSUNAMI_USE_SERIAL2__
-//#define __TSUNAMI_USE_SERIAL3__
-//#define __TSUNAMI_USE_SERIAL4__
-//#define __TSUNAMI_USE_SERIAL5__
-//#define __TSUNAMI_USE_SERIAL6__
-//#define __TSUNAMI_USE_SERIAL7__
-//#define __TSUNAMI_USE_SERIAL8__
-//#define __TSUNAMI_USE_ALTSOFTSERIAL__
-// ==================================================================
+#include "tsunami_trigger_config.h"
 
 #define CMD_GET_VERSION				1
 #define CMD_GET_SYS_INFO			2
