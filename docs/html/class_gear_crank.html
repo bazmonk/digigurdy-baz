@@ -81,10 +81,13 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a079232b6d47355f872c5ce5f80f5bb5f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gear_crank.html#a079232b6d47355f872c5ce5f80f5bb5f">GearCrank</a> (int v_pin, int buzz_pin)</td></tr>
+<tr class="memdesc:a079232b6d47355f872c5ce5f80f5bb5f"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_gear_crank.html">GearCrank</a> controls the cranking mechanism on geared-crank gurdies.  <a href="class_gear_crank.html#a079232b6d47355f872c5ce5f80f5bb5f">More...</a><br /></td></tr>
 <tr class="separator:a079232b6d47355f872c5ce5f80f5bb5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a501f4bfe6fd42e888657c7be109bf79e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gear_crank.html#a501f4bfe6fd42e888657c7be109bf79e">beginPolling</a> ()</td></tr>
+<tr class="memdesc:a501f4bfe6fd42e888657c7be109bf79e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Begins ADC sampling of the crank's voltage pin.  <a href="class_gear_crank.html#a501f4bfe6fd42e888657c7be109bf79e">More...</a><br /></td></tr>
 <tr class="separator:a501f4bfe6fd42e888657c7be109bf79e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af2a3ac44e4190cfadea96a63faf4d38a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gear_crank.html#af2a3ac44e4190cfadea96a63faf4d38a">detect</a> ()</td></tr>
+<tr class="memdesc:af2a3ac44e4190cfadea96a63faf4d38a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines if the crank is connected or not.  <a href="class_gear_crank.html#af2a3ac44e4190cfadea96a63faf4d38a">More...</a><br /></td></tr>
 <tr class="separator:af2a3ac44e4190cfadea96a63faf4d38a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2628e056369e3eb941ff68d7281d8adf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gear_crank.html#a2628e056369e3eb941ff68d7281d8adf">isDetected</a> ()</td></tr>
 <tr class="separator:a2628e056369e3eb941ff68d7281d8adf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -130,6 +133,16 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p><a class="el" href="class_gear_crank.html">GearCrank</a> controls the cranking mechanism on geared-crank gurdies. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">v_pin</td><td>The analog pin connected to the crank </td></tr>
+    <tr><td class="paramname">buzz_pin</td><td>The analog pin of the buzz knob potentiometer </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section warning"><dt>Warning</dt><dd>A <a class="el" href="class_buzz_knob.html">BuzzKnob</a> object using buzz_pin is a hidden private member object of <a class="el" href="class_gear_crank.html">GearCrank</a>. </dd></dl>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
@@ -148,6 +161,9 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Begins ADC sampling of the crank's voltage pin. </p>
+<p >HIGH_SPEED continuous sampling is being used here. This is very fast (readings are available on-deman, no delay), but ties up one of the ADCs full-time. </p><dl class="section warning"><dt>Warning</dt><dd>This is hard-coded to use adc0. </dd></dl>
+
 </div>
 </div>
 <a id="af2a3ac44e4190cfadea96a63faf4d38a" name="af2a3ac44e4190cfadea96a63faf4d38a"></a>
@@ -164,6 +180,9 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Determines if the crank is connected or not. </p>
+<p >This takes advantage of the fact that analog pin voltage "wanders" without some resistance on it. Calculating the standard deviation of a series of readings determines if crank is conntected/attached. </p><dl class="section warning"><dt>Warning</dt><dd>Physically moving the crank can create false negative detections. </dd></dl>
 
 </div>
 </div>

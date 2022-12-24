@@ -20,6 +20,11 @@
 #define __TSUNAMI_USE_SERIAL1__
 //#define __TSUNAMI_USE_SERIAL2__
 //#define __TSUNAMI_USE_SERIAL3__
+//#define __TSUNAMI_USE_SERIAL4__
+//#define __TSUNAMI_USE_SERIAL5__
+//#define __TSUNAMI_USE_SERIAL6__
+//#define __TSUNAMI_USE_SERIAL7__
+//#define __TSUNAMI_USE_SERIAL8__
 //#define __TSUNAMI_USE_ALTSOFTSERIAL__
 // ==================================================================
 
@@ -79,6 +84,26 @@
 #endif
 #ifdef __TSUNAMI_USE_SERIAL3__
 #define TsunamiSerial Serial3
+#define __TSUNAMI_SERIAL_ASSIGNED__
+#endif
+#ifdef __TSUNAMI_USE_SERIAL4__
+#define TsunamiSerial Serial4
+#define __TSUNAMI_SERIAL_ASSIGNED__
+#endif
+#ifdef __TSUNAMI_USE_SERIAL5__
+#define TsunamiSerial Serial5
+#define __TSUNAMI_SERIAL_ASSIGNED__
+#endif
+#ifdef __TSUNAMI_USE_SERIAL6__
+#define TsunamiSerial Serial6
+#define __TSUNAMI_SERIAL_ASSIGNED__
+#endif
+#ifdef __TSUNAMI_USE_SERIAL7__
+#define TsunamiSerial Serial7
+#define __TSUNAMI_SERIAL_ASSIGNED__
+#endif
+#ifdef __TSUNAMI_USE_SERIAL8__
+#define TsunamiSerial Serial8
 #define __TSUNAMI_SERIAL_ASSIGNED__
 #endif
 #ifndef __TSUNAMI_SERIAL_ASSIGNED__

@@ -3,6 +3,7 @@
 /// @brief GearCrank controls the cranking mechanism on geared-crank gurdies.
 /// @param v_pin The analog pin connected to the crank
 /// @param buzz_pin The analog pin of the buzz knob potentiometer
+/// @warning A BuzzKnob object using buzz_pin is a hidden private member object of GearCrank.
 GearCrank::GearCrank(int v_pin, int buzz_pin) {
 
   myKnob = new BuzzKnob(buzz_pin);
@@ -22,7 +23,9 @@ GearCrank::GearCrank(int v_pin, int buzz_pin) {
   buzz_countdown = BUZZ_SMOOTHING;
 };
 
-/// @brief 
+/// @brief Begins ADC sampling of the crank's voltage pin.
+/// @details HIGH_SPEED continuous sampling is being used here.  This is very fast (readings are available on-deman, no delay), but ties up one of the ADCs full-time.
+/// @warning This is hard-coded to use adc0.
 void GearCrank::beginPolling() {
   adc->adc0->setConversionSpeed(ADC_CONVERSION_SPEED::HIGH_SPEED);
   adc->adc0->setSamplingSpeed(ADC_SAMPLING_SPEED::HIGH_SPEED);
@@ -39,6 +42,10 @@ void GearCrank::beginPolling() {
 // 10 stDev from the mean, we consdier it detected.
 //
 // Moving the crank during the detection *does* throw it off.  Don't do that.
+/// @brief Determines if the crank is connected or not.
+/// @details This takes advantage of the fact that analog pin voltage "wanders" without some resistance on it.
+/// Calculating the standard deviation of a series of readings determines if crank is conntected/attached.
+/// @warning Physically moving the crank can create false negative detections.
 void GearCrank::detect() {
 
   sample_sum = 0;

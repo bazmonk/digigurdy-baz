@@ -38,6 +38,11 @@
 #define __WT_USE_SERIAL1__
 //#define __WT_USE_SERIAL2__
 //#define __WT_USE_SERIAL3__
+//#define __WT_USE_SERIAL4__
+//#define __WT_USE_SERIAL5__
+//#define __WT_USE_SERIAL6__
+//#define __WT_USE_SERIAL7__
+//#define __WT_USE_SERIAL8__
 // ==================================================================
 
 #define CMD_GET_VERSION					1
@@ -91,6 +96,26 @@
 #endif
 #ifdef __WT_USE_SERIAL3__
 #define WTSerial Serial3
+#define __WT_SERIAL_ASSIGNED__
+#endif
+#ifdef __WT_USE_SERIAL4__
+#define WTSerial Serial4
+#define __WT_SERIAL_ASSIGNED__
+#endif
+#ifdef __WT_USE_SERIAL5__
+#define WTSerial Serial5
+#define __WT_SERIAL_ASSIGNED__
+#endif
+#ifdef __WT_USE_SERIAL6__
+#define WTSerial Serial6
+#define __WT_SERIAL_ASSIGNED__
+#endif
+#ifdef __WT_USE_SERIAL7__
+#define WTSerial Serial7
+#define __WT_SERIAL_ASSIGNED__
+#endif
+#ifdef __WT_USE_SERIAL8__
+#define WTSerial Serial8
 #define __WT_SERIAL_ASSIGNED__
 #endif
 #ifndef __WT_SERIAL_ASSIGNED__
