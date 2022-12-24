@@ -1,5 +1,10 @@
 #include "exfunctions.h"
 
+/// @brief Cycles through muting the melody strings.
+/// @details
+/// * Applies immediately if playing.
+/// * Cycles through one or the other or no melody strings.
+/// * Does not include an option to mute all melody strings (why have that?).
 void cycle_mel_mute() {
   if (mel_mode == 0) {
     mel_mode = 1; // 1 == high on, low off
@@ -35,6 +40,10 @@ void cycle_mel_mute() {
   };
 };
 
+/// @brief Cycles through muting the drone and trompette strings.
+/// @details
+/// * Applies immediately if playing.
+/// * Cycles through all 4 mute/unmute possibilities between the two strings.
 void cycle_drone_tromp_mute() {
   if (drone_mode == 0) {
     drone_mode = 1; // 1 == both off
@@ -84,6 +93,8 @@ void cycle_drone_tromp_mute() {
   };
 };
 
+/// @brief Toggles muting the drone string.
+/// @details * Applies immediately if playing.
 void cycle_drone_mute() {
   if (drone_mode == 0 || drone_mode == 2) {
     if (drone_mode == 0) {
@@ -115,6 +126,8 @@ void cycle_drone_mute() {
   };
 };
 
+/// @brief Toggles muting the trompette string.
+/// @details * Applies immediately if playing.
 void cycle_tromp_mute() {
   if (t_mode == 0) {
     t_mode = 1;

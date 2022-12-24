@@ -1,7 +1,8 @@
 #include "gearcrank.h"
 
-// class GearCrank controls the cranking mechanism, including the buzz triggers.
-// v_pin is the voltage pin of the crank.  This is A1 on a normal didigurdy.
+/// @brief GearCrank controls the cranking mechanism on geared-crank gurdies.
+/// @param v_pin The analog pin connected to the crank
+/// @param buzz_pin The analog pin of the buzz knob potentiometer
 GearCrank::GearCrank(int v_pin, int buzz_pin) {
 
   myKnob = new BuzzKnob(buzz_pin);
@@ -21,6 +22,7 @@ GearCrank::GearCrank(int v_pin, int buzz_pin) {
   buzz_countdown = BUZZ_SMOOTHING;
 };
 
+/// @brief 
 void GearCrank::beginPolling() {
   adc->adc0->setConversionSpeed(ADC_CONVERSION_SPEED::HIGH_SPEED);
   adc->adc0->setSamplingSpeed(ADC_SAMPLING_SPEED::HIGH_SPEED);
