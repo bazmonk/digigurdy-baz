@@ -584,8 +584,8 @@ void loop() {
      // Serial.println(mycrank->getRev());
      start_time = millis();
      #ifdef USE_PEDAL
-       //Serial.println(String("") + "\nPITCH_V = " + myvibknob->getPitch());
-       //Serial.println(String("") + "KNOB_VIB = " + myvibknob->getVibrato());
+       Serial.println(String("") + "\nPITCH_V = " + myvibknob->getPitch());
+       Serial.println(String("") + "KNOB_VIB = " + myvibknob->getVoltage());
      #endif
   }
 

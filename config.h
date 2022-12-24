@@ -46,11 +46,11 @@ const int LED_PIN = 40;
 #define USE_PEDAL
 
 // PEDAL_PIN is the pin used for the pedal accessory.
-const int PEDAL_PIN = 40;
+const int PEDAL_PIN = A16;
 
 // PEDA_MAX_V should be set near (doesn't need to be exact) the max voltage your pedal will output.
 // 1023 = 3.3v, so (1023/3.3) * [Your voltage] = the value you want here.
-const float PEDAL_MAX_V = 658.0;
+const float PEDAL_MAX_V = 806.0;
 
 // VIBRATO: I use a long-delay, very slow vibrato on the melody strings.  This variable controls how
 // much vibrato (how much modulation like with a physical mod wheel on a MIDI keyboard) to send.

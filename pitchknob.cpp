@@ -11,7 +11,7 @@ PitchKnob::PitchKnob(int v_pin) {
 };
 
 void PitchKnob::update() {
-  if (pitch_knob_timer > 50) {
+  if (enabled && pitch_knob_timer > 100) {
     voltage = adc->adc0->analogReadContinuous();
 
     mystring->setPitchBend(getPitch());
