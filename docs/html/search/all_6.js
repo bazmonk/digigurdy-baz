@@ -23,6 +23,5 @@ var searchData=
   ['f_5f1_20',['f_1',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6cea898150f8b0112f910c51c9a50910009e',1,'notes.h']]],
   ['f_5f1s_21',['f_1s',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6cea6f427aabc11ca5bb742e864575b07a75',1,'notes.h']]],
   ['first_5floop_22',['first_loop',['../digigurdy-baz_8ino.html#a0aafe87552d0b8c2b104d044c40fc1a8',1,'digigurdy-baz.ino']]],
-  ['flush_23',['flush',['../class_tsunami.html#a1b82b8474023556993b1263af7f0ff9a',1,'Tsunami::flush()'],['../classwav_trigger.html#a13de9a54cc7f94d2ce4ea6fe249d5258',1,'wavTrigger::flush()']]],
-  ['fn_5fchoice_5fscreen_24',['fn_choice_screen',['../class_ex_button.html#aa8ee43cebc6c2c8a461e7e2cd44f25b2',1,'ExButton']]]
+  ['fn_5fchoice_5fscreen_23',['fn_choice_screen',['../class_ex_button.html#aa8ee43cebc6c2c8a461e7e2cd44f25b2',1,'ExButton']]]
 ];

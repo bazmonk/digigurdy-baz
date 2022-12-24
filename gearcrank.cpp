@@ -74,11 +74,14 @@ void GearCrank::detect() {
   deviations = sqrt(squared_sum / float(num_samples));
 };
 
+/// @brief Reports whether or not there is a crank attached.
+/// @return True if detected, false if not detected
 bool GearCrank::isDetected() {
   return (deviations < 10);
   //return true;
 };
 
+/// @brief 
 void GearCrank::refreshBuzz() {
   if (isDetected()) {
 
