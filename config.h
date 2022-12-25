@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.3.2";
+const String VERSION = "2.3.3";
 const String REL_DATE = "2022-12-24, v" + VERSION;
 
 /// @defgroup config Configuration Options

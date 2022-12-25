@@ -24,6 +24,8 @@ class ExButton: public GurdyButton {
     void doFunc();
 
     void fn_choice_screen(int but_num);
+
+    bool fn_choice_screen_2(int but_num);
 };
 
 #endif

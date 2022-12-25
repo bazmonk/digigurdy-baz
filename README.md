@@ -6,8 +6,11 @@ See [the code documentation here](https://bazmonk.github.io/digigurdy-baz/html/i
 
 **Pre-compiled builds of the code will be made available from 1.7.99 and up.  See https://github.com/bazmonk/digigurdy-baz/wiki/install-by-hex for installation instructions.**
 
-**Check out version 2.3.2! (NEW)**
+**Check out version 2.3.3! (NEW)**
 
+* 2.3.3 -
+  * New EX button functions: turning volume up and down.
+  
 * 2.3.2 -
   * Broke out and modified Tsunami and Trigger libraries to support all 8 Teensy4.1 Serial TX pins.
   * Rewrote ALL documentation in doxygen format
