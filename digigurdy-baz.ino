@@ -567,7 +567,7 @@ void loop() {
   if (test_count > 100000) {
     test_count = 0;
      Serial.print("100,000 loop()s took: ");
-     Serial.print(millis() - start_time);
+     Serial.println(millis() - start_time);
      // Serial.print("ms.  Avg Velocity: ");
      // Serial.print(mycrank->getVAvg());
      // Serial.print("rpm. Transitions: ");

@@ -249,8 +249,10 @@ Enumerations</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a2453dee5130d938f2a4af3e918328854"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="notes_8h.html#a2453dee5130d938f2a4af3e918328854">getNoteNum</a> (int num)</td></tr>
+<tr class="memdesc:a2453dee5130d938f2a4af3e918328854"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the printed version of the given MIDI note.  <a href="notes_8h.html#a2453dee5130d938f2a4af3e918328854">More...</a><br /></td></tr>
 <tr class="separator:a2453dee5130d938f2a4af3e918328854"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0be3e90e2cfe5e2bc0c2edae12ed2710"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="notes_8h.html#a0be3e90e2cfe5e2bc0c2edae12ed2710">getLongNoteNum</a> (int num)</td></tr>
+<tr class="memdesc:a0be3e90e2cfe5e2bc0c2edae12ed2710"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the longer printed version of the given MIDI note.  <a href="notes_8h.html#a0be3e90e2cfe5e2bc0c2edae12ed2710">More...</a><br /></td></tr>
 <tr class="separator:a0be3e90e2cfe5e2bc0c2edae12ed2710"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
@@ -420,6 +422,16 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns the longer printed version of the given MIDI note. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">num</td><td>A MIDI note, 0-127, 63 = C4 </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A full text version of the note (e.g. "E#4/Fb4", "RE#3/MIb3") </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The use_solfrege variable from the main <a class="el" href="digigurdy-baz_8ino.html">digigurdy-baz.ino</a> file is what determins which notation is used here. </dd></dl>
+
 </div>
 </div>
 <a id="a2453dee5130d938f2a4af3e918328854" name="a2453dee5130d938f2a4af3e918328854"></a>
@@ -437,6 +449,16 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns the printed version of the given MIDI note. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">num</td><td>A MIDI note, 0-127, 63 = C4 </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A text version of the note (e.g. "C4", "RE#3") </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The use_solfrege variable from the main <a class="el" href="digigurdy-baz_8ino.html">digigurdy-baz.ino</a> file is what determins which notation is used here. </dd></dl>
 
 </div>
 </div>

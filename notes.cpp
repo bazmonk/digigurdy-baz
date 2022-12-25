@@ -89,6 +89,10 @@ String LongNoteNumCOMBO[] = {
   "C9/DO9", "C#9/DO#9", "D9/RE9", "Eb9/MIb9", "E9/MI9", "F9/FA9", "F#9/FA#9", "G9/SOL9"
 };
 
+/// @brief Returns the printed version of the given MIDI note.
+/// @param num A MIDI note, 0-127, 63 = C4
+/// @return A text version of the note (e.g. "C4", "RE#3")
+/// @note The use_solfrege variable from the main digigurdy-baz.ino file is what determins which notation is used here.
 String getNoteNum(int num) {
   if (use_solfege == 0) {
     return NoteNumABC[num];
@@ -99,6 +103,10 @@ String getNoteNum(int num) {
   };
 };
 
+/// @brief Returns the longer printed version of the given MIDI note.
+/// @param num A MIDI note, 0-127, 63 = C4
+/// @return A full text version of the note (e.g. "E#4/Fb4", "RE#3/MIb3")
+/// @note The use_solfrege variable from the main digigurdy-baz.ino file is what determins which notation is used here.
 String getLongNoteNum(int num) {
   if (use_solfege == 0) {
     return LongNoteNumABC[num];

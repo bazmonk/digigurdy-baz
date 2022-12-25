@@ -8,11 +8,6 @@
 #include "common.h"
 #include "simpleled.h"
 
-// class GurdyCrank controls the cranking mechanism, including the buzz triggers.
-//   * This version is for optical (IR gate) sensors.  The digital pin readings are expected to
-//     oscillate between 0 and 1 only.
-//   * NUM_SPOKES in config.h needs to be defined as the number of "spokes" (dark lines) on your
-//     wheel, not the number of dark+light bars.  Your RPMs will be half-speed if you do that.
 class GurdyCrank {
   private:
     int sensor_pin;

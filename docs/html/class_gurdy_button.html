@@ -93,14 +93,19 @@ Inheritance diagram for GurdyButton:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a4b8b0290b451f520f31cf07067faf92f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gurdy_button.html#a4b8b0290b451f520f31cf07067faf92f">GurdyButton</a> (int my_pin, int interval)</td></tr>
+<tr class="memdesc:a4b8b0290b451f520f31cf07067faf92f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor. This class handles simple push-on, release-off buttons.  <a href="class_gurdy_button.html#a4b8b0290b451f520f31cf07067faf92f">More...</a><br /></td></tr>
 <tr class="separator:a4b8b0290b451f520f31cf07067faf92f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d3d4f4a75f33b082150eb61cc2aa78e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gurdy_button.html#a1d3d4f4a75f33b082150eb61cc2aa78e">update</a> ()</td></tr>
+<tr class="memdesc:a1d3d4f4a75f33b082150eb61cc2aa78e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Polls the button and updates its state.  <a href="class_gurdy_button.html#a1d3d4f4a75f33b082150eb61cc2aa78e">More...</a><br /></td></tr>
 <tr class="separator:a1d3d4f4a75f33b082150eb61cc2aa78e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a44d94ec03303a2c91cc173e6bd587371"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gurdy_button.html#a44d94ec03303a2c91cc173e6bd587371">beingPressed</a> ()</td></tr>
+<tr class="memdesc:a44d94ec03303a2c91cc173e6bd587371"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reports if the button is being pressed this <a class="el" href="class_gurdy_button.html#a1d3d4f4a75f33b082150eb61cc2aa78e" title="Polls the button and updates its state.">update()</a> cycle.  <a href="class_gurdy_button.html#a44d94ec03303a2c91cc173e6bd587371">More...</a><br /></td></tr>
 <tr class="separator:a44d94ec03303a2c91cc173e6bd587371"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a21b3fc36d8a121de38828209657a6c52"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gurdy_button.html#a21b3fc36d8a121de38828209657a6c52">wasPressed</a> ()</td></tr>
+<tr class="memdesc:a21b3fc36d8a121de38828209657a6c52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reports if the button was pressed down this <a class="el" href="class_gurdy_button.html#a1d3d4f4a75f33b082150eb61cc2aa78e" title="Polls the button and updates its state.">update()</a> cycle.  <a href="class_gurdy_button.html#a21b3fc36d8a121de38828209657a6c52">More...</a><br /></td></tr>
 <tr class="separator:a21b3fc36d8a121de38828209657a6c52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a647e8f5794e697d8e36d5d54a86e25fc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gurdy_button.html#a647e8f5794e697d8e36d5d54a86e25fc">wasReleased</a> ()</td></tr>
+<tr class="memdesc:a647e8f5794e697d8e36d5d54a86e25fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reports if the button was released this <a class="el" href="class_gurdy_button.html#a1d3d4f4a75f33b082150eb61cc2aa78e" title="Polls the button and updates its state.">update()</a> cycle.  <a href="class_gurdy_button.html#a647e8f5794e697d8e36d5d54a86e25fc">More...</a><br /></td></tr>
 <tr class="separator:a647e8f5794e697d8e36d5d54a86e25fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
@@ -137,6 +142,16 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Constructor. This class handles simple push-on, release-off buttons. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">my_pin</td><td>The digital pin this button is connected to </td></tr>
+    <tr><td class="paramname">interval</td><td>The debounce interval for this button</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>This class assumes the button is wired up as an active-low button. It applies the internal pullup resistor. </p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
@@ -155,6 +170,9 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Reports if the button is being pressed this <a class="el" href="class_gurdy_button.html#a1d3d4f4a75f33b082150eb61cc2aa78e" title="Polls the button and updates its state.">update()</a> cycle. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if button is actve, false otherwise. </dd></dl>
+
 </div>
 </div>
 <a id="a1d3d4f4a75f33b082150eb61cc2aa78e" name="a1d3d4f4a75f33b082150eb61cc2aa78e"></a>
@@ -171,6 +189,9 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Polls the button and updates its state. </p>
+<p >This should be run every <a class="el" href="digigurdy-baz_8ino.html#afe461d27b9c48d5921c00d521181f12f" title="The main loop function.">loop()</a> even if the results are not used. </p>
 
 </div>
 </div>
@@ -189,6 +210,9 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Reports if the button was pressed down this <a class="el" href="class_gurdy_button.html#a1d3d4f4a75f33b082150eb61cc2aa78e" title="Polls the button and updates its state.">update()</a> cycle. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if button was just pressed down, false otherwise. </dd></dl>
+
 </div>
 </div>
 <a id="a647e8f5794e697d8e36d5d54a86e25fc" name="a647e8f5794e697d8e36d5d54a86e25fc"></a>
@@ -205,6 +229,9 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Reports if the button was released this <a class="el" href="class_gurdy_button.html#a1d3d4f4a75f33b082150eb61cc2aa78e" title="Polls the button and updates its state.">update()</a> cycle. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if button was just released, false otherwise. </dd></dl>
 
 </div>
 </div>

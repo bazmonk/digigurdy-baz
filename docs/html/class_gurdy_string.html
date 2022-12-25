@@ -81,36 +81,52 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aaa3d35f0d047fa3c86492bceb329f19b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gurdy_string.html#aaa3d35f0d047fa3c86492bceb329f19b">GurdyString</a> (int my_channel, int my_note, String my_name, int my_vol=70)</td></tr>
+<tr class="memdesc:aaa3d35f0d047fa3c86492bceb329f19b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor. <a class="el" href="class_gurdy_string.html">GurdyString</a> manages turning "strings" on and off, determining its note, and interacting with the MIDI layer.  <a href="class_gurdy_string.html#aaa3d35f0d047fa3c86492bceb329f19b">More...</a><br /></td></tr>
 <tr class="separator:aaa3d35f0d047fa3c86492bceb329f19b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6834bb8392ad03b932f71c83bbed84d8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gurdy_string.html#a6834bb8392ad03b932f71c83bbed84d8">soundOn</a> (int my_offset=0, int my_modulation=0)</td></tr>
+<tr class="memdesc:a6834bb8392ad03b932f71c83bbed84d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turns on sound over this string's MIDI channel at its current volume.  <a href="class_gurdy_string.html#a6834bb8392ad03b932f71c83bbed84d8">More...</a><br /></td></tr>
 <tr class="separator:a6834bb8392ad03b932f71c83bbed84d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a58d72ab3baf361272929b1dd34da3927"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gurdy_string.html#a58d72ab3baf361272929b1dd34da3927">soundOff</a> ()</td></tr>
+<tr class="memdesc:a58d72ab3baf361272929b1dd34da3927"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turns off the sound currently playing for this string, nicely.  <a href="class_gurdy_string.html#a58d72ab3baf361272929b1dd34da3927">More...</a><br /></td></tr>
 <tr class="separator:a58d72ab3baf361272929b1dd34da3927"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc1da3772c15a6e49d1314b3759ff137"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gurdy_string.html#adc1da3772c15a6e49d1314b3759ff137">soundKill</a> ()</td></tr>
+<tr class="memdesc:adc1da3772c15a6e49d1314b3759ff137"><td class="mdescLeft">&#160;</td><td class="mdescRight">Issues a MIDI CC123 to the string's MIDI channel, killing all sound on it.  <a href="class_gurdy_string.html#adc1da3772c15a6e49d1314b3759ff137">More...</a><br /></td></tr>
 <tr class="separator:adc1da3772c15a6e49d1314b3759ff137"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba7e0b28418827feb07f3e3a3818b0b0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gurdy_string.html#aba7e0b28418827feb07f3e3a3818b0b0">getOpenNote</a> ()</td></tr>
+<tr class="memdesc:aba7e0b28418827feb07f3e3a3818b0b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the string's open (base) note.  <a href="class_gurdy_string.html#aba7e0b28418827feb07f3e3a3818b0b0">More...</a><br /></td></tr>
 <tr class="separator:aba7e0b28418827feb07f3e3a3818b0b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a403e5d7aa3d663a6f05acd7cd3d16564"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gurdy_string.html#a403e5d7aa3d663a6f05acd7cd3d16564">setOpenNote</a> (int new_note)</td></tr>
+<tr class="memdesc:a403e5d7aa3d663a6f05acd7cd3d16564"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a new base note for this string.  <a href="class_gurdy_string.html#a403e5d7aa3d663a6f05acd7cd3d16564">More...</a><br /></td></tr>
 <tr class="separator:a403e5d7aa3d663a6f05acd7cd3d16564"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4d41db23bed30f6ad63eec173f1e2d1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gurdy_string.html#aa4d41db23bed30f6ad63eec173f1e2d1">setVolume</a> (int vol)</td></tr>
+<tr class="memdesc:aa4d41db23bed30f6ad63eec173f1e2d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a new volume for this string.  <a href="class_gurdy_string.html#aa4d41db23bed30f6ad63eec173f1e2d1">More...</a><br /></td></tr>
 <tr class="separator:aa4d41db23bed30f6ad63eec173f1e2d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a466d58afac0664444d3e9b9a50225969"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gurdy_string.html#a466d58afac0664444d3e9b9a50225969">getVolume</a> ()</td></tr>
+<tr class="memdesc:a466d58afac0664444d3e9b9a50225969"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the string's MIDI volume.  <a href="class_gurdy_string.html#a466d58afac0664444d3e9b9a50225969">More...</a><br /></td></tr>
 <tr class="separator:a466d58afac0664444d3e9b9a50225969"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9508237cae31a8372322a4027cb163fd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gurdy_string.html#a9508237cae31a8372322a4027cb163fd">setMute</a> (bool mute)</td></tr>
+<tr class="memdesc:a9508237cae31a8372322a4027cb163fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mutes/unmutes the string.  <a href="class_gurdy_string.html#a9508237cae31a8372322a4027cb163fd">More...</a><br /></td></tr>
 <tr class="separator:a9508237cae31a8372322a4027cb163fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55030278f910f77a34f670a2a8a28d65"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gurdy_string.html#a55030278f910f77a34f670a2a8a28d65">getMute</a> ()</td></tr>
+<tr class="memdesc:a55030278f910f77a34f670a2a8a28d65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the string's mute/unmute status.  <a href="class_gurdy_string.html#a55030278f910f77a34f670a2a8a28d65">More...</a><br /></td></tr>
 <tr class="separator:a55030278f910f77a34f670a2a8a28d65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2071d75a9b936cbbb6442b68f3a028a2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gurdy_string.html#a2071d75a9b936cbbb6442b68f3a028a2">isPlaying</a> ()</td></tr>
+<tr class="memdesc:a2071d75a9b936cbbb6442b68f3a028a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reports if the string is currently playing a note.  <a href="class_gurdy_string.html#a2071d75a9b936cbbb6442b68f3a028a2">More...</a><br /></td></tr>
 <tr class="separator:a2071d75a9b936cbbb6442b68f3a028a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a927227e984d13b1b2118f8342e55833a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gurdy_string.html#a927227e984d13b1b2118f8342e55833a">setProgram</a> (uint8_t program)</td></tr>
+<tr class="memdesc:a927227e984d13b1b2118f8342e55833a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a MIDI Program Change to this string's MIDI channel.  <a href="class_gurdy_string.html#a927227e984d13b1b2118f8342e55833a">More...</a><br /></td></tr>
 <tr class="separator:a927227e984d13b1b2118f8342e55833a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a577d4cfb05ca441cdfac2b1465c502ad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gurdy_string.html#a577d4cfb05ca441cdfac2b1465c502ad">setExpression</a> (int exp)</td></tr>
+<tr class="memdesc:a577d4cfb05ca441cdfac2b1465c502ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends a MIDI CC11 (Expression) value to this string's MIDI channel.  <a href="class_gurdy_string.html#a577d4cfb05ca441cdfac2b1465c502ad">More...</a><br /></td></tr>
 <tr class="separator:a577d4cfb05ca441cdfac2b1465c502ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad10f22beee507bbd504c760f0e500d22"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gurdy_string.html#ad10f22beee507bbd504c760f0e500d22">setPitchBend</a> (int bend)</td></tr>
+<tr class="memdesc:ad10f22beee507bbd504c760f0e500d22"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bends this string's sound to the specified amount.  <a href="class_gurdy_string.html#ad10f22beee507bbd504c760f0e500d22">More...</a><br /></td></tr>
 <tr class="separator:ad10f22beee507bbd504c760f0e500d22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1886876dfc67e54ca08f6929b03ae8e1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gurdy_string.html#a1886876dfc67e54ca08f6929b03ae8e1">setVibrato</a> (int vib)</td></tr>
+<tr class="memdesc:a1886876dfc67e54ca08f6929b03ae8e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the amount of modulation (vibrato) on this string.  <a href="class_gurdy_string.html#a1886876dfc67e54ca08f6929b03ae8e1">More...</a><br /></td></tr>
 <tr class="separator:a1886876dfc67e54ca08f6929b03ae8e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33739741ba0db2921c185f14ab853cdb"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gurdy_string.html#a33739741ba0db2921c185f14ab853cdb">getName</a> ()</td></tr>
+<tr class="memdesc:a33739741ba0db2921c185f14ab853cdb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the text name of this string.  <a href="class_gurdy_string.html#a33739741ba0db2921c185f14ab853cdb">More...</a><br /></td></tr>
 <tr class="separator:a33739741ba0db2921c185f14ab853cdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
@@ -152,6 +168,17 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Constructor. <a class="el" href="class_gurdy_string.html">GurdyString</a> manages turning "strings" on and off, determining its note, and interacting with the MIDI layer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">my_channel</td><td>The MIDI channel to communicate over </td></tr>
+    <tr><td class="paramname">my_note</td><td>The base MIDI note of this string (0-127) </td></tr>
+    <tr><td class="paramname">my_name</td><td>A text label for this string (e.g. "Drone") </td></tr>
+    <tr><td class="paramname">my_vol</td><td>The volume of this string (0-127) </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
@@ -170,6 +197,9 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns the string's mute/unmute status. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if muted, false if unmuted </dd></dl>
+
 </div>
 </div>
 <a id="a33739741ba0db2921c185f14ab853cdb" name="a33739741ba0db2921c185f14ab853cdb"></a>
@@ -186,6 +216,9 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns the text name of this string. </p>
+<dl class="section return"><dt>Returns</dt><dd>The string's display name </dd></dl>
 
 </div>
 </div>
@@ -204,6 +237,9 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns the string's open (base) note. </p>
+<dl class="section return"><dt>Returns</dt><dd>The string's base note as a MIDI note number 0-127 </dd></dl>
+
 </div>
 </div>
 <a id="a466d58afac0664444d3e9b9a50225969" name="a466d58afac0664444d3e9b9a50225969"></a>
@@ -221,6 +257,9 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns the string's MIDI volume. </p>
+<dl class="section return"><dt>Returns</dt><dd>The string's volume, 0-127 </dd></dl>
+
 </div>
 </div>
 <a id="a2071d75a9b936cbbb6442b68f3a028a2" name="a2071d75a9b936cbbb6442b68f3a028a2"></a>
@@ -237,6 +276,9 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Reports if the string is currently playing a note. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if playing a note, false otherwise. </dd></dl>
 
 </div>
 </div>
@@ -256,6 +298,15 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sends a MIDI CC11 (Expression) value to this string's MIDI channel. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">exp</td><td>The expression value, 0-127. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This has no effect on Tsunami/Trigger units. </dd></dl>
+
 </div>
 </div>
 <a id="a9508237cae31a8372322a4027cb163fd" name="a9508237cae31a8372322a4027cb163fd"></a>
@@ -273,6 +324,15 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Mutes/unmutes the string. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mute</td><td>True = mute, false = unmute </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>While muted, soundOn/Off events do nothing. This exists for programming ease (calling sounOn() on all strings without checking if they are muted). </dd></dl>
 
 </div>
 </div>
@@ -292,6 +352,14 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets a new base note for this string. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">new_note</td><td>The new base MIDI note (0-127) for this string </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="ad10f22beee507bbd504c760f0e500d22" name="ad10f22beee507bbd504c760f0e500d22"></a>
@@ -309,6 +377,15 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Bends this string's sound to the specified amount. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">bend</td><td>The amount of pitch bend. 0 to 16383, where 8192 = no bend. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This has no effect on Tsunami/Trigger units. </dd></dl>
 
 </div>
 </div>
@@ -328,6 +405,15 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Send a MIDI Program Change to this string's MIDI channel. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">program</td><td>The program change value, 0-127. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This has no effect on Tsunami/Trigger units. </dd></dl>
+
 </div>
 </div>
 <a id="a1886876dfc67e54ca08f6929b03ae8e1" name="a1886876dfc67e54ca08f6929b03ae8e1"></a>
@@ -345,6 +431,15 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets the amount of modulation (vibrato) on this string. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vib</td><td>The amount of modulation, 0-127. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This is MIDI CC1, the "mod wheel". Intended to used for a vibrato effect. </dd></dl>
 
 </div>
 </div>
@@ -364,6 +459,18 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets a new volume for this string. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vol</td><td>The new MIDI volume for this string. 0 = silent, 127 = full volume. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>On Tsunami/Trigger units, this is translated to the -70 to +10 scale used on those internally.<ul>
+<li>MIDI volume 112 = line-out volume level on Tsunami/Trigger units. </li>
+</ul>
+</dd></dl>
+
 </div>
 </div>
 <a id="adc1da3772c15a6e49d1314b3759ff137" name="adc1da3772c15a6e49d1314b3759ff137"></a>
@@ -381,6 +488,9 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Issues a MIDI CC123 to the string's MIDI channel, killing all sound on it. </p>
+<dl class="section note"><dt>Note</dt><dd>On Tsunami/Trigger units, this kills <em>all</em> tracks playing. This is not meant be the regular way to turn off sound, see <a class="el" href="class_gurdy_string.html#a58d72ab3baf361272929b1dd34da3927" title="Turns off the sound currently playing for this string, nicely.">soundOff()</a> which does it more gently. </dd></dl>
+
 </div>
 </div>
 <a id="a58d72ab3baf361272929b1dd34da3927" name="a58d72ab3baf361272929b1dd34da3927"></a>
@@ -397,6 +507,8 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Turns off the sound currently playing for this string, nicely. </p>
 
 </div>
 </div>
@@ -425,6 +537,16 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Turns on sound over this string's MIDI channel at its current volume. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">my_offset</td><td>The offset from the string's base note to make sound </td></tr>
+    <tr><td class="paramname">my_modulation</td><td>The amount of optional modulation (0-127) to apply to the sound. This is MIDI CC1. 0 == no modulation. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section warning"><dt>Warning</dt><dd>The way this is currently written, only one note may be playing per string object. Don't call this twice in a row without calling <a class="el" href="class_gurdy_string.html#a58d72ab3baf361272929b1dd34da3927" title="Turns off the sound currently playing for this string, nicely.">soundOff()</a> first. </dd></dl>
 
 </div>
 </div>

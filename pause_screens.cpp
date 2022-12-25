@@ -1,6 +1,10 @@
 #include "pause_screens.h"
 
-// This is the screen that X+A gets you.
+/// @defgroup pause Pause Screens
+/// These are the menu screens which don't have to do with tuning.
+/// @{
+
+/// @brief This is the main Pause Screen, branching out to all other runtime menus.
 void pause_screen() {
 
   bool done = false;
@@ -101,8 +105,8 @@ void pause_screen() {
   delay(500);
 };
 
-
-// This screen prompts which kind of tuning to load.
+/// @brief This screen prompts the user to choose what kind of tuning they wish to load, and runs the appropriate load screen or exits.
+/// @return True if a new tuning choice was made, false if user chooses the "go back" option.
 bool load_tuning_screen() {
 
   bool done = false;
@@ -137,6 +141,10 @@ bool load_tuning_screen() {
 
 // Checks if save slot is occupied and prompts user to overwrite if necessary.
 // Returns true if slot is empty or OK to overwrite.
+
+/// @brief Checks if a given save slot is occupied, prompts user to continue if necessary.
+/// @param slot The EEPROM save slot to check
+/// @return True if slot is empty or user wants to overwrite it, false otherwise
 bool check_save_tuning(int slot) {
 
   if (EEPROM.read(slot) == 0) {
@@ -164,7 +172,8 @@ bool check_save_tuning(int slot) {
   };
 };
 
-// This is the screen for saving to a save slot
+/// @brief This screen prompts to the user to choose between four save slots, and attempts to save to that slot.
+/// @details User is prompted with check_save_tuning() if the chosen slot is full.  Also prints confirmation screen if saving occurs.
 void save_tuning_screen() {
 
   bool done = false;
@@ -221,6 +230,7 @@ void save_tuning_screen() {
   delay(500);
 };
 
+/// @brief This is the about screen shown when the user selects it, which displays until the user presses "X" to continue.
 void options_about_screen() {
 
   about_screen();
@@ -254,6 +264,8 @@ void options_about_screen() {
   // };
 };
 
+/// @brief This prompts the user to choose between the non-tuning/volume configuration options.
+/// @return True if the user chooses one of the options, false otherwise
 bool other_options_screen() {
 
   bool done = false;
@@ -326,6 +338,9 @@ bool other_options_screen() {
   return true;
 };
 
+/// @brief Send a scene-change signal (program change) on MIDI channel 1
+/// @param scene_idx 0-127, representing the scene/program being changed to.
+/// @details This is intended to be used with BS-16i, which will change its soundfonts and settings in reaction to these signals.
 void signal_scene_change(int scene_idx) {
   if (scene_signal_type == 1) {
     // Signal as a Program Control message on Channel 1
@@ -818,6 +833,7 @@ void led_screen() {
   };
 };
 
+/// @brief This menu screen is for enabling/disabling the accessory/vibrato pedal.
 void vib_screen() {
 
   bool done = false;
@@ -902,8 +918,6 @@ void playing_config_screen() {
   };
 };
 
-
-
 void notation_config_screen() {
   bool done = false;
   while (!done) {
@@ -950,3 +964,5 @@ void notation_config_screen() {
     };
   };
 };
+
+/// @}

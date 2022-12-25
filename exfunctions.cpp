@@ -1,5 +1,10 @@
 #include "exfunctions.h"
 
+/// @defgroup ex EX Button Functions
+/// These are the various functions that the EX buttons can be configured to run when pressed.
+/// @note One EX button use isn't listed here: bringing up the pause screen.
+/// @{
+
 /// @brief Cycles through muting the melody strings.
 /// @details
 /// * Applies immediately if playing.
@@ -152,3 +157,5 @@ void cycle_tromp_mute() {
     print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
   };
 };
+
+/// @}

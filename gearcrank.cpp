@@ -32,16 +32,6 @@ void GearCrank::beginPolling() {
   adc->adc0->startContinuous(voltage_pin);
 };
 
-// Crank detection - this comes from John's code.  We sample the voltage
-// of the crank's voltage pin 500 times really quick (100/s for 5s).
-// With that, we calculate the standard deviation of the results.
-//
-// My understanding is this: if the motor is connected and at rest, it
-// will give a consistent very-low voltage.  If the pin is not connected
-// to anything, its voltage will wander around.  If the results are less than
-// 10 stDev from the mean, we consdier it detected.
-//
-// Moving the crank during the detection *does* throw it off.  Don't do that.
 /// @brief Determines if the crank is connected or not.
 /// @details This takes advantage of the fact that analog pin voltage "wanders" without some resistance on it.
 /// Calculating the standard deviation of a series of readings determines if crank is conntected/attached.
@@ -81,7 +71,8 @@ bool GearCrank::isDetected() {
   //return true;
 };
 
-/// @brief 
+/// @brief Samples the buzz knob and determines if buzzing started and/or is continuing.
+/// @details Performs a simple greater-than comparison between the crank's voltage and the knob.
 void GearCrank::refreshBuzz() {
   if (isDetected()) {
 
@@ -139,7 +130,11 @@ void GearCrank::refreshBuzz() {
   };
 };
 
-// This is meant to be run every loop().
+/// @brief Samples the crank voltage.
+/// @details * Actually takes several hundred rapid continuous readings, averages this, and then averages that with the previous reading.
+/// * Also subtracts the average voltage detected during crank detection as a form of noise reduction.
+/// * Also calls refreshBuzz() internally.
+/// * This is intended to be run every loop() cycle.
 void GearCrank::update() {
   if (isDetected()) {
     // Update the knob first.
@@ -164,6 +159,7 @@ void GearCrank::update() {
     Serial.print(" Smoothed: ");
     Serial.print(crank_voltage);
 
+    // From the crank detection, we're subtracting the detected "noise" here.
     crank_voltage = crank_voltage - int(sample_mean);
 
     Serial.print(" Adjusted: ");
@@ -227,22 +223,32 @@ void GearCrank::update() {
   };
 };
 
+/// @brief Reports if spinning has started this update() cycle.
+/// @return True if the crank began spinning this cycle, false otherwise.
 bool GearCrank::startedSpinning() {
   return started_spinning;
 };
 
+/// @brief Reports if spinning has sotpped this update() cycle.
+/// @return True if the crank stopped spinning this cycle, false otherwise.
 bool GearCrank::stoppedSpinning() {
   return stopped_spinning;
 };
 
+/// @brief Reports if spinning is happening.
+/// @return True if the crank is spinning (whether or not it started this cycle), false otherwise.
 bool GearCrank::isSpinning() {
   return is_spinning;
 };
 
+/// @brief Reports if buzzing has begun.
+/// @return True if buzzing started this cycle, false otherwise.
 bool GearCrank::startedBuzzing() {
   return started_buzzing;
 };
 
+/// @brief Reports if buzzing has stopped.
+/// @return True if buzzing stopped this cycle, false otherwise.
 bool GearCrank::stoppedBuzzing() {
   return stopped_buzzing;
 };

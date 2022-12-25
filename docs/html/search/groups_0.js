@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['gear_2dmotor_20crank_20configuration_20variables_0',['Gear-Motor Crank Configuration Variables',['../group__gear.html',1,'']]]
+  ['configuration_20options_0',['Configuration Options',['../group__config.html',1,'']]]
 ];

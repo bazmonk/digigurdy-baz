@@ -1,5 +1,6 @@
 #include "ex_screens.h"
 
+/// @ingroup pause
 /// @brief  Prompt user to choose which EX button to configure.
 void ex_btn_choice_screen() {
 

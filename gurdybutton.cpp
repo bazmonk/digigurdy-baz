@@ -1,12 +1,11 @@
 #include "gurdybutton.h"
 
-// GurdyButton objects abstract the physical buttons.
-//   This class is for generic buttons like the octave/tpose ones, which are
-//   press-on, release-off but otherwise generic in purpose.
-
+/// @brief Constructor.  This class handles simple push-on, release-off buttons.
+/// @param my_pin The digital pin this button is connected to
+/// @param interval The debounce interval for this button
+/// @details This class assumes the button is wired up as an active-low button.  It applies the internal pullup resistor.
 GurdyButton::GurdyButton(int my_pin, int interval) {
-  // The 5 is 5ms wait for events to complete.
-  // Recommended from the Bounce webpage for "good" buttons.
+
   bounce_obj = new Bounce(my_pin, interval);
 
   // In John's code the non-keybox buttons weren't using Bounce.
@@ -17,13 +16,14 @@ GurdyButton::GurdyButton(int my_pin, int interval) {
   being_pressed = false;
 };
 
-// Bounce objects should only be update()-ed once per loop(),
-// so I'm not putting it in wasPressed()/wasReleased().
+/// @brief Polls the button and updates its state.
+/// @details This should be run every loop() even if the results are not used.
 void GurdyButton::update() {
 
   bounce_obj->update();
 
   // If button was pressed or released this cycle, record that.
+
   if (bounce_obj->fallingEdge()) {
     being_pressed = true;
   } else if (bounce_obj->risingEdge()) {
@@ -31,17 +31,20 @@ void GurdyButton::update() {
   };
 };
 
-// This returns true if the button is being pressed.
+/// @brief Reports if the button is being pressed this update() cycle.
+/// @return True if button is actve, false otherwise.
 bool GurdyButton::beingPressed() {
   return being_pressed;
 };
 
-// This returns true ONLY if the button was pressed this particular loop cycle.
+/// @brief Reports if the button was pressed down this update() cycle.
+/// @return True if button was just pressed down, false otherwise.
 bool GurdyButton::wasPressed() {
   return bounce_obj->fallingEdge();
 };
 
-// This returns true ONLY if the button was released this particular loop cycle.
+/// @brief Reports if the button was released this update() cycle.
+/// @return True if button was just released, false otherwise.
 bool GurdyButton::wasReleased() {
   return bounce_obj->risingEdge();
 };

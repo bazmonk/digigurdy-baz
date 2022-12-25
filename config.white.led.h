@@ -6,147 +6,175 @@
 const String VERSION = "2.3.1";
 const String REL_DATE = "2022-12-19, v" + VERSION;
 
-// Use one of these if you want, on the title/about screen.  Or make your own!
+/// @brief This is a freeform line displayed on the About screen
+const String EXTRA_LINE = " MIDI-OUT/HWSPI/LED ";
 //const String EXTRA_LINE = "      3.5 TEST       ";
-const String EXTRA_LINE = " MIDI-OUT/HWSPI/LED  ";
 //const String EXTRA_LINE = " MIDI-OUT, LED, SWSPI";
 //const String EXTRA_LINE = " TRIGGER - LED KNOB  ";
 //const String EXTRA_LINE = " TSUNAMI - LED KNOB  ";
 
-// ALL USERS!!! Uncomment one of these lines depending on what kind of OLED screen you have.
+// This block here is for documentation purposes of macros that may be
+// commented out.
+#ifdef _DOXYGEN_
+  /// @brief Enables SD1306 display support, do not use with BLUE_OLED.
+  #define WHITE_OLED
+  /// @brief Enables SSH1106 display support, do not use with WHITE_OLED.
+  #define BLUE_OLED
+  /// @brief Enables WAV Trigger support, effectively disables MIDI-OUT.
+  /// @details Cannot be used with USE_TSUNAMI simultaneously
+  #define USE_TRIGGER
+  /// @brief Enables Tsunami support, effectively disables MIDI-OUT.
+  /// @details Cannot be used with USE_TRIGGER simultaneously
+  #define USE_TSUNAMI
+  /// @brief Enables geared-crank support.
+  /// @details Disable for optical-crank support
+  #define USE_GEARED_CRANK
+  /// @brief Enables an LED buzz indicator on LED_PIN.
+  #define LED_KNOB
+  /// @brief Enables the accessory/vibrato pedal on PEDAL_PIN.
+  #define USE_PEDAL
+#endif
+
+// One of these OLED options must be enabled.
 #define WHITE_OLED
 //#define BLUE_OLED
 
-// ALL USERS!!! If you're hooking up to a WAV Trigger or Super Tsunami, uncomment one of these.
-// * These expect to transmit via pin 1, Serial1 Tx.
-// * These effectively disables Serial MIDI.  USB MIDI is still available.
+//#define USE_GEARED_CRANK
+
 //#define USE_TRIGGER
 //#define USE_TSUNAMI
 
-// This is the Tsunami out channel (they have multiple).  Adjsut this if you're not using the first
-// one.
+/// @brief The audio output channel used by the Tsunami unit.
+/// @details 0 == 1L, 1 == 1R, etc.
 const int TSUNAMI_OUT = 0;
 
-//#define USE_GEARED_CRANK
 
-
-// PEDAL and LED knob support:
-//
-// If you got your gurdy from John or made yours like he did, pin 40 was variously used for both
-// an LED buzz indicator, or a vibrato pedal accessory socket.  You probably can't use both features
-// below and should enable only one.
-
-// Comment this out if you do not want to use the buzz LED feature
 #define LED_KNOB
 
-// LED_PIN is the pin used for the buzz LED.
+/// @brief Pin used for the LED buzz indicator, if LED_KNOB is enabled.
 const int LED_PIN = 40;
 
-// Comment this out if you do not want to use the vibrato accessory pedal
-// #define USE_PEDAL
 
-// PEDAL_PIN is the pin used for the pedal accessory.
+//#define USE_PEDAL
+
+/// @brief Pin used for the accessory pedal, if USE_PEDAL is enabled.
 const int PEDAL_PIN = 40;
 
-// PEDA_MAX_V should be set near (doesn't need to be exact) the max voltage your pedal will output.
-// 1023 = 3.3v, so (1023/3.3) * [Your voltage] = the value you want here.
+/// @brief The max voltage reported by the accessory pedal.
+/// @details 
+/// This should be set to the max voltage your pedal will output.
+/// * Value need not be exact
+/// * Value is on a 0-1023 scale: 1023 = 3.3V
 const float PEDAL_MAX_V = 658.0;
 
-// VIBRATO: I use a long-delay, very slow vibrato on the melody strings.  This variable controls how
-// much vibrato (how much modulation like with a physical mod wheel on a MIDI keyboard) to send.
-// Setting it to 0 sends no modulation.  Max is 127.  I use 16...
+
+/// @brief Amount of modulation to apply to the melody strings.
+/// @details
+/// * Meant to give a slight vibrato effect
+/// * Intensity 0 = no modulation, 127 = full modulation
+/// * Actual modulation behavior is controlled by the MIDI sampler/synthesizer.  This only controls the intensity of it.
 const int MELODY_VIBRATO = 16;
 
 
-// OPTICAL CRANK OPTIONS
+/// @defgroup optical Optical Crank Configuration Variables
+/// These are configuration variables that only apply to optical-crank models. 
+/// USE_GEAR_CRANK must be disabled for these to have effect.
 
-
-// EXPRESSION:
-// Beyond EXPRESSION_VMAX RPMs, the volume will be at max.
+/// @ingroup optical
+/// @brief The crank speed in RPMs at which expression volume will max out.
 const float EXPRESSION_VMAX = 120.0;
 
-// At the slowest crank velocity, volume will start at this value (0 = silent, 127 = max)
+/// @ingroup optical
+/// @brief The minimum expression volume.
+/// @details
+/// * Expression (MIDI CC11) value will be at least this much.
+/// * Silent = 0, Max = 127 
 const int EXPRESSION_START = 90;
 
-// Cranking and buzz behavior:
-
-// NEW FOR OPTICAL CRANKS:
-//
-// The crank algorithm works in terms of the crank's actual velocity and acceleration.  Thus it is
-// necessary to know how many slots there are in a revolution.
-//
-// This is a count of the black/blocking bars on your wheel, not the number of transitions.
+/// @ingroup optical
+/// @brief The number of "spokes" on the optical crank wheel.
+/// @details * This is the number of black/blocking bars on the wheel, not the number of transitions.
 const int NUM_SPOKES = 80;
 
-// This is the minimum velocity that produces sound.  This is actual crank rpm (rev/minute).
+/// @ingroup optical
+/// @brief The crank speed at which sound begins to play in RPMs.
 const float V_THRESHOLD = 5.5;
 
-// This is how long (in microseconds, 1000us = 1ms = 0.001s) the code waits in between reading the
-// crank.  This determines the resolution, not how long we're waiting to detect movement.
-//const int SAMPLE_RATE = 100;
+/// @ingroup optical
+/// @brief The delay between crank samples in microseconds.
+/// @details
+/// * Code will cycle though at least this long between samples.
+/// * This is not how long the code waits for movement, just how often it checks.
 const int SAMPLE_RATE = 100;
 
-// How long we wait for potential movement of the crank changes dynamically, but not longer than
-// this time in microseconds.
+/// @ingroup optical
+/// @brief The maximum amount of time in microseconds to wait for crank movement.
+/// @details * The actual wait time changes dynamically, but will not exceed this value.
 const int MAX_WAIT_TIME = 40000;
 
-// Once the crank has stopped (after the DECAY_RATE above), we multiply the last velocity by this.
-// E.g. 0.2 means if the velocity was 60, once we stop we consider the current velocity to be 12,
-// then 2.4, then 0.48, etc.  This gets averaged in to give us a "smooth" spin-down.
+/// @ingroup optical
+/// @brief The multiplier applied to the velocity when no movement is detected.
+/// @details * Smaller values cause sound to cut out more quickly once crank motion stop.
 const float DECAY_FACTOR = 0.00;
 
 // This is how long in milliseconds to buzz *at least* once it starts.
+/// @ingroup optical
+/// @brief The minimum duration of buzz sounds.
+/// @details 
+/// * Increase this if buzzing feels too "jittery" or rapid.
+/// * Decrease if buzzing feels sluggish or unresponsive.
 const int BUZZ_MIN = 100;
 
 
-// GEAR CRANK OPTIONS
+/// @defgroup gear Gear-Motor Crank Configuration Variables
+/// These are configuration variables that only apply to gear-motor-crank models.
+///
+/// USE_GEAR_CRANK must be enabled for these to have effect.
 
-
-// Currently, the rest of the settings assume "1,000 loop()s took: 139ms" per the Serial Monitor output.
-// Teensy3.5 @ 120MHz = 700   <-- full 3.5 speed
-// Teensy3.5 @  72Mhz = 240   <-- this seems to work fine...
-// Teensy3.5 @  48Mhz = 100   <-- more like 160ms... this is so-so-stable.
-// Teensy4.1 @ 600MHz ~ 3850  <-- full 4.1 speed... seems unnecessary
-// Teensy4.1 @ 150Mhz ~ 1150  <-- seems fine
-
+/// @ingroup gear
+/// @brief The number of voltage samples per update.
+/// @details This is used to slow down how fast the code runs and avoid timing issues.  Choose based on your Teensy unit:
+/// * Teensy3.5 @ 120MHz = 700   <-- full 3.5 speed
+/// * Teensy3.5 @  72Mhz = 240   <-- probably too slow now
+/// * Teensy3.5 @  48Mhz = 100   <-- probably too slow now
+/// * Teensy4.1 @ 600MHz ~ 3850  <-- full 4.1 speed
+/// * Teensy4.1 @ 150Mhz ~ 1150  <-- seems fine, fast enough, but why do this?
 const int SPIN_SAMPLES = 700;
 
-// This is the high voltage mark.  It determines how easily the crank makes the drones start.
-// With my crank, I can go as low as 2, but it gets ridiculously sensitive (bumping into your gurdy
-// agitates the crank enough to register).  It doesn't need to be very high, though, unless you want
-// you crank to have a "minmum speed limit" before it starts sounding.
-//
-// Especially if you are using a bridge rectifier to have a 2-way crank, you'll want this **as low as you can.**
+/// @ingroup gear
+/// @brief The lower voltage threshold for the crank to register motion.
+/// @details 
+/// * Voltage values are reported between 0-1023, with 0 = 0V and 1023 being 3.3V.
+/// * This should generally be set as low as possible to be sensitive but not register "phantom" cranking.
 const int VOL_THRESHOLD = 5;
 
-// (the equivalent of V_THRESHOLD for buzzing is what the knob does, so there's no variable for it).
-
-// The crank uses an internal "spin" counter to make it continue to play through the inconsistent
-// raw voltage the crank produces.  Each high voltage read increases the counter by SPIN_WEIGHT,
-// up to MAX_SPIN.  While low voltage is being read, spin decreases by SPIN_DECAY.  While spin is
-// greater than SPIN_THRESHOLD, it makes sound.
-//
-// A larger MAX_SPIN versus the SPIN_DECAY make the cranking more consistent at very low speeds,
-// at the expense of responding quickly when you stop cranking.  A higher SPIN_WEIGHT influences
-// how quickly the crank kicks on when you start spinning, and should be at least a few times larger
-// than the SPIN_DECAY.  SPIN_THRESHOLD influences how quickly the noise cuts off after you stop
-// spinning.
+/// @ingroup gear
+/// @brief The maximum "spin" value.
+/// @details Gear crank behavior uses a "spin" number to determine motion, which is added to when cranking is detected, and subtracted from when cranking stops.
+/// This is the maximum spin value the counter will allow.
 const int MAX_SPIN = 7600;
+
+/// @ingroup gear
+/// @brief The amount of spin to add when motion is detected.
+/// @details Every cycle that cranking is detected, this amount is added to the spin value, up to the MAX_SPIN.
 const int SPIN_WEIGHT = 2500;
 
-// I think I've got good values for everything else... in my opinion at least, users should try adjusting just
-// the SPIN_DECAY at first to change responsiveness.  Lower values make notes last longer over jitters in the
-// crank voltage.  Higher values make it run down spin faster overall, increasing how quickly you can
-// play staccato.
-//
-// Users using a rectifier for two-way cranking, you'll want to fiddle with this for personal feel.
-// Users using a normal crank like John does it, you'll just want to increase if your crank is jittery at low
-// speeds.  You don't need to adjust it much to hear a diffrence (try +- 20 at first).
+/// @ingroup gear
+/// @brief The amount of spin to subtract when motion is not detected.
+/// @details Every cycle that cranking is not detected, this amount is subtracted from the spin value, down to zero.
+/// * This should be significantly less than SPIN_WEIGHT in order to give a smoothing effect, as the geared cranks induce a voltage in steps, not smoothly.
+/// * If you have a rectifier on your crank to register motion in both directions, you also don't want it to be too low as to smooth over direction changes entierly.
 const int SPIN_DECAY = 200;
 
-// This is the point notes start:
+/// @ingroup gear
+/// @brief The amount of spin necessary to make sound.
+/// @details Ultimately, sound will be produced when spin is above this value.
 const int SPIN_THRESHOLD = 5001;
-// This is the point they stop:
+
+/// @ingroup gear
+/// @brief The amount of spin below which sound stops.
+/// @details Sound will stop when spin is below this value.
+/// * Note that it is signficantly lower than SPIN_THRESHOLD.
 const int SPIN_STOP_THRESHOLD = 1000;
 
 // Buzzing works sort of the same way except the buzz counter jumps immediately to the
@@ -157,23 +185,32 @@ const int SPIN_STOP_THRESHOLD = 1000;
 // but make it harder to make separate coups rapidly.  Adjust this to find the sweet spot between
 // how easy you want it to buzz and how quickly/consistently you can work a crank.  Players much
 // better than me may want a smaller value.  ***THE SPIN VALUES DON'T AFFECT BUZZ**
+/// @ingroup gear
+/// @brief The amount of buzz "smoothing" to start with when buzzing registers.
+/// @details * When the crank voltage registers higer than the buzz knob's voltage, buzzing registers.
+/// * Buzz is set to this value when buzzing registers and decays.
+/// * The buzzing effect continues as long as this smoothing value is positive
 const int BUZZ_SMOOTHING = 250;
+/// @ingroup gear
+/// @brief The amount of buzz "smoothing" to subtract when buzzing is not registering.
+/// @details Buzz smoothing is subtracted by this amount every cycle that buzz does not register.
+/// * This produces a set delay for buzzing to stop, as well as a minimum buzz duration.
 const int BUZZ_DECAY = 1;
 
 
-
-// KEYBOX VARIABLES:
-// The pin_array[] index here represents the MIDI note offset, and the value is the corresponding
-// teensy pin.  This defines which physical keys are part of the "keybox" and what order they're in.
-//
-// NOTE: There's no key that produces 0 offset (an "open" string),
-// so the first element is bogus.  It gets skipped entirely.
+/// @brief The ordered layout of the keybox keys/buttons.
+/// @details * This both determines which Teensy pins compose the keybox, and the order they are in.
+/// * index 0 is unused and would theoretically not affect the note being played.
+/// * index 1 raises the note played by 1 semitone, index 2 by 2 semitones, etc.
+/// * pin_array can be extended or shortened for larger/smaller keyboxes
 const int pin_array[] = {-1, 2, 24, 3, 25, 26, 4, 27, 5, 28, 29, 6, 30,
                    7, 31, 8, 32, 33, 18, 34, 19, 35, 36, 20, 37};
 
 // This is literally just the size of the above array minus one.  I need this as a const to
 // declare the KeyboxButton array later on... or I just don't know enough C++ to know how to
 // *not* need it ;-)
+/// @brief The number of keys on the keybox.
+/// @details This must/should be set to the length of pin_array[] - 1.
 const int num_keys = 24;
 
 // These control which buttons on the keybox have the roles of the X, A/B, 1-6, etc. buttons.
@@ -181,16 +218,49 @@ const int num_keys = 24;
 //
 // These are array indexes, so if you count chromatically up your keybox and then subtract 1,
 // that is its index.
+/// @brief The position of the "X" key on the keybox.
+/// @details * This is intended to be the upper leftmost key.
+/// * Note that the first key position is 0.  This is the index in pin_array - 1!
 const int X_INDEX = 0;
+
+/// @brief The position of the "A" key on the keybox.
+/// @details This is intended to be the upper key second from the right.
 const int A_INDEX = num_keys - 2;
+
+/// @brief The position of the "B" key on the keybox.
+/// @details This is intended to be the upper rightmost key.
 const int B_INDEX = num_keys - 5;
+
+/// @brief The position of the "1" key on the keybox.
+/// @details This is intended to be the leftmost key on the bottom.
 const int BUTTON_1_INDEX = 1;
+
+/// @brief The position of the "2" key on the keybox.
+/// @details This is intended to be the 2nd key from the left on the bottom.
 const int BUTTON_2_INDEX = 3;
+
+/// @brief The position of the "3" key on the keybox.
+/// @details This is intended to be the 3rd key from the left on the bottom.
 const int BUTTON_3_INDEX = 4;
+
+/// @brief The position of the "4" key on the keybox.
+/// @details This is intended to be the 4th key from the left on the bottom.
 const int BUTTON_4_INDEX = 6;
+
+/// @brief The position of the "5" key on the keybox.
+/// @details This is intended to be the 5th key from the left on the bottom.
 const int BUTTON_5_INDEX = 8;
+
+/// @brief The position of the "6" key on the keybox.
+/// @details This is intended to be the 6th key from the left on the bottom.
 const int BUTTON_6_INDEX = 9;
+
+/// @brief The position of the "T-UP" key on the keybox.
+/// @details This is intended to be the bottom right key.
 const int TPOSE_UP_INDEX = num_keys - 1;
+
+/// @brief The position of the "T-DOWN" key on the keybox.
+/// @details This is intended to be the bottom second key from the right.
 const int TPOSE_DN_INDEX = num_keys - 3;
 
 #endif

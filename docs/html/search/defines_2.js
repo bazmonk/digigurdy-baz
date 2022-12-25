@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['led_5fknob_0',['LED_KNOB',['../config_8h.html#a99ed1ce0eb57dcab8b4943aac388b319',1,'LED_KNOB():&#160;config.h'],['../config_8white_8led_8h.html#a99ed1ce0eb57dcab8b4943aac388b319',1,'LED_KNOB():&#160;config.white.led.h']]]
+  ['midi_5fname_0',['MIDI_NAME',['../name_8c.html#acfb86508806c2d3aabbe8f8c2ef9f401',1,'name.c']]],
+  ['midi_5fname_5flen_1',['MIDI_NAME_LEN',['../name_8c.html#a7b129d726ca2eff9f6b5fd035af68834',1,'name.c']]]
 ];

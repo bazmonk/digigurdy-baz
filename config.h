@@ -3,11 +3,15 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.3.1";
-const String REL_DATE = "2022-12-19, v" + VERSION;
+const String VERSION = "2.3.2";
+const String REL_DATE = "2022-12-24, v" + VERSION;
+
+/// @defgroup config Configuration Options
+/// These variables/definitions are compile-time configuration options.
+/// @{
 
 /// @brief This is a freeform line displayed on the About screen
-const String EXTRA_LINE = "MIDI-OUT/HWSPI/PEDAL";
+const String EXTRA_LINE = " MIDI-OUT/HWSPI/LED ";
 //const String EXTRA_LINE = "      3.5 TEST       ";
 //const String EXTRA_LINE = " MIDI-OUT, LED, SWSPI";
 //const String EXTRA_LINE = " TRIGGER - LED KNOB  ";
@@ -49,13 +53,13 @@ const String EXTRA_LINE = "MIDI-OUT/HWSPI/PEDAL";
 const int TSUNAMI_OUT = 0;
 
 
-//#define LED_KNOB
+#define LED_KNOB
 
 /// @brief Pin used for the LED buzz indicator, if LED_KNOB is enabled.
 const int LED_PIN = 40;
 
 
-#define USE_PEDAL
+//#define USE_PEDAL
 
 /// @brief Pin used for the accessory pedal, if USE_PEDAL is enabled.
 const int PEDAL_PIN = 40;
@@ -75,6 +79,7 @@ const float PEDAL_MAX_V = 658.0;
 /// * Actual modulation behavior is controlled by the MIDI sampler/synthesizer.  This only controls the intensity of it.
 const int MELODY_VIBRATO = 16;
 
+/// @}
 
 /// @defgroup optical Optical Crank Configuration Variables
 /// These are configuration variables that only apply to optical-crank models. 
@@ -177,26 +182,21 @@ const int SPIN_THRESHOLD = 5001;
 /// * Note that it is signficantly lower than SPIN_THRESHOLD.
 const int SPIN_STOP_THRESHOLD = 1000;
 
-// Buzzing works sort of the same way except the buzz counter jumps immediately to the
-// BUZZ_SMOOTHING value and then begins to decay by BUZZ_DECAY.  Any positive "buzz"
-// value makes a buzz.
-//
-// Larger BUZZ_SMOOTHING values make the buzz stay on more consistently once you've triggered it,
-// but make it harder to make separate coups rapidly.  Adjust this to find the sweet spot between
-// how easy you want it to buzz and how quickly/consistently you can work a crank.  Players much
-// better than me may want a smaller value.  ***THE SPIN VALUES DON'T AFFECT BUZZ**
 /// @ingroup gear
 /// @brief The amount of buzz "smoothing" to start with when buzzing registers.
 /// @details * When the crank voltage registers higer than the buzz knob's voltage, buzzing registers.
 /// * Buzz is set to this value when buzzing registers and decays.
 /// * The buzzing effect continues as long as this smoothing value is positive
 const int BUZZ_SMOOTHING = 250;
+
 /// @ingroup gear
 /// @brief The amount of buzz "smoothing" to subtract when buzzing is not registering.
 /// @details Buzz smoothing is subtracted by this amount every cycle that buzz does not register.
 /// * This produces a set delay for buzzing to stop, as well as a minimum buzz duration.
 const int BUZZ_DECAY = 1;
 
+/// @ingroup config
+/// @{
 
 /// @brief The ordered layout of the keybox keys/buttons.
 /// @details * This both determines which Teensy pins compose the keybox, and the order they are in.
@@ -263,4 +263,5 @@ const int TPOSE_UP_INDEX = num_keys - 1;
 /// @details This is intended to be the bottom second key from the right.
 const int TPOSE_DN_INDEX = num_keys - 3;
 
+/// @}
 #endif

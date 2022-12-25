@@ -7,6 +7,9 @@
 #include "config.h"
 #include "notes.h"
 
+/// @ingroup display
+/// @{
+
 // These are the Teensy pins wired up for the OLED.
 // 2.2.1 - changes for HW SPI
 /// @brief The MOSI/DATA pin to the screen.
@@ -19,6 +22,8 @@
 #define OLED_CS 10
 /// @brief The RESET pin to the screen.
 #define OLED_RESET 38
+
+/// @}
 
 #ifdef WHITE_OLED
   extern U8G2_SSD1306_128X64_NONAME_F_4W_HW_SPI u8g2;

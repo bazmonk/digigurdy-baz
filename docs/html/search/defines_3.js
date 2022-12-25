@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['midi_5fname_0',['MIDI_NAME',['../name_8c.html#acfb86508806c2d3aabbe8f8c2ef9f401',1,'name.c']]],
-  ['midi_5fname_5flen_1',['MIDI_NAME_LEN',['../name_8c.html#a7b129d726ca2eff9f6b5fd035af68834',1,'name.c']]]
+  ['use_5fgeared_5fcrank_0',['USE_GEARED_CRANK',['../config_8white_8led_8h.html#ab9d954a924e33a9ffc7342344c7d3d9d',1,'config.white.led.h']]],
+  ['use_5fpedal_1',['USE_PEDAL',['../config_8white_8led_8h.html#afefdab12d20e0adbde1edaa9c93c6102',1,'USE_PEDAL():&#160;config.white.led.h'],['../config_8white_8pedal_8h.html#afefdab12d20e0adbde1edaa9c93c6102',1,'USE_PEDAL():&#160;config.white.pedal.h']]],
+  ['use_5ftrigger_2',['USE_TRIGGER',['../config_8white_8led_8h.html#ad1d176dc647b22b440ff814333519424',1,'config.white.led.h']]],
+  ['use_5ftsunami_3',['USE_TSUNAMI',['../config_8white_8led_8h.html#a77a0822c554e5140b4c736328041e90e',1,'config.white.led.h']]]
 ];

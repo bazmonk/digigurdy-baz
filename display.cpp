@@ -11,6 +11,10 @@
   //U8G2_SH1106_128X64_NONAME_F_4W_SW_SPI u8g2(U8G2_R0, OLED_CLK, OLED_MOSI, OLED_CS, OLED_DC, OLED_RESET);
 #endif
 
+/// @defgroup display Display Functions
+/// These functions concern controlling the display, and drawing formatted screens for use in menu screen fucntions elsewhere.
+/// @{
+
 /// @brief Begins SPI communication with the display
 void start_display() {
   u8g2.begin();
@@ -541,3 +545,5 @@ void print_value_selection(String title, String value) {
 
   u8g2.sendBuffer();
 };
+
+/// @}
