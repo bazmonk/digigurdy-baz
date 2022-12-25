@@ -1,7 +1,7 @@
 #include "play_screens.h"
 
-/// @defgroup play Play Screens
-/// These functions draw the screens shown during play and outside of the menu tree.
+/// @defgroup play Play Screens and Functions
+/// These functions draw the screens shown during play and outside of the menu tree, and help manage play behavior.
 /// @{
 
 /// @brief Draws a 64x64 ABC-style bitmap of the note being played.

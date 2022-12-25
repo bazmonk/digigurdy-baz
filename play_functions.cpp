@@ -1,5 +1,8 @@
 #include "play_functions.h"
 
+/// @ingroup play
+/// @{
+
 /// @brief Turns the volume of all strings up by 10, if possible.
 /// @details 
 /// * Checks volume of all strings
@@ -86,3 +89,5 @@ void vol_down() {
     mydrone->soundOn();
   };
 };
+
+/// @}

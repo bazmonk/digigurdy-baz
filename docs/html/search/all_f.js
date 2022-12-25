@@ -10,7 +10,7 @@ var searchData=
   ['pitchknob_7',['PitchKnob',['../class_pitch_knob.html',1,'PitchKnob'],['../class_pitch_knob.html#a186a367a6ada07b8ab00e874569c7712',1,'PitchKnob::PitchKnob()']]],
   ['pitchknob_2ecpp_8',['pitchknob.cpp',['../pitchknob_8cpp.html',1,'']]],
   ['pitchknob_2eh_9',['pitchknob.h',['../pitchknob_8h.html',1,'']]],
-  ['play_20screens_10',['Play Screens',['../group__play.html',1,'']]],
+  ['play_20screens_20and_20functions_10',['Play Screens and Functions',['../group__play.html',1,'']]],
   ['play_5ffunctions_2ecpp_11',['play_functions.cpp',['../play__functions_8cpp.html',1,'']]],
   ['play_5ffunctions_2eh_12',['play_functions.h',['../play__functions_8h.html',1,'']]],
   ['play_5fscreen_5ftype_13',['play_screen_type',['../common_8h.html#ae13548d3fb6fd7f60ed18f3040fc2610',1,'play_screen_type():&#160;digigurdy-baz.ino'],['../digigurdy-baz_8ino.html#ae13548d3fb6fd7f60ed18f3040fc2610',1,'play_screen_type():&#160;digigurdy-baz.ino']]],
