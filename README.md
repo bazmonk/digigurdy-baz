@@ -6,7 +6,13 @@ See [the code documentation here](https://bazmonk.github.io/digigurdy-baz/html/i
 
 **Pre-compiled builds of the code will be made available from 1.7.99 and up.  See https://github.com/bazmonk/digigurdy-baz/wiki/install-by-hex for installation instructions.**
 
-**Check out version 2.3.1! (NEW)**
+**Check out version 2.3.2! (NEW)**
+
+* 2.3.2 -
+  * Broke out and modified Tsunami and Trigger libraries to support all 8 Teensy4.1 Serial TX pins.
+  * Rewrote ALL documentation in doxygen format
+    * docs included in ./docs/html/index.html
+  * Added VScode configuration file that should make it happy, at least on a Mac.
 
 * 2.3.1 -
   * Added TSUNAMI-OUT variable, made def channel 0
