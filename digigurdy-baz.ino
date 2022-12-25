@@ -30,6 +30,7 @@
 #include "startup_screens.h" // Startup-related screens.
 #include "play_screens.h"    // The screens mid-play (notes and staffs)
 #include "pause_screens.h"   // The pause screen menus
+#include "play_functions.h"
 
 // As far as I can tell, this *has* to be done here or else you get spooooky runtime problems.
 #if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
@@ -454,6 +455,13 @@ void loop() {
       print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
                    tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
     };
+  };
+
+  if (myXButton->beingPressed() && myAltTposeUp->wasPressed()) {
+    vol_up();
+  };
+  if (myXButton->beingPressed() && myAltTposeDown->wasPressed()) {
+    vol_down();
   };
 
   if (ex1Button->wasPressed()) {
