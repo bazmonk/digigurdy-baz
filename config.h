@@ -224,11 +224,11 @@ const int num_keys = 24;
 const int X_INDEX = 0;
 
 /// @brief The position of the "A" key on the keybox.
-/// @details This is intended to be the upper key second from the right.
+/// @details This is intended to be the upper rightmost key.
 const int A_INDEX = num_keys - 2;
 
 /// @brief The position of the "B" key on the keybox.
-/// @details This is intended to be the upper rightmost key.
+/// @details This is intended to be the upper key second from the right.
 const int B_INDEX = num_keys - 5;
 
 /// @brief The position of the "1" key on the keybox.
