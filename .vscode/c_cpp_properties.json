@@ -8,7 +8,9 @@
                 "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/libraries/**",
                 "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/cores/teensy4/**",
                 "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/cores/teensy3/**",
-                "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/cores/teensy/**"
+                "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/cores/teensy/**",
+                "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/cores/teensy3",
+                "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/libraries/Bounce"
             ],
             "defines": [
                 "USBCON",

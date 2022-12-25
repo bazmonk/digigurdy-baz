@@ -448,6 +448,13 @@ void loop() {
     };
   };
 
+  if (myXButton->beingPressed() && myAltTposeUp->wasPressed()) {
+    vol_up();
+  };
+  if (myXButton->beingPressed() && myAltTposeDown->wasPressed()) {
+    vol_down();
+  };
+
   if (ex1Button->wasPressed()) {
     ex1Button->doFunc();
   };

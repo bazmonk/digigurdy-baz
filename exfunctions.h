@@ -2,6 +2,7 @@
 #define EXFUNCTIONS_H
 
 #include "play_screens.h"
+#include "play_functions.h"
 #include "common.h"
 
 void cycle_mel_mute();
