@@ -1,5 +1,12 @@
 #include "play_screens.h"
 
+/// @defgroup play Play Screens
+/// These functions draw the screens shown during play and outside of the menu tree.
+/// @{
+
+/// @brief Draws a 64x64 ABC-style bitmap of the note being played.
+/// @param note 0-127, the MIDI note to be displayed
+/// @param x_offset 0-64, the x-offset to display the image.  0 = far left, 32 = centered, 64 = far right
 void draw_note(int note, int x_offset) {
   int octave = (note / 12 ) - 1;
   int note_pos = (note % 12);
@@ -20,6 +27,9 @@ void draw_note(int note, int x_offset) {
   };
 };
 
+/// @brief Draws a staff bitmap and the given note on it.
+/// @param note 0-127, the MIDI note to be drawn.
+/// @param x_offset 0-64, the x-offset to display the image.  0 = far left, 32 = centered, 64 = far right
 void draw_staff(int note, int x_offset) {
   if (dot_pos[note] >= 0) {
     u8g2.drawXBM(x_offset, 0, 64, 64, staffs[staff_index[note]]);
@@ -38,6 +48,10 @@ void draw_staff(int note, int x_offset) {
   };
 };
 
+/// @brief Print as text the note being played in a large font.
+/// @param note_str The *text* of the note to be displayed.
+/// @param x_offset 0-64, the x-offset to display the text.  0 = far left, 32 = centered, 64 = far right
+/// @warning This function will only correctly display text matching the "LongNoteNum" text pattern.  See `notes.h`, `notes.cpp`.
 void print_note(String note_str, int x_offset) {
 
   String note = "";
@@ -109,6 +123,10 @@ void print_note(String note_str, int x_offset) {
   };
 };
 
+/// @brief Draws the play screen in one of six ways depending on the user's chosen screen type.
+/// @param note 0-127, the MIDI note to be drawn.
+/// @param screen_type The arrangement to display.  See the code itself to know what they mean: this is a magic number.
+/// @param draw_buzz If true, draw the on-screen buzz indicator.
 void draw_play_screen(int note, int screen_type, bool draw_buzz) {
 
   u8g2.clearBuffer();
@@ -140,6 +158,18 @@ void draw_play_screen(int note, int screen_type, bool draw_buzz) {
   u8g2.sendBuffer();
 };
 
+/// @brief Draws the screen visible when sound is not being made, the "heads-up display" screen.
+/// @param mel1 The high melody MIDI note, 0-127
+/// @param mel2 The low melody MIDI note, 0-127
+/// @param drone The drone MIDI note, 0-127
+/// @param tromp The trompette MIDI note, 0-127
+/// @param tpose The transpose value, -12 to +12
+/// @param cap The capo value, 0-4
+/// @param offset The note offset (*Currently unused*)
+/// @param hi_mute True if high melody is muted
+/// @param lo_mute True if low melody is muted
+/// @param drone_mute True if drone is muted
+/// @param tromp_mute True if trompette is muted
 void print_display(int mel1, int mel2, int drone, int tromp, int tpose, int cap, int offset, bool hi_mute, bool lo_mute, bool drone_mute, bool tromp_mute) {
 
   u8g2.clearBuffer();
@@ -205,3 +235,5 @@ void print_display(int mel1, int mel2, int drone, int tromp, int tpose, int cap,
 
   u8g2.sendBuffer();
 };
+
+/// @}

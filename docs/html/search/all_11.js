@@ -33,7 +33,7 @@ var searchData=
   ['start_5ftime_30',['start_time',['../digigurdy-baz_8ino.html#a9d8d7b34b58ecd16168fb2405867a793',1,'digigurdy-baz.ino']]],
   ['startedbuzzing_31',['startedBuzzing',['../class_gear_crank.html#aeeaf7d74931a169beb4a6d8a6b1b3b19',1,'GearCrank::startedBuzzing()'],['../class_gurdy_crank.html#a364aa2fd86d6118e3d8178da1e43f8ac',1,'GurdyCrank::startedBuzzing()']]],
   ['startedspinning_32',['startedSpinning',['../class_gear_crank.html#aa57bdff83aafd73cda3737ec3d905989',1,'GearCrank::startedSpinning()'],['../class_gurdy_crank.html#a9fb5415b92f98a7207e9bd7bb2a65c59',1,'GurdyCrank::startedSpinning()']]],
-  ['startup_5fscreen_5fsequence_33',['startup_screen_sequence',['../startup__screens_8cpp.html#a720500df2b5ccde0fbd0588b8e826f82',1,'startup_screen_sequence():&#160;startup_screens.cpp'],['../startup__screens_8h.html#a720500df2b5ccde0fbd0588b8e826f82',1,'startup_screen_sequence():&#160;startup_screens.cpp']]],
+  ['startup_5fscreen_5fsequence_33',['startup_screen_sequence',['../group__display.html#ga720500df2b5ccde0fbd0588b8e826f82',1,'startup_screen_sequence():&#160;startup_screens.cpp'],['../startup__screens_8h.html#a720500df2b5ccde0fbd0588b8e826f82',1,'startup_screen_sequence():&#160;startup_screens.cpp']]],
   ['startup_5fscreens_2ecpp_34',['startup_screens.cpp',['../startup__screens_8cpp.html',1,'']]],
   ['startup_5fscreens_2eh_35',['startup_screens.h',['../startup__screens_8h.html',1,'']]],
   ['stopped_5fplaying_5ftime_36',['stopped_playing_time',['../digigurdy-baz_8ino.html#a4535f9ce3f6a6198e5c5a6584ce6d147',1,'digigurdy-baz.ino']]],

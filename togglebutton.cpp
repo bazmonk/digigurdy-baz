@@ -1,15 +1,13 @@
 #include "togglebutton.h"
 
-// class ToggleButton adds a state toggle to the GurdyButton class
-//   This class is meant for buttons where:
-//   * Pressing and releasing once activates it.
-//   * Pressing and releasing again deactivates it.
-
+/// @brief Constructor.  This extends GurdyButton with a toggle on/off feature.
+/// @param my_pin The digitial voltage pin to be used.
+/// @param interval The debounce interval to be used.
 ToggleButton::ToggleButton(int my_pin, int interval) : GurdyButton(my_pin, interval) {
   toggled = false;
 };
 
-// update() works a little differently and also checks the toggle status.
+/// @brief Samples the button and determines toggle status.
 void ToggleButton::update() {
   bounce_obj->update();
 
@@ -19,11 +17,14 @@ void ToggleButton::update() {
   };
 };
 
+/// @brief Returns the toggle status of the button.
+/// @return True if toggled on, false otherwise
 bool ToggleButton::toggleOn() {
   return toggled;
 };
 
-// This is to forcibly turn the toggle off after a menu press.
+/// @brief Forcibly sets the toggle status of the button.
+/// @param new_toggle True = toggled on, false = toggled off
 void ToggleButton::setToggle(bool new_toggle) {
   toggled = new_toggle;
 };

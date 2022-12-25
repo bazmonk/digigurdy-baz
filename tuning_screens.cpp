@@ -1,5 +1,12 @@
 #include "tuning_screens.h"
 
+/// @defgroup tuning Tuning Screens
+/// These menus concern the tuning and volume of the GurdyString objects.
+/// @warning These functions are hardcoded to expect certain string objects to exist.
+/// @{
+
+/// @brief Prompts the user to choose between the primary tunining options: guided tuinings, manual tunings, volume control.
+/// @return True if an option was chosen, false otherwise.
 bool tuning() {
 
   bool done = false;
@@ -69,6 +76,8 @@ bool tuning() {
   return true;
 };
 
+/// @brief Prompts the user to choose beween high melody string choices.
+/// Part of the guided tuining menu tree.
 void tuning_hi_melody() {
 
   int base_note;
@@ -111,6 +120,8 @@ void tuning_hi_melody() {
   };
 };
 
+/// @brief Prompts the user to choose between low melody string tunings based off the high melody tuning.
+/// Part of the guided tuning menu tree.
 void tuning_low_melody() {
 
   int base_note = mystring->getOpenNote();
@@ -143,6 +154,7 @@ void tuning_low_melody() {
   };
 };
 
+/// @brief Prompts the user to choose between trompette string tunings based off the current high melody string tuning.
 void tuning_tromp() {
 
   int base_note = mystring->getOpenNote() - 12;
@@ -187,6 +199,7 @@ void tuning_tromp() {
   };
 };
 
+/// @brief Prompts the user to choose between drone string tunings based off the current high melody string tuning.
 void tuning_drone() {
 
   int base_note = mystring->getOpenNote() - 12;
@@ -219,7 +232,7 @@ void tuning_drone() {
   };
 };
 
-// This screen allows the user to make manual changes to each string.
+/// @brief Prompts the user to choose a string to adjust the tuning of manually.
 void manual_tuning_screen() {
 
   while (true) {
@@ -264,7 +277,8 @@ void manual_tuning_screen() {
   return;
 };
 
-// This is the tuning screen for an individual string.  Single argument is a GurdyString pointer.
+/// @brief Prompts the user to manually tune the given string.
+/// @param this_string The GurdyString object to be tuned
 void tune_string_screen(GurdyString *this_string) {
   bool done = false;
   int new_note = this_string->getOpenNote();
@@ -305,6 +319,8 @@ void tune_string_screen(GurdyString *this_string) {
 };
 
 // This screen allows the user to make manual changes to each string's volume.
+
+/// @brief Promts the user to choose a string to adjust the volume of manually.
 void volume_screen() {
 
   while (true) {
@@ -353,6 +369,8 @@ void volume_screen() {
   return;
 };
 
+/// @brief Prompts the user to adjust the volume of the given string.
+/// @param this_string The GurdyString object to adjust the volume of
 void change_volume_screen(GurdyString *this_string) {
   bool done = false;
   int new_vol = this_string->getVolume();

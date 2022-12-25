@@ -139,9 +139,6 @@ bool load_tuning_screen() {
   return true;
 };
 
-// Checks if save slot is occupied and prompts user to overwrite if necessary.
-// Returns true if slot is empty or OK to overwrite.
-
 /// @brief Checks if a given save slot is occupied, prompts user to continue if necessary.
 /// @param slot The EEPROM save slot to check
 /// @return True if slot is empty or user wants to overwrite it, false otherwise
@@ -351,8 +348,9 @@ void signal_scene_change(int scene_idx) {
   }
 };
 
-// load_preset_tunings accepts an int between 1-4 and sets the appropriate preset.
-// See the default_tunings.h file to modify what the presets actually are.
+/// @brief Loads the given tuning preset.
+/// @param preset 1-4, representing one of the EEPROM tuning preset slots to load.
+/// @details see `default_tunings.h` for the actual presets themselves.
 void load_preset_tunings(int preset) {
   const int *tunings;
   if (preset == 1) { tunings = PRESET1; };
@@ -369,8 +367,9 @@ void load_preset_tunings(int preset) {
   capo_offset = tunings[6];
 }
 
-// load_saved_tunings requires one argument: the "save slot" which
-// should be one of the EEPROM_SLOT[1-4] values in eeprom_values.h.
+/// @brief Loads the given saved tuning slot.
+/// @param slot 1-4, representing one of the EEPROM tuning save slots to load.
+/// @details Sets tuning of all strings, tpose, capo, and volume.
 void load_saved_tunings(int slot) {
   byte value;
 
@@ -406,8 +405,8 @@ void load_saved_tunings(int slot) {
 
 };
 
-// save_tunings accepts one argument, which should be one of the
-// EEPROM_SLOT[1-4] values defined in eeprom_values.h.
+/// @brief Saves the current tuning/volume to the given save slot.
+/// @param slot 1-4, the EEPROM save slot to write to.
 void save_tunings(int slot) {
 
   EEPROM.write(slot + EEPROM_HI_MEL, mystring->getOpenNote());
@@ -426,7 +425,8 @@ void save_tunings(int slot) {
 
 };
 
-// This clears the EEPROM and overwrites it all with zeroes
+/// @brief Clears the EEPROM and sets some default values in it.
+/// @note Most values set to zero, but LED and EX values have non-zero defaults also set here.
 void clear_eeprom() {
   // Not much to say here... write 0 everywhere:
   for (int i = 0 ; i < EEPROM.length() ; i++ )
@@ -442,10 +442,9 @@ void clear_eeprom() {
 
 };
 
-// This screen is for viewing a save slot's settings.
-// It returns true if the user wants to use it, false
-// otherwise.
-// Accepts integer slot: the save slot number.
+/// @brief Displays a given saved slot tuning and prompts user to accept.
+/// @param slot_num 1-4, the EEPROM tuning save slot to display and possibly load.
+/// @return True if the user loaded the tuning, false if the user rejected it.
 bool view_slot_screen(int slot_num) {
   int slot;
   if (slot_num == 1) { slot = EEPROM_SLOT1; };
@@ -490,9 +489,9 @@ bool view_slot_screen(int slot_num) {
   return true;
 };
 
-// This screen previews a preset's settings.
-// Returns true if users wants to use it, false otherwise.
-// Accept integer preset_num: the preset number.
+/// @brief Displays a given preset tuning slot and prompts user to accept.
+/// @param preset 1-4, the preset tuning slot to display and possibly load.
+/// @return True if the user loaded the tuning, false if the user rejected it.
 bool view_preset_screen(int preset) {
   const int *tunings;
   if (preset == 1) { tunings = PRESET1; };
@@ -537,8 +536,8 @@ bool view_preset_screen(int preset) {
   return true;
 };
 
-// This screen asks the user to select a save slot for
-// preview and optionally choosing.
+/// @brief Prompts the user to choose a saved tuning slot, and calls view_slot_screen() for that slot.
+/// @return True if the user selects a slot, false otherwise.
 bool load_saved_screen() {
 
   bool done = false;
@@ -574,7 +573,8 @@ bool load_saved_screen() {
   return true;
 };
 
-// This screen lets the user choose a preset.
+/// @brief Prompts the user to choose a preset tuning slot, and calls view_preset_screen() for that slot.
+/// @return True if the user selects a slot, false otherwise.
 bool load_preset_screen() {
 
   bool done = false;
@@ -610,7 +610,7 @@ bool load_preset_screen() {
   return true;
 };
 
-// This screen lets you choose how the gurdy indicates the turning to the controller
+/// @brief Prompts user to activate or disable the Scene Signaling (Program Change) feature.
 void scene_options_screen() {
   bool done = false;
   while (!done) {
@@ -638,7 +638,7 @@ void scene_options_screen() {
   }
 }
 
-// This screen lets you choose what kind of display you want.
+/// @brief Prompts user to choose which play screen to use.
 void playing_scr_screen() {
   bool done = false;
   while (!done) {
@@ -715,8 +715,7 @@ void playing_scr_screen() {
   };
 };
 
-// This screen is for other setup options.  Currently, that's
-// just an option to clear the EEPROM.
+/// @brief The startup other-options screen: prompts user to clear the EEPROM, adjust Scene Control, view the about screen, or go back.
 void options_screen() {
 
   bool done = false;
@@ -752,7 +751,7 @@ void options_screen() {
   };
 };
 
-// This is the first screen after the credits n' stuff.
+/// @brief This is the opening menu screen, prompting user to choose some kind of tuning or view the other startup options.
 void welcome_screen() {
 
   bool done = false;
@@ -788,6 +787,7 @@ void welcome_screen() {
   };
 };
 
+/// @brief Prompts user to enable or disable the buzz LED indicator feature.
 void led_screen() {
 
   bool done = false;
@@ -871,6 +871,7 @@ void vib_screen() {
   };
 };
 
+/// @brief Prompts user to adjust the on-screen options: note notation, on-screen buzz indicator, play screen type.
 void playing_config_screen() {
   bool done = false;
   while (!done) {
@@ -918,6 +919,7 @@ void playing_config_screen() {
   };
 };
 
+/// @brief Prompts user to choose the on-screen note notation to be used.
 void notation_config_screen() {
   bool done = false;
   while (!done) {

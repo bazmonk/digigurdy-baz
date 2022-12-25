@@ -34,8 +34,8 @@ var searchData=
   ['display_2ecpp_31',['display.cpp',['../display_8cpp.html',1,'']]],
   ['display_2eh_32',['display.h',['../display_8h.html',1,'']]],
   ['dofunc_33',['doFunc',['../class_ex_button.html#acd35eb5ce3d3fa5039d14eb30d26b184',1,'ExButton']]],
-  ['draw_5fnote_34',['draw_note',['../play__screens_8cpp.html#ab9c14ae2d9d59c7d3041c13ff21c4fd4',1,'draw_note(int note, int x_offset):&#160;play_screens.cpp'],['../play__screens_8h.html#ab9c14ae2d9d59c7d3041c13ff21c4fd4',1,'draw_note(int note, int x_offset):&#160;play_screens.cpp']]],
-  ['draw_5fplay_5fscreen_35',['draw_play_screen',['../play__screens_8cpp.html#ae6d702c4a98191c54db0877eca80a416',1,'draw_play_screen(int note, int screen_type, bool draw_buzz):&#160;play_screens.cpp'],['../play__screens_8h.html#ae6d702c4a98191c54db0877eca80a416',1,'draw_play_screen(int note, int screen_type, bool draw_buzz):&#160;play_screens.cpp']]],
-  ['draw_5fstaff_36',['draw_staff',['../play__screens_8cpp.html#a1609b37108a17a8c659875a16303b3c8',1,'draw_staff(int note, int x_offset):&#160;play_screens.cpp'],['../play__screens_8h.html#a1609b37108a17a8c659875a16303b3c8',1,'draw_staff(int note, int x_offset):&#160;play_screens.cpp']]],
+  ['draw_5fnote_34',['draw_note',['../group__play.html#gab9c14ae2d9d59c7d3041c13ff21c4fd4',1,'draw_note(int note, int x_offset):&#160;play_screens.cpp'],['../group__play.html#gab9c14ae2d9d59c7d3041c13ff21c4fd4',1,'draw_note(int note, int x_offset):&#160;play_screens.cpp']]],
+  ['draw_5fplay_5fscreen_35',['draw_play_screen',['../group__play.html#gae6d702c4a98191c54db0877eca80a416',1,'draw_play_screen(int note, int screen_type, bool draw_buzz):&#160;play_screens.cpp'],['../group__play.html#gae6d702c4a98191c54db0877eca80a416',1,'draw_play_screen(int note, int screen_type, bool draw_buzz):&#160;play_screens.cpp']]],
+  ['draw_5fstaff_36',['draw_staff',['../group__play.html#ga1609b37108a17a8c659875a16303b3c8',1,'draw_staff(int note, int x_offset):&#160;play_screens.cpp'],['../group__play.html#ga1609b37108a17a8c659875a16303b3c8',1,'draw_staff(int note, int x_offset):&#160;play_screens.cpp']]],
   ['drone_5fmode_37',['drone_mode',['../common_8h.html#a3bf1cfc2bc749fe46cee9234f9fcca86',1,'drone_mode():&#160;digigurdy-baz.ino'],['../digigurdy-baz_8ino.html#a3bf1cfc2bc749fe46cee9234f9fcca86',1,'drone_mode():&#160;digigurdy-baz.ino']]]
 ];

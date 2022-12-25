@@ -81,16 +81,22 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a09ea2090f8efd8a618ffce48f5ef49d9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vib_knob.html#a09ea2090f8efd8a618ffce48f5ef49d9">VibKnob</a> (int v_pin)</td></tr>
+<tr class="memdesc:a09ea2090f8efd8a618ffce48f5ef49d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cosntructor. <a class="el" href="class_vib_knob.html">VibKnob</a> abstracts a knob or pedal that produces a vibrato effect.  <a href="class_vib_knob.html#a09ea2090f8efd8a618ffce48f5ef49d9">More...</a><br /></td></tr>
 <tr class="separator:a09ea2090f8efd8a618ffce48f5ef49d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7b3fdc33fa9f6ed9949cb7538faa982"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vib_knob.html#ab7b3fdc33fa9f6ed9949cb7538faa982">update</a> ()</td></tr>
+<tr class="memdesc:ab7b3fdc33fa9f6ed9949cb7538faa982"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sample the voltage pin and set the appropriate amount of vibrato on the melody strings.  <a href="class_vib_knob.html#ab7b3fdc33fa9f6ed9949cb7538faa982">More...</a><br /></td></tr>
 <tr class="separator:ab7b3fdc33fa9f6ed9949cb7538faa982"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a84eb2198c6c641cae237072783439160"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vib_knob.html#a84eb2198c6c641cae237072783439160">getVoltage</a> ()</td></tr>
+<tr class="memdesc:a84eb2198c6c641cae237072783439160"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reports the current pin voltage.  <a href="class_vib_knob.html#a84eb2198c6c641cae237072783439160">More...</a><br /></td></tr>
 <tr class="separator:a84eb2198c6c641cae237072783439160"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a332dd743671454f4280b6b21121be792"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vib_knob.html#a332dd743671454f4280b6b21121be792">getVibrato</a> ()</td></tr>
+<tr class="memdesc:a332dd743671454f4280b6b21121be792"><td class="mdescLeft">&#160;</td><td class="mdescRight">Report the current vibrato value, calculated based off the current voltage.  <a href="class_vib_knob.html#a332dd743671454f4280b6b21121be792">More...</a><br /></td></tr>
 <tr class="separator:a332dd743671454f4280b6b21121be792"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa388cbd584d83279f5764690a09691a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vib_knob.html#aa388cbd584d83279f5764690a09691a2">enable</a> ()</td></tr>
+<tr class="memdesc:aa388cbd584d83279f5764690a09691a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the enable flag for this object.  <a href="class_vib_knob.html#aa388cbd584d83279f5764690a09691a2">More...</a><br /></td></tr>
 <tr class="separator:aa388cbd584d83279f5764690a09691a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a134134a2582c68d3154594d822e0dcbd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vib_knob.html#a134134a2582c68d3154594d822e0dcbd">disable</a> ()</td></tr>
+<tr class="memdesc:a134134a2582c68d3154594d822e0dcbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disabled this object. <a class="el" href="class_vib_knob.html#ab7b3fdc33fa9f6ed9949cb7538faa982" title="Sample the voltage pin and set the appropriate amount of vibrato on the melody strings.">update()</a> will not respond if the object is disabled.  <a href="class_vib_knob.html#a134134a2582c68d3154594d822e0dcbd">More...</a><br /></td></tr>
 <tr class="separator:a134134a2582c68d3154594d822e0dcbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
@@ -110,6 +116,14 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Cosntructor. <a class="el" href="class_vib_knob.html">VibKnob</a> abstracts a knob or pedal that produces a vibrato effect. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">v_pin</td><td>The <em>analog</em> voltage pin to be used. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
@@ -128,6 +142,8 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Disabled this object. <a class="el" href="class_vib_knob.html#ab7b3fdc33fa9f6ed9949cb7538faa982" title="Sample the voltage pin and set the appropriate amount of vibrato on the melody strings.">update()</a> will not respond if the object is disabled. </p>
+
 </div>
 </div>
 <a id="aa388cbd584d83279f5764690a09691a2" name="aa388cbd584d83279f5764690a09691a2"></a>
@@ -144,6 +160,8 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets the enable flag for this object. </p>
 
 </div>
 </div>
@@ -162,6 +180,9 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Report the current vibrato value, calculated based off the current voltage. </p>
+<dl class="section return"><dt>Returns</dt><dd>0-127, the current vibrato/modulation value to be used. </dd></dl>
+
 </div>
 </div>
 <a id="a84eb2198c6c641cae237072783439160" name="a84eb2198c6c641cae237072783439160"></a>
@@ -179,6 +200,9 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Reports the current pin voltage. </p>
+<dl class="section return"><dt>Returns</dt><dd>0-1023, 0 = 0V, 1023 = 3.3V </dd></dl>
+
 </div>
 </div>
 <a id="ab7b3fdc33fa9f6ed9949cb7538faa982" name="ab7b3fdc33fa9f6ed9949cb7538faa982"></a>
@@ -195,6 +219,9 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sample the voltage pin and set the appropriate amount of vibrato on the melody strings. </p>
+<dl class="section warning"><dt>Warning</dt><dd>This class/method expects certain <a class="el" href="class_gurdy_string.html">GurdyString</a> objects to exist. </dd></dl>
 
 </div>
 </div>

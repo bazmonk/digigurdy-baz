@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['manual_5ftuning_5fscreen_0',['manual_tuning_screen',['../tuning__screens_8cpp.html#a381d23120bdb407825d85edb0ca550e6',1,'manual_tuning_screen():&#160;tuning_screens.cpp'],['../tuning__screens_8h.html#a381d23120bdb407825d85edb0ca550e6',1,'manual_tuning_screen():&#160;tuning_screens.cpp']]],
+  ['manual_5ftuning_5fscreen_0',['manual_tuning_screen',['../group__tuning.html#ga381d23120bdb407825d85edb0ca550e6',1,'manual_tuning_screen():&#160;tuning_screens.cpp'],['../group__tuning.html#ga381d23120bdb407825d85edb0ca550e6',1,'manual_tuning_screen():&#160;tuning_screens.cpp']]],
   ['max_5fcapo_1',['max_capo',['../common_8h.html#ae1a9962beab12e413192839dda631b98',1,'max_capo():&#160;digigurdy-baz.ino'],['../digigurdy-baz_8ino.html#ae1a9962beab12e413192839dda631b98',1,'max_capo():&#160;digigurdy-baz.ino']]],
   ['max_5fspin_2',['MAX_SPIN',['../group__gear.html#gac689d2c5743b51dff57eac4aea9adbd2',1,'MAX_SPIN():&#160;config.h'],['../group__gear.html#gac689d2c5743b51dff57eac4aea9adbd2',1,'MAX_SPIN():&#160;config.white.led.h'],['../config_8white_8pedal_8h.html#ac689d2c5743b51dff57eac4aea9adbd2',1,'MAX_SPIN():&#160;config.white.pedal.h']]],
   ['max_5ftpose_3',['max_tpose',['../common_8h.html#a199ace712d63f934d053b0ea2a2074f8',1,'max_tpose():&#160;digigurdy-baz.ino'],['../digigurdy-baz_8ino.html#a199ace712d63f934d053b0ea2a2074f8',1,'max_tpose():&#160;digigurdy-baz.ino']]],
