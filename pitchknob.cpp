@@ -29,11 +29,14 @@ int PitchKnob::getPitch() {
   // By my calculations, each number in this voltage value is about 3mV
   // This makes sure it really zeroes out.
   if (voltage < 5) {
-    return 16384;
+    return 0;
   }
   else {
-  //John: for 2.2v, change the multiplier from 8 to 11 or 12
-    return 16384 + (8 * voltage);
+    if (getVoltage() > PEDAL_MAX_V) {
+      return 8191;
+    } else {
+    return int(8191.0 * getVoltage() / PEDAL_MAX_V);
+    };
   };
 };
 

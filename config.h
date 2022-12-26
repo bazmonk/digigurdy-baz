@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.3.1x3";
+const String VERSION = "2.3.1x4";
 const String REL_DATE = "2022-12-26, v" + VERSION;
 
 // Use one of these if you want, on the title/about screen.  Or make your own!
@@ -51,7 +51,8 @@ const int PEDAL_PIN = 40;
 
 // PEDA_MAX_V should be set near (doesn't need to be exact) the max voltage your pedal will output.
 // 1023 = 3.3v, so (1023/3.3) * [Your voltage] = the value you want here.
-const float PEDAL_MAX_V = 806.0;
+const float PEDAL_MAX_V = 646.0;
+//const float PEDAL_MAX_V = 1020.0;
 
 // VIBRATO: I use a long-delay, very slow vibrato on the melody strings.  This variable controls how
 // much vibrato (how much modulation like with a physical mod wheel on a MIDI keyboard) to send.
