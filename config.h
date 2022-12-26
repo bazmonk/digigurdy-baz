@@ -3,8 +3,8 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.3.1x";
-const String REL_DATE = "2022-12-21, v" + VERSION;
+const String VERSION = "2.3.1x3";
+const String REL_DATE = "2022-12-26, v" + VERSION;
 
 // Use one of these if you want, on the title/about screen.  Or make your own!
 //const String EXTRA_LINE = "      3.5 TEST       ";
@@ -46,7 +46,8 @@ const int LED_PIN = 40;
 #define USE_PEDAL
 
 // PEDAL_PIN is the pin used for the pedal accessory.
-const int PEDAL_PIN = A16;
+const int PEDAL_PIN = 40;
+//const int PEDAL_PIN = 16;
 
 // PEDA_MAX_V should be set near (doesn't need to be exact) the max voltage your pedal will output.
 // 1023 = 3.3v, so (1023/3.3) * [Your voltage] = the value you want here.
