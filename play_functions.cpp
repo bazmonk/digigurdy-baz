@@ -90,4 +90,33 @@ void vol_down() {
   };
 };
 
+/// @brief Sends a soundOff() to all six string objects.
+void all_soundOff() {
+  mystring->soundOff();
+  mylowstring->soundOff();
+  mykeyclick->soundOff();
+  mytromp->soundOff();
+  mydrone->soundOff();
+  mybuzz->soundOff();
+};
+
+/// @brief Sends a soundOff() to all strings but the buzz
+void no_buzz_soundOff() {
+  mystring->soundOff();
+  mylowstring->soundOff();
+  mykeyclick->soundOff();
+  mytromp->soundOff();
+  mydrone->soundOff();
+};
+
+/// @brief Sends a soundKill() to all six string objects.
+void all_soundKill() {
+  mystring->soundKill();
+  mylowstring->soundKill();
+  mykeyclick->soundKill();
+  mytromp->soundKill();
+  mydrone->soundKill();
+  mybuzz->soundKill();
+};
+
 /// @}

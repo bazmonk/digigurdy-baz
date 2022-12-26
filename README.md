@@ -10,6 +10,7 @@ See [the code documentation here](https://bazmonk.github.io/digigurdy-baz/html/i
 
 * 2.3.4 -
   * Extended volume up/down control to key combo for legacy support.  Will backport this to 2.0.x.
+  * Making some functions to clean up the main ino file.
 
 * 2.3.3 -
   * New EX button functions: turning volume up and down.

@@ -354,12 +354,7 @@ void loop() {
   if ((myAButton->beingPressed() && myXButton->beingPressed()) || go_menu) {
 
     // Turn off the sound :-)
-    mystring->soundOff();
-    mylowstring->soundOff();
-    mykeyclick->soundOff();  // Not sure if this is necessary... but it feels right.
-    mytromp->soundOff();
-    mydrone->soundOff();
-    mybuzz->soundOff();
+    all_soundOff();
 
     // If I don't do this, it comes on afterwards.
     bigbutton->setToggle(false);
@@ -380,11 +375,7 @@ void loop() {
     };
 
     if (mycrank->isSpinning() || bigbutton->toggleOn()) {
-      mytromp->soundOff();
-      mydrone->soundOff();
-      mystring->soundOff();
-      mylowstring->soundOff();
-      mykeyclick->soundOff();
+      no_buzz_soundOff();
 
       mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
       mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
@@ -406,11 +397,7 @@ void loop() {
     tpose_offset += 1;
 
     if (mycrank->isSpinning() || bigbutton->toggleOn()) {
-      mytromp->soundOff();
-      mydrone->soundOff();
-      mystring->soundOff();
-      mylowstring->soundOff();
-      mykeyclick->soundOff();
+      no_buzz_soundOff();
 
       mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
       mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
@@ -429,11 +416,7 @@ void loop() {
     tpose_offset -= 1;
 
     if (mycrank->isSpinning() || bigbutton->toggleOn()) {
-      mytromp->soundOff();
-      mydrone->soundOff();
-      mystring->soundOff();
-      mylowstring->soundOff();
-      mykeyclick->soundOff();
+      no_buzz_soundOff();
 
       mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
       mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
@@ -518,21 +501,10 @@ void loop() {
 
   // If the toggle came off and the crank is off, turn off sound.
   } else if (bigbutton->wasReleased() && !mycrank->isSpinning()) {
-    mystring->soundOff();
-    mylowstring->soundOff();
-    mykeyclick->soundOff();  // Not sure if this is necessary... but it feels right.
-    mytromp->soundOff();
-    mydrone->soundOff();
-    mybuzz->soundOff();
+    all_soundOff();
 
-    // Send a CC 123 (all notes off) to be sure.  This causes turning off sound via the big
-    // button to basically be a MIDI kill button.
-    mystring->soundKill();
-    mylowstring->soundKill();
-    mykeyclick->soundKill();
-    mytromp->soundKill();
-    mydrone->soundKill();
-    mybuzz->soundKill();
+    // Just to be sure...
+    all_soundKill();
 
     // Mark the time we stopped playing and trip the turn-off-the-display flag
     stopped_playing_time = millis();
@@ -540,12 +512,7 @@ void loop() {
 
   // If the crank stops and the toggle was off, turn off sound.
   } else if (mycrank->stoppedSpinning() && !bigbutton->toggleOn()) {
-    mystring->soundOff();
-    mylowstring->soundOff();
-    mykeyclick->soundOff();
-    mytromp->soundOff();
-    mydrone->soundOff();
-    mybuzz->soundOff();
+    all_soundOff();
 
     stopped_playing_time = millis();
     note_display_off = false;
