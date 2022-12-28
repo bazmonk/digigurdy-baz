@@ -3,8 +3,8 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.3.4";
-const String REL_DATE = "2022-12-25, v" + VERSION;
+const String VERSION = "2.3.4x";
+const String REL_DATE = "2022-12-27, v" + VERSION;
 
 /// @defgroup config Configuration Options
 /// These variables/definitions are compile-time configuration options.
@@ -45,7 +45,7 @@ const String EXTRA_LINE = " MIDI-OUT/HWSPI/LED ";
 
 //#define USE_GEARED_CRANK
 
-//#define USE_TRIGGER
+#define USE_TRIGGER
 //#define USE_TSUNAMI
 
 /// @brief The audio output channel used by the Tsunami unit.

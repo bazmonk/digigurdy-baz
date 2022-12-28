@@ -66,7 +66,7 @@
 
 #define SOM1	0xf0
 #define SOM2	0xaa
-#define EOM		0x55
+#define EOMWT		0x55
 
 
 #ifdef __WT_USE_ALTSOFTSERIAL__

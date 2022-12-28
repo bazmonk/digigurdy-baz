@@ -31,6 +31,8 @@
 #include "play_screens.h"    // The screens mid-play (notes and staffs)
 #include "pause_screens.h"   // The pause screen menus
 
+#include "USBHost_t36.h"
+
 // As far as I can tell, this *has* to be done here or else you get spooooky runtime problems.
 #if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
   MIDI_CREATE_DEFAULT_INSTANCE();
@@ -43,6 +45,8 @@
 #ifdef USE_TSUNAMI
   Tsunami trigger_obj;
 #endif
+
+USBHost myusb;
 
 //
 // GLOBAL OBJECTS/VARIABLES
@@ -159,6 +163,7 @@ void setup() {
    delay(500);
    Serial.println("Hello.");
 
+  myusb.begin();
 
   // Start the Serial MIDI object (like for a bluetooth transmitter).
   // The usbMIDI object is available by Teensyduino magic that I don't know about.
@@ -166,6 +171,7 @@ void setup() {
       MIDI.begin(MIDI_CHANNEL_OMNI);
 
   #elif defined(USE_TRIGGER)
+    Serial5.setTX(47);
     trigger_obj.start();
     delay(10);
 
