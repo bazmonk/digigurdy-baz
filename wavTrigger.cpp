@@ -6,6 +6,8 @@
 //
 // Programmers: Jamie Robertson, jamie@robertsonics.com
 //
+// Changed "EOM" to "EOMWT" to not clash with USBHost_t36 library -BDL
+//
 // **************************************************************
 
 #include "wavTrigger.h"

@@ -15,6 +15,7 @@
 #include "startup_screens.h"
 #include "ex_screens.h"
 #include "tuning_screens.h"
+#include "usb_power.h"
 
 #ifdef USE_GEARED_CRANK
   #include "gearcrank.h"
@@ -49,6 +50,8 @@ bool load_saved_screen();
 bool load_preset_screen();
 void scene_options_screen();
 void playing_scr_screen();
+void io_screen();
+void sec_output_screen();
 void options_screen();
 void welcome_screen();
 void led_screen();

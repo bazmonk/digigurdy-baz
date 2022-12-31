@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Digigurdy-baz: gurdystring.h File Reference</title>
+<title>Digigurdy-baz: usb_power.cpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,72 +70,57 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#var-members">Variables</a>  </div>
-  <div class="headertitle"><div class="title">gurdystring.h File Reference</div></div>
+<a href="#func-members">Functions</a>  </div>
+  <div class="headertitle"><div class="title">usb_power.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="config_8h_source.html">config.h</a>&quot;</code><br />
-<code>#include &lt;MIDI.h&gt;</code><br />
-<code>#include &quot;wavTrigger.h&quot;</code><br />
-<code>#include &quot;Tsunami.h&quot;</code><br />
-</div>
-<p><a href="gurdystring_8h_source.html">Go to the source code of this file.</a></p>
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gurdy_string.html">GurdyString</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:a4793725486a721fd3f9ddff12435bf70"><td class="memItemLeft" align="right" valign="top">wavTrigger&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gurdystring_8h.html#a4793725486a721fd3f9ddff12435bf70">trigger_obj</a></td></tr>
-<tr class="separator:a4793725486a721fd3f9ddff12435bf70"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a8837fc198c535dcef0f0508717c31c"><td class="memItemLeft" align="right" valign="top">MIDI_NAMESPACE::MidiInterface&lt; MIDI_NAMESPACE::SerialMIDI&lt; HardwareSerial &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gurdystring_8h.html#a2a8837fc198c535dcef0f0508717c31c">MIDI</a></td></tr>
-<tr class="separator:a2a8837fc198c535dcef0f0508717c31c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<div class="textblock"><code>#include &quot;<a class="el" href="usb__power_8h_source.html">usb_power.h</a>&quot;</code><br />
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a73fd5417a4145ba0b40d9560ad157312"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="usb__power_8cpp.html#a73fd5417a4145ba0b40d9560ad157312">usb_power_on</a> ()</td></tr>
+<tr class="memdesc:a73fd5417a4145ba0b40d9560ad157312"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables power to the USBHost controller pin.  <a href="usb__power_8cpp.html#a73fd5417a4145ba0b40d9560ad157312">More...</a><br /></td></tr>
+<tr class="separator:a73fd5417a4145ba0b40d9560ad157312"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ab828b5c780de7f98f72ae21c25172a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="usb__power_8cpp.html#a4ab828b5c780de7f98f72ae21c25172a">usb_power_off</a> ()</td></tr>
+<tr class="memdesc:a4ab828b5c780de7f98f72ae21c25172a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cuts power to the USBHost controller pin.  <a href="usb__power_8cpp.html#a4ab828b5c780de7f98f72ae21c25172a">More...</a><br /></td></tr>
+<tr class="separator:a4ab828b5c780de7f98f72ae21c25172a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Variable Documentation</h2>
-<a id="a2a8837fc198c535dcef0f0508717c31c" name="a2a8837fc198c535dcef0f0508717c31c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2a8837fc198c535dcef0f0508717c31c">&#9670;&#160;</a></span>MIDI</h2>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a4ab828b5c780de7f98f72ae21c25172a" name="a4ab828b5c780de7f98f72ae21c25172a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ab828b5c780de7f98f72ae21c25172a">&#9670;&#160;</a></span>usb_power_off()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">MIDI_NAMESPACE::MidiInterface&lt;MIDI_NAMESPACE::SerialMIDI&lt;HardwareSerial&gt; &gt; MIDI</td>
+          <td class="memname">void usb_power_off </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">extern</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
+
+<p>Cuts power to the USBHost controller pin. </p>
 
 </div>
 </div>
-<a id="a4793725486a721fd3f9ddff12435bf70" name="a4793725486a721fd3f9ddff12435bf70"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4793725486a721fd3f9ddff12435bf70">&#9670;&#160;</a></span>trigger_obj</h2>
+<a id="a73fd5417a4145ba0b40d9560ad157312" name="a73fd5417a4145ba0b40d9560ad157312"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73fd5417a4145ba0b40d9560ad157312">&#9670;&#160;</a></span>usb_power_on()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Tsunami trigger_obj</td>
+          <td class="memname">void usb_power_on </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">extern</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
+
+<p>Enables power to the USBHost controller pin. </p>
 
 </div>
 </div>

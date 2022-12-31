@@ -26,6 +26,9 @@
 //
 // 11/06/16  Support for v1.30 firmware features, including two-way
 //           communication with track status reporting.
+//
+// Changed "EOM" to "EOMWT" to not clash with USBHost_t36 library -BDL
+// Expanded __WT_USE_SERIAL#__ to all 8 supported by Teensy4.1 -BDL
 
 #ifndef WAVTRIGGER_H
 #define WAVTRIGGER_H

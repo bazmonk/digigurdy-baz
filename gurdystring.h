@@ -5,29 +5,20 @@
 
 // https://www.pjrc.com/teensy/td_midi.html
 // https://www.pjrc.com/teensy/td_libs_MIDI.html
-#if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
-  #include <MIDI.h>
-#endif
+#include <MIDI.h>
 
 #ifdef USE_TRIGGER
   #include "wavTrigger.h"
-#endif
-
-#ifdef USE_TSUNAMI
-  #include "Tsunami.h"
-#endif
-
-#if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
-  extern MIDI_NAMESPACE::MidiInterface<MIDI_NAMESPACE::SerialMIDI<HardwareSerial>> MIDI;
-#endif
-
-#ifdef USE_TRIGGER
   extern wavTrigger trigger_obj;
 #endif
 
 #ifdef USE_TSUNAMI
+  #include "Tsunami.h"
   extern Tsunami trigger_obj;
 #endif
+
+extern MIDI_NAMESPACE::MidiInterface<MIDI_NAMESPACE::SerialMIDI<HardwareSerial>> MIDI;
+
 
 class GurdyString {
   private:
@@ -40,9 +31,10 @@ class GurdyString {
     bool is_playing = false;
     int note_being_played;  // The note being sounded (base note + key offset)
                             // This is necessary to turn off notes before turning on new ones.
+    int output_mode;
 
   public:
-    GurdyString(int my_channel, int my_note, String my_name, int my_vol = 70);
+    GurdyString(int my_channel, int my_note, String my_name, int my_mode, int my_vol = 70);
     void soundOn(int my_offset = 0, int my_modulation = 0);
     void soundOff();
     void soundKill();
@@ -58,6 +50,7 @@ class GurdyString {
     void setPitchBend(int bend);
     void setVibrato(int vib);
     String getName();
+    void setOutputMode(int my_mode);
 };
 
 #endif

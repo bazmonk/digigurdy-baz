@@ -7,7 +7,7 @@ This applies to the following four files:
 
 ---
 
-These have been taken unaltered from the following git repositories:
+These have been taken (and subsequently minorly altered) from the following git repositories:
 
 https://github.com/robertsonics/Tsunami-Arduino-Serial-Library
 https://github.com/robertsonics/WAV-Trigger-Arduino-Serial-Library

@@ -6,6 +6,8 @@
 //
 // Programmers: Jamie Robertson, info@robertsonics.com
 // Hacked by: @bazmonk
+// Changed "EOM" to "EOMTS" to not clash with USBHost_t36 library -BDL
+// Expanded __WT_USE_SERIAL#__ to all 8 supported by Teensy4.1 -BDL
 //
 // **************************************************************
 
@@ -50,7 +52,7 @@
 
 #define SOM1	0xf0
 #define SOM2	0xaa
-#define EOM		0x55
+#define EOMTS		0x55
 
 #define IMIX_OUT1	0x01
 #define IMIX_OUT2	0x02

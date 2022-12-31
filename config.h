@@ -3,15 +3,15 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.3.4x";
-const String REL_DATE = "2022-12-27, v" + VERSION;
+const String VERSION = "2.3.5";
+const String REL_DATE = "2022-12-31, v" + VERSION;
 
 /// @defgroup config Configuration Options
 /// These variables/definitions are compile-time configuration options.
 /// @{
 
 /// @brief This is a freeform line displayed on the About screen
-const String EXTRA_LINE = " MIDI-OUT/HWSPI/LED ";
+const String EXTRA_LINE = "          TEST       ";
 //const String EXTRA_LINE = "      3.5 TEST       ";
 //const String EXTRA_LINE = " MIDI-OUT, LED, SWSPI";
 //const String EXTRA_LINE = " TRIGGER - LED KNOB  ";
@@ -24,10 +24,10 @@ const String EXTRA_LINE = " MIDI-OUT/HWSPI/LED ";
   #define WHITE_OLED
   /// @brief Enables SSH1106 display support, do not use with WHITE_OLED.
   #define BLUE_OLED
-  /// @brief Enables WAV Trigger support, effectively disables MIDI-OUT.
+  /// @brief Enables WAV Trigger support.
   /// @details Cannot be used with USE_TSUNAMI simultaneously
   #define USE_TRIGGER
-  /// @brief Enables Tsunami support, effectively disables MIDI-OUT.
+  /// @brief Enables Tsunami support.
   /// @details Cannot be used with USE_TRIGGER simultaneously
   #define USE_TSUNAMI
   /// @brief Enables geared-crank support.
@@ -37,6 +37,9 @@ const String EXTRA_LINE = " MIDI-OUT/HWSPI/LED ";
   #define LED_KNOB
   /// @brief Enables the accessory/vibrato pedal on PEDAL_PIN.
   #define USE_PEDAL
+  /// @brief Setting this option allows both MIDI-OUT and Trigger/Tsunami use simultaneously.
+  /// @details Set this only if the MIDI-OUT and Trigger/Tsunami Tx pins are different!
+  #define ALLOW_COMBO_MODE
 #endif
 
 // One of these OLED options must be enabled.
@@ -45,21 +48,24 @@ const String EXTRA_LINE = " MIDI-OUT/HWSPI/LED ";
 
 //#define USE_GEARED_CRANK
 
+// Only one of these should be defined.
 #define USE_TRIGGER
 //#define USE_TSUNAMI
+
+//#define ALLOW_COMBO_MODE
 
 /// @brief The audio output channel used by the Tsunami unit.
 /// @details 0 == 1L, 1 == 1R, etc.
 const int TSUNAMI_OUT = 0;
 
 
-#define LED_KNOB
+//#define LED_KNOB
 
 /// @brief Pin used for the LED buzz indicator, if LED_KNOB is enabled.
 const int LED_PIN = 40;
 
 
-//#define USE_PEDAL
+#define USE_PEDAL
 
 /// @brief Pin used for the accessory pedal, if USE_PEDAL is enabled.
 const int PEDAL_PIN = 40;

@@ -278,9 +278,9 @@ bool other_options_screen() {
     #endif
 
     #ifndef USE_GEARED_CRANK
-    print_menu_5("Other Options", "EX Button Config", "Screen Configuration", opt2, opt3, "About Digi-Gurdy");
+    print_menu_4("Other Options", "EX Button Config", "Screen Configuration", "Input/Output Config", "About Digi-Gurdy");
     #else
-    print_menu_5("Other Options", "Crank Detection", "Screen Configuration", opt2, opt3, "About Digi-Gurdy");
+    print_menu_4("Other Options", "Crank Detection", "Screen Configuration", "Input/Output Config", "About Digi-Gurdy");
     #endif
 
     delay(150);
@@ -290,7 +290,6 @@ bool other_options_screen() {
     my3Button->update();
     my4Button->update();
     my5Button->update();
-    my6Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {
@@ -315,19 +314,12 @@ bool other_options_screen() {
       playing_config_screen();
 
     } else if (my3Button->wasPressed()) {
-      #ifdef LED_KNOB
-      led_screen();
-      #endif
+      io_screen();
 
     } else if (my4Button->wasPressed()) {
-      #ifdef USE_PEDAL
-      vib_screen();
-      #endif
-
-    } else if (my5Button->wasPressed()) {
       options_about_screen();
 
-    } else if (my6Button->wasPressed() || myXButton->wasPressed()) {
+    } else if (my5Button->wasPressed() || myXButton->wasPressed()) {
       return false;
     };
   };
@@ -715,13 +707,13 @@ void playing_scr_screen() {
   };
 };
 
-/// @brief The startup other-options screen: prompts user to clear the EEPROM, adjust Scene Control, view the about screen, or go back.
+/// @brief The startup other-options screen: prompts user to clear the EEPROM, adjust Scene Control, change Secondary Output, view the about screen, or go back.
 void options_screen() {
 
   bool done = false;
   while (!done) {
 
-    print_menu_3("Options", "Clear EEPROM", "Scene Control", "About Digi-Gurdy");
+    print_menu_4("Options", "Clear EEPROM", "Scene Control", "Secondary Output", "About Digi-Gurdy");
     delay(150);
 
     // Check the 1 and 2 buttons
@@ -729,6 +721,7 @@ void options_screen() {
     my2Button->update();
     my3Button->update();
     my4Button->update();
+    my5Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {
@@ -743,9 +736,12 @@ void options_screen() {
       scene_options_screen();
       done = true;
     } else if (my3Button->wasPressed()) {
+      sec_output_screen();
+      done = true;
+    } else if (my4Button->wasPressed()) {
       options_about_screen();
       done = true;
-    } else if (myXButton->wasPressed() || my4Button->wasPressed()) {
+    } else if (myXButton->wasPressed() || my5Button->wasPressed()) {
       done = true;
     };
   };
@@ -964,6 +960,143 @@ void notation_config_screen() {
     } else if (my4Button->wasPressed() || myXButton->wasPressed()) {
       done = true;
     };
+  };
+};
+
+/// @brief Prompts the user to choose between various input/output options
+void io_screen() {
+  bool done = false;
+  while (!done) {
+
+    String opt2 = "This Option Disabled";
+    String opt3 = "This Option Disabled";
+    #ifdef USE_PEDAL
+    opt2 = "Vibrato Pedal On/Off";
+    #endif
+    #ifdef LED_KNOB
+    opt3 = "Buzz LED On/Off";
+    #endif
+
+    #ifndef USE_GEARED_CRANK
+    print_menu_3("Input/Output Options", "Secondary Output", opt2, opt3);
+    #else
+    print_menu_3("Input/Output Options", "Secondary Output", opt2, opt3);
+    #endif
+
+    delay(150);
+
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    my4Button->update();
+    myXButton->update();
+
+    if (my1Button->wasPressed()) {
+      sec_output_screen();
+        
+    } else if (my2Button->wasPressed()) {
+      #ifdef USE_PEDAL
+      vib_screen();
+      #endif
+
+    } else if (my3Button->wasPressed()) {
+      #ifdef LED_KNOB
+      led_screen();
+      #endif
+
+    } else if (my4Button->wasPressed() || myXButton->wasPressed()) {
+      done = true;
+    };
+  };
+};
+
+/// @brief Promts user to choose the secondary output (primary output is usbMIDI)
+void sec_output_screen() {
+  bool done = false;
+  while (!done) {
+
+    #ifdef ALLOW_COMBO_MODE
+      print_menu_3("Secondary Output", "MIDI-OUT Socket", "Audio Socket", "MIDI-OUT and Audio Socket");
+    #else
+      print_menu_2("Secondary Output", "MIDI-OUT Socket", "Audio Socket");
+    #endif
+
+    delay(150);
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    my4Button->update();
+    myXButton->update();
+
+    if (my1Button->wasPressed()) {
+      EEPROM.write(EEPROM_SEC_OUT, 0);
+
+      usb_power_off();
+      delay(100);
+
+      mystring->setOutputMode(0);
+      mylowstring->setOutputMode(0);
+      mytromp->setOutputMode(0);
+      mydrone->setOutputMode(0);
+      mykeyclick->setOutputMode(0);
+      mybuzz->setOutputMode(0);
+      
+      print_message_2("Secondary Output", "MIDI-OUT", "Saved to EEPROM!");
+      delay(750);
+
+      done = true;
+
+    } else if (my2Button->wasPressed()) {
+      EEPROM.write(EEPROM_SEC_OUT, 1);
+
+      usb_power_on();
+      delay(100);
+
+      mystring->setOutputMode(1);
+      mylowstring->setOutputMode(1);
+      mytromp->setOutputMode(1);
+      mydrone->setOutputMode(1);
+      mykeyclick->setOutputMode(1);
+      mybuzz->setOutputMode(1);
+
+      print_message_2("Secondary Output", "Audio Socket", "Saved to EEPROM!");
+      delay(750);
+
+      done = true;
+
+    #ifdef ALLOW_COMBO_MODE
+      
+    } else if (my3Button->wasPressed()) {
+      EEPROM.write(EEPROM_SEC_OUT, 2);
+
+      usb_power_on();
+      delay(100);
+
+      mystring->setOutputMode(2);
+      mylowstring->setOutputMode(2);
+      mytromp->setOutputMode(2);
+      mydrone->setOutputMode(2);
+      mykeyclick->setOutputMode(2);
+      mybuzz->setOutputMode(2);
+
+      print_message_2("Secondary Output", "MIDI-OUT + Audio", "Saved to EEPROM!");
+      delay(750);
+
+      done = true;
+
+    } else if (my4Button->wasPressed() || myXButton->wasPressed()) {
+      done = true;
+    };
+    
+    #else
+
+    } else if (my3Button->wasPressed() || myXButton->wasPressed()) {
+      done = true;
+    };
+
+    #endif
   };
 };
 
