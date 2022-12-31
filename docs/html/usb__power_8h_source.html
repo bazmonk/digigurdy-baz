@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Digigurdy-baz: File Members</title>
+<title>Digigurdy-baz: usb_power.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -68,21 +68,22 @@ $(function() {
 </div>
 </div>
 
+<div class="header">
+  <div class="headertitle"><div class="title">usb_power.h</div></div>
+</div><!--header-->
 <div class="contents">
-<div class="textblock">Here is a list of all file members with links to the files they belong to:</div>
-
-<h3><a id="index_u" name="index_u"></a>- u -</h3><ul>
-<li>u8g2&#160;:&#160;<a class="el" href="display_8h.html#a219912b676b14760ff31dcc6b6d3ed7d">display.h</a>, <a class="el" href="display_8cpp.html#ac45dfb52e7bcd7f86213882ad92031ea">display.cpp</a></li>
-<li>usb_power_off()&#160;:&#160;<a class="el" href="usb__power_8cpp.html#a4ab828b5c780de7f98f72ae21c25172a">usb_power.cpp</a>, <a class="el" href="usb__power_8h.html#a4ab828b5c780de7f98f72ae21c25172a">usb_power.h</a></li>
-<li>usb_power_on()&#160;:&#160;<a class="el" href="usb__power_8cpp.html#a73fd5417a4145ba0b40d9560ad157312">usb_power.cpp</a>, <a class="el" href="usb__power_8h.html#a73fd5417a4145ba0b40d9560ad157312">usb_power.h</a></li>
-<li>usb_string_product_name&#160;:&#160;<a class="el" href="name_8c.html#ac306526ea4c665592e1c51d6253cbad7">name.c</a></li>
-<li>USE_GEARED_CRANK&#160;:&#160;<a class="el" href="group__config.html#gab9d954a924e33a9ffc7342344c7d3d9d">config.h</a>, <a class="el" href="config_8white_8led_8h.html#ab9d954a924e33a9ffc7342344c7d3d9d">config.white.led.h</a></li>
-<li>USE_PEDAL&#160;:&#160;<a class="el" href="group__config.html#gafefdab12d20e0adbde1edaa9c93c6102">config.h</a>, <a class="el" href="config_8white_8led_8h.html#afefdab12d20e0adbde1edaa9c93c6102">config.white.led.h</a>, <a class="el" href="config_8white_8pedal_8h.html#afefdab12d20e0adbde1edaa9c93c6102">config.white.pedal.h</a></li>
-<li>use_solfege&#160;:&#160;<a class="el" href="digigurdy-baz_8ino.html#aae650c280016b5bd61be7e2259ee6ef0">digigurdy-baz.ino</a>, <a class="el" href="notes_8h.html#aae650c280016b5bd61be7e2259ee6ef0">notes.h</a>, <a class="el" href="tuning__screens_8h.html#aae650c280016b5bd61be7e2259ee6ef0">tuning_screens.h</a></li>
-<li>USE_TRIGGER&#160;:&#160;<a class="el" href="group__config.html#gad1d176dc647b22b440ff814333519424">config.h</a>, <a class="el" href="config_8white_8led_8h.html#ad1d176dc647b22b440ff814333519424">config.white.led.h</a></li>
-<li>USE_TSUNAMI&#160;:&#160;<a class="el" href="group__config.html#ga77a0822c554e5140b4c736328041e90e">config.h</a>, <a class="el" href="config_8white_8led_8h.html#a77a0822c554e5140b4c736328041e90e">config.white.led.h</a></li>
-</ul>
-</div><!-- contents -->
+<a href="usb__power_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef USB_POWER_HH</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define USB_POWER_HH</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;imxrt.h&gt;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keywordtype">void</span> <a class="code hl_function" href="usb__power_8h.html#a73fd5417a4145ba0b40d9560ad157312">usb_power_on</a>();</div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keywordtype">void</span> <a class="code hl_function" href="usb__power_8h.html#a4ab828b5c780de7f98f72ae21c25172a">usb_power_off</a>();</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="ausb__power_8h_html_a4ab828b5c780de7f98f72ae21c25172a"><div class="ttname"><a href="usb__power_8h.html#a4ab828b5c780de7f98f72ae21c25172a">usb_power_off</a></div><div class="ttdeci">void usb_power_off()</div><div class="ttdoc">Cuts power to the USBHost controller pin.</div><div class="ttdef"><b>Definition:</b> usb_power.cpp:10</div></div>
+<div class="ttc" id="ausb__power_8h_html_a73fd5417a4145ba0b40d9560ad157312"><div class="ttname"><a href="usb__power_8h.html#a73fd5417a4145ba0b40d9560ad157312">usb_power_on</a></div><div class="ttdeci">void usb_power_on()</div><div class="ttdoc">Enables power to the USBHost controller pin.</div><div class="ttdef"><b>Definition:</b> usb_power.cpp:4</div></div>
+</div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5

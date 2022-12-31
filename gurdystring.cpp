@@ -4,14 +4,17 @@
 /// @param my_channel The MIDI channel to communicate over
 /// @param my_note The base MIDI note of this string (0-127)
 /// @param my_name A text label for this string (e.g. "Drone")
+/// @param my_mode The secondary output mode (see setOutputMode() for more info)
 /// @param my_vol The volume of this string (0-127)
-GurdyString::GurdyString(int my_channel, int my_note, String my_name, int my_vol) {
+GurdyString::GurdyString(int my_channel, int my_note, String my_name, int my_mode, int my_vol) {
   midi_channel = my_channel;
   name = my_name;
   open_note = my_note;
   midi_volume = my_vol;
   trigger_volume = int((my_vol)/128.0 * 80 - 70);
   note_being_played = open_note;
+
+  setOutputMode(my_mode);
 };
 
 // soundOn() sends sound on this string's channel at its notes
@@ -29,59 +32,74 @@ GurdyString::GurdyString(int my_channel, int my_note, String my_name, int my_vol
 void GurdyString::soundOn(int my_offset, int my_modulation) {
   note_being_played = open_note + my_offset;
   if (!mute_on) {
+
     usbMIDI.sendNoteOn(note_being_played, midi_volume, midi_channel);
-#if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
-    MIDI.sendNoteOn(note_being_played, midi_volume, midi_channel);
-#elif defined(USE_TRIGGER)
-    trigger_obj.trackGain(note_being_played + (128 * (midi_channel - 1)), trigger_volume);
-    trigger_obj.trackPlayPoly(note_being_played + (128 * (midi_channel - 1)), true);
-    trigger_obj.trackLoop(note_being_played + (128 * (midi_channel - 1)), true);
-#elif defined(USE_TSUNAMI)
-    trigger_obj.trackGain(note_being_played + (128 * (midi_channel - 1)), trigger_volume);
-    trigger_obj.trackPlayPoly(note_being_played + (128 * (midi_channel - 1)), TSUNAMI_OUT, true);
-    trigger_obj.trackLoop(note_being_played + (128 * (midi_channel - 1)), true);
-#endif
+
+    if (output_mode != 1) {
+      MIDI.sendNoteOn(note_being_played, midi_volume, midi_channel);
+    };
+
+    if (output_mode > 0) {
+      #if defined(USE_TRIGGER)
+        trigger_obj.trackGain(note_being_played + (128 * (midi_channel - 1)), trigger_volume);
+        trigger_obj.trackPlayPoly(note_being_played + (128 * (midi_channel - 1)), true);
+        trigger_obj.trackLoop(note_being_played + (128 * (midi_channel - 1)), true);
+      #elif defined(USE_TSUNAMI)
+        trigger_obj.trackGain(note_being_played + (128 * (midi_channel - 1)), trigger_volume);
+        trigger_obj.trackPlayPoly(note_being_played + (128 * (midi_channel - 1)), TSUNAMI_OUT, true);
+        trigger_obj.trackLoop(note_being_played + (128 * (midi_channel - 1)), true);
+      #endif
+    };
 
     // If modulation isn't zero, send that as a MIDI CC for this channel
     // This is meant to be configured to create a gentle vibrato.
     if (my_modulation > 0) {
       usbMIDI.sendControlChange(1, my_modulation, midi_channel);
-#if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
-      MIDI.sendControlChange(1, my_modulation, midi_channel);
-#endif
-    }
-  }
+      
+      if (output_mode != 1) {
+        MIDI.sendControlChange(1, my_modulation, midi_channel);
+      };
+    };
+  };
+
   is_playing = true;
 };
 
 /// @brief  Turns off the sound currently playing for this string, nicely.
 void GurdyString::soundOff() {
+
   usbMIDI.sendNoteOff(note_being_played, midi_volume, midi_channel);
-#if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
-  MIDI.sendNoteOff(note_being_played, midi_volume, midi_channel);
-#else
-  if (trigger_volume > -60) {
-    trigger_obj.trackFade(note_being_played + (128 * (midi_channel - 1)), trigger_volume - 10, 200, true);
-  } else {
-    trigger_obj.trackFade(note_being_played + (128 * (midi_channel - 1)), -70, 200, true);
-  }
-  //trigger_obj.trackStop(note_being_played + (128 * (midi_channel - 1)));
-#endif
+
+  if (output_mode != 1) {
+    MIDI.sendNoteOff(note_being_played, midi_volume, midi_channel);
+  };
+
+  if (output_mode > 0) {
+    if (trigger_volume > -60) {
+      trigger_obj.trackFade(note_being_played + (128 * (midi_channel - 1)), trigger_volume - 10, 200, true);
+    } else {
+      trigger_obj.trackFade(note_being_played + (128 * (midi_channel - 1)), -70, 200, true);
+    }
+    //trigger_obj.trackStop(note_being_played + (128 * (midi_channel - 1)));
+  };
+
   is_playing = false;
 };
-
-// soundKill is a nuclear version of soundOff() that kills sound on the channel.
-// It does not need to know the note being played as it kills all of them.
 
 /// @brief Issues a MIDI CC123 to the string's MIDI channel, killing all sound on it.
 /// @note On Tsunami/Trigger units, this kills *all* tracks playing.  This is not meant be the regular way to turn off sound, see soundOff() which does it more gently.
 void GurdyString::soundKill() {
+
   usbMIDI.sendControlChange(123, 0, midi_channel);
-#if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
-  MIDI.sendControlChange(123, 0, midi_channel);
-#else
-  trigger_obj.stopAllTracks();
-#endif
+
+  if (output_mode != 1) {
+    MIDI.sendControlChange(123, 0, midi_channel);
+  };
+
+  if (output_mode > 0) {
+    trigger_obj.stopAllTracks();
+  };
+
   is_playing = false;
 };
 
@@ -137,20 +155,24 @@ bool GurdyString::isPlaying() {
 /// @param program The program change value, 0-127.
 /// @note This has no effect on Tsunami/Trigger units.
 void GurdyString::setProgram(uint8_t program) {
+
   usbMIDI.sendProgramChange(program, midi_channel);
-#if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
-  MIDI.sendProgramChange(program, midi_channel);
-#endif
+
+  if (output_mode != 1) {
+    MIDI.sendProgramChange(program, midi_channel);
+  };
 };
 
 /// @brief Sends a MIDI CC11 (Expression) value to this string's MIDI channel.
 /// @param exp The expression value, 0-127.
 /// @note This has no effect on Tsunami/Trigger units.
 void GurdyString::setExpression(int exp) {
-      usbMIDI.sendControlChange(11, exp, midi_channel);
-#if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
-      MIDI.sendControlChange(11, exp, midi_channel);
-#endif
+
+  usbMIDI.sendControlChange(11, exp, midi_channel);
+
+  if (output_mode != 1) {
+    MIDI.sendControlChange(11, exp, midi_channel);
+  };
 };
 
 /// @brief Bends this string's sound to the specified amount.
@@ -158,9 +180,10 @@ void GurdyString::setExpression(int exp) {
 /// @note This has no effect on Tsunami/Trigger units.
 void GurdyString::setPitchBend(int bend) {
   usbMIDI.sendPitchBend(bend, midi_channel);
-  #if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
+
+  if (output_mode != 1) {
     MIDI.sendPitchBend(bend, midi_channel);
-  #endif
+  };
 };
 
 /// @brief Sets the amount of modulation (vibrato) on this string.
@@ -168,13 +191,24 @@ void GurdyString::setPitchBend(int bend) {
 /// @note This is MIDI CC1, the "mod wheel".  Intended to used for a vibrato effect.
 void GurdyString::setVibrato(int vib) {
   usbMIDI.sendControlChange(1, vib, midi_channel);
-#if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
-  MIDI.sendControlChange(1, vib, midi_channel);
-#endif
+
+  if (output_mode != 1) {
+    MIDI.sendControlChange(1, vib, midi_channel);
+  };
 };
 
 /// @brief Returns the text name of this string.
 /// @return The string's display name
 String GurdyString::getName() {
   return name;
+};
+
+/// @brief Sets the secondary output mode for this string
+/// @param my_mode 0-2
+/// @details Modes accepted:
+/// * 0 - MIDI-OUT socket
+/// * 1 - A Trigger/Tsunami device
+/// * 2 - Both
+void GurdyString::setOutputMode(int my_mode) {
+  output_mode = my_mode;
 };

@@ -14,6 +14,7 @@
 
 #include "exbutton.h"
 #include "common.h"
+#include "usb_power.h"
 
 #ifdef USE_GEARED_CRANK
   #include "gearcrank.h"
@@ -32,9 +33,7 @@
 #include "pause_screens.h"   // The pause screen menus
 
 // As far as I can tell, this *has* to be done here or else you get spooooky runtime problems.
-#if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
-  MIDI_CREATE_DEFAULT_INSTANCE();
-#endif
+MIDI_CREATE_DEFAULT_INSTANCE();
 
 #ifdef USE_TRIGGER
   wavTrigger  trigger_obj;
@@ -159,13 +158,12 @@ void setup() {
    delay(500);
    Serial.println("Hello.");
 
-
   // Start the Serial MIDI object (like for a bluetooth transmitter).
   // The usbMIDI object is available by Teensyduino magic that I don't know about.
-  #if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
-      MIDI.begin(MIDI_CHANNEL_OMNI);
+  MIDI.begin(MIDI_CHANNEL_OMNI);
 
-  #elif defined(USE_TRIGGER)
+  #if defined(USE_TRIGGER)
+    Serial5.setTX(47); // I can just do this for everyone until it bugs someone...
     trigger_obj.start();
     delay(10);
 
@@ -236,12 +234,19 @@ void setup() {
   // preset, a saved tuning, or a created one.  The menu shouldn't let you actually
   // end up with this, but I have to initialize them with something, so might as well
   // be a working tuning.
-  mystring = new GurdyString(1, Note(g4), "Hi Melody");
-  mylowstring = new GurdyString(2, Note(g3), "Low Melody");
-  mytromp = new GurdyString(3, Note(c3), "Trompette");
-  mydrone = new GurdyString(4, Note(c2), "Drone");
-  mybuzz = new GurdyString(5,Note(c3), "Buzz");
-  mykeyclick = new GurdyString(6, Note(b5), "Key Click");
+
+  // Turn on the power if we're using it.
+  if (EEPROM.read(EEPROM_SEC_OUT) > 0) {
+    usb_power_on();
+    delay(100);
+  };
+
+  mystring = new GurdyString(1, Note(g4), "Hi Melody", EEPROM.read(EEPROM_SEC_OUT));
+  mylowstring = new GurdyString(2, Note(g3), "Low Melody", EEPROM.read(EEPROM_SEC_OUT));
+  mytromp = new GurdyString(3, Note(c3), "Trompette", EEPROM.read(EEPROM_SEC_OUT));
+  mydrone = new GurdyString(4, Note(c2), "Drone", EEPROM.read(EEPROM_SEC_OUT));
+  mybuzz = new GurdyString(5,Note(c3), "Buzz", EEPROM.read(EEPROM_SEC_OUT));
+  mykeyclick = new GurdyString(6, Note(b5), "Key Click", EEPROM.read(EEPROM_SEC_OUT));
 
   tpose_up = new GurdyButton(22, 200);   // A.k.a. the button formerly known as octave-up
   tpose_down = new GurdyButton(21, 200); // A.k.a. the button formerly known as octave-down
@@ -529,10 +534,10 @@ void loop() {
   };
 
   // Apparently we need to do this to discard incoming data.
-  #if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
+  if (EEPROM.read(EEPROM_SEC_OUT) != 1) {
     while (MIDI.read()) {
-    };
-  #endif
+      };
+  };
   while (usbMIDI.read()) {
   };
 

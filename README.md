@@ -6,7 +6,12 @@ See [the code documentation here](https://bazmonk.github.io/digigurdy-baz/html/i
 
 **Pre-compiled builds of the code will be made available from 1.7.99 and up.  See https://github.com/bazmonk/digigurdy-baz/wiki/install-by-hex for installation instructions.**
 
-**Check out version 2.3.4! (NEW)**
+**Check out version 2.3.5! (NEW)**
+
+* 2.3.5 -
+  * ALLOW_COMBO_MODE in config.h allows MIDI-OUT and Trigger/Tsunami simultaneously.
+  * Switching between MIDI-OUT and Trigger (if supported) is possible in-menu, not in config.h.
+  * Trigger or Tsunami support must be compiled in.  If you don't one have... pick one you might get later, doesn't matter.
 
 * 2.3.4 -
   * Extended volume up/down control to key combo for legacy support.  Will backport this to 2.0.x.

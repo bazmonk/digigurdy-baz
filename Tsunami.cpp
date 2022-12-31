@@ -6,6 +6,7 @@
 //
 // Programmers: Jamie Robertson, info@robertsonics.com
 //
+// Changed "EOM" to "EOMTS" to not clash with USBHost_t36 library -BDL
 // **************************************************************
 
 #include "Tsunami.h"
@@ -26,7 +27,7 @@ uint8_t txbuf[5];
 	txbuf[1] = SOM2;
 	txbuf[2] = 0x05;
 	txbuf[3] = CMD_GET_VERSION;
-	txbuf[4] = EOM;
+	txbuf[4] = EOMTS;
 	TsunamiSerial.write(txbuf, 5);
 
 	// Request system info
@@ -34,7 +35,7 @@ uint8_t txbuf[5];
 	txbuf[1] = SOM2;
 	txbuf[2] = 0x05;
 	txbuf[3] = CMD_GET_SYS_INFO;
-	txbuf[4] = EOM;
+	txbuf[4] = EOMTS;
 	TsunamiSerial.write(txbuf, 5);
 }
 
@@ -91,7 +92,7 @@ uint16_t track;
 			rxCount++;
 		}
 		else if (rxCount == rxLen) {
-			if (dat == EOM)
+			if (dat == EOMTS)
 				rxMsgReady = true;
 			else {
 				rxCount = 0;
@@ -189,7 +190,7 @@ uint8_t o;
 	vol = (unsigned short)gain;
 	txbuf[5] = (uint8_t)vol;
 	txbuf[6] = (uint8_t)(vol >> 8);
-	txbuf[7] = EOM;
+	txbuf[7] = EOMTS;
 	TsunamiSerial.write(txbuf, 8);
 }
 
@@ -203,7 +204,7 @@ uint8_t txbuf[6];
 	txbuf[2] = 0x06;
 	txbuf[3] = CMD_SET_REPORTING;
 	txbuf[4] = enable;
-	txbuf[5] = EOM;
+	txbuf[5] = EOMTS;
 	TsunamiSerial.write(txbuf, 6);
 }
 
@@ -306,7 +307,7 @@ uint8_t o;
 	txbuf[6] = (uint8_t)(trk >> 8);
 	txbuf[7] = (uint8_t)o;
 	txbuf[8] = (uint8_t)flags;
-	txbuf[9] = EOM;
+	txbuf[9] = EOMTS;
 	TsunamiSerial.write(txbuf, 10);
 }
 
@@ -319,7 +320,7 @@ uint8_t txbuf[5];
 	txbuf[1] = SOM2;
 	txbuf[2] = 0x05;
 	txbuf[3] = CMD_STOP_ALL;
-	txbuf[4] = EOM;
+	txbuf[4] = EOMTS;
 	TsunamiSerial.write(txbuf, 5);
 }
 
@@ -332,7 +333,7 @@ uint8_t txbuf[5];
 	txbuf[1] = SOM2;
 	txbuf[2] = 0x05;
 	txbuf[3] = CMD_RESUME_ALL_SYNC;
-	txbuf[4] = EOM;
+	txbuf[4] = EOMTS;
 	TsunamiSerial.write(txbuf, 5);
 }
 
@@ -351,7 +352,7 @@ unsigned short vol;
 	vol = (unsigned short)gain;
 	txbuf[6] = (uint8_t)vol;
 	txbuf[7] = (uint8_t)(vol >> 8);
-	txbuf[8] = EOM;
+	txbuf[8] = EOMTS;
 	TsunamiSerial.write(txbuf, 9);
 }
 
@@ -373,7 +374,7 @@ unsigned short vol;
 	txbuf[8] = (uint8_t)time;
 	txbuf[9] = (uint8_t)(time >> 8);
 	txbuf[10] = stopFlag;
-	txbuf[11] = EOM;
+	txbuf[11] = EOMTS;
 	TsunamiSerial.write(txbuf, 12);
 }
 
@@ -393,7 +394,7 @@ uint8_t o;
 	off = (unsigned short)offset;
 	txbuf[5] = (uint8_t)off;
 	txbuf[6] = (uint8_t)(off >> 8);
-	txbuf[7] = EOM;
+	txbuf[7] = EOMTS;
 	TsunamiSerial.write(txbuf, 8);
 }
 
@@ -407,7 +408,7 @@ void Tsunami::setTriggerBank(int bank) {
 	txbuf[2] = 0x06;
 	txbuf[3] = CMD_SET_TRIGGER_BANK;
 	txbuf[4] = (uint8_t)bank;
-	txbuf[5] = EOM;
+	txbuf[5] = EOMTS;
 	TsunamiSerial.write(txbuf, 6);
 }
 
@@ -421,7 +422,7 @@ void Tsunami::setInputMix(int mix) {
 	txbuf[2] = 0x06;
 	txbuf[3] = CMD_SET_INPUT_MIX;
 	txbuf[4] = (uint8_t)mix;
-	txbuf[5] = EOM;
+	txbuf[5] = EOMTS;
 	TsunamiSerial.write(txbuf, 6);
 }
 
@@ -435,7 +436,7 @@ void Tsunami::setMidiBank(int bank) {
 	txbuf[2] = 0x06;
 	txbuf[3] = CMD_SET_MIDI_BANK;
 	txbuf[4] = (uint8_t)bank;
-	txbuf[5] = EOM;
+	txbuf[5] = EOMTS;
 	TsunamiSerial.write(txbuf, 6);
 }
 

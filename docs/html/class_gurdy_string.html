@@ -80,9 +80,9 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aaa3d35f0d047fa3c86492bceb329f19b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gurdy_string.html#aaa3d35f0d047fa3c86492bceb329f19b">GurdyString</a> (int my_channel, int my_note, String my_name, int my_vol=70)</td></tr>
-<tr class="memdesc:aaa3d35f0d047fa3c86492bceb329f19b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor. <a class="el" href="class_gurdy_string.html">GurdyString</a> manages turning "strings" on and off, determining its note, and interacting with the MIDI layer.  <a href="class_gurdy_string.html#aaa3d35f0d047fa3c86492bceb329f19b">More...</a><br /></td></tr>
-<tr class="separator:aaa3d35f0d047fa3c86492bceb329f19b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4799fbe36247ad4b79145b8218af741"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gurdy_string.html#ab4799fbe36247ad4b79145b8218af741">GurdyString</a> (int my_channel, int my_note, String my_name, int my_mode, int my_vol=70)</td></tr>
+<tr class="memdesc:ab4799fbe36247ad4b79145b8218af741"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor. <a class="el" href="class_gurdy_string.html">GurdyString</a> manages turning "strings" on and off, determining its note, and interacting with the MIDI layer.  <a href="class_gurdy_string.html#ab4799fbe36247ad4b79145b8218af741">More...</a><br /></td></tr>
+<tr class="separator:ab4799fbe36247ad4b79145b8218af741"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6834bb8392ad03b932f71c83bbed84d8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gurdy_string.html#a6834bb8392ad03b932f71c83bbed84d8">soundOn</a> (int my_offset=0, int my_modulation=0)</td></tr>
 <tr class="memdesc:a6834bb8392ad03b932f71c83bbed84d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turns on sound over this string's MIDI channel at its current volume.  <a href="class_gurdy_string.html#a6834bb8392ad03b932f71c83bbed84d8">More...</a><br /></td></tr>
 <tr class="separator:a6834bb8392ad03b932f71c83bbed84d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -128,10 +128,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a33739741ba0db2921c185f14ab853cdb"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gurdy_string.html#a33739741ba0db2921c185f14ab853cdb">getName</a> ()</td></tr>
 <tr class="memdesc:a33739741ba0db2921c185f14ab853cdb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the text name of this string.  <a href="class_gurdy_string.html#a33739741ba0db2921c185f14ab853cdb">More...</a><br /></td></tr>
 <tr class="separator:a33739741ba0db2921c185f14ab853cdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee9ec1bbd6f91c3125355f966bce6915"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_gurdy_string.html#aee9ec1bbd6f91c3125355f966bce6915">setOutputMode</a> (int my_mode)</td></tr>
+<tr class="memdesc:aee9ec1bbd6f91c3125355f966bce6915"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the secondary output mode for this string.  <a href="class_gurdy_string.html#aee9ec1bbd6f91c3125355f966bce6915">More...</a><br /></td></tr>
+<tr class="separator:aee9ec1bbd6f91c3125355f966bce6915"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="aaa3d35f0d047fa3c86492bceb329f19b" name="aaa3d35f0d047fa3c86492bceb329f19b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaa3d35f0d047fa3c86492bceb329f19b">&#9670;&#160;</a></span>GurdyString()</h2>
+<a id="ab4799fbe36247ad4b79145b8218af741" name="ab4799fbe36247ad4b79145b8218af741"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4799fbe36247ad4b79145b8218af741">&#9670;&#160;</a></span>GurdyString()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -158,6 +161,12 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>my_mode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>my_vol</em> = <code>70</code>&#160;</td>
         </tr>
         <tr>
@@ -174,6 +183,7 @@ Public Member Functions</h2></td></tr>
     <tr><td class="paramname">my_channel</td><td>The MIDI channel to communicate over </td></tr>
     <tr><td class="paramname">my_note</td><td>The base MIDI note of this string (0-127) </td></tr>
     <tr><td class="paramname">my_name</td><td>A text label for this string (e.g. "Drone") </td></tr>
+    <tr><td class="paramname">my_mode</td><td>The secondary output mode (see <a class="el" href="class_gurdy_string.html#aee9ec1bbd6f91c3125355f966bce6915" title="Sets the secondary output mode for this string.">setOutputMode()</a> for more info) </td></tr>
     <tr><td class="paramname">my_vol</td><td>The volume of this string (0-127) </td></tr>
   </table>
   </dd>
@@ -359,6 +369,37 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="aee9ec1bbd6f91c3125355f966bce6915" name="aee9ec1bbd6f91c3125355f966bce6915"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee9ec1bbd6f91c3125355f966bce6915">&#9670;&#160;</a></span>setOutputMode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void GurdyString::setOutputMode </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>my_mode</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets the secondary output mode for this string. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">my_mode</td><td>0-2</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Modes accepted:</p><ul>
+<li>0 - MIDI-OUT socket</li>
+<li>1 - A Trigger/Tsunami device</li>
+<li>2 - Both </li>
+</ul>
 
 </div>
 </div>
