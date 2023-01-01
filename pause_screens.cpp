@@ -432,6 +432,16 @@ void clear_eeprom() {
   EEPROM.write(EEPROM_SCENE_SIGNALLING, 0);
   EEPROM.write(EEPROM_USE_SOLFEGE, 0);
 
+  usb_power_off();
+  MIDI.begin(MIDI_CHANNEL_OMNI);
+  delay(100);
+
+  mystring->setOutputMode(0);
+  mylowstring->setOutputMode(0);
+  mytromp->setOutputMode(0);
+  mydrone->setOutputMode(0);
+  mykeyclick->setOutputMode(0);
+  mybuzz->setOutputMode(0);  
 };
 
 /// @brief Displays a given saved slot tuning and prompts user to accept.
@@ -1034,6 +1044,7 @@ void sec_output_screen() {
       EEPROM.write(EEPROM_SEC_OUT, 0);
 
       usb_power_off();
+      MIDI.begin(MIDI_CHANNEL_OMNI);
       delay(100);
 
       mystring->setOutputMode(0);
@@ -1049,9 +1060,24 @@ void sec_output_screen() {
       done = true;
 
     } else if (my2Button->wasPressed()) {
+
+      print_message_2("Secondary Output", "Un-plug any MIDI adapters!", "Press X to Continue");
+
+      bool done2= false;
+      while (!done2) {
+        delay(150);
+
+        myXButton->update();
+
+        if (myXButton->wasPressed()) {
+          done2 = true;
+        };
+      };
+
       EEPROM.write(EEPROM_SEC_OUT, 1);
 
       usb_power_on();
+      trigger_obj.start();
       delay(100);
 
       mystring->setOutputMode(1);
@@ -1072,6 +1098,8 @@ void sec_output_screen() {
       EEPROM.write(EEPROM_SEC_OUT, 2);
 
       usb_power_on();
+      MIDI.begin(MIDI_CHANNEL_OMNI);
+      trigger_obj.start();
       delay(100);
 
       mystring->setOutputMode(2);

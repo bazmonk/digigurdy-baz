@@ -160,26 +160,32 @@ void setup() {
 
   // Start the Serial MIDI object (like for a bluetooth transmitter).
   // The usbMIDI object is available by Teensyduino magic that I don't know about.
-  MIDI.begin(MIDI_CHANNEL_OMNI);
-
+  if (EEPROM.read(EEPROM_SEC_OUT) != 1) {
+    MIDI.begin(MIDI_CHANNEL_OMNI);
+  }
+  
   #if defined(USE_TRIGGER)
     Serial5.setTX(47); // I can just do this for everyone until it bugs someone...
-    trigger_obj.start();
-    delay(10);
+    if (EEPROM.read(EEPROM_SEC_OUT) > 0) {
+      trigger_obj.start();
+      delay(10);
 
-    // Send a stop-all command and reset the sample-rate offset, in case we have
-    //  reset while the WAV Trigger was already playing.
-    trigger_obj.stopAllTracks();
-    trigger_obj.samplerateOffset(0);
+      // Send a stop-all command and reset the sample-rate offset, in case we have
+      //  reset while the WAV Trigger was already playing.
+      trigger_obj.stopAllTracks();
+      trigger_obj.samplerateOffset(0);
+    };
 
   #elif defined(USE_TSUNAMI)
-    trigger_obj.start();
-    delay(10);
+    if (EEPROM.read(EEPROM_SEC_OUT) > 0) {
+      trigger_obj.start();
+      delay(10);
 
-    // Send a stop-all command and reset the sample-rate offset, in case we have
-    //  reset while the Tsunami was already playing.
-    trigger_obj.stopAllTracks();
-    trigger_obj.samplerateOffset(1, 0);
+      // Send a stop-all command and reset the sample-rate offset, in case we have
+      //  reset while the WAV Trigger was already playing.
+      trigger_obj.stopAllTracks();
+      trigger_obj.samplerateOffset(1, 0);
+    };
   #endif
 
   // Initialize the ADC object and the crank that will use it.

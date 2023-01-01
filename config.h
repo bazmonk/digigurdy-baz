@@ -4,14 +4,14 @@
 #include <Arduino.h>
 
 const String VERSION = "2.3.5";
-const String REL_DATE = "2022-12-31, v" + VERSION;
+const String REL_DATE = "2023-01-01, v" + VERSION;
 
 /// @defgroup config Configuration Options
 /// These variables/definitions are compile-time configuration options.
 /// @{
 
 /// @brief This is a freeform line displayed on the About screen
-const String EXTRA_LINE = "          TEST       ";
+const String EXTRA_LINE = "  HAPPY NEW YEAR!!!  ";
 //const String EXTRA_LINE = "      3.5 TEST       ";
 //const String EXTRA_LINE = " MIDI-OUT, LED, SWSPI";
 //const String EXTRA_LINE = " TRIGGER - LED KNOB  ";
@@ -40,7 +40,11 @@ const String EXTRA_LINE = "          TEST       ";
   /// @brief Setting this option allows both MIDI-OUT and Trigger/Tsunami use simultaneously.
   /// @details Set this only if the MIDI-OUT and Trigger/Tsunami Tx pins are different!
   #define ALLOW_COMBO_MODE
+  /// @brief Setting this option disables USBHost power control.
+  #define USE_TEENSY35
 #endif
+
+// #define USE_TEENSY35
 
 // One of these OLED options must be enabled.
 #define WHITE_OLED
