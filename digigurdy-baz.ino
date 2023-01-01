@@ -177,6 +177,7 @@ void setup() {
     };
 
   #elif defined(USE_TSUNAMI)
+    Serial5.setTX(47);
     if (EEPROM.read(EEPROM_SEC_OUT) > 0) {
       trigger_obj.start();
       delay(10);
