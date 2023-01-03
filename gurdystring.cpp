@@ -13,6 +13,7 @@ GurdyString::GurdyString(int my_channel, int my_note, String my_name, int my_mod
   midi_volume = my_vol;
   trigger_volume = int((my_vol)/128.0 * 80 - 70);
   note_being_played = open_note;
+  gros_mode = 0;
 
   setOutputMode(my_mode);
 };
@@ -31,6 +32,16 @@ GurdyString::GurdyString(int my_channel, int my_note, String my_name, int my_mod
 /// @warning The way this is currently written, only one note may be playing per string object.  Don't call this twice in a row without calling soundOff() first.
 void GurdyString::soundOn(int my_offset, int my_modulation) {
   note_being_played = open_note + my_offset;
+
+  // If user has one of the second-drone options enabled, trigger them here.
+  if (gros_mode == 1) {
+    soundOn(0, 0, note_being_played - 5);
+  } else if (gros_mode == 2) {
+    soundOn(0, 0, note_being_played - 7);
+  } else if (gros_mode == 3) {
+    soundOn(0, 0, note_being_played - 12);
+  };
+
   if (!mute_on) {
 
     usbMIDI.sendNoteOn(note_being_played, midi_volume, midi_channel);
@@ -65,8 +76,47 @@ void GurdyString::soundOn(int my_offset, int my_modulation) {
   is_playing = true;
 };
 
+/// @brief Turns on a specific note over this string's MIDI channel at its current volume.
+/// @details This is meant to be for the second drone option, and bypasses the note_being_played logic.
+/// @param my_offset The offset from the string's base note to make sound.  Unused here.
+/// @param my_modulation The amount of optional modulation (0-127) to apply to the sound.  This is MIDI CC1.  0 == no modulation.  Unused here.
+/// @param note The specific note to sound.
+/// @warning my_modulation and my_offset only exist in this incarnation of the method because it keeps it from being ambiguous compared the other one.  Maybe I should change this.
+void GurdyString::soundOn(int my_offset, int my_modulation, int note) {
+  int note_to_play = note;
+  if (!mute_on) {
+
+    usbMIDI.sendNoteOn(note_to_play, midi_volume, midi_channel);
+
+    if (output_mode != 1) {
+      MIDI.sendNoteOn(note_to_play, midi_volume, midi_channel);
+    };
+
+    if (output_mode > 0) {
+      #if defined(USE_TRIGGER)
+        trigger_obj.trackGain(note_to_play + (128 * (midi_channel - 1)), trigger_volume);
+        trigger_obj.trackPlayPoly(note_to_play + (128 * (midi_channel - 1)), true);
+        trigger_obj.trackLoop(note_to_play + (128 * (midi_channel - 1)), true);
+      #elif defined(USE_TSUNAMI)
+        trigger_obj.trackGain(note_to_play + (128 * (midi_channel - 1)), trigger_volume);
+        trigger_obj.trackPlayPoly(note_to_play + (128 * (midi_channel - 1)), TSUNAMI_OUT, true);
+        trigger_obj.trackLoop(note_to_play + (128 * (midi_channel - 1)), true);
+      #endif
+    };
+  };
+};
+
 /// @brief  Turns off the sound currently playing for this string, nicely.
 void GurdyString::soundOff() {
+
+  // If user has one of the second-drone options enabled, trigger them here.
+  if (gros_mode == 1) {
+    soundOff(note_being_played - 5);
+  } else if (gros_mode == 2) {
+    soundOff(note_being_played - 7);
+  } else if (gros_mode == 3) {
+    soundOff(note_being_played - 12);
+  };
 
   usbMIDI.sendNoteOff(note_being_played, midi_volume, midi_channel);
 
@@ -84,6 +134,25 @@ void GurdyString::soundOff() {
   };
 
   is_playing = false;
+};
+
+/// @brief Turns off sound to a specific note.
+/// @param note The specific note to stop
+void GurdyString::soundOff(int note) {
+
+  usbMIDI.sendNoteOff(note, midi_volume, midi_channel);
+
+  if (output_mode != 1) {
+    MIDI.sendNoteOff(note, midi_volume, midi_channel);
+  };
+
+  if (output_mode > 0) {
+    if (trigger_volume > -60) {
+      trigger_obj.trackFade(note + (128 * (midi_channel - 1)), trigger_volume - 10, 200, true);
+    } else {
+      trigger_obj.trackFade(note + (128 * (midi_channel - 1)), -70, 200, true);
+    };
+  };
 };
 
 /// @brief Issues a MIDI CC123 to the string's MIDI channel, killing all sound on it.
@@ -211,4 +280,34 @@ String GurdyString::getName() {
 /// * 2 - Both
 void GurdyString::setOutputMode(int my_mode) {
   output_mode = my_mode;
+};
+
+/// @brief Sets the "gros-mode" for this string.
+/// @details Value of this should be 0-3:
+/// * 0 = no additional sound
+/// * 1 = a perfect fourth below (-5 semitones)
+/// * 2 = a perfect fifth below (-7 semitones)
+/// * 3 = an octave below (-12 semitones)
+/// @param my_gros_mode 
+void GurdyString::setGrosMode(int my_gros_mode) {
+  gros_mode = my_gros_mode;
+};
+
+int GurdyString::getGrosMode() {
+  return gros_mode;
+};
+
+String GurdyString::getGrosString() {
+  if (gros_mode == 0) {
+    return String("None");
+  };
+  if (gros_mode == 1) {
+    return getLongNoteNum(getOpenNote() - 5);
+  };
+  if (gros_mode == 2) {
+    return getLongNoteNum(getOpenNote() - 7);
+  };
+  if (gros_mode == 3) {
+    return getLongNoteNum(getOpenNote() - 12);
+  };
 };
