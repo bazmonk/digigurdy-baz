@@ -413,7 +413,8 @@ void change_volume_screen(GurdyString *this_string) {
   };
 };
 
-/// @brief Prompts the user to choose a string to adjust the tuning of manually.
+/// @brief Prompts the user to add additional tones to each string (and buzz).
+/// @details This is a "hidden" feature.
 void cool_kids_screen() {
 
   while (true) {

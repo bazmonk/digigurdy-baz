@@ -81,12 +81,16 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:af69da6307841871c1008b32de43242e0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzz_knob.html#af69da6307841871c1008b32de43242e0">BuzzKnob</a> (int v_pin)</td></tr>
+<tr class="memdesc:af69da6307841871c1008b32de43242e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contructor. <a class="el" href="class_buzz_knob.html">BuzzKnob</a> handles the potentiometer knob that adjusts buzzing thresholds.  <a href="class_buzz_knob.html#af69da6307841871c1008b32de43242e0">More...</a><br /></td></tr>
 <tr class="separator:af69da6307841871c1008b32de43242e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aefc9d9ddaefa65faadc3c7279d959414"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzz_knob.html#aefc9d9ddaefa65faadc3c7279d959414">update</a> ()</td></tr>
+<tr class="memdesc:aefc9d9ddaefa65faadc3c7279d959414"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks knob for new reading. Self-timing: should be run every <a class="el" href="digigurdy-baz_8ino.html#afe461d27b9c48d5921c00d521181f12f" title="The main loop function.">loop()</a> cycle.  <a href="class_buzz_knob.html#aefc9d9ddaefa65faadc3c7279d959414">More...</a><br /></td></tr>
 <tr class="separator:aefc9d9ddaefa65faadc3c7279d959414"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a30dc7c0d27f1b42b148de7a2814f36"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzz_knob.html#a9a30dc7c0d27f1b42b148de7a2814f36">getVoltage</a> ()</td></tr>
+<tr class="memdesc:a9a30dc7c0d27f1b42b148de7a2814f36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current voltage of the knob.  <a href="class_buzz_knob.html#a9a30dc7c0d27f1b42b148de7a2814f36">More...</a><br /></td></tr>
 <tr class="separator:a9a30dc7c0d27f1b42b148de7a2814f36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23524214163cab6fe4c97d88488259a6"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzz_knob.html#a23524214163cab6fe4c97d88488259a6">getThreshold</a> ()</td></tr>
+<tr class="memdesc:a23524214163cab6fe4c97d88488259a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the calculated velocity threshold based off the current voltage.  <a href="class_buzz_knob.html#a23524214163cab6fe4c97d88488259a6">More...</a><br /></td></tr>
 <tr class="separator:a23524214163cab6fe4c97d88488259a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
@@ -106,6 +110,15 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Contructor. <a class="el" href="class_buzz_knob.html">BuzzKnob</a> handles the potentiometer knob that adjusts buzzing thresholds. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">v_pin</td><td>The active pin the potentiometer is attached to. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section warning"><dt>Warning</dt><dd>3.3V MAX! </dd></dl>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
@@ -124,6 +137,9 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Gets the calculated velocity threshold based off the current voltage. </p>
+<dl class="section return"><dt>Returns</dt><dd>The buzzing velocity threshold. </dd></dl>
+
 </div>
 </div>
 <a id="a9a30dc7c0d27f1b42b148de7a2814f36" name="a9a30dc7c0d27f1b42b148de7a2814f36"></a>
@@ -141,6 +157,9 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Gets the current voltage of the knob. </p>
+<dl class="section return"><dt>Returns</dt><dd>The voltage, 0 = 0V, 1023 = 3.3V </dd></dl>
+
 </div>
 </div>
 <a id="aefc9d9ddaefa65faadc3c7279d959414" name="aefc9d9ddaefa65faadc3c7279d959414"></a>
@@ -157,6 +176,8 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Checks knob for new reading. Self-timing: should be run every <a class="el" href="digigurdy-baz_8ino.html#afe461d27b9c48d5921c00d521181f12f" title="The main loop function.">loop()</a> cycle. </p>
 
 </div>
 </div>
