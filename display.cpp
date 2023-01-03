@@ -326,9 +326,9 @@ void print_pause_screen(String d_string, String t_string, String h_string, Strin
   // Print the title centered on the top "line"
   u8g2.drawStr(64 - (u8g2.getStrWidth(title.c_str()) / 2), 8, title.c_str());
 
-  u8g2.drawStr(25 - u8g2.getStrWidth("1) "), 18, "1) Load");
+  u8g2.drawStr(15 - u8g2.getStrWidth("1) "), 18, "1) Load");
   u8g2.drawStr(89 - u8g2.getStrWidth("2) "), 18, "2) Save");
-  u8g2.drawStr(25 - u8g2.getStrWidth("3) "), 28, "3) Tuning");
+  u8g2.drawStr(15 - u8g2.getStrWidth("3) "), 28, "3) Tuning/Vol.");
   u8g2.drawStr(89 - u8g2.getStrWidth("4) "), 28, "4) Other");
   u8g2.drawStr(64 - (u8g2.getStrWidth("5 or X) Go Back") / 2), 39, "5 or X) Go Back");
 
