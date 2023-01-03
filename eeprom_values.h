@@ -32,6 +32,11 @@ static const int EEPROM_DRONE_VOL = 9;
 static const int EEPROM_TROMP_VOL = 10;
 static const int EEPROM_BUZZ_VOL = 11;
 static const int EEPROM_KEYCLICK_VOL = 12;
+static const int EEPROM_HI_MEL_GROS = 13;
+static const int EEPROM_LOW_MEL_GROS = 14;
+static const int EEPROM_TROMP_GROS = 15;
+static const int EEPROM_DRONE_GROS = 16;
+static const int EEPROM_BUZZ_GROS = 17;
 
 // This int saves the play screen type.  0 = note + staff, 1 = note only;
 static const int EEPROM_DISPLY_TYPE = 100;

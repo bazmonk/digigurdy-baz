@@ -395,6 +395,13 @@ void load_saved_tunings(int slot) {
   value = EEPROM.read(slot + EEPROM_KEYCLICK_VOL);
   mykeyclick->setVolume(value);
 
+  // Gros Modes
+  mystring->setGrosMode(EEPROM.read(slot + EEPROM_HI_MEL_GROS));
+  mylowstring->setGrosMode(EEPROM.read(slot + EEPROM_LOW_MEL_GROS));
+  mytromp->setGrosMode(EEPROM.read(slot + EEPROM_TROMP_GROS));
+  mydrone->setGrosMode(EEPROM.read(slot + EEPROM_DRONE_GROS));
+  mybuzz->setGrosMode(EEPROM.read(slot + EEPROM_BUZZ_GROS));
+
 };
 
 /// @brief Saves the current tuning/volume to the given save slot.
@@ -414,6 +421,11 @@ void save_tunings(int slot) {
   EEPROM.write(slot + EEPROM_TROMP_VOL, mytromp->getVolume());
   EEPROM.write(slot + EEPROM_BUZZ_VOL, mybuzz->getVolume());
   EEPROM.write(slot + EEPROM_KEYCLICK_VOL, mykeyclick->getVolume());
+  EEPROM.write(slot + EEPROM_HI_MEL_GROS, mystring->getGrosMode());
+  EEPROM.write(slot + EEPROM_LOW_MEL_GROS, mylowstring->getGrosMode());
+  EEPROM.write(slot + EEPROM_TROMP_GROS, mytromp->getGrosMode());
+  EEPROM.write(slot + EEPROM_DRONE_GROS, mydrone->getGrosMode());
+  EEPROM.write(slot + EEPROM_BUZZ_GROS, mybuzz->getGrosMode());
 
 };
 
