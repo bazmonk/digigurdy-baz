@@ -11,7 +11,7 @@ const String REL_DATE = "2023-01-02, v" + VERSION;
 /// @{
 
 /// @brief This is a freeform line displayed on the About screen
-const String EXTRA_LINE = " 2nd Drone Test Ver. ";
+const String EXTRA_LINE = " Production Build ";
 //const String EXTRA_LINE = "      3.5 TEST       ";
 //const String EXTRA_LINE = " MIDI-OUT, LED, SWSPI";
 //const String EXTRA_LINE = " TRIGGER - LED KNOB  ";
