@@ -307,7 +307,7 @@ String GurdyString::getGrosString() {
   if (gros_mode == 2) {
     return getLongNoteNum(getOpenNote() - 7);
   };
-  if (gros_mode == 3) {
-    return getLongNoteNum(getOpenNote() - 12);
-  };
+  
+  return getLongNoteNum(getOpenNote() - 12);
+  
 };
