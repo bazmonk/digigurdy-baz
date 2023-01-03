@@ -96,7 +96,7 @@ GurdyString *mybuzz;
 // These are the dedicated transpose/capo buttons
 GurdyButton *tpose_up;
 GurdyButton *tpose_down;
-GurdyButton *capo;
+//GurdyButton *capo;
 
 // These are the "extra" buttons, new on the rev3.0 gurdies
 ExButton *ex1Button;
@@ -259,7 +259,7 @@ void setup() {
   tpose_down = new GurdyButton(21, 200); // A.k.a. the button formerly known as octave-down
   tpose_offset = 0;
 
-  capo = new GurdyButton(23, 200); // The capo button
+  // capo = new GurdyButton(23, 200); // The capo button
   capo_offset = 0;
 
   ex1Button = new ExButton(41, EEPROM.read(EEPROM_EX1), 200);
@@ -346,7 +346,7 @@ void loop() {
 
   tpose_up->update();
   tpose_down->update();
-  capo->update();
+  // capo->update();
 
   myAButton->update();
   myXButton->update();
@@ -377,30 +377,30 @@ void loop() {
   };
 
   // Check for a capo shift.
-  if (capo->wasPressed() ||
-      (myXButton->beingPressed() && myBButton->wasPressed())) {
+  // if (capo->wasPressed() ||
+  //     (myXButton->beingPressed() && myBButton->wasPressed())) {
 
-    capo_offset += 2;
+  //   capo_offset += 2;
 
-    if (capo_offset > max_capo ) {
-      capo_offset = 0;
-    };
+  //   if (capo_offset > max_capo ) {
+  //     capo_offset = 0;
+  //   };
 
-    if (mycrank->isSpinning() || bigbutton->toggleOn()) {
-      no_buzz_soundOff();
+  //   if (mycrank->isSpinning() || bigbutton->toggleOn()) {
+  //     no_buzz_soundOff();
 
-      mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
-      mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
-      mykeyclick->soundOn(tpose_offset);
-      mytromp->soundOn(tpose_offset + capo_offset);
-      mydrone->soundOn(tpose_offset + capo_offset);
+  //     mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
+  //     mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
+  //     mykeyclick->soundOn(tpose_offset);
+  //     mytromp->soundOn(tpose_offset + capo_offset);
+  //     mydrone->soundOn(tpose_offset + capo_offset);
 
-      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
-    } else {
-      print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
-                 tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
-    };
-  };
+  //     draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
+  //   } else {
+  //     print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
+  //                tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
+  //   };
+  // };
 
   // As long as we're in playing mode--acutally playing or not--
   // check for a tpose shift.
