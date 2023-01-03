@@ -2,6 +2,7 @@
 #define GURDYSTRING_H
 
 #include "config.h"
+#include "notes.h"
 
 // https://www.pjrc.com/teensy/td_midi.html
 // https://www.pjrc.com/teensy/td_libs_MIDI.html
@@ -32,11 +33,14 @@ class GurdyString {
     int note_being_played;  // The note being sounded (base note + key offset)
                             // This is necessary to turn off notes before turning on new ones.
     int output_mode;
+    int gros_mode;
 
   public:
     GurdyString(int my_channel, int my_note, String my_name, int my_mode, int my_vol = 70);
     void soundOn(int my_offset = 0, int my_modulation = 0);
+    void soundOn(int my_offset, int my_modulation, int note);
     void soundOff();
+    void soundOff(int note);
     void soundKill();
     int getOpenNote();
     void setOpenNote(int new_note);
@@ -51,6 +55,9 @@ class GurdyString {
     void setVibrato(int vib);
     String getName();
     void setOutputMode(int my_mode);
+    void setGrosMode(int my_gros_mode);
+    int getGrosMode();
+    String getGrosString();
 };
 
 #endif

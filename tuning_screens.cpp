@@ -27,6 +27,7 @@ bool tuning() {
     my3Button->update();
     my4Button->update();
     my5Button->update();
+    my6Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {
@@ -43,6 +44,8 @@ bool tuning() {
       volume_screen();
     } else if (my5Button->wasPressed() || myXButton->wasPressed()) {
       return false;
+    } else if (my6Button->wasPressed()) {
+      cool_kids_screen();
     };
   };
 
@@ -408,4 +411,69 @@ void change_volume_screen(GurdyString *this_string) {
       done = true;
     };
   };
+};
+
+/// @brief Prompts the user to choose a string to adjust the tuning of manually.
+void cool_kids_screen() {
+
+  while (true) {
+
+    print_menu_5("Second String Tones",
+                 String("Hi Mel. - ") + mystring->getGrosString(),
+                 String("Low Mel. - ") + mylowstring->getGrosString(),
+                 String("Tromp. - ") + mytromp->getGrosString(),
+                 String("Drone - ") + mydrone->getGrosString(),
+                 String("Buzz - ") + mybuzz->getGrosString());
+    delay(150);
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    my4Button->update();
+    my5Button->update();
+    my6Button->update();
+    myXButton->update();
+
+    if (my1Button->wasPressed()) {
+      if (mystring->getGrosMode() == 3) {
+        mystring->setGrosMode(0);
+      } else { 
+        mystring->setGrosMode(mystring->getGrosMode() + 1);
+      };
+
+    } else if (my2Button->wasPressed()) {
+      if (mylowstring->getGrosMode() == 3) {
+        mylowstring->setGrosMode(0);
+      } else { 
+        mylowstring->setGrosMode(mylowstring->getGrosMode() + 1);
+      };
+
+    } else if (my3Button->wasPressed()) {
+      if (mytromp->getGrosMode() == 3) {
+        mytromp->setGrosMode(0);
+      } else { 
+        mytromp->setGrosMode(mytromp->getGrosMode() + 1);
+      };
+
+    } else if (my4Button->wasPressed()) {
+      if (mydrone->getGrosMode() == 3) {
+        mydrone->setGrosMode(0);
+      } else { 
+        mydrone->setGrosMode(mydrone->getGrosMode() + 1);
+      };
+
+    } else if (my5Button->wasPressed()) {
+      if (mybuzz->getGrosMode() == 3) {
+        mybuzz->setGrosMode(0);
+      } else { 
+        mybuzz->setGrosMode(mybuzz->getGrosMode() + 1);
+      };
+
+    } else if (my6Button->wasPressed() || myXButton->wasPressed()) {
+      return;
+    };
+  };
+
+  return;
 };
