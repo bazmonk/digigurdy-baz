@@ -11,5 +11,8 @@ void cycle_drone_mute();
 void cycle_tromp_mute();
 void turn_volume_down();
 void turn_volume_up();
+void ex_cycle_capo(bool playing);
+void ex_tpose_up(bool playing);
+void ex_tpose_down(bool playing);
 
 #endif

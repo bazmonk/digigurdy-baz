@@ -6,7 +6,11 @@ See [the code documentation here](https://bazmonk.github.io/digigurdy-baz/html/i
 
 **Pre-compiled builds of the code will be made available from 1.7.99 and up.  See https://github.com/bazmonk/digigurdy-baz/wiki/install-by-hex for installation instructions.**
 
-**Check out version 2.3.6! (NEW)**
+**Check out version 2.3.7! (NEW)**
+
+* 2.3.7 -
+  * EX functions include transpose and capo functions.
+  * Transpose and capos buttons *are* EX buttons.
 
 * 2.3.6 -
   * Basil's secret fun menu (ask him!)

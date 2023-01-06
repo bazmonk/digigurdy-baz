@@ -172,4 +172,22 @@ void turn_volume_up() {
   vol_up();
 };
 
+/// @brief Cycles the capo, and adjusts any playing notes.
+/// @version *New in  2.3.7*
+void ex_cycle_capo(bool playing) {
+  cycle_capo(playing);
+};
+
+/// @brief Increases the transpose by 1 semitone, and adjusts any playing notes.
+/// @version *New in  2.3.7*
+void ex_tpose_up(bool playing) {
+  tpose_up_1(playing);
+};
+
+/// @brief Decreases the transpose by 1 semitone, and adjusts any playing notes.
+/// @version *New in  2.3.7*
+void ex_tpose_down(bool playing) {
+  tpose_down_1(playing);
+};
+
 /// @}

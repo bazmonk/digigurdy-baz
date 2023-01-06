@@ -93,15 +93,13 @@ GurdyString *mytromp;
 GurdyString *mydrone;
 GurdyString *mybuzz;
 
-// These are the dedicated transpose/capo buttons
-GurdyButton *tpose_up;
-GurdyButton *tpose_down;
-GurdyButton *capo;
-
 // These are the "extra" buttons, new on the rev3.0 gurdies
 ExButton *ex1Button;
 ExButton *ex2Button;
 ExButton *ex3Button;
+ExButton *ex4Button;
+ExButton *ex5Button;
+ExButton *ex6Button;
 
 // This defines the +/- one octave transpose range.
 int max_tpose;
@@ -255,16 +253,15 @@ void setup() {
   mybuzz = new GurdyString(5,Note(c3), "Buzz", EEPROM.read(EEPROM_SEC_OUT));
   mykeyclick = new GurdyString(6, Note(b5), "Key Click", EEPROM.read(EEPROM_SEC_OUT));
 
-  tpose_up = new GurdyButton(22, 200);   // A.k.a. the button formerly known as octave-up
-  tpose_down = new GurdyButton(21, 200); // A.k.a. the button formerly known as octave-down
   tpose_offset = 0;
-
-  capo = new GurdyButton(23, 200); // The capo button
   capo_offset = 0;
 
   ex1Button = new ExButton(41, EEPROM.read(EEPROM_EX1), 200);
   ex2Button = new ExButton(17, EEPROM.read(EEPROM_EX2), 200);
   ex3Button = new ExButton(14, EEPROM.read(EEPROM_EX3), 200);
+  ex4Button = new ExButton(21, EEPROM.read(EEPROM_EX4), 200);
+  ex5Button = new ExButton(22, EEPROM.read(EEPROM_EX5), 200);
+  ex6Button = new ExButton(23, EEPROM.read(EEPROM_EX6), 200);
 
   scene_signal_type = EEPROM.read(EEPROM_SCENE_SIGNALLING);
 
@@ -315,6 +312,9 @@ void loop() {
     ex1Button->setFunc(EEPROM.read(EEPROM_EX1));
     ex2Button->setFunc(EEPROM.read(EEPROM_EX2));
     ex3Button->setFunc(EEPROM.read(EEPROM_EX3));
+    ex4Button->setFunc(EEPROM.read(EEPROM_EX4));
+    ex5Button->setFunc(EEPROM.read(EEPROM_EX5));
+    ex6Button->setFunc(EEPROM.read(EEPROM_EX6));
 
     use_solfege = EEPROM.read(EEPROM_USE_SOLFEGE);
 
@@ -344,21 +344,23 @@ void loop() {
     myvibknob->update();
   #endif
 
-  tpose_up->update();
-  tpose_down->update();
-  capo->update();
-
   myAButton->update();
   myXButton->update();
 
   ex1Button->update();
   ex2Button->update();
   ex3Button->update();
+  ex4Button->update();
+  ex5Button->update();
+  ex6Button->update();
 
   bool go_menu = false;
   if ((ex1Button->wasPressed() && ex1Button->getFunc() == 1) ||
       (ex2Button->wasPressed() && ex2Button->getFunc() == 1) ||
-      (ex3Button->wasPressed() && ex3Button->getFunc() == 1)) {
+      (ex3Button->wasPressed() && ex3Button->getFunc() == 1) ||
+      (ex4Button->wasPressed() && ex4Button->getFunc() == 1) ||
+      (ex5Button->wasPressed() && ex5Button->getFunc() == 1) ||
+      (ex6Button->wasPressed() && ex6Button->getFunc() == 1)) {
     go_menu = true;
   }
   // If the "X" and "O" buttons are both down, or if the first extra button is pressed,
@@ -376,73 +378,6 @@ void loop() {
                  tpose_offset, capo_offset, 0, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
   };
 
-  // Check for a capo shift.
-  if (capo->wasPressed() ||
-      (myXButton->beingPressed() && myBButton->wasPressed())) {
-
-    capo_offset += 2;
-
-    if (capo_offset > max_capo ) {
-      capo_offset = 0;
-    };
-
-    if (mycrank->isSpinning() || bigbutton->toggleOn()) {
-      no_buzz_soundOff();
-
-      mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
-      mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
-      mykeyclick->soundOn(tpose_offset);
-      mytromp->soundOn(tpose_offset + capo_offset);
-      mydrone->soundOn(tpose_offset + capo_offset);
-
-      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
-    } else {
-      print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
-                 tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
-    };
-  };
-
-  // As long as we're in playing mode--acutally playing or not--
-  // check for a tpose shift.
-  if ((tpose_up->wasPressed() ||
-      (my1Button->beingPressed() && myAltTposeUp->wasPressed())) && (tpose_offset < max_tpose)) {
-    tpose_offset += 1;
-
-    if (mycrank->isSpinning() || bigbutton->toggleOn()) {
-      no_buzz_soundOff();
-
-      mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
-      mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
-      mykeyclick->soundOn(tpose_offset);
-      mytromp->soundOn(tpose_offset + capo_offset);
-      mydrone->soundOn(tpose_offset + capo_offset);
-
-      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
-    } else {
-      print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
-                   tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
-    };
-  };
-  if ((tpose_down->wasPressed() ||
-      (my1Button->beingPressed() && myAltTposeDown->wasPressed())) && (max_tpose + tpose_offset > 0)) {
-    tpose_offset -= 1;
-
-    if (mycrank->isSpinning() || bigbutton->toggleOn()) {
-      no_buzz_soundOff();
-
-      mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
-      mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
-      mykeyclick->soundOn(tpose_offset);
-      mytromp->soundOn(tpose_offset + capo_offset);
-      mydrone->soundOn(tpose_offset + capo_offset);
-
-      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
-    } else {
-      print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
-                   tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
-    };
-  };
-
   if (myXButton->beingPressed() && myAltTposeUp->wasPressed()) {
     vol_up();
   };
@@ -451,16 +386,29 @@ void loop() {
   };
 
   if (ex1Button->wasPressed()) {
-    ex1Button->doFunc();
+    ex1Button->doFunc(mycrank->isSpinning() || bigbutton->toggleOn());
   };
 
   if (ex2Button->wasPressed()) {
-    ex2Button->doFunc();
+    ex2Button->doFunc(mycrank->isSpinning() || bigbutton->toggleOn());
   };
 
   if (ex3Button->wasPressed()) {
-    ex3Button->doFunc();
+    ex3Button->doFunc(mycrank->isSpinning() || bigbutton->toggleOn());
   };
+
+  if (ex4Button->wasPressed()) {
+    ex4Button->doFunc(mycrank->isSpinning() || bigbutton->toggleOn());
+  };
+
+  if (ex5Button->wasPressed()) {
+    ex5Button->doFunc(mycrank->isSpinning() || bigbutton->toggleOn());
+  };
+
+  if (ex6Button->wasPressed()) {
+    ex6Button->doFunc(mycrank->isSpinning() || bigbutton->toggleOn());
+  };
+  
 
   // NOTE:
   // We don't actually do anything if nothing changed this cycle.  Strings stay on/off automatically,

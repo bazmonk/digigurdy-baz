@@ -5,7 +5,7 @@
 #include <Arduino.h>
 
 #include "buzzknob.h"
-#include "common.h"
+#include "config.h"
 #include "simpleled.h"
 
 class GurdyCrank {

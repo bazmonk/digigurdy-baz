@@ -119,4 +119,78 @@ void all_soundKill() {
   mybuzz->soundKill();
 };
 
+/// @brief Increases the transpose by 1 semitone, and adjusts any playing notes.
+/// @param playing True if currently playing sound, false otherwise.
+/// @version *New in  2.3.7*
+void tpose_up_1(bool playing) {
+  if (tpose_offset < max_tpose) {
+      tpose_offset += 1;
+
+    if (playing) {
+      no_buzz_soundOff();
+
+      mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
+      mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
+      mykeyclick->soundOn(tpose_offset);
+      mytromp->soundOn(tpose_offset + capo_offset);
+      mydrone->soundOn(tpose_offset + capo_offset);
+
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
+    } else {
+      print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
+                  tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
+    };
+  };
+};
+
+/// @brief Decreases the transpose by 1 semitone, and adjusts any playing notes.
+/// @param playing True if currently playing sound, false otherwise.
+/// @version *New in  2.3.7*
+void tpose_down_1(bool playing) {
+  if (max_tpose + tpose_offset > 0) {
+      tpose_offset -= 1;
+
+    if (playing) {
+      no_buzz_soundOff();
+
+      mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
+      mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
+      mykeyclick->soundOn(tpose_offset);
+      mytromp->soundOn(tpose_offset + capo_offset);
+      mydrone->soundOn(tpose_offset + capo_offset);
+
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
+    } else {
+      print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
+                  tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
+    };
+  };
+};
+
+/// @brief Cycles the capo, and adjusts any playing notes.
+/// @param playing True if currently playing sound, false otherwise.
+/// @version *New in  2.3.7*
+void cycle_capo(bool playing) {
+  capo_offset += 2;
+
+    if (capo_offset > max_capo ) {
+      capo_offset = 0;
+    };
+
+    if (playing) {
+      no_buzz_soundOff();
+
+      mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
+      mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
+      mykeyclick->soundOn(tpose_offset);
+      mytromp->soundOn(tpose_offset + capo_offset);
+      mydrone->soundOn(tpose_offset + capo_offset);
+
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
+    } else {
+      print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
+                 tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
+    };
+};
+
 /// @}

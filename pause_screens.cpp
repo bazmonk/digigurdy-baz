@@ -441,6 +441,9 @@ void clear_eeprom() {
   EEPROM.write(EEPROM_EX1, 1);
   EEPROM.write(EEPROM_EX2, 2);
   EEPROM.write(EEPROM_EX3, 3);
+  EEPROM.write(EEPROM_EX4, 8);
+  EEPROM.write(EEPROM_EX5, 9);
+  EEPROM.write(EEPROM_EX6, 10);
   EEPROM.write(EEPROM_SCENE_SIGNALLING, 0);
   EEPROM.write(EEPROM_USE_SOLFEGE, 0);
 

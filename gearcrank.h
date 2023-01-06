@@ -4,7 +4,7 @@
 #include <ADC.h>
 
 #include "buzzknob.h"
-#include "common.h"
+#include "config.h"
 
 extern ADC* adc;
 
