@@ -33,7 +33,7 @@ var searchData=
   ['display_20functions_30',['Display Functions',['../group__display.html',1,'']]],
   ['display_2ecpp_31',['display.cpp',['../display_8cpp.html',1,'']]],
   ['display_2eh_32',['display.h',['../display_8h.html',1,'']]],
-  ['dofunc_33',['doFunc',['../class_ex_button.html#acd35eb5ce3d3fa5039d14eb30d26b184',1,'ExButton']]],
+  ['dofunc_33',['doFunc',['../class_ex_button.html#a5727d4515519fd4b8b16cf33b8b80240',1,'ExButton']]],
   ['draw_5fnote_34',['draw_note',['../group__play.html#gab9c14ae2d9d59c7d3041c13ff21c4fd4',1,'draw_note(int note, int x_offset):&#160;play_screens.cpp'],['../group__play.html#gab9c14ae2d9d59c7d3041c13ff21c4fd4',1,'draw_note(int note, int x_offset):&#160;play_screens.cpp']]],
   ['draw_5fplay_5fscreen_35',['draw_play_screen',['../group__play.html#gae6d702c4a98191c54db0877eca80a416',1,'draw_play_screen(int note, int screen_type, bool draw_buzz):&#160;play_screens.cpp'],['../group__play.html#gae6d702c4a98191c54db0877eca80a416',1,'draw_play_screen(int note, int screen_type, bool draw_buzz):&#160;play_screens.cpp']]],
   ['draw_5fstaff_36',['draw_staff',['../group__play.html#ga1609b37108a17a8c659875a16303b3c8',1,'draw_staff(int note, int x_offset):&#160;play_screens.cpp'],['../group__play.html#ga1609b37108a17a8c659875a16303b3c8',1,'draw_staff(int note, int x_offset):&#160;play_screens.cpp']]],

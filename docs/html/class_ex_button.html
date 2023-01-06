@@ -98,9 +98,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9f2fadad1df37beffcab6885f1a5c191"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_ex_button.html#a9f2fadad1df37beffcab6885f1a5c191">setFunc</a> (int func)</td></tr>
 <tr class="memdesc:a9f2fadad1df37beffcab6885f1a5c191"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the function to be called when this button is pressed.  <a href="class_ex_button.html#a9f2fadad1df37beffcab6885f1a5c191">More...</a><br /></td></tr>
 <tr class="separator:a9f2fadad1df37beffcab6885f1a5c191"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd35eb5ce3d3fa5039d14eb30d26b184"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_ex_button.html#acd35eb5ce3d3fa5039d14eb30d26b184">doFunc</a> ()</td></tr>
-<tr class="memdesc:acd35eb5ce3d3fa5039d14eb30d26b184"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute the button's configured fucntion.  <a href="class_ex_button.html#acd35eb5ce3d3fa5039d14eb30d26b184">More...</a><br /></td></tr>
-<tr class="separator:acd35eb5ce3d3fa5039d14eb30d26b184"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5727d4515519fd4b8b16cf33b8b80240"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_ex_button.html#a5727d4515519fd4b8b16cf33b8b80240">doFunc</a> (bool playing)</td></tr>
+<tr class="memdesc:a5727d4515519fd4b8b16cf33b8b80240"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute the button's configured fucntion.  <a href="class_ex_button.html#a5727d4515519fd4b8b16cf33b8b80240">More...</a><br /></td></tr>
+<tr class="separator:a5727d4515519fd4b8b16cf33b8b80240"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8ee43cebc6c2c8a461e7e2cd44f25b2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_ex_button.html#aa8ee43cebc6c2c8a461e7e2cd44f25b2">fn_choice_screen</a> (int but_num)</td></tr>
 <tr class="memdesc:aa8ee43cebc6c2c8a461e7e2cd44f25b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prompt user to choose the button function.  <a href="class_ex_button.html#aa8ee43cebc6c2c8a461e7e2cd44f25b2">More...</a><br /></td></tr>
 <tr class="separator:aa8ee43cebc6c2c8a461e7e2cd44f25b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -169,7 +169,7 @@ Additional Inherited Members</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">my_pin</td><td>The digital pin this button is connected to </td></tr>
-    <tr><td class="paramname">func</td><td>The beginning function for this button (See <a class="el" href="class_ex_button.html#acd35eb5ce3d3fa5039d14eb30d26b184" title="Execute the button&#39;s configured fucntion.">ExButton::doFunc</a> for the numbering) </td></tr>
+    <tr><td class="paramname">func</td><td>The beginning function for this button (See <a class="el" href="class_ex_button.html#a5727d4515519fd4b8b16cf33b8b80240" title="Execute the button&#39;s configured fucntion.">ExButton::doFunc</a> for the numbering) </td></tr>
     <tr><td class="paramname">interval</td><td>The debounce interval for this button in milliseconds </td></tr>
   </table>
   </dd>
@@ -178,8 +178,8 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="acd35eb5ce3d3fa5039d14eb30d26b184" name="acd35eb5ce3d3fa5039d14eb30d26b184"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acd35eb5ce3d3fa5039d14eb30d26b184">&#9670;&#160;</a></span>doFunc()</h2>
+<a id="a5727d4515519fd4b8b16cf33b8b80240" name="a5727d4515519fd4b8b16cf33b8b80240"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5727d4515519fd4b8b16cf33b8b80240">&#9670;&#160;</a></span>doFunc()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -187,7 +187,8 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void ExButton::doFunc </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>playing</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -290,7 +291,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Set the function to be called when this button is pressed. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">func</td><td>The function to be called. See <a class="el" href="class_ex_button.html#acd35eb5ce3d3fa5039d14eb30d26b184" title="Execute the button&#39;s configured fucntion.">ExButton::doFunc()</a> to determine the internal numbering of the functions. </td></tr>
+    <tr><td class="paramname">func</td><td>The function to be called. See <a class="el" href="class_ex_button.html#a5727d4515519fd4b8b16cf33b8b80240" title="Execute the button&#39;s configured fucntion.">ExButton::doFunc()</a> to determine the internal numbering of the functions. </td></tr>
   </table>
   </dd>
 </dl>

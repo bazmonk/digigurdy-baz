@@ -22,7 +22,7 @@ var searchData=
   ['c9s_19',['c9s',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6ceacf060626dbfd0f65133f9d4bce3f27d1',1,'notes.h']]],
   ['c_5f1_20',['c_1',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6cea3fb79f270fa878bcec901208ea0b28e9',1,'notes.h']]],
   ['c_5f1s_21',['c_1s',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6cea54ebdedbd1013841dd7f4fbc09f7323a',1,'notes.h']]],
-  ['capo_22',['capo',['../common_8h.html#a33c8138e6a0fa5a1798a88e338700e88',1,'capo():&#160;digigurdy-baz.ino'],['../digigurdy-baz_8ino.html#a33c8138e6a0fa5a1798a88e338700e88',1,'capo():&#160;digigurdy-baz.ino']]],
+  ['capo_22',['capo',['../common_8h.html#a33c8138e6a0fa5a1798a88e338700e88',1,'common.h']]],
   ['capo_5foffset_23',['capo_offset',['../common_8h.html#acdf43c09ded5b3770fb31f6a2001959d',1,'capo_offset():&#160;digigurdy-baz.ino'],['../digigurdy-baz_8ino.html#acdf43c09ded5b3770fb31f6a2001959d',1,'capo_offset():&#160;digigurdy-baz.ino']]],
   ['change_5fvolume_5fscreen_24',['change_volume_screen',['../group__tuning.html#gac4b724875b18f3db11eab4e3e107e524',1,'change_volume_screen(GurdyString *this_string):&#160;tuning_screens.cpp'],['../group__tuning.html#gac4b724875b18f3db11eab4e3e107e524',1,'change_volume_screen(GurdyString *this_string):&#160;tuning_screens.cpp']]],
   ['check_5fsave_5ftuning_25',['check_save_tuning',['../group__pause.html#ga6fabd7e6054f11932ec5fa21fa446498',1,'check_save_tuning(int slot):&#160;pause_screens.cpp'],['../group__pause.html#ga6fabd7e6054f11932ec5fa21fa446498',1,'check_save_tuning(int slot):&#160;pause_screens.cpp']]],
@@ -33,8 +33,9 @@ var searchData=
   ['config_2ewhite_2epedal_2eh_30',['config.white.pedal.h',['../config_8white_8pedal_8h.html',1,'']]],
   ['configuration_20options_31',['Configuration Options',['../group__config.html',1,'']]],
   ['cool_5fkids_5fscreen_32',['cool_kids_screen',['../group__tuning.html#gaf8792284ff8f54d32e9791b368c9c9cf',1,'cool_kids_screen():&#160;tuning_screens.cpp'],['../group__tuning.html#gaf8792284ff8f54d32e9791b368c9c9cf',1,'cool_kids_screen():&#160;tuning_screens.cpp']]],
-  ['cycle_5fdrone_5fmute_33',['cycle_drone_mute',['../group__ex.html#ga0a3a208b4f736b1af198a4a5fcf1183f',1,'cycle_drone_mute():&#160;exfunctions.cpp'],['../group__ex.html#ga0a3a208b4f736b1af198a4a5fcf1183f',1,'cycle_drone_mute():&#160;exfunctions.cpp']]],
-  ['cycle_5fdrone_5ftromp_5fmute_34',['cycle_drone_tromp_mute',['../group__ex.html#ga4c5e79e5e9690c8216f6a2cfe895ff0a',1,'cycle_drone_tromp_mute():&#160;exfunctions.cpp'],['../group__ex.html#ga4c5e79e5e9690c8216f6a2cfe895ff0a',1,'cycle_drone_tromp_mute():&#160;exfunctions.cpp']]],
-  ['cycle_5fmel_5fmute_35',['cycle_mel_mute',['../group__ex.html#ga2e10ced2b9f07a002e0924c9e39fdae5',1,'cycle_mel_mute():&#160;exfunctions.cpp'],['../group__ex.html#ga2e10ced2b9f07a002e0924c9e39fdae5',1,'cycle_mel_mute():&#160;exfunctions.cpp']]],
-  ['cycle_5ftromp_5fmute_36',['cycle_tromp_mute',['../group__ex.html#gaceaf0ff72e3bd4e29112eb7603cb8d60',1,'cycle_tromp_mute():&#160;exfunctions.cpp'],['../group__ex.html#gaceaf0ff72e3bd4e29112eb7603cb8d60',1,'cycle_tromp_mute():&#160;exfunctions.cpp']]]
+  ['cycle_5fcapo_33',['cycle_capo',['../group__play.html#gadf96bffeca82e312f79067ed23ef12eb',1,'cycle_capo(bool playing):&#160;play_functions.cpp'],['../play__functions_8h.html#adf96bffeca82e312f79067ed23ef12eb',1,'cycle_capo(bool playing):&#160;play_functions.cpp']]],
+  ['cycle_5fdrone_5fmute_34',['cycle_drone_mute',['../group__ex.html#ga0a3a208b4f736b1af198a4a5fcf1183f',1,'cycle_drone_mute():&#160;exfunctions.cpp'],['../group__ex.html#ga0a3a208b4f736b1af198a4a5fcf1183f',1,'cycle_drone_mute():&#160;exfunctions.cpp']]],
+  ['cycle_5fdrone_5ftromp_5fmute_35',['cycle_drone_tromp_mute',['../group__ex.html#ga4c5e79e5e9690c8216f6a2cfe895ff0a',1,'cycle_drone_tromp_mute():&#160;exfunctions.cpp'],['../group__ex.html#ga4c5e79e5e9690c8216f6a2cfe895ff0a',1,'cycle_drone_tromp_mute():&#160;exfunctions.cpp']]],
+  ['cycle_5fmel_5fmute_36',['cycle_mel_mute',['../group__ex.html#ga2e10ced2b9f07a002e0924c9e39fdae5',1,'cycle_mel_mute():&#160;exfunctions.cpp'],['../group__ex.html#ga2e10ced2b9f07a002e0924c9e39fdae5',1,'cycle_mel_mute():&#160;exfunctions.cpp']]],
+  ['cycle_5ftromp_5fmute_37',['cycle_tromp_mute',['../group__ex.html#gaceaf0ff72e3bd4e29112eb7603cb8d60',1,'cycle_tromp_mute():&#160;exfunctions.cpp'],['../group__ex.html#gaceaf0ff72e3bd4e29112eb7603cb8d60',1,'cycle_tromp_mute():&#160;exfunctions.cpp']]]
 ];
