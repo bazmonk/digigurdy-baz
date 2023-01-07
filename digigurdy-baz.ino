@@ -163,8 +163,8 @@ void setup() {
   }
   
   #if defined(USE_TRIGGER)
-    Serial5.setTX(47); // I can just do this for everyone until it bugs someone...
-    Serial5.setRX(46);
+    // Serial5.setTX(47); // I can just do this for everyone until it bugs someone...
+    // Serial5.setRX(46);
     if (EEPROM.read(EEPROM_SEC_OUT) > 0) {
       trigger_obj.start();
       delay(10);
@@ -176,7 +176,8 @@ void setup() {
     };
 
   #elif defined(USE_TSUNAMI)
-    Serial5.setTX(47);
+    // DAVE
+    // Serial5.setTX(47);
     if (EEPROM.read(EEPROM_SEC_OUT) > 0) {
       trigger_obj.start();
       delay(10);
