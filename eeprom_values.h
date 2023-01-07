@@ -57,17 +57,17 @@ static const int EEPROM_BUZZ_LED = 102;
 static const int EEPROM_EX1 = 103;
 static const int EEPROM_EX2 = 104;
 static const int EEPROM_EX3 = 105;
-static const int EEPROM_EX4 = 108;
-static const int EEPROM_EX5 = 109;
-static const int EEPROM_EX6 = 110;
+static const int EEPROM_EX4 = 106;
+static const int EEPROM_EX5 = 107;
+static const int EEPROM_EX6 = 108;
 
 
-static const bool EEPROM_USE_SOLFEGE = 106;
+static const bool EEPROM_USE_SOLFEGE = 109;
 
 // This determines which output to use besides usbMIDI
 // 0 = MIDI-OUT
 // 1 = Trigger/Tsunami
 // 2 = Both
-static const int EEPROM_SEC_OUT = 107;
+static const int EEPROM_SEC_OUT = 110;
 
 #endif

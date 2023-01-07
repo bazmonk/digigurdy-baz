@@ -164,6 +164,7 @@ void setup() {
   
   #if defined(USE_TRIGGER)
     Serial5.setTX(47); // I can just do this for everyone until it bugs someone...
+    Serial5.setRX(46);
     if (EEPROM.read(EEPROM_SEC_OUT) > 0) {
       trigger_obj.start();
       delay(10);

@@ -22,6 +22,10 @@ void ExButton::setFunc(int func) {
 
 /// @brief Execute the button's configured fucntion
 void ExButton::doFunc(bool playing) {
+
+  Serial.print("I was clicked for function: ");
+  Serial.println(my_func);
+
   if (my_func == 1) {
     return;
   } else if (my_func == 2) {
