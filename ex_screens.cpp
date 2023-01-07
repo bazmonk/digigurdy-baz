@@ -10,9 +10,9 @@ void ex_btn_choice_screen() {
     #ifdef USE_GEARED_CRANK
 
     print_menu_3("EX Buttons",
-                 "Tpose Down (a.k.a. EX4)",
-                 "Tpose Up (a.k.a. EX5)",
-                 "Capo (a.k.a. EX6)");
+                 String("EX4 - ") + ex4Button->printFunc(),
+                 String("EX5 - ") + ex5Button->printFunc(),
+                 String("EX6 - ") + ex6Button->printFunc());
     delay(150);
 
     my1Button->update();
@@ -47,12 +47,12 @@ void ex_btn_choice_screen() {
   #else
 
   print_menu_6("EX Buttons",
-                 "EX1 (L)",
-                 "EX2",
-                 "EX3",
-                 "EX4 (a.k.a. Tpose Down",
-                 "EX5 (a.k.a. Tpose Up",
-                 "EX6 (a.k.a. Capo)");
+                 String("EX1 - ") + ex1Button->printFunc(),
+                 String("EX2 - ") + ex2Button->printFunc(),
+                 String("EX3 - ") + ex3Button->printFunc(),
+                 String("EX4 - ") + ex4Button->printFunc(),
+                 String("EX5 - ") + ex5Button->printFunc(),
+                 String("EX6 - ") + ex6Button->printFunc());
     delay(150);
 
     my1Button->update();

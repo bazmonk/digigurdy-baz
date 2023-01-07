@@ -51,6 +51,34 @@ void ExButton::doFunc(bool playing) {
   return;
 };
 
+/// @brief Returns a short text label of the button's function.
+/// @return A short description of the current button fucntion.
+String ExButton::printFunc() {
+  if (my_func == 1) {
+    return String("Open Pause Menu");
+  } else if (my_func == 2) {
+    return String("Melody Mutes");
+  } else if (my_func == 3) {
+    return String("Dro./Tro. Mutes");
+  } else if (my_func == 4) {
+    return String("Drone Mute");
+  } else if (my_func == 5) {
+    return String("Trompette Mute");
+  } else if (my_func == 6) {
+    return String("Volume Down");
+  } else if (my_func == 7) {
+    return String("Volume Up");
+  } else if (my_func == 8) {
+    return String("Transpose Down");
+  } else if (my_func == 9) {
+    return String("Transpose Up");
+  } else if (my_func == 10) {
+    return String("Cycle Capo");
+  };
+
+  return String("FIX ME!!!");
+};
+
 /// @brief Prompt user to choose the button function
 /// @param but_num an int, 1-3, corresponding to the left-to-right button being configured
 void ExButton::fn_choice_screen(int but_num) {

@@ -5,7 +5,7 @@ var searchData=
   ['pause_5fscreens_2ecpp_2',['pause_screens.cpp',['../pause__screens_8cpp.html',1,'']]],
   ['pause_5fscreens_2eh_3',['pause_screens.h',['../pause__screens_8h.html',1,'']]],
   ['pedal_5fmax_5fv_4',['PEDAL_MAX_V',['../group__config.html#ga7d1e72821f1301be4321ed789a55ebc3',1,'PEDAL_MAX_V():&#160;config.h'],['../config_8white_8led_8h.html#a7d1e72821f1301be4321ed789a55ebc3',1,'PEDAL_MAX_V():&#160;config.white.led.h'],['../config_8white_8pedal_8h.html#a7d1e72821f1301be4321ed789a55ebc3',1,'PEDAL_MAX_V():&#160;config.white.pedal.h']]],
-  ['pedal_5fpin_5',['PEDAL_PIN',['../group__config.html#ga47e9845f86b1f0d17a0ab80ee46cac79',1,'PEDAL_PIN():&#160;config.h'],['../config_8white_8led_8h.html#a47e9845f86b1f0d17a0ab80ee46cac79',1,'PEDAL_PIN():&#160;config.white.led.h'],['../config_8white_8pedal_8h.html#a47e9845f86b1f0d17a0ab80ee46cac79',1,'PEDAL_PIN():&#160;config.white.pedal.h']]],
+  ['pedal_5fpin_5',['PEDAL_PIN',['../config_8white_8pedal_8h.html#a47e9845f86b1f0d17a0ab80ee46cac79',1,'PEDAL_PIN():&#160;config.white.pedal.h'],['../group__config.html#ga47e9845f86b1f0d17a0ab80ee46cac79',1,'PEDAL_PIN():&#160;config.h'],['../config_8white_8led_8h.html#a47e9845f86b1f0d17a0ab80ee46cac79',1,'PEDAL_PIN():&#160;config.white.led.h']]],
   ['pin_5farray_6',['pin_array',['../config_8white_8pedal_8h.html#a56158cd49f0641aae4ed4db7876fb800',1,'pin_array():&#160;config.white.pedal.h'],['../config_8white_8led_8h.html#a56158cd49f0641aae4ed4db7876fb800',1,'pin_array():&#160;config.white.led.h'],['../group__config.html#ga56158cd49f0641aae4ed4db7876fb800',1,'pin_array():&#160;config.h']]],
   ['pitchknob_7',['PitchKnob',['../class_pitch_knob.html',1,'PitchKnob'],['../class_pitch_knob.html#a186a367a6ada07b8ab00e874569c7712',1,'PitchKnob::PitchKnob()']]],
   ['pitchknob_2ecpp_8',['pitchknob.cpp',['../pitchknob_8cpp.html',1,'']]],
@@ -33,5 +33,6 @@ var searchData=
   ['print_5ftuning_5fchoice_5f3_30',['print_tuning_choice_3',['../group__display.html#ga92a92b184f21ccf331b1c58127433cbe',1,'print_tuning_choice_3(String title, int opt1, int opt2, int opt3):&#160;display.cpp'],['../group__display.html#ga92a92b184f21ccf331b1c58127433cbe',1,'print_tuning_choice_3(String title, int opt1, int opt2, int opt3):&#160;display.cpp']]],
   ['print_5ftuning_5fsummary_31',['print_tuning_summary',['../group__display.html#ga171a006ceef7b21955c4cc505aeceed6',1,'print_tuning_summary(int hi, int lo, int tromp, int drone):&#160;display.cpp'],['../group__display.html#ga171a006ceef7b21955c4cc505aeceed6',1,'print_tuning_summary(int hi, int lo, int tromp, int drone):&#160;display.cpp']]],
   ['print_5fvalue_5fselection_32',['print_value_selection',['../group__display.html#ga7fdcda8eaf4f8187eddd16bcdee7583b',1,'print_value_selection(String title, String value):&#160;display.cpp'],['../group__display.html#ga7fdcda8eaf4f8187eddd16bcdee7583b',1,'print_value_selection(String title, String value):&#160;display.cpp']]],
-  ['progmem_33',['PROGMEM',['../songs_8h.html#a6e0edffe83c9d056e5a779251a586150',1,'songs.h']]]
+  ['printfunc_33',['printFunc',['../class_ex_button.html#aae087b9b2baaf95aa67e26d2f71015e3',1,'ExButton']]],
+  ['progmem_34',['PROGMEM',['../songs_8h.html#a6e0edffe83c9d056e5a779251a586150',1,'songs.h']]]
 ];

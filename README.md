@@ -11,6 +11,7 @@ See [the code documentation here](https://bazmonk.github.io/digigurdy-baz/html/i
 * 2.3.7 -
   * EX functions include transpose and capo functions.
   * Transpose and capos buttons *are* EX buttons.
+  * EX menu prints current assigned function!
 
 * 2.3.6 -
   * Basil's secret fun menu (ask him!)
