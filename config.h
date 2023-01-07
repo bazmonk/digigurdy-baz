@@ -42,9 +42,12 @@ const String EXTRA_LINE = " Production Build ";
   #define ALLOW_COMBO_MODE
   /// @brief Setting this option disables USBHost power control.
   #define USE_TEENSY35
+  /// @brief Setting this uses 3.6-style USBHost power control (default is 4.x-style).
+  #define USE_TEENSY36
 #endif
 
 // #define USE_TEENSY35
+// #define USE_TEENSY36
 
 // One of these OLED options must be enabled.
 #define WHITE_OLED

@@ -3,8 +3,12 @@
 
 #include "config.h"
 
-#ifndef USE_TEENSY35
+#if !defined(USE_TEENSY35) && !defined(USE_TEENSY36)
 #include <imxrt.h>
+#endif
+
+#ifdef USE_TEENSY36
+#include <kinetis.h>
 #endif
 
 void usb_power_on();
