@@ -8,6 +8,8 @@ void usb_power_on() {
   #endif
 
   #ifdef USE_TEENSY_36
+  PORTE_PCR6 = PORT_PCR_MUX(1);
+  GPIOE_PDDR |= (1<<6);
   GPIOE_PSOR = (1<<6); // turn on USB host power
   #endif
 }
