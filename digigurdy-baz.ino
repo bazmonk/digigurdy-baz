@@ -348,9 +348,11 @@ void loop() {
   myAButton->update();
   myXButton->update();
 
+  #ifndef USE_GEARED_CRANK
   ex1Button->update();
   ex2Button->update();
   ex3Button->update();
+  #endif
   ex4Button->update();
   ex5Button->update();
   ex6Button->update();

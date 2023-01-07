@@ -268,20 +268,8 @@ bool other_options_screen() {
   bool done = false;
   while (!done) {
 
-    String opt2 = "This Option Disabled";
-    String opt3 = "This Option Disabled";
-    #ifdef LED_KNOB
-    opt2 = "Buzz LED On/Off";
-    #endif
-    #ifdef USE_PEDAL
-    opt3 = "Vibrato Pedal On/Off";
-    #endif
-
     #ifndef USE_GEARED_CRANK
     print_menu_4("Other Options", "EX Button Config", "Screen Configuration", "Input/Output Config", "About Digi-Gurdy");
-    #else
-    print_menu_4("Other Options", "Crank Detection", "Screen Configuration", "Input/Output Config", "About Digi-Gurdy");
-    #endif
 
     delay(150);
 
@@ -293,22 +281,7 @@ bool other_options_screen() {
     myXButton->update();
 
     if (my1Button->wasPressed()) {
-      
-      #ifndef USE_GEARED_CRANK
       ex_btn_choice_screen();
-
-      #else
-      print_message_2("Crank Detection", "Crank is detecting,", "Please wait...");
-      mycrank->detect();
-      if (mycrank->isDetected()) {
-        print_message_2("Crank Detection", "Crank is detecting,", "CRANK DETECTED!");
-        delay(1000);
-      } else {
-        print_message_2("Crank Detection", "Crank is detecting,", "CRANK NOT FOUND.");
-        delay(1000);
-      };
-      
-      #endif
       
     } else if (my2Button->wasPressed()) {
       playing_config_screen();
@@ -322,6 +295,50 @@ bool other_options_screen() {
     } else if (my5Button->wasPressed() || myXButton->wasPressed()) {
       return false;
     };
+
+    #else
+
+    print_menu_5("Other Options", "Crank Detection", "EX Button Config", "Screen Configuration", "Input/Output Config", "About Digi-Gurdy");
+    
+    delay(150);
+
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    my4Button->update();
+    my5Button->update();
+    my6Button->update();
+    myXButton->update();
+
+    if (my1Button->wasPressed()) {
+      
+      print_message_2("Crank Detection", "Crank is detecting,", "Please wait...");
+      mycrank->detect();
+      if (mycrank->isDetected()) {
+        print_message_2("Crank Detection", "Crank is detecting,", "CRANK DETECTED!");
+        delay(1000);
+      } else {
+        print_message_2("Crank Detection", "Crank is detecting,", "CRANK NOT FOUND.");
+        delay(1000);
+      };
+
+    } else if (my2Button->wasPressed()) {
+      ex_btn_choice_screen();
+
+    } else if (my3Button->wasPressed()) {
+      playing_config_screen();
+
+    } else if (my4Button->wasPressed()) {
+      io_screen();
+
+    } else if (my5Button->wasPressed()) {
+      options_about_screen();
+
+    } else if (my6Button->wasPressed() || myXButton->wasPressed()) {
+      return false;
+    };
+ 
+    #endif
   };
 
   return true;
