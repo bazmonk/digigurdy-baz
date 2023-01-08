@@ -265,6 +265,18 @@ void options_about_screen() {
     };
   };
 
+  u8g2.clearBuffer();
+  u8g2.drawXBM(0, 0, 128, 64, qrcode_digigurdy);
+  u8g2.sendBuffer();
+  
+  while (true) {
+    myXButton->update();
+
+    if(myXButton->wasPressed()) {
+      break;
+    };
+  };
+
   // BAZ - FIX THIS LATER
   // String disp_str = "      DigiGurdy      \n"
   //                   "---------------------\n"
