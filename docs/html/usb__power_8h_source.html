@@ -77,16 +77,20 @@ $(function() {
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;<a class="code" href="config_8h.html">config.h</a>&quot;</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#ifndef USE_TEENSY35</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#if !defined(USE_TEENSY35) &amp;&amp; !defined(USE_TEENSY36)</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;imxrt.h&gt;</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keywordtype">void</span> <a class="code hl_function" href="usb__power_8h.html#a73fd5417a4145ba0b40d9560ad157312">usb_power_on</a>();</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keywordtype">void</span> <a class="code hl_function" href="usb__power_8h.html#a4ab828b5c780de7f98f72ae21c25172a">usb_power_off</a>();</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#ifdef USE_TEENSY36</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;kinetis.h&gt;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keywordtype">void</span> <a class="code hl_function" href="usb__power_8h.html#a73fd5417a4145ba0b40d9560ad157312">usb_power_on</a>();</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keywordtype">void</span> <a class="code hl_function" href="usb__power_8h.html#a4ab828b5c780de7f98f72ae21c25172a">usb_power_off</a>();</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aconfig_8h_html"><div class="ttname"><a href="config_8h.html">config.h</a></div></div>
-<div class="ttc" id="ausb__power_8h_html_a4ab828b5c780de7f98f72ae21c25172a"><div class="ttname"><a href="usb__power_8h.html#a4ab828b5c780de7f98f72ae21c25172a">usb_power_off</a></div><div class="ttdeci">void usb_power_off()</div><div class="ttdoc">Cuts power to the USBHost controller pin.</div><div class="ttdef"><b>Definition:</b> usb_power.cpp:12</div></div>
+<div class="ttc" id="ausb__power_8h_html_a4ab828b5c780de7f98f72ae21c25172a"><div class="ttname"><a href="usb__power_8h.html#a4ab828b5c780de7f98f72ae21c25172a">usb_power_off</a></div><div class="ttdeci">void usb_power_off()</div><div class="ttdoc">Cuts power to the USBHost controller pin.</div><div class="ttdef"><b>Definition:</b> usb_power.cpp:18</div></div>
 <div class="ttc" id="ausb__power_8h_html_a73fd5417a4145ba0b40d9560ad157312"><div class="ttname"><a href="usb__power_8h.html#a73fd5417a4145ba0b40d9560ad157312">usb_power_on</a></div><div class="ttdeci">void usb_power_on()</div><div class="ttdoc">Enables power to the USBHost controller pin.</div><div class="ttdef"><b>Definition:</b> usb_power.cpp:4</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

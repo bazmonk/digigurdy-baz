@@ -44,7 +44,7 @@ uint8_t txbuf[5];
 void wavTrigger::flush(void) {
 
 int i;
-uint8_t dat;
+//uint8_t dat;
 
 	rxCount = 0;
 	rxLen = 0;
@@ -53,7 +53,7 @@ uint8_t dat;
 	  voiceTable[i] = 0xffff;
 	}
 	while(WTSerial.available())
-		dat = WTSerial.read();
+		WTSerial.read();
 }
 
 

@@ -16,7 +16,7 @@
 
 #define TSUNAMI_NUM_OUTPUTS	8
 
-#include "tsunami_trigger_config.h"
+#include "config.h"
 
 #define CMD_GET_VERSION				1
 #define CMD_GET_SYS_INFO			2

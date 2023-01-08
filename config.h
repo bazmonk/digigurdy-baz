@@ -3,8 +3,8 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.3.7";
-const String REL_DATE = "2023-01-06, v" + VERSION;
+const String VERSION = "2.3.8";
+const String REL_DATE = "2023-01-07, v" + VERSION;
 
 /// @defgroup config Configuration Options
 /// These variables/definitions are compile-time configuration options.
@@ -60,10 +60,18 @@ const String EXTRA_LINE = " Production Build ";
 //#define USE_TSUNAMI
 
 //#define ALLOW_COMBO_MODE
+//#define BAZ_MODE
 
 /// @brief The audio output channel used by the Tsunami unit.
 /// @details 0 == 1L, 1 == 1R, etc.
 const int TSUNAMI_OUT = 0;
+
+/// @brief The Serial port to use on the Teensy unit for the Tsunami.
+#define __TSUNAMI_USE_SERIAL1__
+
+/// @brief The Serial port to use on the Teensy unit for the Trigger.
+#define __WT_USE_SERIAL1__
+//#define __WT_USE_SERIAL5__
 
 
 //#define LED_KNOB
@@ -208,6 +216,9 @@ const int BUZZ_SMOOTHING = 250;
 /// * This produces a set delay for buzzing to stop, as well as a minimum buzz duration.
 const int BUZZ_DECAY = 1;
 
+
+// These are all keybox pins:
+
 /// @ingroup config
 /// @{
 
@@ -275,6 +286,32 @@ const int TPOSE_UP_INDEX = num_keys - 1;
 /// @brief The position of the "T-DOWN" key on the keybox.
 /// @details This is intended to be the bottom second key from the right.
 const int TPOSE_DN_INDEX = num_keys - 3;
+
+
+// These are less-commonly-changed options:
+
+/// @brief The pin running to the crank.
+/// @warning If using a geared crank, this pin must be analog-capable.
+const int CRANK_PIN = 15;
+
+/// @brief The analog pin running to the buzz potentiometer/knob.
+const int BUZZ_PIN = A2;
+
+/// @brief The pin running to the arcade, "auto-crank" button.
+const int BIG_BUTTON_PIN = 39;
+
+/// @brief The pin to the EX1 button.
+const int EX1_PIN = 41;
+/// @brief The pin to the EX2 button.
+const int EX2_PIN = 17;
+/// @brief The pin to the EX3 button.
+const int EX3_PIN = 14;
+/// @brief The pin to the EX4 button.
+const int EX4_PIN = 21;
+/// @brief The pin to the EX5 button.
+const int EX5_PIN = 22;
+/// @brief The pin to the EX6 button.
+const int EX6_PIN = 23;
 
 /// @}
 #endif

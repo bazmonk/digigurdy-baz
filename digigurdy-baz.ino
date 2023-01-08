@@ -153,7 +153,7 @@ void setup() {
   // Un-comment to print yourself debugging messages to the Teensyduino
   // serial console.
    Serial.begin(115200);
-   delay(500);
+   delay(300);
    Serial.println("Hello.");
 
   // Start the Serial MIDI object (like for a bluetooth transmitter).
@@ -163,8 +163,10 @@ void setup() {
   }
   
   #if defined(USE_TRIGGER)
+    #ifdef BAZ_MODE
     Serial5.setTX(47); // I can just do this for everyone until it bugs someone...
     Serial5.setRX(46);
+    #endif
     if (EEPROM.read(EEPROM_SEC_OUT) > 0) {
       trigger_obj.start();
       delay(10);
@@ -176,7 +178,6 @@ void setup() {
     };
 
   #elif defined(USE_TSUNAMI)
-    Serial5.setTX(47);
     if (EEPROM.read(EEPROM_SEC_OUT) > 0) {
       trigger_obj.start();
       delay(10);
@@ -192,7 +193,7 @@ void setup() {
   adc = new ADC();
 
   #ifdef USE_GEARED_CRANK
-    mycrank = new GearCrank(15, A2);
+    mycrank = new GearCrank(CRANK_PIN, BUZZ_PIN);
     mycrank->beginPolling();
     
     print_message_2("Crank Detection", "Crank is detecting,", "Please wait...");
@@ -206,7 +207,7 @@ void setup() {
     };
 
   #else
-    mycrank = new GurdyCrank(15, A2, LED_PIN);
+    mycrank = new GurdyCrank(CRANK_PIN, BUZZ_PIN, LED_PIN);
   #endif
 
   #ifdef USE_PEDAL
@@ -216,7 +217,7 @@ void setup() {
   // The keybox arrangement is decided by pin_array, which is up in the CONFIG SECTION
   // of this file.  Make adjustments there.
   mygurdy = new HurdyGurdy(pin_array, num_keys);
-  bigbutton = new ToggleButton(39, 250);
+  bigbutton = new ToggleButton(BIG_BUTTON_PIN, 250);
 
   // These indices are defined in config.h
   myXButton = mygurdy->keybox[X_INDEX];
