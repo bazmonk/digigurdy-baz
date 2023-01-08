@@ -4,9 +4,17 @@ See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more docu
 
 See [the code documentation here](https://bazmonk.github.io/digigurdy-baz/html/index.html).
 
-**Pre-compiled builds of the code will be made available from 1.7.99 and up.  See https://github.com/bazmonk/digigurdy-baz/wiki/install-by-hex for installation instructions.**
+**Check out version 2.4.0! (NEW)**
 
-**Check out version 2.3.8! (NEW)**
+* 2.4.0 = 2.3.8 rebadged for main branch.  **Summary of changes since 2.2**:
+  * *Switch to hardware SPI screen wiring requirement.*
+  * Button performance fixes
+  * Geared crank support
+  * "Official" Trigger/Tsunami support incl. volume control, power control, and ability to switch between it and MIDI-OUT.
+  * New EX functions: volume, transpose, capo.
+  * Transpose and capo buttons are now programmable EX buttons 4-6.
+  * Bug fixes, documentation and various code improvements.
+  * Basil's secret fun menu for playing double tones on any string.
 
 * 2.3.8 -
   * Parameterized all pins.
