@@ -359,6 +359,14 @@ void loop() {
   ex6Button->update();
 
   bool go_menu = false;
+
+  #ifdef USE_GEARED_CRANK
+  if ((ex4Button->wasPressed() && ex4Button->getFunc() == 1) ||
+      (ex5Button->wasPressed() && ex5Button->getFunc() == 1) ||
+      (ex6Button->wasPressed() && ex6Button->getFunc() == 1)) {
+    go_menu = true;
+  }
+  #else
   if ((ex1Button->wasPressed() && ex1Button->getFunc() == 1) ||
       (ex2Button->wasPressed() && ex2Button->getFunc() == 1) ||
       (ex3Button->wasPressed() && ex3Button->getFunc() == 1) ||
@@ -367,6 +375,7 @@ void loop() {
       (ex6Button->wasPressed() && ex6Button->getFunc() == 1)) {
     go_menu = true;
   }
+  #endif
   // If the "X" and "O" buttons are both down, or if the first extra button is pressed,
   // trigger the tuning menu
   if ((myAButton->beingPressed() && myXButton->beingPressed()) || go_menu) {
@@ -389,6 +398,7 @@ void loop() {
     vol_down();
   };
 
+  #ifndef USE_GEARED_CRANK
   if (ex1Button->wasPressed()) {
     ex1Button->doFunc(mycrank->isSpinning() || bigbutton->toggleOn());
   };
@@ -400,7 +410,8 @@ void loop() {
   if (ex3Button->wasPressed()) {
     ex3Button->doFunc(mycrank->isSpinning() || bigbutton->toggleOn());
   };
-
+  #endif
+  
   if (ex4Button->wasPressed()) {
     ex4Button->doFunc(mycrank->isSpinning() || bigbutton->toggleOn());
   };

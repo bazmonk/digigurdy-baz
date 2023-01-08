@@ -3,11 +3,15 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.3.1";
-const String REL_DATE = "2022-12-19, v" + VERSION;
+const String VERSION = "2.4.0";
+const String REL_DATE = "2023-01-07, v" + VERSION;
+
+/// @defgroup config Configuration Options
+/// These variables/definitions are compile-time configuration options.
+/// @{
 
 /// @brief This is a freeform line displayed on the About screen
-const String EXTRA_LINE = " MIDI-OUT/HWSPI/LED ";
+const String EXTRA_LINE = " Production Build ";
 //const String EXTRA_LINE = "      3.5 TEST       ";
 //const String EXTRA_LINE = " MIDI-OUT, LED, SWSPI";
 //const String EXTRA_LINE = " TRIGGER - LED KNOB  ";
@@ -20,10 +24,10 @@ const String EXTRA_LINE = " MIDI-OUT/HWSPI/LED ";
   #define WHITE_OLED
   /// @brief Enables SSH1106 display support, do not use with WHITE_OLED.
   #define BLUE_OLED
-  /// @brief Enables WAV Trigger support, effectively disables MIDI-OUT.
+  /// @brief Enables WAV Trigger support.
   /// @details Cannot be used with USE_TSUNAMI simultaneously
   #define USE_TRIGGER
-  /// @brief Enables Tsunami support, effectively disables MIDI-OUT.
+  /// @brief Enables Tsunami support.
   /// @details Cannot be used with USE_TRIGGER simultaneously
   #define USE_TSUNAMI
   /// @brief Enables geared-crank support.
@@ -33,23 +37,44 @@ const String EXTRA_LINE = " MIDI-OUT/HWSPI/LED ";
   #define LED_KNOB
   /// @brief Enables the accessory/vibrato pedal on PEDAL_PIN.
   #define USE_PEDAL
+  /// @brief Setting this option allows both MIDI-OUT and Trigger/Tsunami use simultaneously.
+  /// @details Set this only if the MIDI-OUT and Trigger/Tsunami Tx pins are different!
+  #define ALLOW_COMBO_MODE
+  /// @brief Setting this option disables USBHost power control.
+  #define USE_TEENSY35
+  /// @brief Setting this uses 3.6-style USBHost power control (default is 4.x-style).
+  #define USE_TEENSY36
 #endif
 
+#define USE_TEENSY35
+// #define USE_TEENSY36
+
 // One of these OLED options must be enabled.
-#define WHITE_OLED
-//#define BLUE_OLED
+//#define WHITE_OLED
+#define BLUE_OLED
 
-//#define USE_GEARED_CRANK
+#define USE_GEARED_CRANK
 
-//#define USE_TRIGGER
+// Only one of these should be defined.
+#define USE_TRIGGER
 //#define USE_TSUNAMI
+
+//#define ALLOW_COMBO_MODE
+//#define BAZ_MODE
 
 /// @brief The audio output channel used by the Tsunami unit.
 /// @details 0 == 1L, 1 == 1R, etc.
 const int TSUNAMI_OUT = 0;
 
+/// @brief The Serial port to use on the Teensy unit for the Tsunami.
+#define __TSUNAMI_USE_SERIAL1__
 
-#define LED_KNOB
+/// @brief The Serial port to use on the Teensy unit for the Trigger.
+#define __WT_USE_SERIAL1__
+//#define __WT_USE_SERIAL5__
+
+
+//#define LED_KNOB
 
 /// @brief Pin used for the LED buzz indicator, if LED_KNOB is enabled.
 const int LED_PIN = 40;
@@ -75,6 +100,7 @@ const float PEDAL_MAX_V = 658.0;
 /// * Actual modulation behavior is controlled by the MIDI sampler/synthesizer.  This only controls the intensity of it.
 const int MELODY_VIBRATO = 16;
 
+/// @}
 
 /// @defgroup optical Optical Crank Configuration Variables
 /// These are configuration variables that only apply to optical-crank models. 
@@ -177,26 +203,24 @@ const int SPIN_THRESHOLD = 5001;
 /// * Note that it is signficantly lower than SPIN_THRESHOLD.
 const int SPIN_STOP_THRESHOLD = 1000;
 
-// Buzzing works sort of the same way except the buzz counter jumps immediately to the
-// BUZZ_SMOOTHING value and then begins to decay by BUZZ_DECAY.  Any positive "buzz"
-// value makes a buzz.
-//
-// Larger BUZZ_SMOOTHING values make the buzz stay on more consistently once you've triggered it,
-// but make it harder to make separate coups rapidly.  Adjust this to find the sweet spot between
-// how easy you want it to buzz and how quickly/consistently you can work a crank.  Players much
-// better than me may want a smaller value.  ***THE SPIN VALUES DON'T AFFECT BUZZ**
 /// @ingroup gear
 /// @brief The amount of buzz "smoothing" to start with when buzzing registers.
 /// @details * When the crank voltage registers higer than the buzz knob's voltage, buzzing registers.
 /// * Buzz is set to this value when buzzing registers and decays.
 /// * The buzzing effect continues as long as this smoothing value is positive
 const int BUZZ_SMOOTHING = 250;
+
 /// @ingroup gear
 /// @brief The amount of buzz "smoothing" to subtract when buzzing is not registering.
 /// @details Buzz smoothing is subtracted by this amount every cycle that buzz does not register.
 /// * This produces a set delay for buzzing to stop, as well as a minimum buzz duration.
 const int BUZZ_DECAY = 1;
 
+
+// These are all keybox pins:
+
+/// @ingroup config
+/// @{
 
 /// @brief The ordered layout of the keybox keys/buttons.
 /// @details * This both determines which Teensy pins compose the keybox, and the order they are in.
@@ -224,11 +248,11 @@ const int num_keys = 24;
 const int X_INDEX = 0;
 
 /// @brief The position of the "A" key on the keybox.
-/// @details This is intended to be the upper key second from the right.
+/// @details This is intended to be the upper rightmost key.
 const int A_INDEX = num_keys - 2;
 
 /// @brief The position of the "B" key on the keybox.
-/// @details This is intended to be the upper rightmost key.
+/// @details This is intended to be the upper key second from the right.
 const int B_INDEX = num_keys - 5;
 
 /// @brief The position of the "1" key on the keybox.
@@ -263,4 +287,31 @@ const int TPOSE_UP_INDEX = num_keys - 1;
 /// @details This is intended to be the bottom second key from the right.
 const int TPOSE_DN_INDEX = num_keys - 3;
 
+
+// These are less-commonly-changed options:
+
+/// @brief The pin running to the crank.
+/// @warning If using a geared crank, this pin must be analog-capable.
+const int CRANK_PIN = 15;
+
+/// @brief The analog pin running to the buzz potentiometer/knob.
+const int BUZZ_PIN = A2;
+
+/// @brief The pin running to the arcade, "auto-crank" button.
+const int BIG_BUTTON_PIN = 39;
+
+/// @brief The pin to the EX1 button.
+const int EX1_PIN = 41;
+/// @brief The pin to the EX2 button.
+const int EX2_PIN = 17;
+/// @brief The pin to the EX3 button.
+const int EX3_PIN = 14;
+/// @brief The pin to the EX4 button.
+const int EX4_PIN = 21;
+/// @brief The pin to the EX5 button.
+const int EX5_PIN = 22;
+/// @brief The pin to the EX6 button.
+const int EX6_PIN = 23;
+
+/// @}
 #endif
