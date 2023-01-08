@@ -8,6 +8,7 @@ See [the code documentation here](https://bazmonk.github.io/digigurdy-baz/html/i
 
 * 2.4.0 = 2.3.8 rebadged for main branch.  **Summary of changes since 2.2**:
   * *Switch to hardware SPI screen wiring requirement.*
+    * This brings significant speed improvements!
   * Button performance fixes
   * Geared crank support
   * "Official" Trigger/Tsunami support incl. volume control, power control, and ability to switch between it and MIDI-OUT.
