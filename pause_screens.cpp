@@ -37,6 +37,7 @@ void pause_screen() {
     my3Button->update();
     my4Button->update();
     my5Button->update();
+    my6Button->update();
     myXButton->update();
     myAButton->update();
     myBButton->update();
@@ -60,7 +61,31 @@ void pause_screen() {
         done = true;
       };
 
-    } else if (my5Button->wasPressed() || myXButton->wasPressed()) {
+    } else if (my5Button->wasPressed()) {
+
+      print_message_2("Help/User Guide", "Scan with your phone,", "Press X to continue...");
+
+      while (true) {
+        myXButton->update();
+
+        if(myXButton->wasPressed()) {
+          break;
+        };
+      };
+
+      u8g2.clearBuffer();
+      u8g2.drawXBM(0, 0, 128, 64, qrcode);
+      u8g2.sendBuffer();
+      
+      while (true) {
+        myXButton->update();
+
+        if(myXButton->wasPressed()) {
+          break;
+        };
+      };
+
+    } else if (my6Button->wasPressed() || myXButton->wasPressed()) {
       done = true;
 
     } else if (myAButton->wasPressed()) {

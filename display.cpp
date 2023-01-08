@@ -330,7 +330,8 @@ void print_pause_screen(String d_string, String t_string, String h_string, Strin
   u8g2.drawStr(89 - u8g2.getStrWidth("2) "), 18, "2) Save");
   u8g2.drawStr(15 - u8g2.getStrWidth("3) "), 28, "3) Tuning/Vol.");
   u8g2.drawStr(89 - u8g2.getStrWidth("4) "), 28, "4) Other");
-  u8g2.drawStr(64 - (u8g2.getStrWidth("5 or X) Go Back") / 2), 39, "5 or X) Go Back");
+  u8g2.drawStr(15 - u8g2.getStrWidth("5) "), 39, "5) Help");
+  u8g2.drawStr(89 - u8g2.getStrWidth("6/X) "), 39, "6/X) Go Back");
 
   // Divider line between mute options and menu choices
   u8g2.drawHLine(0, 42, 128);
