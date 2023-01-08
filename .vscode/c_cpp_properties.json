@@ -1,0 +1,35 @@
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/../../Arduino/libraries/**",
+                "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/cores/teensy3",
+                "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/libraries/Bounce",
+                "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/libraries/USBHost_t36",
+                "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/libraries/SdFat/src",
+                "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/cores/teensy4",
+                "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/libraries/ADC",
+                "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/libraries/EEPROM",
+                "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/libraries/SPI",
+                "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/libraries/MIDI/src"
+            ],
+            "defines": [
+                "USBCON",
+                "ARDUINO_TEENSY41",
+                "USB_MIDI_SERIAL",
+                "ARDUINO",
+                "ADC_DUAL_ADCS"
+            ],
+            "macFrameworkPath": [
+                "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks"
+            ],
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "macos-clang-x64"
+        }
+    ],
+    "version": 4
+}

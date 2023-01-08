@@ -1,7 +1,8 @@
 #include "buzzknob.h"
 
-// BuzzKnob manages the potentiometer knob that adjusts the buzzing threshold.
-// The GurdyCrank class below uses it to determine when buzzing happens.
+/// @brief Contructor.  BuzzKnob handles the potentiometer knob that adjusts buzzing thresholds.
+/// @param v_pin The active pin the potentiometer is attached to.
+/// @warning 3.3V MAX!
 BuzzKnob::BuzzKnob(int v_pin) {
       voltage_pin = v_pin;
       pinMode(voltage_pin, INPUT);
@@ -10,8 +11,7 @@ BuzzKnob::BuzzKnob(int v_pin) {
       knob_voltage = 0;
 };
 
-// This should be run every loop() during play.
-// Reads the knob voltage second.
+/// @brief Checks knob for new reading.  Self-timing: should be run every loop() cycle.
 void BuzzKnob::update() {
   if (the_knob_timer > 1000) {
     the_knob_timer = 0;
@@ -19,13 +19,14 @@ void BuzzKnob::update() {
   };
 };
 
-// Returns an a raw voltage between 0 and 1023.
+/// @brief Gets the current voltage of the knob.
+/// @return The voltage, 0 = 0V, 1023 = 3.3V
 float BuzzKnob::getVoltage() {
   return (float)(knob_voltage);
 };
 
-// This returns a weighted value based off the voltage between 60 and ~250,
-//  except at the top end it ramps way up as a "buzz off"
+/// @brief Gets the calculated velocity threshold based off the current voltage.
+/// @return The buzzing velocity threshold.
 float BuzzKnob::getThreshold() {
   if (getVoltage() > 975) {
     return (60 + (getVoltage() / 2));

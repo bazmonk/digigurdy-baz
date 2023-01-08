@@ -19,4 +19,5 @@ void tune_string_screen(GurdyString *this_string);
 void volume_screen();
 void change_volume_screen(GurdyString *this_string);
 
+void cool_kids_screen();
 #endif

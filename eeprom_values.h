@@ -32,6 +32,11 @@ static const int EEPROM_DRONE_VOL = 9;
 static const int EEPROM_TROMP_VOL = 10;
 static const int EEPROM_BUZZ_VOL = 11;
 static const int EEPROM_KEYCLICK_VOL = 12;
+static const int EEPROM_HI_MEL_GROS = 13;
+static const int EEPROM_LOW_MEL_GROS = 14;
+static const int EEPROM_TROMP_GROS = 15;
+static const int EEPROM_DRONE_GROS = 16;
+static const int EEPROM_BUZZ_GROS = 17;
 
 // This int saves the play screen type.  0 = note + staff, 1 = note only;
 static const int EEPROM_DISPLY_TYPE = 100;
@@ -47,12 +52,22 @@ static const int EEPROM_SCENE_SIGNALLING = 101;
 // 1 = LED buzz
 static const int EEPROM_BUZZ_LED = 102;
 
-// These three ints hold the last-chosen EX1/2/3 button functions.
+// These three ints hold the last-chosen EX1/2/3/4/5/6 button functions.
 // See ExButton::fn_choice_screen() for the numbering used.
 static const int EEPROM_EX1 = 103;
 static const int EEPROM_EX2 = 104;
 static const int EEPROM_EX3 = 105;
+static const int EEPROM_EX4 = 106;
+static const int EEPROM_EX5 = 107;
+static const int EEPROM_EX6 = 108;
 
-static const bool EEPROM_USE_SOLFEGE = 106;
+
+static const bool EEPROM_USE_SOLFEGE = 109;
+
+// This determines which output to use besides usbMIDI
+// 0 = MIDI-OUT
+// 1 = Trigger/Tsunami
+// 2 = Both
+static const int EEPROM_SEC_OUT = 110;
 
 #endif

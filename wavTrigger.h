@@ -26,19 +26,14 @@
 //
 // 11/06/16  Support for v1.30 firmware features, including two-way
 //           communication with track status reporting.
+//
+// Changed "EOM" to "EOMWT" to not clash with USBHost_t36 library -BDL
+// Expanded __WT_USE_SERIAL#__ to all 8 supported by Teensy4.1 -BDL
 
 #ifndef WAVTRIGGER_H
 #define WAVTRIGGER_H
 
-// ==================================================================
-// The following defines are used to control which serial class is
-//  used. Uncomment only the one you wish to use. If all of them are
-//  commented out, the library will use Hardware Serial
-//#define __WT_USE_ALTSOFTSERIAL__
-#define __WT_USE_SERIAL1__
-//#define __WT_USE_SERIAL2__
-//#define __WT_USE_SERIAL3__
-// ==================================================================
+#include "config.h"
 
 #define CMD_GET_VERSION					1
 #define CMD_GET_SYS_INFO				2
@@ -74,7 +69,7 @@
 
 #define SOM1	0xf0
 #define SOM2	0xaa
-#define EOM		0x55
+#define EOMWT		0x55
 
 
 #ifdef __WT_USE_ALTSOFTSERIAL__
@@ -91,6 +86,26 @@
 #endif
 #ifdef __WT_USE_SERIAL3__
 #define WTSerial Serial3
+#define __WT_SERIAL_ASSIGNED__
+#endif
+#ifdef __WT_USE_SERIAL4__
+#define WTSerial Serial4
+#define __WT_SERIAL_ASSIGNED__
+#endif
+#ifdef __WT_USE_SERIAL5__
+#define WTSerial Serial5
+#define __WT_SERIAL_ASSIGNED__
+#endif
+#ifdef __WT_USE_SERIAL6__
+#define WTSerial Serial6
+#define __WT_SERIAL_ASSIGNED__
+#endif
+#ifdef __WT_USE_SERIAL7__
+#define WTSerial Serial7
+#define __WT_SERIAL_ASSIGNED__
+#endif
+#ifdef __WT_USE_SERIAL8__
+#define WTSerial Serial8
 #define __WT_SERIAL_ASSIGNED__
 #endif
 #ifndef __WT_SERIAL_ASSIGNED__

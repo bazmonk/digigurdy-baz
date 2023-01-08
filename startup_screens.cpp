@@ -1,5 +1,9 @@
 #include "startup_screens.h"
 
+/// @ingroup display
+/// @{
+
+/// @brief Draws the about screen.
 void about_screen() {
 
   u8g2.clearBuffer();
@@ -34,6 +38,7 @@ void about_screen() {
   u8g2.sendBuffer();
 };
 
+/// @brief Draws the startup animation sequence.
 void startup_screen_sequence() {
 
   for (int x = 0; x < 8; x++) {
@@ -53,3 +58,5 @@ void startup_screen_sequence() {
   about_screen();
   delay(2500);
 };
+
+/// @}

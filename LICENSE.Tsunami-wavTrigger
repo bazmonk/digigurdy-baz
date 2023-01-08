@@ -1,0 +1,17 @@
+This applies to the following four files:
+
+./Tsunami.cpp
+./Tsunami.h
+./wavTrigger.cpp
+./wavTrigger.h
+
+---
+
+These have been taken (and subsequently minorly altered) from the following git repositories:
+
+https://github.com/robertsonics/Tsunami-Arduino-Serial-Library
+https://github.com/robertsonics/WAV-Trigger-Arduino-Serial-Library
+
+No software license was listed on the site (as of December 2022), but due to the nature of it and
+being publicly available, I assume it is being released into the public domain.  This is code
+released by the creator of the WAV Trigger and Tsunami boards for use with them.

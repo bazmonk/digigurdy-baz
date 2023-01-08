@@ -1,6 +1,10 @@
 #include "pause_screens.h"
 
-// This is the screen that X+A gets you.
+/// @defgroup pause Pause Screens
+/// These are the menu screens which don't have to do with tuning.
+/// @{
+
+/// @brief This is the main Pause Screen, branching out to all other runtime menus.
 void pause_screen() {
 
   bool done = false;
@@ -101,8 +105,8 @@ void pause_screen() {
   delay(500);
 };
 
-
-// This screen prompts which kind of tuning to load.
+/// @brief This screen prompts the user to choose what kind of tuning they wish to load, and runs the appropriate load screen or exits.
+/// @return True if a new tuning choice was made, false if user chooses the "go back" option.
 bool load_tuning_screen() {
 
   bool done = false;
@@ -135,8 +139,9 @@ bool load_tuning_screen() {
   return true;
 };
 
-// Checks if save slot is occupied and prompts user to overwrite if necessary.
-// Returns true if slot is empty or OK to overwrite.
+/// @brief Checks if a given save slot is occupied, prompts user to continue if necessary.
+/// @param slot The EEPROM save slot to check
+/// @return True if slot is empty or user wants to overwrite it, false otherwise
 bool check_save_tuning(int slot) {
 
   if (EEPROM.read(slot) == 0) {
@@ -164,7 +169,8 @@ bool check_save_tuning(int slot) {
   };
 };
 
-// This is the screen for saving to a save slot
+/// @brief This screen prompts to the user to choose between four save slots, and attempts to save to that slot.
+/// @details User is prompted with check_save_tuning() if the chosen slot is full.  Also prints confirmation screen if saving occurs.
 void save_tuning_screen() {
 
   bool done = false;
@@ -221,6 +227,7 @@ void save_tuning_screen() {
   delay(500);
 };
 
+/// @brief This is the about screen shown when the user selects it, which displays until the user presses "X" to continue.
 void options_about_screen() {
 
   about_screen();
@@ -254,21 +261,45 @@ void options_about_screen() {
   // };
 };
 
+/// @brief This prompts the user to choose between the non-tuning/volume configuration options.
+/// @return True if the user chooses one of the options, false otherwise
 bool other_options_screen() {
 
   bool done = false;
   while (!done) {
 
-    String opt2 = "This Option Disabled";
-    String opt3 = "This Option Disabled";
-    #ifdef LED_KNOB
-    opt2 = "Buzz LED On/Off";
-    #endif
-    #ifdef USE_PEDAL
-    opt3 = "Vibrato Pedal On/Off";
-    #endif
+    #ifndef USE_GEARED_CRANK
+    print_menu_4("Other Options", "EX Button Config", "Screen Configuration", "Input/Output Config", "About Digi-Gurdy");
 
-    print_menu_5("Other Options", "EX Button Config", "Screen Configuration", opt2, opt3, "About Digi-Gurdy");
+    delay(150);
+
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    my4Button->update();
+    my5Button->update();
+    myXButton->update();
+
+    if (my1Button->wasPressed()) {
+      ex_btn_choice_screen();
+      
+    } else if (my2Button->wasPressed()) {
+      playing_config_screen();
+
+    } else if (my3Button->wasPressed()) {
+      io_screen();
+
+    } else if (my4Button->wasPressed()) {
+      options_about_screen();
+
+    } else if (my5Button->wasPressed() || myXButton->wasPressed()) {
+      return false;
+    };
+
+    #else
+
+    print_menu_5("Other Options", "Crank Detection", "EX Button Config", "Screen Configuration", "Input/Output Config", "About Digi-Gurdy");
+    
     delay(150);
 
     my1Button->update();
@@ -280,20 +311,25 @@ bool other_options_screen() {
     myXButton->update();
 
     if (my1Button->wasPressed()) {
-      ex_btn_choice_screen();
+      
+      print_message_2("Crank Detection", "Crank is detecting,", "Please wait...");
+      mycrank->detect();
+      if (mycrank->isDetected()) {
+        print_message_2("Crank Detection", "Crank is detecting,", "CRANK DETECTED!");
+        delay(1000);
+      } else {
+        print_message_2("Crank Detection", "Crank is detecting,", "CRANK NOT FOUND.");
+        delay(1000);
+      };
 
     } else if (my2Button->wasPressed()) {
-      playing_config_screen();
+      ex_btn_choice_screen();
 
     } else if (my3Button->wasPressed()) {
-      #ifdef LED_KNOB
-      led_screen();
-      #endif
+      playing_config_screen();
 
     } else if (my4Button->wasPressed()) {
-      #ifdef USE_PEDAL
-      vib_screen();
-      #endif
+      io_screen();
 
     } else if (my5Button->wasPressed()) {
       options_about_screen();
@@ -301,11 +337,16 @@ bool other_options_screen() {
     } else if (my6Button->wasPressed() || myXButton->wasPressed()) {
       return false;
     };
+ 
+    #endif
   };
 
   return true;
 };
 
+/// @brief Send a scene-change signal (program change) on MIDI channel 1
+/// @param scene_idx 0-127, representing the scene/program being changed to.
+/// @details This is intended to be used with BS-16i, which will change its soundfonts and settings in reaction to these signals.
 void signal_scene_change(int scene_idx) {
   if (scene_signal_type == 1) {
     // Signal as a Program Control message on Channel 1
@@ -316,8 +357,9 @@ void signal_scene_change(int scene_idx) {
   }
 };
 
-// load_preset_tunings accepts an int between 1-4 and sets the appropriate preset.
-// See the default_tunings.h file to modify what the presets actually are.
+/// @brief Loads the given tuning preset.
+/// @param preset 1-4, representing one of the EEPROM tuning preset slots to load.
+/// @details see `default_tunings.h` for the actual presets themselves.
 void load_preset_tunings(int preset) {
   const int *tunings;
   if (preset == 1) { tunings = PRESET1; };
@@ -334,8 +376,9 @@ void load_preset_tunings(int preset) {
   capo_offset = tunings[6];
 }
 
-// load_saved_tunings requires one argument: the "save slot" which
-// should be one of the EEPROM_SLOT[1-4] values in eeprom_values.h.
+/// @brief Loads the given saved tuning slot.
+/// @param slot 1-4, representing one of the EEPROM tuning save slots to load.
+/// @details Sets tuning of all strings, tpose, capo, and volume.
 void load_saved_tunings(int slot) {
   byte value;
 
@@ -369,10 +412,17 @@ void load_saved_tunings(int slot) {
   value = EEPROM.read(slot + EEPROM_KEYCLICK_VOL);
   mykeyclick->setVolume(value);
 
+  // Gros Modes
+  mystring->setGrosMode(EEPROM.read(slot + EEPROM_HI_MEL_GROS));
+  mylowstring->setGrosMode(EEPROM.read(slot + EEPROM_LOW_MEL_GROS));
+  mytromp->setGrosMode(EEPROM.read(slot + EEPROM_TROMP_GROS));
+  mydrone->setGrosMode(EEPROM.read(slot + EEPROM_DRONE_GROS));
+  mybuzz->setGrosMode(EEPROM.read(slot + EEPROM_BUZZ_GROS));
+
 };
 
-// save_tunings accepts one argument, which should be one of the
-// EEPROM_SLOT[1-4] values defined in eeprom_values.h.
+/// @brief Saves the current tuning/volume to the given save slot.
+/// @param slot 1-4, the EEPROM save slot to write to.
 void save_tunings(int slot) {
 
   EEPROM.write(slot + EEPROM_HI_MEL, mystring->getOpenNote());
@@ -388,10 +438,16 @@ void save_tunings(int slot) {
   EEPROM.write(slot + EEPROM_TROMP_VOL, mytromp->getVolume());
   EEPROM.write(slot + EEPROM_BUZZ_VOL, mybuzz->getVolume());
   EEPROM.write(slot + EEPROM_KEYCLICK_VOL, mykeyclick->getVolume());
+  EEPROM.write(slot + EEPROM_HI_MEL_GROS, mystring->getGrosMode());
+  EEPROM.write(slot + EEPROM_LOW_MEL_GROS, mylowstring->getGrosMode());
+  EEPROM.write(slot + EEPROM_TROMP_GROS, mytromp->getGrosMode());
+  EEPROM.write(slot + EEPROM_DRONE_GROS, mydrone->getGrosMode());
+  EEPROM.write(slot + EEPROM_BUZZ_GROS, mybuzz->getGrosMode());
 
 };
 
-// This clears the EEPROM and overwrites it all with zeroes
+/// @brief Clears the EEPROM and sets some default values in it.
+/// @note Most values set to zero, but LED and EX values have non-zero defaults also set here.
 void clear_eeprom() {
   // Not much to say here... write 0 everywhere:
   for (int i = 0 ; i < EEPROM.length() ; i++ )
@@ -402,15 +458,27 @@ void clear_eeprom() {
   EEPROM.write(EEPROM_EX1, 1);
   EEPROM.write(EEPROM_EX2, 2);
   EEPROM.write(EEPROM_EX3, 3);
+  EEPROM.write(EEPROM_EX4, 8);
+  EEPROM.write(EEPROM_EX5, 9);
+  EEPROM.write(EEPROM_EX6, 10);
   EEPROM.write(EEPROM_SCENE_SIGNALLING, 0);
   EEPROM.write(EEPROM_USE_SOLFEGE, 0);
 
+  usb_power_off();
+  MIDI.begin(MIDI_CHANNEL_OMNI);
+  delay(100);
+
+  mystring->setOutputMode(0);
+  mylowstring->setOutputMode(0);
+  mytromp->setOutputMode(0);
+  mydrone->setOutputMode(0);
+  mykeyclick->setOutputMode(0);
+  mybuzz->setOutputMode(0);  
 };
 
-// This screen is for viewing a save slot's settings.
-// It returns true if the user wants to use it, false
-// otherwise.
-// Accepts integer slot: the save slot number.
+/// @brief Displays a given saved slot tuning and prompts user to accept.
+/// @param slot_num 1-4, the EEPROM tuning save slot to display and possibly load.
+/// @return True if the user loaded the tuning, false if the user rejected it.
 bool view_slot_screen(int slot_num) {
   int slot;
   if (slot_num == 1) { slot = EEPROM_SLOT1; };
@@ -455,9 +523,9 @@ bool view_slot_screen(int slot_num) {
   return true;
 };
 
-// This screen previews a preset's settings.
-// Returns true if users wants to use it, false otherwise.
-// Accept integer preset_num: the preset number.
+/// @brief Displays a given preset tuning slot and prompts user to accept.
+/// @param preset 1-4, the preset tuning slot to display and possibly load.
+/// @return True if the user loaded the tuning, false if the user rejected it.
 bool view_preset_screen(int preset) {
   const int *tunings;
   if (preset == 1) { tunings = PRESET1; };
@@ -502,8 +570,8 @@ bool view_preset_screen(int preset) {
   return true;
 };
 
-// This screen asks the user to select a save slot for
-// preview and optionally choosing.
+/// @brief Prompts the user to choose a saved tuning slot, and calls view_slot_screen() for that slot.
+/// @return True if the user selects a slot, false otherwise.
 bool load_saved_screen() {
 
   bool done = false;
@@ -539,7 +607,8 @@ bool load_saved_screen() {
   return true;
 };
 
-// This screen lets the user choose a preset.
+/// @brief Prompts the user to choose a preset tuning slot, and calls view_preset_screen() for that slot.
+/// @return True if the user selects a slot, false otherwise.
 bool load_preset_screen() {
 
   bool done = false;
@@ -575,7 +644,7 @@ bool load_preset_screen() {
   return true;
 };
 
-// This screen lets you choose how the gurdy indicates the turning to the controller
+/// @brief Prompts user to activate or disable the Scene Signaling (Program Change) feature.
 void scene_options_screen() {
   bool done = false;
   while (!done) {
@@ -603,7 +672,7 @@ void scene_options_screen() {
   }
 }
 
-// This screen lets you choose what kind of display you want.
+/// @brief Prompts user to choose which play screen to use.
 void playing_scr_screen() {
   bool done = false;
   while (!done) {
@@ -680,14 +749,13 @@ void playing_scr_screen() {
   };
 };
 
-// This screen is for other setup options.  Currently, that's
-// just an option to clear the EEPROM.
+/// @brief The startup other-options screen: prompts user to clear the EEPROM, adjust Scene Control, change Secondary Output, view the about screen, or go back.
 void options_screen() {
 
   bool done = false;
   while (!done) {
 
-    print_menu_3("Options", "Clear EEPROM", "Scene Control", "About Digi-Gurdy");
+    print_menu_4("Options", "Clear EEPROM", "Scene Control", "Secondary Output", "About Digi-Gurdy");
     delay(150);
 
     // Check the 1 and 2 buttons
@@ -695,6 +763,7 @@ void options_screen() {
     my2Button->update();
     my3Button->update();
     my4Button->update();
+    my5Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {
@@ -709,15 +778,18 @@ void options_screen() {
       scene_options_screen();
       done = true;
     } else if (my3Button->wasPressed()) {
+      sec_output_screen();
+      done = true;
+    } else if (my4Button->wasPressed()) {
       options_about_screen();
       done = true;
-    } else if (myXButton->wasPressed() || my4Button->wasPressed()) {
+    } else if (myXButton->wasPressed() || my5Button->wasPressed()) {
       done = true;
     };
   };
 };
 
-// This is the first screen after the credits n' stuff.
+/// @brief This is the opening menu screen, prompting user to choose some kind of tuning or view the other startup options.
 void welcome_screen() {
 
   bool done = false;
@@ -753,6 +825,7 @@ void welcome_screen() {
   };
 };
 
+/// @brief Prompts user to enable or disable the buzz LED indicator feature.
 void led_screen() {
 
   bool done = false;
@@ -769,7 +842,10 @@ void led_screen() {
 
     if (my1Button->wasPressed()) {
       EEPROM.write(EEPROM_BUZZ_LED, 1);
-      mycrank->enableLED();
+
+      #ifndef USE_GEARED_CRANK
+        mycrank->enableLED();
+      #endif
 
       print_message_2("Buzz LED On/Off", "Buzz LED On", "Saved to EEPROM");
       delay(1000);
@@ -778,8 +854,11 @@ void led_screen() {
 
     } else if (my2Button->wasPressed()) {
       EEPROM.write(EEPROM_BUZZ_LED, 0);
-      mycrank->disableLED();
 
+      #ifndef USE_GEARED_CRANK
+        mycrank->disableLED();
+      #endif
+      
       print_message_2("Buzz LED On/Off", "Buzz LED Off", "Saved to EEPROM");
       delay(1000);
 
@@ -792,6 +871,7 @@ void led_screen() {
   };
 };
 
+/// @brief This menu screen is for enabling/disabling the accessory/vibrato pedal.
 void vib_screen() {
 
   bool done = false;
@@ -829,6 +909,7 @@ void vib_screen() {
   };
 };
 
+/// @brief Prompts user to adjust the on-screen options: note notation, on-screen buzz indicator, play screen type.
 void playing_config_screen() {
   bool done = false;
   while (!done) {
@@ -876,8 +957,7 @@ void playing_config_screen() {
   };
 };
 
-
-
+/// @brief Prompts user to choose the on-screen note notation to be used.
 void notation_config_screen() {
   bool done = false;
   while (!done) {
@@ -924,3 +1004,160 @@ void notation_config_screen() {
     };
   };
 };
+
+/// @brief Prompts the user to choose between various input/output options
+void io_screen() {
+  bool done = false;
+  while (!done) {
+
+    String opt2 = "This Option Disabled";
+    String opt3 = "This Option Disabled";
+    #ifdef USE_PEDAL
+    opt2 = "Vibrato Pedal On/Off";
+    #endif
+    #ifdef LED_KNOB
+    opt3 = "Buzz LED On/Off";
+    #endif
+
+    #ifndef USE_GEARED_CRANK
+    print_menu_3("Input/Output Options", "Secondary Output", opt2, opt3);
+    #else
+    print_menu_3("Input/Output Options", "Secondary Output", opt2, opt3);
+    #endif
+
+    delay(150);
+
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    my4Button->update();
+    myXButton->update();
+
+    if (my1Button->wasPressed()) {
+      sec_output_screen();
+        
+    } else if (my2Button->wasPressed()) {
+      #ifdef USE_PEDAL
+      vib_screen();
+      #endif
+
+    } else if (my3Button->wasPressed()) {
+      #ifdef LED_KNOB
+      led_screen();
+      #endif
+
+    } else if (my4Button->wasPressed() || myXButton->wasPressed()) {
+      done = true;
+    };
+  };
+};
+
+/// @brief Promts user to choose the secondary output (primary output is usbMIDI)
+void sec_output_screen() {
+  bool done = false;
+  while (!done) {
+
+    #ifdef ALLOW_COMBO_MODE
+      print_menu_3("Secondary Output", "MIDI-OUT Socket", "Audio Socket", "MIDI-OUT and Audio Socket");
+    #else
+      print_menu_2("Secondary Output", "MIDI-OUT Socket", "Audio Socket");
+    #endif
+
+    delay(150);
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    my4Button->update();
+    myXButton->update();
+
+    if (my1Button->wasPressed()) {
+      EEPROM.write(EEPROM_SEC_OUT, 0);
+
+      usb_power_off();
+      MIDI.begin(MIDI_CHANNEL_OMNI);
+      delay(100);
+
+      mystring->setOutputMode(0);
+      mylowstring->setOutputMode(0);
+      mytromp->setOutputMode(0);
+      mydrone->setOutputMode(0);
+      mykeyclick->setOutputMode(0);
+      mybuzz->setOutputMode(0);
+      
+      print_message_2("Secondary Output", "MIDI-OUT", "Saved to EEPROM!");
+      delay(750);
+
+      done = true;
+
+    } else if (my2Button->wasPressed()) {
+
+      print_message_2("Secondary Output", "Un-plug any MIDI adapters!", "Press X to Continue");
+
+      bool done2= false;
+      while (!done2) {
+        delay(150);
+
+        myXButton->update();
+
+        if (myXButton->wasPressed()) {
+          done2 = true;
+        };
+      };
+
+      EEPROM.write(EEPROM_SEC_OUT, 1);
+
+      usb_power_on();
+      trigger_obj.start();
+      delay(100);
+
+      mystring->setOutputMode(1);
+      mylowstring->setOutputMode(1);
+      mytromp->setOutputMode(1);
+      mydrone->setOutputMode(1);
+      mykeyclick->setOutputMode(1);
+      mybuzz->setOutputMode(1);
+
+      print_message_2("Secondary Output", "Audio Socket", "Saved to EEPROM!");
+      delay(750);
+
+      done = true;
+
+    #ifdef ALLOW_COMBO_MODE
+      
+    } else if (my3Button->wasPressed()) {
+      EEPROM.write(EEPROM_SEC_OUT, 2);
+
+      usb_power_on();
+      MIDI.begin(MIDI_CHANNEL_OMNI);
+      trigger_obj.start();
+      delay(100);
+
+      mystring->setOutputMode(2);
+      mylowstring->setOutputMode(2);
+      mytromp->setOutputMode(2);
+      mydrone->setOutputMode(2);
+      mykeyclick->setOutputMode(2);
+      mybuzz->setOutputMode(2);
+
+      print_message_2("Secondary Output", "MIDI-OUT + Audio", "Saved to EEPROM!");
+      delay(750);
+
+      done = true;
+
+    } else if (my4Button->wasPressed() || myXButton->wasPressed()) {
+      done = true;
+    };
+    
+    #else
+
+    } else if (my3Button->wasPressed() || myXButton->wasPressed()) {
+      done = true;
+    };
+
+    #endif
+  };
+};
+
+/// @}

@@ -6,6 +6,8 @@
 //
 // Programmers: Jamie Robertson, jamie@robertsonics.com
 //
+// Changed "EOM" to "EOMWT" to not clash with USBHost_t36 library -BDL
+//
 // **************************************************************
 
 #include "wavTrigger.h"
@@ -26,7 +28,7 @@ uint8_t txbuf[5];
 	txbuf[1] = SOM2;
 	txbuf[2] = 0x05;
 	txbuf[3] = CMD_GET_VERSION;
-	txbuf[4] = EOM;
+	txbuf[4] = EOMWT;
 	WTSerial.write(txbuf, 5);
 
 	// Request system info
@@ -34,7 +36,7 @@ uint8_t txbuf[5];
 	txbuf[1] = SOM2;
 	txbuf[2] = 0x05;
 	txbuf[3] = CMD_GET_SYS_INFO;
-	txbuf[4] = EOM;
+	txbuf[4] = EOMWT;
 	WTSerial.write(txbuf, 5);
 }
 
@@ -42,7 +44,7 @@ uint8_t txbuf[5];
 void wavTrigger::flush(void) {
 
 int i;
-uint8_t dat;
+//uint8_t dat;
 
 	rxCount = 0;
 	rxLen = 0;
@@ -51,7 +53,7 @@ uint8_t dat;
 	  voiceTable[i] = 0xffff;
 	}
 	while(WTSerial.available())
-		dat = WTSerial.read();
+		WTSerial.read();
 }
 
 
@@ -92,7 +94,7 @@ uint16_t track;
 			rxCount++;
 		}
 		else if (rxCount == rxLen) {
-			if (dat == EOM)
+			if (dat == EOMWT)
 				rxMsgReady = true;
 			else {
 				rxCount = 0;
@@ -187,7 +189,7 @@ unsigned short vol;
 	vol = (unsigned short)gain;
 	txbuf[4] = (uint8_t)vol;
 	txbuf[5] = (uint8_t)(vol >> 8);
-	txbuf[6] = EOM;
+	txbuf[6] = EOMWT;
 	WTSerial.write(txbuf, 7);
 }
 
@@ -201,7 +203,7 @@ uint8_t txbuf[6];
     txbuf[2] = 0x06;
     txbuf[3] = CMD_AMP_POWER;
     txbuf[4] = enable;
-    txbuf[5] = EOM;
+    txbuf[5] = EOMWT;
     WTSerial.write(txbuf, 6);
 }
 
@@ -215,7 +217,7 @@ uint8_t txbuf[6];
 	txbuf[2] = 0x06;
 	txbuf[3] = CMD_SET_REPORTING;
 	txbuf[4] = enable;
-	txbuf[5] = EOM;
+	txbuf[5] = EOMWT;
 	WTSerial.write(txbuf, 6);
 }
 
@@ -319,7 +321,7 @@ uint8_t txbuf[8];
 	txbuf[4] = (uint8_t)code;
 	txbuf[5] = (uint8_t)trk;
 	txbuf[6] = (uint8_t)(trk >> 8);
-	txbuf[7] = EOM;
+	txbuf[7] = EOMWT;
 	WTSerial.write(txbuf, 8);
 }
 
@@ -336,7 +338,7 @@ uint8_t txbuf[9];
 	txbuf[5] = (uint8_t)trk;
 	txbuf[6] = (uint8_t)(trk >> 8);
 	txbuf[7] = lock;
-	txbuf[8] = EOM;
+	txbuf[8] = EOMWT;
 	WTSerial.write(txbuf, 9);
 }
 
@@ -349,7 +351,7 @@ uint8_t txbuf[5];
 	txbuf[1] = SOM2;
 	txbuf[2] = 0x05;
 	txbuf[3] = CMD_STOP_ALL;
-	txbuf[4] = EOM;
+	txbuf[4] = EOMWT;
 	WTSerial.write(txbuf, 5);
 }
 
@@ -362,7 +364,7 @@ uint8_t txbuf[5];
 	txbuf[1] = SOM2;
 	txbuf[2] = 0x05;
 	txbuf[3] = CMD_RESUME_ALL_SYNC;
-	txbuf[4] = EOM;
+	txbuf[4] = EOMWT;
 	WTSerial.write(txbuf, 5);
 }
 
@@ -381,7 +383,7 @@ unsigned short vol;
 	vol = (unsigned short)gain;
 	txbuf[6] = (uint8_t)vol;
 	txbuf[7] = (uint8_t)(vol >> 8);
-	txbuf[8] = EOM;
+	txbuf[8] = EOMWT;
 	WTSerial.write(txbuf, 9);
 }
 
@@ -403,7 +405,7 @@ unsigned short vol;
 	txbuf[8] = (uint8_t)time;
 	txbuf[9] = (uint8_t)(time >> 8);
 	txbuf[10] = stopFlag;
-	txbuf[11] = EOM;
+	txbuf[11] = EOMWT;
 	WTSerial.write(txbuf, 12);
 }
 
@@ -420,7 +422,7 @@ unsigned short off;
 	off = (unsigned short)offset;
 	txbuf[4] = (uint8_t)off;
 	txbuf[5] = (uint8_t)(off >> 8);
-	txbuf[6] = EOM;
+	txbuf[6] = EOMWT;
 	WTSerial.write(txbuf, 7);
 }
 
@@ -434,6 +436,6 @@ uint8_t txbuf[6];
 	txbuf[2] = 0x06;
 	txbuf[3] = CMD_SET_TRIGGER_BANK;
 	txbuf[4] = (uint8_t)bank;
-	txbuf[5] = EOM;
+	txbuf[5] = EOMWT;
 	WTSerial.write(txbuf, 6);
 }

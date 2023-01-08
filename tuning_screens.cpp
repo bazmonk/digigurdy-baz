@@ -1,5 +1,12 @@
 #include "tuning_screens.h"
 
+/// @defgroup tuning Tuning Screens
+/// These menus concern the tuning and volume of the GurdyString objects.
+/// @warning These functions are hardcoded to expect certain string objects to exist.
+/// @{
+
+/// @brief Prompts the user to choose between the primary tunining options: guided tuinings, manual tunings, volume control.
+/// @return True if an option was chosen, false otherwise.
 bool tuning() {
 
   bool done = false;
@@ -20,6 +27,7 @@ bool tuning() {
     my3Button->update();
     my4Button->update();
     my5Button->update();
+    my6Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {
@@ -36,6 +44,8 @@ bool tuning() {
       volume_screen();
     } else if (my5Button->wasPressed() || myXButton->wasPressed()) {
       return false;
+    } else if (my6Button->wasPressed()) {
+      cool_kids_screen();
     };
   };
 
@@ -69,6 +79,8 @@ bool tuning() {
   return true;
 };
 
+/// @brief Prompts the user to choose beween high melody string choices.
+/// Part of the guided tuining menu tree.
 void tuning_hi_melody() {
 
   int base_note;
@@ -111,6 +123,8 @@ void tuning_hi_melody() {
   };
 };
 
+/// @brief Prompts the user to choose between low melody string tunings based off the high melody tuning.
+/// Part of the guided tuning menu tree.
 void tuning_low_melody() {
 
   int base_note = mystring->getOpenNote();
@@ -143,6 +157,7 @@ void tuning_low_melody() {
   };
 };
 
+/// @brief Prompts the user to choose between trompette string tunings based off the current high melody string tuning.
 void tuning_tromp() {
 
   int base_note = mystring->getOpenNote() - 12;
@@ -187,6 +202,7 @@ void tuning_tromp() {
   };
 };
 
+/// @brief Prompts the user to choose between drone string tunings based off the current high melody string tuning.
 void tuning_drone() {
 
   int base_note = mystring->getOpenNote() - 12;
@@ -219,7 +235,7 @@ void tuning_drone() {
   };
 };
 
-// This screen allows the user to make manual changes to each string.
+/// @brief Prompts the user to choose a string to adjust the tuning of manually.
 void manual_tuning_screen() {
 
   while (true) {
@@ -264,7 +280,8 @@ void manual_tuning_screen() {
   return;
 };
 
-// This is the tuning screen for an individual string.  Single argument is a GurdyString pointer.
+/// @brief Prompts the user to manually tune the given string.
+/// @param this_string The GurdyString object to be tuned
 void tune_string_screen(GurdyString *this_string) {
   bool done = false;
   int new_note = this_string->getOpenNote();
@@ -305,6 +322,8 @@ void tune_string_screen(GurdyString *this_string) {
 };
 
 // This screen allows the user to make manual changes to each string's volume.
+
+/// @brief Promts the user to choose a string to adjust the volume of manually.
 void volume_screen() {
 
   while (true) {
@@ -353,6 +372,8 @@ void volume_screen() {
   return;
 };
 
+/// @brief Prompts the user to adjust the volume of the given string.
+/// @param this_string The GurdyString object to adjust the volume of
 void change_volume_screen(GurdyString *this_string) {
   bool done = false;
   int new_vol = this_string->getVolume();
@@ -390,4 +411,70 @@ void change_volume_screen(GurdyString *this_string) {
       done = true;
     };
   };
+};
+
+/// @brief Prompts the user to add additional tones to each string (and buzz).
+/// @details This is a "hidden" feature.
+void cool_kids_screen() {
+
+  while (true) {
+
+    print_menu_5("Second String Tones",
+                 String("Hi Mel. - ") + mystring->getGrosString(),
+                 String("Low Mel. - ") + mylowstring->getGrosString(),
+                 String("Tromp. - ") + mytromp->getGrosString(),
+                 String("Drone - ") + mydrone->getGrosString(),
+                 String("Buzz - ") + mybuzz->getGrosString());
+    delay(150);
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    my4Button->update();
+    my5Button->update();
+    my6Button->update();
+    myXButton->update();
+
+    if (my1Button->wasPressed()) {
+      if (mystring->getGrosMode() == 3) {
+        mystring->setGrosMode(0);
+      } else { 
+        mystring->setGrosMode(mystring->getGrosMode() + 1);
+      };
+
+    } else if (my2Button->wasPressed()) {
+      if (mylowstring->getGrosMode() == 3) {
+        mylowstring->setGrosMode(0);
+      } else { 
+        mylowstring->setGrosMode(mylowstring->getGrosMode() + 1);
+      };
+
+    } else if (my3Button->wasPressed()) {
+      if (mytromp->getGrosMode() == 3) {
+        mytromp->setGrosMode(0);
+      } else { 
+        mytromp->setGrosMode(mytromp->getGrosMode() + 1);
+      };
+
+    } else if (my4Button->wasPressed()) {
+      if (mydrone->getGrosMode() == 3) {
+        mydrone->setGrosMode(0);
+      } else { 
+        mydrone->setGrosMode(mydrone->getGrosMode() + 1);
+      };
+
+    } else if (my5Button->wasPressed()) {
+      if (mybuzz->getGrosMode() == 3) {
+        mybuzz->setGrosMode(0);
+      } else { 
+        mybuzz->setGrosMode(mybuzz->getGrosMode() + 1);
+      };
+
+    } else if (my6Button->wasPressed() || myXButton->wasPressed()) {
+      return;
+    };
+  };
+
+  return;
 };

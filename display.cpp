@@ -11,10 +11,24 @@
   //U8G2_SH1106_128X64_NONAME_F_4W_SW_SPI u8g2(U8G2_R0, OLED_CLK, OLED_MOSI, OLED_CS, OLED_DC, OLED_RESET);
 #endif
 
+/// @defgroup display Display Functions
+/// These functions concern controlling the display, and drawing formatted screens for use in menu screen fucntions elsewhere.
+/// @{
+
+/// @brief Begins SPI communication with the display
 void start_display() {
   u8g2.begin();
 };
 
+/// @brief Prints a formatted menu screen with a numbered 6-option list
+/// @details Prints "X" for back/done option, 1-6 for choices
+/// @param title Menu title
+/// @param opt1 First option text
+/// @param opt2 Second option text
+/// @param opt3 Third option text
+/// @param opt4 Fourth option text
+/// @param opt5 Fifth option text
+/// @param opt6 Sixth option text
 void print_menu_6(String title, String opt1, String opt2, String opt3, String opt4, String opt5, String opt6) {
 
   // Clear the screen, set overlay font mode (don't draw background)
@@ -54,6 +68,14 @@ void print_menu_6(String title, String opt1, String opt2, String opt3, String op
   u8g2.sendBuffer();
 };
 
+/// @brief Prints a formatted menu screen with a numbered 5-option list
+/// @details Prints "X"/6 for back/done option, 1-5 for choices
+/// @param title Menu title
+/// @param opt1 First option text
+/// @param opt2 Second option text
+/// @param opt3 Third option text
+/// @param opt4 Fourth option text
+/// @param opt5 Fifth option text
 void print_menu_5(String title, String opt1, String opt2, String opt3, String opt4, String opt5) {
 
   // Clear the screen, set overlay font mode (don't draw background)
@@ -91,6 +113,13 @@ void print_menu_5(String title, String opt1, String opt2, String opt3, String op
   u8g2.sendBuffer();
 };
 
+/// @brief Prints a formatted menu screen with a numbered 4-option list
+/// @details Prints "X"/5 for back/done option, 1-4 for choices
+/// @param title Menu title
+/// @param opt1 First option text
+/// @param opt2 Second option text
+/// @param opt3 Third option text
+/// @param opt4 Fourth option text
 void print_menu_4(String title, String opt1, String opt2, String opt3, String opt4) {
 
   // Clear the screen, set overlay font mode (don't draw background)
@@ -126,6 +155,12 @@ void print_menu_4(String title, String opt1, String opt2, String opt3, String op
   u8g2.sendBuffer();
 };
 
+/// @brief Prints a formatted menu screen with a numbered 3-option list
+/// @details Prints "X"/4 for back/done option, 1-3 for choices
+/// @param title Menu title
+/// @param opt1 First option text
+/// @param opt2 Second option text
+/// @param opt3 Third option text
 void print_menu_3(String title, String opt1, String opt2, String opt3) {
 
   // Clear the screen, set overlay font mode (don't draw background)
@@ -159,6 +194,11 @@ void print_menu_3(String title, String opt1, String opt2, String opt3) {
   u8g2.sendBuffer();
 };
 
+/// @brief Prints a formatted menu screen with a numbered 2-option list
+/// @details Prints "X"/3 for back/done option, 1-2 for choices
+/// @param title Menu title
+/// @param opt1 First option text
+/// @param opt2 Second option text
 void print_menu_2(String title, String opt1, String opt2) {
 
   // Clear the screen, set overlay font mode (don't draw background)
@@ -190,6 +230,10 @@ void print_menu_2(String title, String opt1, String opt2) {
   u8g2.sendBuffer();
 };
 
+/// @brief Print a titled screen with two lines of centered text
+/// @param title Screen title
+/// @param opt1 First line text
+/// @param opt2 Second line text
 void print_message_2(String title, String opt1, String opt2) {
 
   // Clear the screen, set overlay font mode (don't draw background)
@@ -215,6 +259,12 @@ void print_message_2(String title, String opt1, String opt2) {
   u8g2.sendBuffer();
 };
 
+/// @brief Prints a formatted menu screen, numbered 4-option list, NO back option
+/// @param title Menu title
+/// @param opt1 First option text
+/// @param opt2 Second option text
+/// @param opt3 Third option text
+/// @param opt4 Fourth option text
 void print_menu_4_nobk(String title, String opt1, String opt2, String opt3, String opt4) {
 
   // Clear the screen, set overlay font mode (don't draw background)
@@ -250,6 +300,12 @@ void print_menu_4_nobk(String title, String opt1, String opt2, String opt3, Stri
   u8g2.sendBuffer();
 };
 
+/// @brief Print the standard pause screen
+/// @details Prints "X" for back/done option
+/// @param d_string The drone note String
+/// @param t_string The trompette note String
+/// @param h_string The high melody note String
+/// @param l_string The low melody note String
 void print_pause_screen(String d_string, String t_string, String h_string, String l_string) {
   // Clear the screen, set overlay font mode (don't draw background)
   // FontMode 1 requires a t* font
@@ -270,9 +326,9 @@ void print_pause_screen(String d_string, String t_string, String h_string, Strin
   // Print the title centered on the top "line"
   u8g2.drawStr(64 - (u8g2.getStrWidth(title.c_str()) / 2), 8, title.c_str());
 
-  u8g2.drawStr(25 - u8g2.getStrWidth("1) "), 18, "1) Load");
+  u8g2.drawStr(15 - u8g2.getStrWidth("1) "), 18, "1) Load");
   u8g2.drawStr(89 - u8g2.getStrWidth("2) "), 18, "2) Save");
-  u8g2.drawStr(25 - u8g2.getStrWidth("3) "), 28, "3) Tuning");
+  u8g2.drawStr(15 - u8g2.getStrWidth("3) "), 28, "3) Tuning/Vol.");
   u8g2.drawStr(89 - u8g2.getStrWidth("4) "), 28, "4) Other");
   u8g2.drawStr(64 - (u8g2.getStrWidth("5 or X) Go Back") / 2), 39, "5 or X) Go Back");
 
@@ -289,6 +345,12 @@ void print_pause_screen(String d_string, String t_string, String h_string, Strin
   u8g2.sendBuffer();
 };
 
+/// @brief Prints a confirmation screen
+/// @details Prints "X"/2 for back/done option, 1 to confirm
+/// @param title Screen title
+/// @param msg1 Message/question, line 1
+/// @param msg2 Message, line 2
+/// @param opt1 The affirmative option text (e.g. "Yes", "Continue", "Save")
 void print_confirm_screen(String title, String msg1, String msg2, String opt1) {
 
   // Clear the screen, set overlay font mode (don't draw background)
@@ -320,6 +382,15 @@ void print_confirm_screen(String title, String msg1, String msg2, String opt1) {
   u8g2.sendBuffer();
 };
 
+/// @brief Print a full list of the given tuning with a confirmation option
+/// @details Prints "X"/2 for back/done option, 1 to confirm
+/// @param title Screen title
+/// @param hi_note High melody note
+/// @param low_note Low melody note
+/// @param drone_note Drone note
+/// @param tromp_note Trompette note
+/// @param tpose_str Transpose offset
+/// @param capo_str Capo offset
 void print_tuning(String title, String hi_note, String low_note, String drone_note, String tromp_note, String tpose_str, String capo_str) {
 
   // Clear the screen, set overlay font mode (don't draw background)
@@ -359,6 +430,12 @@ void print_tuning(String title, String hi_note, String low_note, String drone_no
   u8g2.sendBuffer();
 };
 
+/// @brief Print a string-only list of a given tuning with a confirmation option
+/// @details Prints "X"/2 for back/done option, "A"/1 to confirm
+/// @param hi High melody note number
+/// @param lo Low melody note number
+/// @param tromp Trompette note number
+/// @param drone Drone note number
 void print_tuning_summary(int hi, int lo, int tromp, int drone) {
 
   // Clear the screen, set overlay font mode (don't draw background)
@@ -395,6 +472,12 @@ void print_tuning_summary(int hi, int lo, int tromp, int drone) {
   u8g2.sendBuffer();
 };
 
+/// @brief Print a 3-option tuning choice screen
+/// @details Prints "A" for default choice
+/// @param title Screen title
+/// @param opt1 Default tuning note number choice
+/// @param opt2 Tuning note number choice 2
+/// @param opt3 Tuning note number choice 3
 void print_tuning_choice_3(String title, int opt1, int opt2, int opt3) {
 
   // Clear the screen, set overlay font mode (don't draw background)
@@ -428,6 +511,10 @@ void print_tuning_choice_3(String title, int opt1, int opt2, int opt3) {
   u8g2.sendBuffer();
 };
 
+/// @brief Print a numerical value selection
+/// @details Prints "X" for back/done option
+/// @param title Screen title
+/// @param value Value to display
 void print_value_selection(String title, String value) {
   u8g2.clearBuffer();
   u8g2.setFontMode(1);
@@ -458,3 +545,5 @@ void print_value_selection(String title, String value) {
 
   u8g2.sendBuffer();
 };
+
+/// @}

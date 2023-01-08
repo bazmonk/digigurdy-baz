@@ -2,9 +2,59 @@
 
 See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more documentation.
 
-**Pre-compiled builds of the code will be made available from 1.7.99 and up.  See https://github.com/bazmonk/digigurdy-baz/wiki/install-by-hex for installation instructions.**
+See [the code documentation here](https://bazmonk.github.io/digigurdy-baz/html/index.html).
 
-**Check out version 2.2.2! (NEW)**
+**Check out version 2.4.0! (NEW)**
+
+* 2.4.0 = 2.3.8 rebadged for main branch.  **Summary of changes since 2.2**:
+  * *Switch to hardware SPI screen wiring requirement.*
+  * Button performance fixes
+  * Geared crank support
+  * "Official" Trigger/Tsunami support incl. volume control, power control, and ability to switch between it and MIDI-OUT.
+  * New EX functions: volume, transpose, capo.
+  * Transpose and capo buttons are now programmable EX buttons 4-6.
+  * Bug fixes, documentation and various code improvements.
+  * Basil's secret fun menu for playing double tones on any string.
+
+* 2.3.8 -
+  * Parameterized all pins.
+  * Moved Tsunami/Trigger config to main config file.
+
+* 2.3.7 -
+  * EX functions include transpose and capo functions.
+  * Transpose and capos buttons *are* EX buttons.
+  * EX menu prints current assigned function!
+
+* 2.3.6 -
+  * Basil's secret fun menu (ask him!)
+
+* 2.3.5 -
+  * ALLOW_COMBO_MODE in config.h allows MIDI-OUT and Trigger/Tsunami simultaneously.
+  * Switching between MIDI-OUT and Trigger (if supported) is possible in-menu, not in config.h.
+  * Trigger or Tsunami support must be compiled in.  If you don't one have... pick one you might get later, doesn't matter.
+
+* 2.3.4 -
+  * Extended volume up/down control to key combo for legacy support.  Will backport this to 2.0.x.
+  * Making some functions to clean up the main ino file.
+
+* 2.3.3 -
+  * New EX button functions: turning volume up and down.
+  
+* 2.3.2 -
+  * Broke out and modified Tsunami and Trigger libraries to support all 8 Teensy4.1 Serial TX pins.
+  * Rewrote ALL documentation in doxygen format
+    * docs included in ./docs/html/index.html
+  * Added VScode configuration file that should make it happy, at least on a Mac.
+
+* 2.3.1 -
+  * Added TSUNAMI-OUT variable, made def channel 0
+  * Linked trigger/tsunami volume to MIDI volume.  MIDI 112 = line-level wav out.
+  * Geared crank detection:
+    * If using geared crank, crank detection routine runs at startup.
+    * EX config menu is also replaced with a option to trigger crank-redetection.
+
+* 2.3.0 - Geared Crank Support!
+  * Remember, in this branch you must have rewired your screen.
 
 * 2.2.2 - Button debouncing
   * Big button debounce interval bumped up to 250ms.

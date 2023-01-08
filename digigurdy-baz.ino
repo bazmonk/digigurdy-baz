@@ -14,8 +14,14 @@
 
 #include "exbutton.h"
 #include "common.h"
+#include "usb_power.h"
 
-#include "gurdycrank.h"
+#ifdef USE_GEARED_CRANK
+  #include "gearcrank.h"
+#else
+  #include "gurdycrank.h"
+#endif
+
 #include "hurdygurdy.h"
 #include "togglebutton.h"
 #include "vibknob.h"
@@ -27,9 +33,7 @@
 #include "pause_screens.h"   // The pause screen menus
 
 // As far as I can tell, this *has* to be done here or else you get spooooky runtime problems.
-#if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
-  MIDI_CREATE_DEFAULT_INSTANCE();
-#endif
+MIDI_CREATE_DEFAULT_INSTANCE();
 
 #ifdef USE_TRIGGER
   wavTrigger  trigger_obj;
@@ -49,7 +53,12 @@ ADC* adc;
 // Declare the "keybox" and buttons.
 HurdyGurdy *mygurdy;
 ToggleButton *bigbutton;
-GurdyCrank *mycrank;
+
+#ifdef USE_GEARED_CRANK
+  GearCrank *mycrank;
+#else
+  GurdyCrank *mycrank;
+#endif
 
 VibKnob *myvibknob;
 
@@ -84,15 +93,13 @@ GurdyString *mytromp;
 GurdyString *mydrone;
 GurdyString *mybuzz;
 
-// These are the dedicated transpose/capo buttons
-GurdyButton *tpose_up;
-GurdyButton *tpose_down;
-GurdyButton *capo;
-
 // These are the "extra" buttons, new on the rev3.0 gurdies
 ExButton *ex1Button;
 ExButton *ex2Button;
 ExButton *ex3Button;
+ExButton *ex4Button;
+ExButton *ex5Button;
+ExButton *ex6Button;
 
 // This defines the +/- one octave transpose range.
 int max_tpose;
@@ -130,13 +137,13 @@ bool gc_or_dg;
 
 int use_solfege;
 
-//
-// SETUP
-//
-
-// Teensy and Arduino units start by running setup() once after powering up.
-// Here we establish how the "gurdy" is setup, what strings to use, and we also
-// start the MIDI communication.
+/// @brief The main setup function.
+/// @details Arduinio/Teensy sketches run this function once upon startup.
+/// * Initializes display, runs startup animation.
+/// * Initializes MIDI/Tsunami/Serial objects.
+/// * Initializes gurdy button/string/crank/knob objects.
+/// * Pin assignments which no one tends to change around (crank, bigButton) are hardcoded here.
+/// * The MIDI channel assignments of the strings are hardcoded here.
 void setup() {
 
   // Display some startup animations for the user.
@@ -146,37 +153,62 @@ void setup() {
   // Un-comment to print yourself debugging messages to the Teensyduino
   // serial console.
    Serial.begin(115200);
-   delay(500);
+   delay(300);
    Serial.println("Hello.");
-
 
   // Start the Serial MIDI object (like for a bluetooth transmitter).
   // The usbMIDI object is available by Teensyduino magic that I don't know about.
-  #if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
-      MIDI.begin(MIDI_CHANNEL_OMNI);
+  if (EEPROM.read(EEPROM_SEC_OUT) != 1) {
+    MIDI.begin(MIDI_CHANNEL_OMNI);
+  }
+  
+  #if defined(USE_TRIGGER)
+    #ifdef BAZ_MODE
+    Serial5.setTX(47); // I can just do this for everyone until it bugs someone...
+    Serial5.setRX(46);
+    #endif
+    if (EEPROM.read(EEPROM_SEC_OUT) > 0) {
+      trigger_obj.start();
+      delay(10);
 
-  #elif defined(USE_TRIGGER)
-    trigger_obj.start();
-    delay(10);
-
-    // Send a stop-all command and reset the sample-rate offset, in case we have
-    //  reset while the WAV Trigger was already playing.
-    trigger_obj.stopAllTracks();
-    trigger_obj.samplerateOffset(0);
+      // Send a stop-all command and reset the sample-rate offset, in case we have
+      //  reset while the WAV Trigger was already playing.
+      trigger_obj.stopAllTracks();
+      trigger_obj.samplerateOffset(0);
+    };
 
   #elif defined(USE_TSUNAMI)
-    trigger_obj.start();
-    delay(10);
+    if (EEPROM.read(EEPROM_SEC_OUT) > 0) {
+      trigger_obj.start();
+      delay(10);
 
-    // Send a stop-all command and reset the sample-rate offset, in case we have
-    //  reset while the Tsunami was already playing.
-    trigger_obj.stopAllTracks();
-    trigger_obj.samplerateOffset(1, 0);
+      // Send a stop-all command and reset the sample-rate offset, in case we have
+      //  reset while the WAV Trigger was already playing.
+      trigger_obj.stopAllTracks();
+      trigger_obj.samplerateOffset(1, 0);
+    };
   #endif
 
   // Initialize the ADC object and the crank that will use it.
   adc = new ADC();
-  mycrank = new GurdyCrank(15, A2, LED_PIN);
+
+  #ifdef USE_GEARED_CRANK
+    mycrank = new GearCrank(CRANK_PIN, BUZZ_PIN);
+    mycrank->beginPolling();
+    
+    print_message_2("Crank Detection", "Crank is detecting,", "Please wait...");
+    mycrank->detect();
+    if (mycrank->isDetected()) {
+      print_message_2("Crank Detection", "Crank is detecting,", "CRANK DETECTED!");
+      delay(1000);
+    } else {
+      print_message_2("Crank Detection", "Crank is detecting,", "CRANK NOT FOUND.");
+      delay(1000);
+    };
+
+  #else
+    mycrank = new GurdyCrank(CRANK_PIN, BUZZ_PIN, LED_PIN);
+  #endif
 
   #ifdef USE_PEDAL
     myvibknob = new VibKnob(PEDAL_PIN);
@@ -185,7 +217,7 @@ void setup() {
   // The keybox arrangement is decided by pin_array, which is up in the CONFIG SECTION
   // of this file.  Make adjustments there.
   mygurdy = new HurdyGurdy(pin_array, num_keys);
-  bigbutton = new ToggleButton(39, 250);
+  bigbutton = new ToggleButton(BIG_BUTTON_PIN, 250);
 
   // These indices are defined in config.h
   myXButton = mygurdy->keybox[X_INDEX];
@@ -209,23 +241,29 @@ void setup() {
   // preset, a saved tuning, or a created one.  The menu shouldn't let you actually
   // end up with this, but I have to initialize them with something, so might as well
   // be a working tuning.
-  mystring = new GurdyString(1, Note(g4), "Hi Melody");
-  mylowstring = new GurdyString(2, Note(g3), "Low Melody");
-  mytromp = new GurdyString(3, Note(c3), "Trompette");
-  mydrone = new GurdyString(4, Note(c2), "Drone");
-  mybuzz = new GurdyString(5,Note(c3), "Buzz");
-  mykeyclick = new GurdyString(6, Note(b5), "Key Click");
 
-  tpose_up = new GurdyButton(22, 200);   // A.k.a. the button formerly known as octave-up
-  tpose_down = new GurdyButton(21, 200); // A.k.a. the button formerly known as octave-down
+  // Turn on the power if we're using it.
+  if (EEPROM.read(EEPROM_SEC_OUT) > 0) {
+    usb_power_on();
+    delay(100);
+  };
+
+  mystring = new GurdyString(1, Note(g4), "Hi Melody", EEPROM.read(EEPROM_SEC_OUT));
+  mylowstring = new GurdyString(2, Note(g3), "Low Melody", EEPROM.read(EEPROM_SEC_OUT));
+  mytromp = new GurdyString(3, Note(c3), "Trompette", EEPROM.read(EEPROM_SEC_OUT));
+  mydrone = new GurdyString(4, Note(c2), "Drone", EEPROM.read(EEPROM_SEC_OUT));
+  mybuzz = new GurdyString(5,Note(c3), "Buzz", EEPROM.read(EEPROM_SEC_OUT));
+  mykeyclick = new GurdyString(6, Note(b5), "Key Click", EEPROM.read(EEPROM_SEC_OUT));
+
   tpose_offset = 0;
-
-  capo = new GurdyButton(23, 200); // The capo button
   capo_offset = 0;
 
   ex1Button = new ExButton(41, EEPROM.read(EEPROM_EX1), 200);
   ex2Button = new ExButton(17, EEPROM.read(EEPROM_EX2), 200);
   ex3Button = new ExButton(14, EEPROM.read(EEPROM_EX3), 200);
+  ex4Button = new ExButton(21, EEPROM.read(EEPROM_EX4), 200);
+  ex5Button = new ExButton(22, EEPROM.read(EEPROM_EX5), 200);
+  ex6Button = new ExButton(23, EEPROM.read(EEPROM_EX6), 200);
 
   scene_signal_type = EEPROM.read(EEPROM_SCENE_SIGNALLING);
 
@@ -261,14 +299,10 @@ bool note_display_off = true;
 // The loop() function is repeatedly run by the Teensy unit after setup() completes.
 // This is the main logic of the program and defines how the strings, keys, click, buzz,
 // and buttons acutally behave during play.
+/// @brief The main loop function.
+/// @details Arduino/Teensy sketches run this function in a continuous loop.
+/// * The overall high-level logic (e.g. when crank->isSpinning(), make sound) is contained here.
 void loop() {
-  // loop() actually runs too fast and gets ahead of hardware calls if it's allowed to run freely.
-  // This was noticeable in older versions when the crank got "stuck" and would not buzz and took
-  // oddly long to stop playing when the crank stopped moving.
-  //
-  // A microsecond delay here lets everything keep up with itself.  The exactly delay is set at
-  // the top in the config section.
-  //delayMicroseconds(LOOP_DELAY);
 
   if (first_loop) {
     welcome_screen();
@@ -280,6 +314,9 @@ void loop() {
     ex1Button->setFunc(EEPROM.read(EEPROM_EX1));
     ex2Button->setFunc(EEPROM.read(EEPROM_EX2));
     ex3Button->setFunc(EEPROM.read(EEPROM_EX3));
+    ex4Button->setFunc(EEPROM.read(EEPROM_EX4));
+    ex5Button->setFunc(EEPROM.read(EEPROM_EX5));
+    ex6Button->setFunc(EEPROM.read(EEPROM_EX6));
 
     use_solfege = EEPROM.read(EEPROM_USE_SOLFEGE);
 
@@ -309,21 +346,25 @@ void loop() {
     myvibknob->update();
   #endif
 
-  tpose_up->update();
-  tpose_down->update();
-  capo->update();
-
   myAButton->update();
   myXButton->update();
 
+  #ifndef USE_GEARED_CRANK
   ex1Button->update();
   ex2Button->update();
   ex3Button->update();
+  #endif
+  ex4Button->update();
+  ex5Button->update();
+  ex6Button->update();
 
   bool go_menu = false;
   if ((ex1Button->wasPressed() && ex1Button->getFunc() == 1) ||
       (ex2Button->wasPressed() && ex2Button->getFunc() == 1) ||
-      (ex3Button->wasPressed() && ex3Button->getFunc() == 1)) {
+      (ex3Button->wasPressed() && ex3Button->getFunc() == 1) ||
+      (ex4Button->wasPressed() && ex4Button->getFunc() == 1) ||
+      (ex5Button->wasPressed() && ex5Button->getFunc() == 1) ||
+      (ex6Button->wasPressed() && ex6Button->getFunc() == 1)) {
     go_menu = true;
   }
   // If the "X" and "O" buttons are both down, or if the first extra button is pressed,
@@ -331,12 +372,7 @@ void loop() {
   if ((myAButton->beingPressed() && myXButton->beingPressed()) || go_menu) {
 
     // Turn off the sound :-)
-    mystring->soundOff();
-    mylowstring->soundOff();
-    mykeyclick->soundOff();  // Not sure if this is necessary... but it feels right.
-    mytromp->soundOff();
-    mydrone->soundOff();
-    mybuzz->soundOff();
+    all_soundOff();
 
     // If I don't do this, it comes on afterwards.
     bigbutton->setToggle(false);
@@ -346,96 +382,37 @@ void loop() {
                  tpose_offset, capo_offset, 0, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
   };
 
-  // Check for a capo shift.
-  if (capo->wasPressed() ||
-      (myXButton->beingPressed() && myBButton->wasPressed())) {
-
-    capo_offset += 2;
-
-    if (capo_offset > max_capo ) {
-      capo_offset = 0;
-    };
-
-    if (mycrank->isSpinning() || bigbutton->toggleOn()) {
-      mytromp->soundOff();
-      mydrone->soundOff();
-      mystring->soundOff();
-      mylowstring->soundOff();
-      mykeyclick->soundOff();
-
-      mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
-      mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
-      mykeyclick->soundOn(tpose_offset);
-      mytromp->soundOn(tpose_offset + capo_offset);
-      mydrone->soundOn(tpose_offset + capo_offset);
-
-      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
-    } else {
-      print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
-                 tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
-    };
+  if (myXButton->beingPressed() && myAltTposeUp->wasPressed()) {
+    vol_up();
   };
-
-  // As long as we're in playing mode--acutally playing or not--
-  // check for a tpose shift.
-  if ((tpose_up->wasPressed() ||
-      (my1Button->beingPressed() && myAltTposeUp->wasPressed())) && (tpose_offset < max_tpose)) {
-    tpose_offset += 1;
-
-    if (mycrank->isSpinning() || bigbutton->toggleOn()) {
-      mytromp->soundOff();
-      mydrone->soundOff();
-      mystring->soundOff();
-      mylowstring->soundOff();
-      mykeyclick->soundOff();
-
-      mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
-      mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
-      mykeyclick->soundOn(tpose_offset);
-      mytromp->soundOn(tpose_offset + capo_offset);
-      mydrone->soundOn(tpose_offset + capo_offset);
-
-      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
-    } else {
-      print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
-                   tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
-    };
-  };
-  if ((tpose_down->wasPressed() ||
-      (my1Button->beingPressed() && myAltTposeDown->wasPressed())) && (max_tpose + tpose_offset > 0)) {
-    tpose_offset -= 1;
-
-    if (mycrank->isSpinning() || bigbutton->toggleOn()) {
-      mytromp->soundOff();
-      mydrone->soundOff();
-      mystring->soundOff();
-      mylowstring->soundOff();
-      mykeyclick->soundOff();
-
-      mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
-      mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
-      mykeyclick->soundOn(tpose_offset);
-      mytromp->soundOn(tpose_offset + capo_offset);
-      mydrone->soundOn(tpose_offset + capo_offset);
-
-      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
-    } else {
-      print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
-                   tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
-    };
+  if (myXButton->beingPressed() && myAltTposeDown->wasPressed()) {
+    vol_down();
   };
 
   if (ex1Button->wasPressed()) {
-    ex1Button->doFunc();
+    ex1Button->doFunc(mycrank->isSpinning() || bigbutton->toggleOn());
   };
 
   if (ex2Button->wasPressed()) {
-    ex2Button->doFunc();
+    ex2Button->doFunc(mycrank->isSpinning() || bigbutton->toggleOn());
   };
 
   if (ex3Button->wasPressed()) {
-    ex3Button->doFunc();
+    ex3Button->doFunc(mycrank->isSpinning() || bigbutton->toggleOn());
   };
+
+  if (ex4Button->wasPressed()) {
+    ex4Button->doFunc(mycrank->isSpinning() || bigbutton->toggleOn());
+  };
+
+  if (ex5Button->wasPressed()) {
+    ex5Button->doFunc(mycrank->isSpinning() || bigbutton->toggleOn());
+  };
+
+  if (ex6Button->wasPressed()) {
+    ex6Button->doFunc(mycrank->isSpinning() || bigbutton->toggleOn());
+  };
+  
 
   // NOTE:
   // We don't actually do anything if nothing changed this cycle.  Strings stay on/off automatically,
@@ -488,21 +465,10 @@ void loop() {
 
   // If the toggle came off and the crank is off, turn off sound.
   } else if (bigbutton->wasReleased() && !mycrank->isSpinning()) {
-    mystring->soundOff();
-    mylowstring->soundOff();
-    mykeyclick->soundOff();  // Not sure if this is necessary... but it feels right.
-    mytromp->soundOff();
-    mydrone->soundOff();
-    mybuzz->soundOff();
+    all_soundOff();
 
-    // Send a CC 123 (all notes off) to be sure.  This causes turning off sound via the big
-    // button to basically be a MIDI kill button.
-    mystring->soundKill();
-    mylowstring->soundKill();
-    mykeyclick->soundKill();
-    mytromp->soundKill();
-    mydrone->soundKill();
-    mybuzz->soundKill();
+    // Just to be sure...
+    all_soundKill();
 
     // Mark the time we stopped playing and trip the turn-off-the-display flag
     stopped_playing_time = millis();
@@ -510,12 +476,7 @@ void loop() {
 
   // If the crank stops and the toggle was off, turn off sound.
   } else if (mycrank->stoppedSpinning() && !bigbutton->toggleOn()) {
-    mystring->soundOff();
-    mylowstring->soundOff();
-    mykeyclick->soundOff();
-    mytromp->soundOff();
-    mydrone->soundOff();
-    mybuzz->soundOff();
+    all_soundOff();
 
     stopped_playing_time = millis();
     note_display_off = false;
@@ -532,34 +493,30 @@ void loop() {
   };
 
   // Apparently we need to do this to discard incoming data.
-  #if !defined(USE_TRIGGER) && !defined(USE_TSUNAMI)
+  if (EEPROM.read(EEPROM_SEC_OUT) != 1) {
     while (MIDI.read()) {
-    };
-  #endif
+      };
+  };
   while (usbMIDI.read()) {
   };
-
-  #ifdef USE_TRIGGER
-    //delay(100);
-  #endif
 
   // My dev output stuff.
   test_count +=1;
   if (test_count > 100000) {
     test_count = 0;
      Serial.print("100,000 loop()s took: ");
-     Serial.print(millis() - start_time);
-     Serial.print("ms.  Avg Velocity: ");
-     Serial.print(mycrank->getVAvg());
-     Serial.print("rpm. Transitions: ");
-     Serial.print(mycrank->getCount());
-     Serial.print(", est. rev: ");
-     Serial.println(mycrank->getRev());
+     Serial.println(millis() - start_time);
+     // Serial.print("ms.  Avg Velocity: ");
+     // Serial.print(mycrank->getVAvg());
+     // Serial.print("rpm. Transitions: ");
+     // Serial.print(mycrank->getCount());
+     // Serial.print(", est. rev: ");
+     // Serial.println(mycrank->getRev());
      start_time = millis();
      #ifdef USE_PEDAL
        Serial.println(String("") + "\nKNOB_V = " + myvibknob->getVoltage());
        Serial.println(String("") + "KNOB_VIB = " + myvibknob->getVibrato());
      #endif
-
   }
+
 };

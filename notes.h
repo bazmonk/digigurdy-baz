@@ -20,11 +20,6 @@ enum Note {
   c9, c9s, d9, d9s, e9, f9, f9s, g9
 };
 
-extern String NoteNumABC[];
-extern String NoteNumDRM[];
-extern String LongNoteNumABC[];
-extern String LongNoteNumDRM[];
-
 extern int use_solfege;
 
 String getNoteNum(int num);

@@ -5,6 +5,9 @@
 //     Comments: Robertsonics Tsunami serial control library
 //
 // Programmers: Jamie Robertson, info@robertsonics.com
+// Hacked by: @bazmonk
+// Changed "EOM" to "EOMTS" to not clash with USBHost_t36 library -BDL
+// Expanded __WT_USE_SERIAL#__ to all 8 supported by Teensy4.1 -BDL
 //
 // **************************************************************
 
@@ -13,15 +16,7 @@
 
 #define TSUNAMI_NUM_OUTPUTS	8
 
-// ==================================================================
-// The following defines are used to control which serial class is
-//  used. Uncomment only the one you wish to use. If all of them are
-//  commented out, the library will use Hardware Serial
-#define __TSUNAMI_USE_SERIAL1__
-//#define __TSUNAMI_USE_SERIAL2__
-//#define __TSUNAMI_USE_SERIAL3__
-//#define __TSUNAMI_USE_ALTSOFTSERIAL__
-// ==================================================================
+#include "config.h"
 
 #define CMD_GET_VERSION				1
 #define CMD_GET_SYS_INFO			2
@@ -57,7 +52,7 @@
 
 #define SOM1	0xf0
 #define SOM2	0xaa
-#define EOM		0x55
+#define EOMTS		0x55
 
 #define IMIX_OUT1	0x01
 #define IMIX_OUT2	0x02
@@ -79,6 +74,26 @@
 #endif
 #ifdef __TSUNAMI_USE_SERIAL3__
 #define TsunamiSerial Serial3
+#define __TSUNAMI_SERIAL_ASSIGNED__
+#endif
+#ifdef __TSUNAMI_USE_SERIAL4__
+#define TsunamiSerial Serial4
+#define __TSUNAMI_SERIAL_ASSIGNED__
+#endif
+#ifdef __TSUNAMI_USE_SERIAL5__
+#define TsunamiSerial Serial5
+#define __TSUNAMI_SERIAL_ASSIGNED__
+#endif
+#ifdef __TSUNAMI_USE_SERIAL6__
+#define TsunamiSerial Serial6
+#define __TSUNAMI_SERIAL_ASSIGNED__
+#endif
+#ifdef __TSUNAMI_USE_SERIAL7__
+#define TsunamiSerial Serial7
+#define __TSUNAMI_SERIAL_ASSIGNED__
+#endif
+#ifdef __TSUNAMI_USE_SERIAL8__
+#define TsunamiSerial Serial8
 #define __TSUNAMI_SERIAL_ASSIGNED__
 #endif
 #ifndef __TSUNAMI_SERIAL_ASSIGNED__

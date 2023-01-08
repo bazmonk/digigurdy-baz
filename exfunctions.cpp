@@ -1,5 +1,15 @@
 #include "exfunctions.h"
 
+/// @defgroup ex EX Button Functions
+/// These are the various functions that the EX buttons can be configured to run when pressed.
+/// @note One EX button use isn't listed here: bringing up the pause screen.
+/// @{
+
+/// @brief Cycles through muting the melody strings.
+/// @details
+/// * Applies immediately if playing.
+/// * Cycles through one or the other or no melody strings.
+/// * Does not include an option to mute all melody strings (why have that?).
 void cycle_mel_mute() {
   if (mel_mode == 0) {
     mel_mode = 1; // 1 == high on, low off
@@ -35,6 +45,10 @@ void cycle_mel_mute() {
   };
 };
 
+/// @brief Cycles through muting the drone and trompette strings.
+/// @details
+/// * Applies immediately if playing.
+/// * Cycles through all 4 mute/unmute possibilities between the two strings.
 void cycle_drone_tromp_mute() {
   if (drone_mode == 0) {
     drone_mode = 1; // 1 == both off
@@ -84,6 +98,8 @@ void cycle_drone_tromp_mute() {
   };
 };
 
+/// @brief Toggles muting the drone string.
+/// @details * Applies immediately if playing.
 void cycle_drone_mute() {
   if (drone_mode == 0 || drone_mode == 2) {
     if (drone_mode == 0) {
@@ -115,6 +131,8 @@ void cycle_drone_mute() {
   };
 };
 
+/// @brief Toggles muting the trompette string.
+/// @details * Applies immediately if playing.
 void cycle_tromp_mute() {
   if (t_mode == 0) {
     t_mode = 1;
@@ -139,3 +157,37 @@ void cycle_tromp_mute() {
     print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
   };
 };
+
+/// @brief Turns the volume down by 10 if possible on all strings.
+/// @version *New in 2.3.3*
+void turn_volume_down() {
+  
+  vol_down();
+};
+
+/// @brief Turns the volume up by 10 if possible on all strings.
+/// @version *New in 2.3.3*
+void turn_volume_up() {
+
+  vol_up();
+};
+
+/// @brief Cycles the capo, and adjusts any playing notes.
+/// @version *New in  2.3.7*
+void ex_cycle_capo(bool playing) {
+  cycle_capo(playing);
+};
+
+/// @brief Increases the transpose by 1 semitone, and adjusts any playing notes.
+/// @version *New in  2.3.7*
+void ex_tpose_up(bool playing) {
+  tpose_up_1(playing);
+};
+
+/// @brief Decreases the transpose by 1 semitone, and adjusts any playing notes.
+/// @version *New in  2.3.7*
+void ex_tpose_down(bool playing) {
+  tpose_down_1(playing);
+};
+
+/// @}

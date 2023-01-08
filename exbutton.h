@@ -21,9 +21,13 @@ class ExButton: public GurdyButton {
 
     void setFunc(int func);
 
-    void doFunc();
+    void doFunc(bool playing);
+
+    String printFunc();
 
     void fn_choice_screen(int but_num);
+
+    bool fn_choice_screen_2(int but_num);
 };
 
 #endif

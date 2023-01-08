@@ -7,13 +7,23 @@
 #include "config.h"
 #include "notes.h"
 
+/// @ingroup display
+/// @{
+
 // These are the Teensy pins wired up for the OLED.
 // 2.2.1 - changes for HW SPI
+/// @brief The MOSI/DATA pin to the screen.
 #define OLED_MOSI 11
+/// @brief The CLK/SCL/SCK pin to the screen.
 #define OLED_CLK 13
+/// @brief The DC pin to the screen.
 #define OLED_DC 9
+/// @brief The CS pin to the screen.
 #define OLED_CS 10
+/// @brief The RESET pin to the screen.
 #define OLED_RESET 38
+
+/// @}
 
 #ifdef WHITE_OLED
   extern U8G2_SSD1306_128X64_NONAME_F_4W_HW_SPI u8g2;
@@ -26,6 +36,7 @@
   extern U8G2_SH1106_128X64_NONAME_F_4W_HW_SPI u8g2;
   //extern U8G2_SH1106_128X64_NONAME_F_4W_SW_SPI u8g2;
 #endif
+
 
 void start_display();
 void print_menu_6(String title, String opt1, String opt2, String opt3, String opt4, String opt5, String opt6);
