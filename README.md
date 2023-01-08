@@ -4,7 +4,10 @@ See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more docu
 
 See [the code documentation here](https://bazmonk.github.io/digigurdy-baz/html/index.html).
 
-**Check out version 2.4.0! (NEW)**
+**Check out version 2.5.1! (NEW)**
+
+* 2.5.1 -
+  * Added QR codes as a help function (to User Guide), and after the about screen (to main Digi-Gurdy site)
 
 * 2.4.0 = 2.3.8 rebadged for main branch.  **Summary of changes since 2.2**:
   * *Switch to hardware SPI screen wiring requirement.*
