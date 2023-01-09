@@ -11,6 +11,6 @@ var searchData=
   ['notenumdrm_8',['NoteNumDRM',['../notes_8cpp.html#a032169a523872e2f0578cd4fc7ba412c',1,'notes.cpp']]],
   ['notes_2ecpp_9',['notes.cpp',['../notes_8cpp.html',1,'']]],
   ['notes_2eh_10',['notes.h',['../notes_8h.html',1,'']]],
-  ['num_5fkeys_11',['num_keys',['../group__config.html#ga5436d28962848be585a4dec2ea597775',1,'num_keys():&#160;config.h'],['../config_8white_8led_8h.html#a5436d28962848be585a4dec2ea597775',1,'num_keys():&#160;config.white.led.h'],['../config_8white_8pedal_8h.html#a5436d28962848be585a4dec2ea597775',1,'num_keys():&#160;config.white.pedal.h']]],
-  ['num_5fspokes_12',['NUM_SPOKES',['../group__optical.html#gaec34bc626c60b1adb67821731b8e31a7',1,'NUM_SPOKES():&#160;config.h'],['../group__optical.html#gaec34bc626c60b1adb67821731b8e31a7',1,'NUM_SPOKES():&#160;config.white.led.h'],['../config_8white_8pedal_8h.html#aec34bc626c60b1adb67821731b8e31a7',1,'NUM_SPOKES():&#160;config.white.pedal.h']]]
+  ['num_5fkeys_11',['num_keys',['../group__config.html#ga5436d28962848be585a4dec2ea597775',1,'num_keys():&#160;config.h'],['../group__config.html#ga5436d28962848be585a4dec2ea597775',1,'num_keys():&#160;config.oldgurdy.h']]],
+  ['num_5fspokes_12',['NUM_SPOKES',['../group__optical.html#gaec34bc626c60b1adb67821731b8e31a7',1,'NUM_SPOKES():&#160;config.h'],['../group__optical.html#gaec34bc626c60b1adb67821731b8e31a7',1,'NUM_SPOKES():&#160;config.oldgurdy.h']]]
 ];

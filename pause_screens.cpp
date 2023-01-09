@@ -483,6 +483,18 @@ void save_tunings(int slot) {
 
 };
 
+/// @brief Resets EX EEPROM values to their defaults
+void reset_ex_eeprom() {
+  EEPROM.write(EEPROM_BUZZ_LED, 1);
+  EEPROM.write(EEPROM_EX1, 1);
+  EEPROM.write(EEPROM_EX2, 2);
+  EEPROM.write(EEPROM_EX3, 3);
+  EEPROM.write(EEPROM_EX4, 8);
+  EEPROM.write(EEPROM_EX5, 9);
+  EEPROM.write(EEPROM_EX6, 10);
+  EEPROM.write(EEPROM_EXBB, 11);
+};
+
 /// @brief Clears the EEPROM and sets some default values in it.
 /// @note Most values set to zero, but LED and EX values have non-zero defaults also set here.
 void clear_eeprom() {
@@ -491,13 +503,8 @@ void clear_eeprom() {
     EEPROM.write(i, 0);
 
   // But now let's fill in the defaults:
-  EEPROM.write(EEPROM_BUZZ_LED, 1);
-  EEPROM.write(EEPROM_EX1, 1);
-  EEPROM.write(EEPROM_EX2, 2);
-  EEPROM.write(EEPROM_EX3, 3);
-  EEPROM.write(EEPROM_EX4, 8);
-  EEPROM.write(EEPROM_EX5, 9);
-  EEPROM.write(EEPROM_EX6, 10);
+  reset_ex_eeprom();
+
   EEPROM.write(EEPROM_SCENE_SIGNALLING, 0);
   EEPROM.write(EEPROM_USE_SOLFEGE, 0);
 

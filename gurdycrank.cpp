@@ -143,7 +143,7 @@ void GurdyCrank::updateExpression() {
       cur_v = V_THRESHOLD;
     }
     int new_expression = int(((cur_v - V_THRESHOLD)/(EXPRESSION_VMAX - V_THRESHOLD)) * (127 - EXPRESSION_START) + EXPRESSION_START);
-    if (bigbutton->toggleOn()) {
+    if (autocrank_toggle_on) {
       new_expression = 90;
     };
 

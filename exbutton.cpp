@@ -108,6 +108,7 @@ void ExButton::fn_choice_screen(int but_num) {
     if (my1Button->wasPressed()) {
       setFunc(1);
       // this is ugly, I know...
+      if (but_num == 0) { EEPROM.write(EEPROM_EXBB, 1); };
       if (but_num == 1) { EEPROM.write(EEPROM_EX1, 1); };
       if (but_num == 2) { EEPROM.write(EEPROM_EX2, 1); };
       if (but_num == 3) { EEPROM.write(EEPROM_EX3, 1); };
@@ -118,6 +119,7 @@ void ExButton::fn_choice_screen(int but_num) {
       done = true;
     } else if (my2Button->wasPressed()) {
       setFunc(2);
+      if (but_num == 0) { EEPROM.write(EEPROM_EXBB, 2); };
       if (but_num == 1) { EEPROM.write(EEPROM_EX1, 2); };
       if (but_num == 2) { EEPROM.write(EEPROM_EX2, 2); };
       if (but_num == 3) { EEPROM.write(EEPROM_EX3, 2); };
@@ -128,6 +130,7 @@ void ExButton::fn_choice_screen(int but_num) {
       done = true;
     } else if (my3Button->wasPressed()) {
       setFunc(3);
+      if (but_num == 0) { EEPROM.write(EEPROM_EXBB, 3); };
       if (but_num == 1) { EEPROM.write(EEPROM_EX1, 3); };
       if (but_num == 2) { EEPROM.write(EEPROM_EX2, 3); };
       if (but_num == 3) { EEPROM.write(EEPROM_EX3, 3); };
@@ -138,6 +141,7 @@ void ExButton::fn_choice_screen(int but_num) {
       done = true;
     } else if (my4Button->wasPressed()) {
       setFunc(4);
+      if (but_num == 0) { EEPROM.write(EEPROM_EXBB, 4); };
       if (but_num == 1) { EEPROM.write(EEPROM_EX1, 4); };
       if (but_num == 2) { EEPROM.write(EEPROM_EX2, 4); };
       if (but_num == 3) { EEPROM.write(EEPROM_EX3, 4); };
@@ -148,6 +152,7 @@ void ExButton::fn_choice_screen(int but_num) {
       done = true;
     } else if (my5Button->wasPressed()) {
       setFunc(5);
+      if (but_num == 0) { EEPROM.write(EEPROM_EXBB, 5); };
       if (but_num == 1) { EEPROM.write(EEPROM_EX1, 5); };
       if (but_num == 2) { EEPROM.write(EEPROM_EX2, 5); };
       if (but_num == 3) { EEPROM.write(EEPROM_EX3, 5); };
@@ -190,6 +195,7 @@ bool ExButton::fn_choice_screen_2(int but_num) {
     if (my1Button->wasPressed()) {
       setFunc(6);
       // this is ugly, I know...
+      if (but_num == 0) { EEPROM.write(EEPROM_EXBB, 6); };
       if (but_num == 1) { EEPROM.write(EEPROM_EX1, 6); };
       if (but_num == 2) { EEPROM.write(EEPROM_EX2, 6); };
       if (but_num == 3) { EEPROM.write(EEPROM_EX3, 6); };
@@ -200,6 +206,7 @@ bool ExButton::fn_choice_screen_2(int but_num) {
       done = true;
     } else if (my2Button->wasPressed()) {
       setFunc(7);
+      if (but_num == 0) { EEPROM.write(EEPROM_EXBB, 7); };
       if (but_num == 1) { EEPROM.write(EEPROM_EX1, 7); };
       if (but_num == 2) { EEPROM.write(EEPROM_EX2, 7); };
       if (but_num == 3) { EEPROM.write(EEPROM_EX3, 7); };
@@ -210,6 +217,7 @@ bool ExButton::fn_choice_screen_2(int but_num) {
       done = true;
     } else if (my3Button->wasPressed()) {
       setFunc(8);
+      if (but_num == 0) { EEPROM.write(EEPROM_EXBB, 8); };
       if (but_num == 1) { EEPROM.write(EEPROM_EX1, 8); };
       if (but_num == 2) { EEPROM.write(EEPROM_EX2, 8); };
       if (but_num == 3) { EEPROM.write(EEPROM_EX3, 8); };
@@ -220,6 +228,7 @@ bool ExButton::fn_choice_screen_2(int but_num) {
       done = true;
     } else if (my4Button->wasPressed()) {
       setFunc(9);
+      if (but_num == 0) { EEPROM.write(EEPROM_EXBB, 9); };
       if (but_num == 1) { EEPROM.write(EEPROM_EX1, 9); };
       if (but_num == 2) { EEPROM.write(EEPROM_EX2, 9); };
       if (but_num == 3) { EEPROM.write(EEPROM_EX3, 9); };
@@ -230,6 +239,7 @@ bool ExButton::fn_choice_screen_2(int but_num) {
       done = true;
     } else if (my5Button->wasPressed()) {
       setFunc(10);
+      if (but_num == 0) { EEPROM.write(EEPROM_EXBB, 10); };
       if (but_num == 1) { EEPROM.write(EEPROM_EX1, 10); };
       if (but_num == 2) { EEPROM.write(EEPROM_EX2, 10); };
       if (but_num == 3) { EEPROM.write(EEPROM_EX3, 10); };
@@ -240,6 +250,7 @@ bool ExButton::fn_choice_screen_2(int but_num) {
       done = true;
     } else if (my6Button->wasPressed()) {
       setFunc(11);
+      if (but_num == 0) { EEPROM.write(EEPROM_EXBB, 11); };
       if (but_num == 1) { EEPROM.write(EEPROM_EX1, 11); };
       if (but_num == 2) { EEPROM.write(EEPROM_EX2, 11); };
       if (but_num == 3) { EEPROM.write(EEPROM_EX3, 11); };

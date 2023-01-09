@@ -43,6 +43,7 @@ void save_tuning_screen();
 void signal_scene_change(int scene_idx);
 void load_preset_tunings(int preset);
 void load_saved_tunings(int slot);
+void reset_ex_eeprom();
 void clear_eeprom();
 bool view_slot_screen(int slot_num);
 bool view_preset_screen(int preset);

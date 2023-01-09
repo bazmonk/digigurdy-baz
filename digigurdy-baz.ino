@@ -23,7 +23,6 @@
 #endif
 
 #include "hurdygurdy.h"
-#include "togglebutton.h"
 #include "vibknob.h"
 
 // These are all about the display
@@ -52,7 +51,7 @@ ADC* adc;
 
 // Declare the "keybox" and buttons.
 HurdyGurdy *mygurdy;
-ToggleButton *bigbutton;
+ExButton *bigButton;
 
 #ifdef USE_GEARED_CRANK
   GearCrank *mycrank;
@@ -137,6 +136,8 @@ bool gc_or_dg;
 
 int use_solfege;
 
+bool autocrank_toggle_on = false;
+
 /// @brief The main setup function.
 /// @details Arduinio/Teensy sketches run this function once upon startup.
 /// * Initializes display, runs startup animation.
@@ -217,7 +218,6 @@ void setup() {
   // The keybox arrangement is decided by pin_array, which is up in the CONFIG SECTION
   // of this file.  Make adjustments there.
   mygurdy = new HurdyGurdy(pin_array, num_keys);
-  bigbutton = new ToggleButton(BIG_BUTTON_PIN, 250);
 
   // These indices are defined in config.h
   myXButton = mygurdy->keybox[X_INDEX];
@@ -264,6 +264,7 @@ void setup() {
   ex4Button = new ExButton(21, EEPROM.read(EEPROM_EX4), 200);
   ex5Button = new ExButton(22, EEPROM.read(EEPROM_EX5), 200);
   ex6Button = new ExButton(23, EEPROM.read(EEPROM_EX6), 200);
+  bigButton = new ExButton(BIG_BUTTON_PIN, EEPROM.read(EEPROM_EXBB), 250);
 
   scene_signal_type = EEPROM.read(EEPROM_SCENE_SIGNALLING);
 
@@ -288,8 +289,6 @@ void setup() {
 //
 
 bool first_loop = true;
-
-bool autocrank_toggle_on = false;
 
 // This is for dev stuff when it breaks.
 int test_count = 0;
@@ -319,6 +318,7 @@ void loop() {
     ex4Button->setFunc(EEPROM.read(EEPROM_EX4));
     ex5Button->setFunc(EEPROM.read(EEPROM_EX5));
     ex6Button->setFunc(EEPROM.read(EEPROM_EX6));
+    bigButton->setFunc(EEPROM.read(EEPROM_EXBB));
 
     use_solfege = EEPROM.read(EEPROM_USE_SOLFEGE);
 
@@ -341,7 +341,6 @@ void loop() {
 
   // Update the keys, buttons, and crank status (which includes the buzz knob)
   myoffset = mygurdy->getMaxOffset();  // This covers the keybox buttons.
-  bigbutton->update();
   mycrank->update();
 
   #ifdef USE_PEDAL
@@ -356,20 +355,24 @@ void loop() {
   ex2Button->update();
   ex3Button->update();
   #endif
+  bigButton->update();
   ex4Button->update();
   ex5Button->update();
   ex6Button->update();
 
   bool go_menu = false;
 
+  // Check if any pause manu EX buttons were pressed.
   #ifdef USE_GEARED_CRANK
-  if ((ex4Button->wasPressed() && ex4Button->getFunc() == 1) ||
+  if ((bigButton->wasPressed() && bigButton->getFunc() == 1) ||
+      (ex4Button->wasPressed() && ex4Button->getFunc() == 1) ||
       (ex5Button->wasPressed() && ex5Button->getFunc() == 1) ||
       (ex6Button->wasPressed() && ex6Button->getFunc() == 1)) {
     go_menu = true;
   }
   #else
-  if ((ex1Button->wasPressed() && ex1Button->getFunc() == 1) ||
+  if ((bigButton->wasPressed() && bigButton->getFunc() == 1) ||
+      (ex1Button->wasPressed() && ex1Button->getFunc() == 1) ||
       (ex2Button->wasPressed() && ex2Button->getFunc() == 1) ||
       (ex3Button->wasPressed() && ex3Button->getFunc() == 1) ||
       (ex4Button->wasPressed() && ex4Button->getFunc() == 1) ||
@@ -386,9 +389,6 @@ void loop() {
     // Turn off the sound :-)
     all_soundOff();
 
-    // If I don't do this, it comes on afterwards.
-    bigbutton->setToggle(false);
-
     pause_screen();
     print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
                  tpose_offset, capo_offset, 0, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
@@ -404,12 +404,7 @@ void loop() {
   bool any_newly_pressed = false;
   bool any_newly_released = false;
 
-  // If toggled off, check if any pressed.
-  if (bigbutton->wasPressed()) { 
-    autocrank_toggle_on = !autocrank_toggle_on;
-    any_newly_pressed = true;
-  } else 
-
+  // Check if any autocrank EX buttons were pressed
   #ifndef USE_GEARED_CRANK
   if (ex1Button->getFunc() == 11 && ex1Button->wasPressed()) { 
     autocrank_toggle_on = !autocrank_toggle_on;
@@ -423,7 +418,10 @@ void loop() {
   } else
   #endif
 
-  if (ex4Button->getFunc() == 11 && ex4Button->wasPressed()) { 
+  if (bigButton->getFunc() == 11 && bigButton->wasPressed()) { 
+    autocrank_toggle_on = !autocrank_toggle_on;
+    any_newly_pressed = true;
+  } else if (ex4Button->getFunc() == 11 && ex4Button->wasPressed()) { 
     autocrank_toggle_on = !autocrank_toggle_on;
     any_newly_pressed = true;
   } else if (ex5Button->getFunc() == 11 && ex5Button->wasPressed()) { 
@@ -434,11 +432,7 @@ void loop() {
     any_newly_pressed = true;
   };
 
-
-  if (bigbutton->wasReleased()) { 
-    any_newly_released = true;
-  } else 
-
+  // Check if any autocrank EX buttons were released
   #ifndef USE_GEARED_CRANK
   if (ex1Button->getFunc() == 11 && ex1Button->wasReleased()) { 
     any_newly_released = true;
@@ -449,6 +443,9 @@ void loop() {
   } else
   #endif
 
+  if (bigButton->getFunc() == 11 && bigButton->wasReleased()) { 
+    any_newly_released = true;
+  } else 
   if (ex4Button->getFunc() == 11 && ex4Button->wasReleased()) { 
     any_newly_released = true;
   } else if (ex5Button->getFunc() == 11 && ex5Button->wasReleased()) { 
@@ -464,6 +461,7 @@ void loop() {
   if (ex2Button->wasPressed()) { ex2Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
   if (ex3Button->wasPressed()) { ex3Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
   #endif
+  if (bigButton->wasPressed()) { bigButton->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
   if (ex4Button->wasPressed()) { ex4Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
   if (ex5Button->wasPressed()) { ex5Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
   if (ex6Button->wasPressed()) { ex6Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };

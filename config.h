@@ -4,7 +4,7 @@
 #include <Arduino.h>
 
 const String VERSION = "2.5.2";
-const String REL_DATE = "2023-01-08, v" + VERSION;
+const String REL_DATE = "2023-01-09, v" + VERSION;
 
 /// @defgroup config Configuration Options
 /// These variables/definitions are compile-time configuration options.

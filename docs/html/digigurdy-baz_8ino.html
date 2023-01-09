@@ -84,7 +84,6 @@ $(function() {
 <code>#include &quot;<a class="el" href="usb__power_8h_source.html">usb_power.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="gearcrank_8h_source.html">gearcrank.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="hurdygurdy_8h_source.html">hurdygurdy.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="togglebutton_8h_source.html">togglebutton.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="vibknob_8h_source.html">vibknob.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="display_8h_source.html">display.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="startup__screens_8h_source.html">startup_screens.h</a>&quot;</code><br />
@@ -110,8 +109,8 @@ Variables</h2></td></tr>
 <tr class="separator:adfc4cf75de73dc229c45303c75fc1178"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ec9ea28d62a593133f3ef8fc080465e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_hurdy_gurdy.html">HurdyGurdy</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digigurdy-baz_8ino.html#a0ec9ea28d62a593133f3ef8fc080465e">mygurdy</a></td></tr>
 <tr class="separator:a0ec9ea28d62a593133f3ef8fc080465e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9263d028ea92fce2dab2a8f989fcccb5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_toggle_button.html">ToggleButton</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digigurdy-baz_8ino.html#a9263d028ea92fce2dab2a8f989fcccb5">bigbutton</a></td></tr>
-<tr class="separator:a9263d028ea92fce2dab2a8f989fcccb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40af89cdb02ed0b5acdecbcf6010f51e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_ex_button.html">ExButton</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digigurdy-baz_8ino.html#a40af89cdb02ed0b5acdecbcf6010f51e">bigButton</a></td></tr>
+<tr class="separator:a40af89cdb02ed0b5acdecbcf6010f51e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a264f2296c075fbebbd0f46c72f34946b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_gear_crank.html">GearCrank</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digigurdy-baz_8ino.html#a264f2296c075fbebbd0f46c72f34946b">mycrank</a></td></tr>
 <tr class="separator:a264f2296c075fbebbd0f46c72f34946b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abdc04a1e75cd49285a1e195572555123"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_vib_knob.html">VibKnob</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digigurdy-baz_8ino.html#abdc04a1e75cd49285a1e195572555123">myvibknob</a></td></tr>
@@ -190,6 +189,8 @@ Variables</h2></td></tr>
 <tr class="separator:a96154e369f2e4244e7985ef982bb0a61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae650c280016b5bd61be7e2259ee6ef0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digigurdy-baz_8ino.html#aae650c280016b5bd61be7e2259ee6ef0">use_solfege</a></td></tr>
 <tr class="separator:aae650c280016b5bd61be7e2259ee6ef0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73059a8c3b8900fb2b0e46dc69f8bbda"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digigurdy-baz_8ino.html#a73059a8c3b8900fb2b0e46dc69f8bbda">autocrank_toggle_on</a> = false</td></tr>
+<tr class="separator:a73059a8c3b8900fb2b0e46dc69f8bbda"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0aafe87552d0b8c2b104d044c40fc1a8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digigurdy-baz_8ino.html#a0aafe87552d0b8c2b104d044c40fc1a8">first_loop</a> = true</td></tr>
 <tr class="separator:a0aafe87552d0b8c2b104d044c40fc1a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a125a07facfdab18ee2d8495d4f8c9d5b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digigurdy-baz_8ino.html#a125a07facfdab18ee2d8495d4f8c9d5b">test_count</a> = 0</td></tr>
@@ -282,14 +283,28 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a9263d028ea92fce2dab2a8f989fcccb5" name="a9263d028ea92fce2dab2a8f989fcccb5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9263d028ea92fce2dab2a8f989fcccb5">&#9670;&#160;</a></span>bigbutton</h2>
+<a id="a73059a8c3b8900fb2b0e46dc69f8bbda" name="a73059a8c3b8900fb2b0e46dc69f8bbda"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73059a8c3b8900fb2b0e46dc69f8bbda">&#9670;&#160;</a></span>autocrank_toggle_on</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_toggle_button.html">ToggleButton</a>* bigbutton</td>
+          <td class="memname">bool autocrank_toggle_on = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a40af89cdb02ed0b5acdecbcf6010f51e" name="a40af89cdb02ed0b5acdecbcf6010f51e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40af89cdb02ed0b5acdecbcf6010f51e">&#9670;&#160;</a></span>bigButton</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_ex_button.html">ExButton</a>* bigButton</td>
         </tr>
       </table>
 </div><div class="memdoc">
