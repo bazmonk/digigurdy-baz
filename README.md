@@ -4,7 +4,11 @@ See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more docu
 
 See [the code documentation here](https://bazmonk.github.io/digigurdy-baz/html/index.html).
 
-**Check out version 2.5.1! (NEW)**
+**Check out version 2.5.2! (NEW)**
+
+* 2.5.2 - 
+  * Auto-Crank is an EX function.
+  * Auto-Crank button is an EX button!
 
 * 2.5.1 -
   * Added QR codes as a help function (to User Guide), and after the about screen (to main Digi-Gurdy site)

@@ -4,13 +4,13 @@
 #include <Arduino.h>
 #include <EEPROM.h>
 
-#include "gurdybutton.h"
+#include "togglebutton.h"
 #include "exfunctions.h"
 #include "display.h"
 #include "eeprom_values.h"
 //#include "common.h"
 
-class ExButton: public GurdyButton {
+class ExButton: public ToggleButton {
   private:
     int my_func;
 

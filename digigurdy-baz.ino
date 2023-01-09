@@ -289,6 +289,8 @@ void setup() {
 
 bool first_loop = true;
 
+bool autocrank_toggle_on = false;
+
 // This is for dev stuff when it breaks.
 int test_count = 0;
 int start_time = millis();
@@ -376,6 +378,7 @@ void loop() {
     go_menu = true;
   }
   #endif
+
   // If the "X" and "O" buttons are both down, or if the first extra button is pressed,
   // trigger the tuning menu
   if ((myAButton->beingPressed() && myXButton->beingPressed()) || go_menu) {
@@ -398,31 +401,72 @@ void loop() {
     vol_down();
   };
 
+  bool any_newly_pressed = false;
+  bool any_newly_released = false;
+
+  // If toggled off, check if any pressed.
+  if (bigbutton->wasPressed()) { 
+    autocrank_toggle_on = !autocrank_toggle_on;
+    any_newly_pressed = true;
+  } else 
+
   #ifndef USE_GEARED_CRANK
-  if (ex1Button->wasPressed()) {
-    ex1Button->doFunc(mycrank->isSpinning() || bigbutton->toggleOn());
-  };
-
-  if (ex2Button->wasPressed()) {
-    ex2Button->doFunc(mycrank->isSpinning() || bigbutton->toggleOn());
-  };
-
-  if (ex3Button->wasPressed()) {
-    ex3Button->doFunc(mycrank->isSpinning() || bigbutton->toggleOn());
-  };
+  if (ex1Button->getFunc() == 11 && ex1Button->wasPressed()) { 
+    autocrank_toggle_on = !autocrank_toggle_on;
+    any_newly_pressed = true;
+  } else if (ex2Button->getFunc() == 11 && ex2Button->wasPressed()) { 
+    autocrank_toggle_on = !autocrank_toggle_on;
+    any_newly_pressed = true;
+  } else if (ex3Button->getFunc() == 11 && ex3Button->wasPressed()) { 
+    autocrank_toggle_on = !autocrank_toggle_on;
+    any_newly_pressed = true;
+  } else
   #endif
-  
-  if (ex4Button->wasPressed()) {
-    ex4Button->doFunc(mycrank->isSpinning() || bigbutton->toggleOn());
+
+  if (ex4Button->getFunc() == 11 && ex4Button->wasPressed()) { 
+    autocrank_toggle_on = !autocrank_toggle_on;
+    any_newly_pressed = true;
+  } else if (ex5Button->getFunc() == 11 && ex5Button->wasPressed()) { 
+    autocrank_toggle_on = !autocrank_toggle_on;
+    any_newly_pressed = true;
+  } else if (ex6Button->getFunc() == 11 && ex6Button->wasPressed()) { 
+    autocrank_toggle_on = !autocrank_toggle_on;
+    any_newly_pressed = true;
   };
 
-  if (ex5Button->wasPressed()) {
-    ex5Button->doFunc(mycrank->isSpinning() || bigbutton->toggleOn());
+
+  if (bigbutton->wasReleased()) { 
+    any_newly_released = true;
+  } else 
+
+  #ifndef USE_GEARED_CRANK
+  if (ex1Button->getFunc() == 11 && ex1Button->wasReleased()) { 
+    any_newly_released = true;
+  } else if (ex2Button->getFunc() == 11 && ex2Button->wasReleased()) { 
+    any_newly_released = true;
+  } else if (ex3Button->getFunc() == 11 && ex3Button->wasReleased()) { 
+    any_newly_released = true;
+  } else
+  #endif
+
+  if (ex4Button->getFunc() == 11 && ex4Button->wasReleased()) { 
+    any_newly_released = true;
+  } else if (ex5Button->getFunc() == 11 && ex5Button->wasReleased()) { 
+    any_newly_released = true;
+  } else if (ex6Button->getFunc() == 11 && ex6Button->wasReleased()) { 
+    any_newly_released = true;
   };
 
-  if (ex6Button->wasPressed()) {
-    ex6Button->doFunc(mycrank->isSpinning() || bigbutton->toggleOn());
-  };
+
+  // Run EX functions (other than open-pause-menu and auto-crank)
+  #ifndef USE_GEARED_CRANK
+  if (ex1Button->wasPressed()) { ex1Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
+  if (ex2Button->wasPressed()) { ex2Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
+  if (ex3Button->wasPressed()) { ex3Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
+  #endif
+  if (ex4Button->wasPressed()) { ex4Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
+  if (ex5Button->wasPressed()) { ex5Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
+  if (ex6Button->wasPressed()) { ex6Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
   
 
   // NOTE:
@@ -431,19 +475,20 @@ void loop() {
   // MIDI note itself.  We just turn that on and off like the other strings.
 
   // If the big button is toggled on or the crank is active (i.e., if we're making noise):
-  if (bigbutton->toggleOn() || mycrank->isSpinning()) {
+  if (autocrank_toggle_on || mycrank->isSpinning()) {
 
     // Turn on the strings without a click if:
     // * We just hit the button and we weren't cranking, OR
     // * We just started cranking and we hadn't hit the button.
-    if (bigbutton->wasPressed() && !mycrank->isSpinning()) {
+
+    if (any_newly_pressed && !mycrank->isSpinning()) {
       mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
       mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
       draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
 
-    } else if (mycrank->startedSpinning() && !bigbutton->toggleOn()) {
+    } else if (mycrank->startedSpinning() && !autocrank_toggle_on) {
       mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
       mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
       mytromp->soundOn(tpose_offset + capo_offset);
@@ -475,7 +520,7 @@ void loop() {
     };
 
   // If the toggle came off and the crank is off, turn off sound.
-  } else if (bigbutton->wasReleased() && !mycrank->isSpinning()) {
+  } else if (any_newly_released && !mycrank->isSpinning()) {
     all_soundOff();
 
     // Just to be sure...
@@ -486,7 +531,7 @@ void loop() {
     note_display_off = false;
 
   // If the crank stops and the toggle was off, turn off sound.
-  } else if (mycrank->stoppedSpinning() && !bigbutton->toggleOn()) {
+  } else if (mycrank->stoppedSpinning() && !autocrank_toggle_on) {
     all_soundOff();
 
     stopped_playing_time = millis();
@@ -496,7 +541,7 @@ void loop() {
   // Once the sound stops, track the time until a fifth of a second has passed, then go back to the
   // non-playing display.  This just makes the display looks a bit nicer even if the sound jitters a
   // little.  It's subtle but I like the touch.
-  if (!note_display_off && !bigbutton->toggleOn() && !mycrank->isSpinning()) {
+  if (!note_display_off && !autocrank_toggle_on && !mycrank->isSpinning()) {
     if ((millis() - stopped_playing_time) > 200) {
       note_display_off = true;
       print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());

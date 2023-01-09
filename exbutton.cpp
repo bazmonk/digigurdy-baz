@@ -4,7 +4,7 @@
 /// @param my_pin The digital pin this button is connected to
 /// @param func The beginning function for this button (See ExButton::doFunc for the numbering)
 /// @param interval The debounce interval for this button in milliseconds
-ExButton::ExButton(int my_pin, int func, int interval) : GurdyButton(my_pin, interval) {
+ExButton::ExButton(int my_pin, int func, int interval) : ToggleButton(my_pin, interval) {
   my_func = func;
 };
 
@@ -46,7 +46,8 @@ void ExButton::doFunc(bool playing) {
     ex_tpose_up(playing);
   } else if (my_func == 10) {
     ex_cycle_capo(playing);
-  
+  } else if (my_func == 11) {
+    return;
   };
   return;
 };
@@ -74,6 +75,8 @@ String ExButton::printFunc() {
     return String("Transpose Up");
   } else if (my_func == 10) {
     return String("Cycle Capo");
+  } else if (my_func == 11) {
+    return String("Auto-Crank");
   };
 
   return String("FIX ME!!!");
@@ -173,7 +176,7 @@ bool ExButton::fn_choice_screen_2(int but_num) {
   bool done = false;
   while (!done) {
 
-    print_menu_5("Ex Button Func., P.2", "Turn Volume Down", "Turn Volume Up", "Transpose Down", "Transpose Up", "Cycle Capo");
+    print_menu_6("Ex Button Func., P.2", "Turn Volume Down", "Turn Volume Up", "Transpose Down", "Transpose Up", "Cycle Capo", "Auto-Crank");
     delay(200);
 
     my1Button->update();
@@ -235,7 +238,17 @@ bool ExButton::fn_choice_screen_2(int but_num) {
       if (but_num == 6) { EEPROM.write(EEPROM_EX6, 10); };
 
       done = true;
-    } else if (my6Button->wasPressed() || myXButton->wasPressed()) {
+    } else if (my6Button->wasPressed()) {
+      setFunc(11);
+      if (but_num == 1) { EEPROM.write(EEPROM_EX1, 11); };
+      if (but_num == 2) { EEPROM.write(EEPROM_EX2, 11); };
+      if (but_num == 3) { EEPROM.write(EEPROM_EX3, 11); };
+      if (but_num == 4) { EEPROM.write(EEPROM_EX4, 11); };
+      if (but_num == 5) { EEPROM.write(EEPROM_EX5, 11); };
+      if (but_num == 6) { EEPROM.write(EEPROM_EX6, 11); };
+
+      done = true;
+    } else if (myXButton->wasPressed()) {
       return false;
     };
   };
