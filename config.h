@@ -295,6 +295,7 @@ const int TPOSE_DN_INDEX = num_keys - 3;
 const int CRANK_PIN = 15;
 
 /// @brief The analog pin running to the buzz potentiometer/knob.
+/// @warning This pin must be analog-capable.
 const int BUZZ_PIN = 16;
 
 /// @brief The pin running to the arcade, "auto-crank" button.
