@@ -8,26 +8,26 @@ const String REL_DATE = "2022-12-25, v" + VERSION;
 
 // Use one of these if you want, on the title/about screen.  Or make your own!
 //const String EXTRA_LINE = "                     ";
-const String EXTRA_LINE = " BLUE,TSUNAMI,GEARED ";
-//const String EXTRA_LINE = "  MIDI-OUT - PEDAL   ";
+//const String EXTRA_LINE = " BLUE,TSUNAMI,GEARED ";
+const String EXTRA_LINE = "  MIDI-OUT - PEDAL   ";
 //const String EXTRA_LINE = " TRIGGER - LED KNOB  ";
 //const String EXTRA_LINE = " TSUNAMI - LED KNOB  ";
 
 // ALL USERS!!! Uncomment one of these lines depending on what kind of OLED screen you have.
-//#define WHITE_OLED
-#define BLUE_OLED
+#define WHITE_OLED
+//#define BLUE_OLED
 
 // ALL USERS!!! If you're hooking up to a WAV Trigger or Super Tsunami, uncomment one of these.
 // * These expect to transmit via pin 1, Serial1 Tx.
 // * These effectively disables Serial MIDI.  USB MIDI is still available.
 //#define USE_TRIGGER
-#define USE_TSUNAMI
+//#define USE_TSUNAMI
 
 // This is the Tsunami out channel (they have multiple).  Adjsut this if you're not using the first
 // one.
 const int TSUNAMI_OUT = 0;
 
-#define USE_GEARED_CRANK
+//#define USE_GEARED_CRANK
 
 
 
@@ -44,7 +44,7 @@ const int TSUNAMI_OUT = 0;
 const int LED_PIN = 40;
 
 // Comment this out if you do not want to use the vibrato accessory pedal
-//#define USE_PEDAL
+#define USE_PEDAL
 
 // PEDAL_PIN is the pin used for the pedal accessory.
 const int PEDAL_PIN = 40;
