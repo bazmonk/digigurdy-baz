@@ -505,9 +505,6 @@ void clear_eeprom() {
   // But now let's fill in the defaults:
   reset_ex_eeprom();
 
-  EEPROM.write(EEPROM_SCENE_SIGNALLING, 0);
-  EEPROM.write(EEPROM_USE_SOLFEGE, 0);
-
   usb_power_off();
   MIDI.begin(MIDI_CHANNEL_OMNI);
   delay(100);
@@ -1064,9 +1061,9 @@ void io_screen() {
     #endif
 
     #ifndef USE_GEARED_CRANK
-    print_menu_3("Input/Output Options", "Secondary Output", opt2, opt3);
+    print_menu_4("Input/Output Options", "Secondary Output", "MIDI Melody Vibrato", opt2, opt3);
     #else
-    print_menu_3("Input/Output Options", "Secondary Output", opt2, opt3);
+    print_menu_4("Input/Output Options", "Secondary Output", "MIDI Melody Vibrato", opt2, opt3);
     #endif
 
     delay(150);
@@ -1075,22 +1072,26 @@ void io_screen() {
     my2Button->update();
     my3Button->update();
     my4Button->update();
+    my5Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {
       sec_output_screen();
-        
+
     } else if (my2Button->wasPressed()) {
+      mel_vib_screen();
+    
+    } else if (my3Button->wasPressed()) {
       #ifdef USE_PEDAL
       vib_screen();
       #endif
 
-    } else if (my3Button->wasPressed()) {
+    } else if (my4Button->wasPressed()) {
       #ifdef LED_KNOB
       led_screen();
       #endif
 
-    } else if (my4Button->wasPressed() || myXButton->wasPressed()) {
+    } else if (my5Button->wasPressed() || myXButton->wasPressed()) {
       done = true;
     };
   };
@@ -1201,6 +1202,50 @@ void sec_output_screen() {
     };
 
     #endif
+  };
+};
+
+/// @brief Prompts user to choose what amount of constant vibrato to send with the melody strings.
+void mel_vib_screen() {
+  bool done = false;
+  int new_vib = mel_vibrato;
+
+  delay(300);
+  while (!done) {
+
+    print_value_selection("Choose Vibrato Amount", new_vib);
+
+    my1Button->update();
+    my2Button->update();
+    myXButton->update();
+
+    if (my1Button->wasPressed()) {
+      if (new_vib > 0) {
+        new_vib -= 1;
+        delay(300);
+      };
+    } else if (my1Button->beingPressed()) {
+      if (new_vib > 0) {
+        new_vib -= 1;
+        delay(100);
+      };
+    } else if (my2Button->wasPressed()) {
+      if (new_vib < 127) {
+        new_vib += 1;
+        delay(300);
+      };
+    } else if (my2Button->beingPressed()) {
+      if (new_vib < 127) {
+        new_vib += 1;
+        delay(100);
+      };
+    } else if (myXButton->wasPressed()) {
+      mel_vibrato = new_vib;
+      EEPROM.write(EEPROM_MEL_VIBRATO, mel_vibrato);
+      print_message_2("Choose Vibrato Amount", "MIDI Melody Vibrato", "Saved to EEPROM");
+      delay(500);
+      done = true;
+    };
   };
 };
 

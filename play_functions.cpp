@@ -129,8 +129,8 @@ void tpose_up_1(bool playing) {
     if (playing) {
       no_buzz_soundOff();
 
-      mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
-      mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
+      mystring->soundOn(myoffset + tpose_offset, mel_vibrato);
+      mylowstring->soundOn(myoffset + tpose_offset, mel_vibrato);
       mykeyclick->soundOn(tpose_offset);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
@@ -153,8 +153,8 @@ void tpose_down_1(bool playing) {
     if (playing) {
       no_buzz_soundOff();
 
-      mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
-      mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
+      mystring->soundOn(myoffset + tpose_offset, mel_vibrato);
+      mylowstring->soundOn(myoffset + tpose_offset, mel_vibrato);
       mykeyclick->soundOn(tpose_offset);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
@@ -180,8 +180,8 @@ void cycle_capo(bool playing) {
     if (playing) {
       no_buzz_soundOff();
 
-      mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
-      mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
+      mystring->soundOn(myoffset + tpose_offset, mel_vibrato);
+      mylowstring->soundOn(myoffset + tpose_offset, mel_vibrato);
       mykeyclick->soundOn(tpose_offset);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);

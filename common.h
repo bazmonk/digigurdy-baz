@@ -78,4 +78,6 @@ extern int myoffset;
 
 extern bool autocrank_toggle_on;
 
+extern int mel_vibrato;
+
 #endif

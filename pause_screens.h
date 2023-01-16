@@ -59,5 +59,6 @@ void led_screen();
 void vib_screen();
 void playing_config_screen();
 void notation_config_screen();
+void mel_vib_screen();
 
 #endif

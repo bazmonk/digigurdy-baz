@@ -36,8 +36,8 @@ int VibKnob::getVoltage() {
 int VibKnob::getVibrato() {
   float adj_value = (getVoltage() / max_voltage) * 127;
 
-  if (adj_value < MELODY_VIBRATO) {
-    return MELODY_VIBRATO;
+  if (adj_value < mel_vibrato) {
+    return mel_vibrato;
   } else if (adj_value > 127) {
     return 127;
   } else {

@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.5.3";
+const String VERSION = "2.5.4";
 const String REL_DATE = "2023-01-16, v" + VERSION;
 
 /// @defgroup config Configuration Options
@@ -84,14 +84,6 @@ const int PEDAL_PIN = 40;
 /// * Value need not be exact
 /// * Value is on a 0-1023 scale: 1023 = 3.3V
 const float PEDAL_MAX_V = 658.0;
-
-
-/// @brief Amount of modulation to apply to the melody strings.
-/// @details
-/// * Meant to give a slight vibrato effect
-/// * Intensity 0 = no modulation, 127 = full modulation
-/// * Actual modulation behavior is controlled by the MIDI sampler/synthesizer.  This only controls the intensity of it.
-const int MELODY_VIBRATO = 16;
 
 /// @}
 

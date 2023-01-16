@@ -129,6 +129,8 @@ int mel_mode;
 int d_mode;
 int t_mode;
 
+int mel_vibrato;
+
 int play_screen_type;
 uint8_t scene_signal_type;
 
@@ -282,6 +284,8 @@ void setup() {
   max_capo = 4;
 
   use_solfege = EEPROM.read(EEPROM_USE_SOLFEGE);
+
+  mel_vibrato = EEPROM.read(EEPROM_MEL_VIBRATO);
 };
 
 //
@@ -321,6 +325,8 @@ void loop() {
     bigButton->setFunc(EEPROM.read(EEPROM_EXBB));
 
     use_solfege = EEPROM.read(EEPROM_USE_SOLFEGE);
+
+    mel_vibrato = EEPROM.read(EEPROM_MEL_VIBRATO);
 
     // LED may have been reset, too... thanks John!
     if (EEPROM.read(EEPROM_BUZZ_LED) == 1) {
@@ -480,15 +486,15 @@ void loop() {
     // * We just started cranking and we hadn't hit the button.
 
     if (any_newly_pressed && !mycrank->isSpinning()) {
-      mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
-      mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
+      mystring->soundOn(myoffset + tpose_offset, mel_vibrato);
+      mylowstring->soundOn(myoffset + tpose_offset, mel_vibrato);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
       draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
 
     } else if (mycrank->startedSpinning() && !autocrank_toggle_on) {
-      mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
-      mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
+      mystring->soundOn(myoffset + tpose_offset, mel_vibrato);
+      mylowstring->soundOn(myoffset + tpose_offset, mel_vibrato);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
       draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
@@ -500,8 +506,8 @@ void loop() {
       mylowstring->soundOff();
       mykeyclick->soundOff();
 
-      mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
-      mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
+      mystring->soundOn(myoffset + tpose_offset, mel_vibrato);
+      mylowstring->soundOn(myoffset + tpose_offset, mel_vibrato);
       mykeyclick->soundOn(tpose_offset);
       draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
     };
