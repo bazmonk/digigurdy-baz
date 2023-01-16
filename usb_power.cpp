@@ -2,12 +2,12 @@
 
 /// @brief Enables power to the USBHost controller pin.
 void usb_power_on() {
-  #if !defined(USE_TEENSY35) && !defined(USE_TEENSY_36)
+  #ifdef ARDUINO_TEENSY41
   GPIO8_GDIR |= 1<<26;
   GPIO8_DR_SET = 1<<26;
   #endif
 
-  #ifdef USE_TEENSY_36
+  #ifdef ARDUINO_TEENSY36
   PORTE_PCR6 = PORT_PCR_MUX(1);
   GPIOE_PDDR |= (1<<6);
   GPIOE_PSOR = (1<<6); // turn on USB host power
@@ -16,11 +16,11 @@ void usb_power_on() {
 
 /// @brief Cuts power to the USBHost controller pin.
 void usb_power_off() {
-  #if !defined(USE_TEENSY35) && !defined(USE_TEENSY_36)
+  #ifdef ARDUINO_TEENSY41
   GPIO8_DR_CLEAR = 1<<26;
   #endif
 
-  #ifdef USE_TEENSY_36
+  #ifdef ARDUINO_TEENSY36
   GPIOE_PCOR = (1<<6); // turn on USB host power
   #endif
 }

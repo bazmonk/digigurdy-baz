@@ -3,8 +3,8 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.5.2";
-const String REL_DATE = "2023-01-09, v" + VERSION;
+const String VERSION = "2.5.3";
+const String REL_DATE = "2023-01-16, v" + VERSION;
 
 /// @defgroup config Configuration Options
 /// These variables/definitions are compile-time configuration options.
@@ -40,14 +40,7 @@ const String EXTRA_LINE = " Production Build ";
   /// @brief Setting this option allows both MIDI-OUT and Trigger/Tsunami use simultaneously.
   /// @details Set this only if the MIDI-OUT and Trigger/Tsunami Tx pins are different!
   #define ALLOW_COMBO_MODE
-  /// @brief Setting this option disables USBHost power control.
-  #define USE_TEENSY35
-  /// @brief Setting this uses 3.6-style USBHost power control (default is 4.x-style).
-  #define USE_TEENSY36
 #endif
-
-// #define USE_TEENSY35
-// #define USE_TEENSY36
 
 // One of these OLED options must be enabled.
 #define WHITE_OLED
