@@ -1164,7 +1164,15 @@ void sec_output_screen() {
       mykeyclick->setOutputMode(1);
       mybuzz->setOutputMode(1);
 
-      print_message_2("Secondary Output", "Audio Socket", "Saved to EEPROM!");
+      print_message_2("Secondary Output", "Initializing Tracks,", "Please Wait ~5s...");
+      mystring->setTrackLoops();
+      mylowstring->setTrackLoops();
+      mytromp->setTrackLoops();
+      mydrone->setTrackLoops();
+      mybuzz->setTrackLoops();
+      mykeyclick->setTrackLoops();
+
+      print_message_2("Secondary Output", "Completed! Audio Socket", "Saved to EEPROM!");
       delay(750);
 
       done = true;
@@ -1185,6 +1193,14 @@ void sec_output_screen() {
       mydrone->setOutputMode(2);
       mykeyclick->setOutputMode(2);
       mybuzz->setOutputMode(2);
+
+      print_message_2("Secondary Output", "Initializing Tracks,", "Please Wait ~5s...");
+      mystring->setTrackLoops();
+      mylowstring->setTrackLoops();
+      mytromp->setTrackLoops();
+      mydrone->setTrackLoops();
+      mybuzz->setTrackLoops();
+      mykeyclick->setTrackLoops();
 
       print_message_2("Secondary Output", "MIDI-OUT + Audio", "Saved to EEPROM!");
       delay(750);
