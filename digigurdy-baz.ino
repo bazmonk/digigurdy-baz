@@ -257,6 +257,13 @@ void setup() {
   mybuzz = new GurdyString(5,Note(c3), "Buzz", EEPROM.read(EEPROM_SEC_OUT));
   mykeyclick = new GurdyString(6, Note(b5), "Key Click", EEPROM.read(EEPROM_SEC_OUT));
 
+  mystring->setTrackLoops();
+  mylowstring->setTrackLoops();
+  mytromp->setTrackLoops();
+  mydrone->setTrackLoops();
+  mybuzz->setTrackLoops();
+  mykeyclick->setTrackLoops();
+
   tpose_offset = 0;
   capo_offset = 0;
 

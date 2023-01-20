@@ -4,7 +4,9 @@ See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more docu
 
 See [the code documentation here](https://bazmonk.github.io/digigurdy-baz/html/index.html).
 
-**Check out version 2.5.4! (NEW)**
+**Check out version 2.5.5! (NEW)**
+
+* 2.5.5 - Improved crank behavior, reducing phandom buzzes.
 
 * 2.5.4 - Melody vibrato is now adjustable in the Input/Output Config menu.
 

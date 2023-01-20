@@ -3,8 +3,8 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.5.4";
-const String REL_DATE = "2023-01-16, v" + VERSION;
+const String VERSION = "2.5.5";
+const String REL_DATE = "2023-01-19, v" + VERSION;
 
 /// @defgroup config Configuration Options
 /// These variables/definitions are compile-time configuration options.
@@ -116,7 +116,7 @@ const float V_THRESHOLD = 5.5;
 /// @details
 /// * Code will cycle though at least this long between samples.
 /// * This is not how long the code waits for movement, just how often it checks.
-const int SAMPLE_RATE = 100;
+const int SAMPLE_RATE = 1000;
 
 /// @ingroup optical
 /// @brief The maximum amount of time in microseconds to wait for crank movement.

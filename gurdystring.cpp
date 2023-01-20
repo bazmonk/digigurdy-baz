@@ -54,11 +54,11 @@ void GurdyString::soundOn(int my_offset, int my_modulation) {
       #if defined(USE_TRIGGER)
         trigger_obj.trackGain(note_being_played + (128 * (midi_channel - 1)), trigger_volume);
         trigger_obj.trackPlayPoly(note_being_played + (128 * (midi_channel - 1)), true);
-        trigger_obj.trackLoop(note_being_played + (128 * (midi_channel - 1)), true);
+        //trigger_obj.trackLoop(note_being_played + (128 * (midi_channel - 1)), true);
       #elif defined(USE_TSUNAMI)
         trigger_obj.trackGain(note_being_played + (128 * (midi_channel - 1)), trigger_volume);
         trigger_obj.trackPlayPoly(note_being_played + (128 * (midi_channel - 1)), TSUNAMI_OUT, true);
-        trigger_obj.trackLoop(note_being_played + (128 * (midi_channel - 1)), true);
+        //trigger_obj.trackLoop(note_being_played + (128 * (midi_channel - 1)), true);
       #endif
     };
 
@@ -96,11 +96,11 @@ void GurdyString::soundOn(int my_offset, int my_modulation, int note) {
       #if defined(USE_TRIGGER)
         trigger_obj.trackGain(note_to_play + (128 * (midi_channel - 1)), trigger_volume);
         trigger_obj.trackPlayPoly(note_to_play + (128 * (midi_channel - 1)), true);
-        trigger_obj.trackLoop(note_to_play + (128 * (midi_channel - 1)), true);
+        //trigger_obj.trackLoop(note_to_play + (128 * (midi_channel - 1)), true);
       #elif defined(USE_TSUNAMI)
         trigger_obj.trackGain(note_to_play + (128 * (midi_channel - 1)), trigger_volume);
         trigger_obj.trackPlayPoly(note_to_play + (128 * (midi_channel - 1)), TSUNAMI_OUT, true);
-        trigger_obj.trackLoop(note_to_play + (128 * (midi_channel - 1)), true);
+        //trigger_obj.trackLoop(note_to_play + (128 * (midi_channel - 1)), true);
       #endif
     };
   };
@@ -310,4 +310,14 @@ String GurdyString::getGrosString() {
   
   return getLongNoteNum(getOpenNote() - 12);
   
+};
+
+/// @brief Sets the Trigger/Tsunami loop mode on all of the tracks this string may use.
+void GurdyString::setTrackLoops() {
+  #if defined(USE_TRIGGER) || defined(USE_TSUNAMI)
+    for (int x = 0; x <= 127; x++) {
+      trigger_obj.trackLoop(x + (128 * (midi_channel - 1)), true);
+      delay(7);
+    };
+  #endif
 };

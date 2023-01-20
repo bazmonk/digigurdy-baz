@@ -58,6 +58,7 @@ class GurdyString {
     void setGrosMode(int my_gros_mode);
     int getGrosMode();
     String getGrosString();
+    void setTrackLoops();
 };
 
 #endif
