@@ -3,8 +3,8 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.5.5";
-const String REL_DATE = "2023-01-19, v" + VERSION;
+const String VERSION = "2.5.6";
+const String REL_DATE = "2023-01-21, v" + VERSION;
 
 /// @defgroup config Configuration Options
 /// These variables/definitions are compile-time configuration options.
@@ -134,7 +134,7 @@ const float DECAY_FACTOR = 0.00;
 /// @details 
 /// * Increase this if buzzing feels too "jittery" or rapid.
 /// * Decrease if buzzing feels sluggish or unresponsive.
-const int BUZZ_MIN = 100;
+const int BUZZ_MIN = 75;
 
 
 /// @defgroup gear Gear-Motor Crank Configuration Variables

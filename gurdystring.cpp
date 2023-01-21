@@ -16,6 +16,10 @@ GurdyString::GurdyString(int my_channel, int my_note, String my_name, int my_mod
   gros_mode = 0;
 
   setOutputMode(my_mode);
+
+  for (int x = 0; x < 128; x++) {
+    vol_array[x] = 0;
+  };
 };
 
 // soundOn() sends sound on this string's channel at its notes
@@ -52,11 +56,19 @@ void GurdyString::soundOn(int my_offset, int my_modulation) {
 
     if (output_mode > 0) {
       #if defined(USE_TRIGGER)
-        trigger_obj.trackGain(note_being_played + (128 * (midi_channel - 1)), trigger_volume);
+        if (vol_array[note_being_played] != trigger_volume) {
+          trigger_obj.trackGain(note_being_played + (128 * (midi_channel - 1)), trigger_volume);
+          vol_array[note_being_played] = trigger_volume;
+        };
+
         trigger_obj.trackPlayPoly(note_being_played + (128 * (midi_channel - 1)), true);
         //trigger_obj.trackLoop(note_being_played + (128 * (midi_channel - 1)), true);
       #elif defined(USE_TSUNAMI)
-        trigger_obj.trackGain(note_being_played + (128 * (midi_channel - 1)), trigger_volume);
+        if (vol_array[note_being_played] != trigger_volume) {
+          trigger_obj.trackGain(note_being_played + (128 * (midi_channel - 1)), trigger_volume);
+          vol_array[note_being_played] = trigger_volume;
+        };
+
         trigger_obj.trackPlayPoly(note_being_played + (128 * (midi_channel - 1)), TSUNAMI_OUT, true);
         //trigger_obj.trackLoop(note_being_played + (128 * (midi_channel - 1)), true);
       #endif
@@ -94,11 +106,19 @@ void GurdyString::soundOn(int my_offset, int my_modulation, int note) {
 
     if (output_mode > 0) {
       #if defined(USE_TRIGGER)
-        trigger_obj.trackGain(note_to_play + (128 * (midi_channel - 1)), trigger_volume);
+        if (vol_array[note_to_play] != trigger_volume) {
+          trigger_obj.trackGain(note_to_play + (128 * (midi_channel - 1)), trigger_volume);
+          vol_array[note_to_play] = trigger_volume;
+        };
+      
         trigger_obj.trackPlayPoly(note_to_play + (128 * (midi_channel - 1)), true);
         //trigger_obj.trackLoop(note_to_play + (128 * (midi_channel - 1)), true);
       #elif defined(USE_TSUNAMI)
-        trigger_obj.trackGain(note_to_play + (128 * (midi_channel - 1)), trigger_volume);
+        if (vol_array[note_to_play] != trigger_volume) {
+          trigger_obj.trackGain(note_to_play + (128 * (midi_channel - 1)), trigger_volume);
+          vol_array[note_to_play] = trigger_volume;
+        };
+
         trigger_obj.trackPlayPoly(note_to_play + (128 * (midi_channel - 1)), TSUNAMI_OUT, true);
         //trigger_obj.trackLoop(note_to_play + (128 * (midi_channel - 1)), true);
       #endif
@@ -317,7 +337,7 @@ void GurdyString::setTrackLoops() {
   #if defined(USE_TRIGGER) || defined(USE_TSUNAMI)
     for (int x = 0; x <= 127; x++) {
       trigger_obj.trackLoop(x + (128 * (midi_channel - 1)), true);
-      delay(7);
+      delay(5);
     };
   #endif
 };

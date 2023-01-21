@@ -34,6 +34,7 @@ class GurdyString {
                             // This is necessary to turn off notes before turning on new ones.
     int output_mode;
     int gros_mode;
+    int vol_array[128];
 
   public:
     GurdyString(int my_channel, int my_note, String my_name, int my_mode, int my_vol = 70);
