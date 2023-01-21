@@ -4,7 +4,9 @@ See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more docu
 
 See [the code documentation here](https://bazmonk.github.io/digigurdy-baz/html/index.html).
 
-**Check out version 2.5.6! (NEW)**
+**Check out version 2.5.7! (NEW)**
+
+* 2.5.7 - 
 
 * 2.5.6 - Bug/hang fix, more improved trigger/crank behavior.
 

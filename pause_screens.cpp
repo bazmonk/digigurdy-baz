@@ -63,6 +63,8 @@ void pause_screen() {
 
     } else if (my5Button->wasPressed()) {
 
+      delay(150);
+
       print_message_2("Help/User Guide", "Scan with your phone,", "Press X to continue...");
 
       while (true) {
@@ -72,12 +74,13 @@ void pause_screen() {
           break;
         };
       };
-
+      
       u8g2.clearBuffer();
       u8g2.drawXBM(0, 0, 128, 64, qrcode);
       u8g2.sendBuffer();
       
       while (true) {
+        delay(150);
         myXButton->update();
 
         if(myXButton->wasPressed()) {
@@ -497,7 +500,7 @@ void reset_ex_eeprom() {
 
 /// @brief Clears the EEPROM and sets some default values in it.
 /// @note Most values set to zero, but LED and EX values have non-zero defaults also set here.
-void clear_eeprom() {
+void reset_eeprom() {
   // Not much to say here... write 0 everywhere:
   for (int i = 0 ; i < EEPROM.length() ; i++ )
     EEPROM.write(i, 0);
@@ -796,7 +799,7 @@ void options_screen() {
   bool done = false;
   while (!done) {
 
-    print_menu_4("Options", "Clear EEPROM", "Scene Control", "Secondary Output", "About Digi-Gurdy");
+    print_menu_4("Options", "Reset Settings", "Scene Control", "Secondary Output", "About Digi-Gurdy");
     delay(150);
 
     // Check the 1 and 2 buttons
@@ -809,9 +812,9 @@ void options_screen() {
 
     if (my1Button->wasPressed()) {
 
-      clear_eeprom();
+      reset_eeprom();
 
-      print_message_2("Clear EEPROM", "EEPROM Cleared,", "(Defaults Reset)");
+      print_message_2("Reset Settings", "All Settings,", "Reset to Default");
       delay(750);
       done = true;
 

@@ -81,19 +81,19 @@ void ex_btn_choice_screen() {
     myXButton->update();
 
     if (my1Button->wasPressed()) {
-      ex1Button->fn_choice_screen(1);
+      ex1Button->fn_choice_screen();
 
       print_message_2("EX Buttons", "EX1 Button", "Saved!");
       delay(1000);
 
     } else if (my2Button->wasPressed()) {
-      ex2Button->fn_choice_screen(2);
+      ex2Button->fn_choice_screen();
 
       print_message_2("EX Buttons", "EX2 Button", "Saved!");
       delay(1000);
 
     } else if (my3Button->wasPressed()) {
-      ex3Button->fn_choice_screen(3);
+      ex3Button->fn_choice_screen();
 
       print_message_2("EX Buttons", "EX3 Button", "Saved!");
       delay(1000);
@@ -120,25 +120,25 @@ void ex_btn_choice_screen() {
         myXButton->update();
 
         if (my1Button->wasPressed()) {
-          ex4Button->fn_choice_screen(4);
+          ex4Button->fn_choice_screen();
 
           print_message_2("EX Buttons", "EX4 Button", "Saved!");
           delay(1000);
 
         } else if (my2Button->wasPressed()) {
-          ex5Button->fn_choice_screen(5);
+          ex5Button->fn_choice_screen();
 
           print_message_2("EX Buttons", "EX5 Button", "Saved!");
           delay(1000);
 
         } else if (my3Button->wasPressed()) {
-          ex6Button->fn_choice_screen(6);
+          ex6Button->fn_choice_screen();
 
           print_message_2("EX Buttons", "EX6 Button", "Saved!");
           delay(1000);
 
         } else if (my4Button->wasPressed()) {
-          bigButton->fn_choice_screen(0);
+          bigButton->fn_choice_screen();
 
           print_message_2("EX Buttons", "Big Button", "Saved!");
           delay(1000);

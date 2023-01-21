@@ -13,9 +13,10 @@
 class ExButton: public ToggleButton {
   private:
     int my_func;
+    int eeprom_addr;
 
   public:
-    ExButton(int my_pin, int func, int interval);
+    ExButton(int my_pin, int func, int interval, int my_addr);
 
     int getFunc();
 
@@ -25,9 +26,9 @@ class ExButton: public ToggleButton {
 
     String printFunc();
 
-    void fn_choice_screen(int but_num);
+    void fn_choice_screen();
 
-    bool fn_choice_screen_2(int but_num);
+    bool fn_choice_screen_2();
 };
 
 #endif
