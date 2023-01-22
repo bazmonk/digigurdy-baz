@@ -259,6 +259,37 @@ void print_message_2(String title, String opt1, String opt2) {
   u8g2.sendBuffer();
 };
 
+/// @brief Print a titled screen with three lines of centered text
+/// @param title Screen title
+/// @param opt1 First line text
+/// @param opt2 Second line text
+/// @param opt3 Third line text
+void print_message_3(String title, String opt1, String opt2, String opt3) {
+
+  // Clear the screen, set overlay font mode (don't draw background)
+  // FontMode 1 requires a t* font
+  u8g2.clearBuffer();
+  u8g2.setFontMode(1);
+  u8g2.setFont(u8g2_font_finderskeepers_tf);
+
+  // Print a pretty 3-stripe line "around" the title
+  u8g2.drawHLine(0, 2, 61 - (u8g2.getStrWidth(title.c_str()) / 2));
+  u8g2.drawHLine(0, 4, 61 - (u8g2.getStrWidth(title.c_str()) / 2));
+  u8g2.drawHLine(0, 6, 61 - (u8g2.getStrWidth(title.c_str()) / 2));
+  u8g2.drawHLine(67 + (u8g2.getStrWidth(title.c_str()) / 2), 2, 64);
+  u8g2.drawHLine(67 + (u8g2.getStrWidth(title.c_str()) / 2), 4, 64);
+  u8g2.drawHLine(67 + (u8g2.getStrWidth(title.c_str()) / 2), 6, 64);
+
+  // Print the title centered on the top "line"
+  u8g2.drawStr(64 - (u8g2.getStrWidth(title.c_str()) / 2), 8, title.c_str());
+
+  u8g2.drawStr(64 - (u8g2.getStrWidth(opt1.c_str()) / 2), 20, opt1.c_str());
+  u8g2.drawStr(64 - (u8g2.getStrWidth(opt2.c_str()) / 2), 40, opt2.c_str());
+  u8g2.drawStr(64 - (u8g2.getStrWidth(opt3.c_str()) / 2), 60, opt3.c_str());
+
+  u8g2.sendBuffer();
+};
+
 /// @brief Prints a formatted menu screen, numbered 4-option list, NO back option
 /// @param title Menu title
 /// @param opt1 First option text

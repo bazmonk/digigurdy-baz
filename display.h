@@ -45,6 +45,7 @@ void print_menu_4(String title, String opt1, String opt2, String opt3, String op
 void print_menu_3(String title, String opt1, String opt2, String opt3);
 void print_menu_2(String title, String opt1, String opt2);
 void print_message_2(String title, String opt1, String opt2);
+void print_message_3(String title, String opt1, String opt2, String opt3);
 void print_menu_4_nobk(String title, String opt1, String opt2, String opt3, String opt4);
 void print_pause_screen(String d_string, String t_string, String h_string, String l_string);
 void print_confirm_screen(String title, String msg1, String msg2, String opt1);
