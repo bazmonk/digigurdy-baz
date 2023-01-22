@@ -4,7 +4,9 @@ See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more docu
 
 See [the code documentation here](https://bazmonk.github.io/digigurdy-baz/html/index.html).
 
-**Check out version 2.5.7! (NEW)**
+**Check out version 2.6.0! (NEW)**
+
+* 2.6.0 - Changes since 2.4
 
 * 2.5.7 - Renamed clear EEPROM for clarity.
   * Other logic improvements in EX buttons
