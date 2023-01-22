@@ -34,6 +34,7 @@ void ex_btn_choice_screen() {
       if (sel_4) {
         if (ex4Button->fn_choice_screen()) {
           print_message_2("EX Buttons", "EX4 Button", "Saved!");
+          sel_1 = sel_2 = sel_3 = sel_4 = sel_5 = sel_6 = sel_BB = false;
           delay(1000);
           print_message_3("EX Buttons", "Click a button to view...", "X) Go Back", "1) Reset All Buttons");
         };
@@ -48,6 +49,7 @@ void ex_btn_choice_screen() {
       if (sel_5) {
         if (ex5Button->fn_choice_screen()) {
           print_message_2("EX Buttons", "EX5 Button", "Saved!");
+          sel_1 = sel_2 = sel_3 = sel_4 = sel_5 = sel_6 = sel_BB = false;
           delay(1000);
           print_message_3("EX Buttons", "Click a button to view...", "X) Go Back", "1) Reset All Buttons");
         };
@@ -62,6 +64,7 @@ void ex_btn_choice_screen() {
       if (sel_6) {
         if (ex6Button->fn_choice_screen()) {
           print_message_2("EX Buttons", "EX6 Button", "Saved!");
+          sel_1 = sel_2 = sel_3 = sel_4 = sel_5 = sel_6 = sel_BB = false;
           delay(1000);
           print_message_3("EX Buttons", "Click a button to view...", "X) Go Back", "1) Reset All Buttons");
         };
@@ -76,6 +79,7 @@ void ex_btn_choice_screen() {
       if (sel_BB) {
         if (bigButton->fn_choice_screen()) {
           print_message_2("EX Buttons", "Big Button", "Saved!");
+          sel_1 = sel_2 = sel_3 = sel_4 = sel_5 = sel_6 = sel_BB = false;
           delay(1000);
           print_message_3("EX Buttons", "Click a button to view...", "X) Go Back", "1) Reset All Buttons");
         };
@@ -92,6 +96,7 @@ void ex_btn_choice_screen() {
       if (sel_1) {
         if (ex1Button->fn_choice_screen()) {
           print_message_2("EX Buttons", "EX1 Button", "Saved!");
+          sel_1 = sel_2 = sel_3 = sel_4 = sel_5 = sel_6 = sel_BB = false;
           delay(1000);
           print_message_3("EX Buttons", "Click a button to view...", "X) Go Back", "1) Reset All Buttons");
         };
@@ -105,6 +110,7 @@ void ex_btn_choice_screen() {
       if (sel_2) {
         if (ex2Button->fn_choice_screen()) {
           print_message_2("EX Buttons", "EX2 Button", "Saved!");
+          sel_1 = sel_2 = sel_3 = sel_4 = sel_5 = sel_6 = sel_BB = false;
           delay(1000);
           print_message_3("EX Buttons", "Click a button to view...", "X) Go Back", "1) Reset All Buttons");
         };
@@ -118,6 +124,7 @@ void ex_btn_choice_screen() {
       if (sel_3) {
         if (ex3Button->fn_choice_screen()) {
           print_message_2("EX Buttons", "EX3 Button", "Saved!");
+          sel_1 = sel_2 = sel_3 = sel_4 = sel_5 = sel_6 = sel_BB = false;
           delay(1000);
           print_message_3("EX Buttons", "Click a button to view...", "X) Go Back", "1) Reset All Buttons");
         };
