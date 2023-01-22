@@ -799,7 +799,7 @@ void options_screen() {
   bool done = false;
   while (!done) {
 
-    print_menu_4("Options", "Reset Settings", "Scene Control", "Secondary Output", "About Digi-Gurdy");
+    print_menu_4("Options", "Reset All Settings", "Scene Control", "Secondary Output", "About Digi-Gurdy");
     delay(150);
 
     // Check the 1 and 2 buttons
@@ -814,8 +814,8 @@ void options_screen() {
 
       reset_eeprom();
 
-      print_message_2("Reset Settings", "All Settings,", "Reset to Default");
-      delay(750);
+      print_message_2("Reset All Settings", "All settings reset", "to defaults!");
+      delay(1000);
       done = true;
 
     } else if (my2Button->wasPressed()) {

@@ -4,9 +4,11 @@
 /// @param my_pin The digital pin this button is connected to
 /// @param func The beginning function for this button (See ExButton::doFunc for the numbering)
 /// @param interval The debounce interval for this button in milliseconds
-ExButton::ExButton(int my_pin, int func, int interval, int my_addr) : ToggleButton(my_pin, interval) {
-  my_func = func;
+ExButton::ExButton(int my_pin, int interval, int my_addr, int my_step_addr) : ToggleButton(my_pin, interval) {
   eeprom_addr = my_addr;
+  my_func = EEPROM.read(my_addr);
+  eeprom_step_addr = my_step_addr;
+  t_toggle_steps = EEPROM.read(my_step_addr) - 12;
 };
 
 /// @brief Return the current function number of the button
@@ -49,6 +51,8 @@ void ExButton::doFunc(bool playing) {
     ex_cycle_capo(playing);
   } else if (my_func == 11) {
     return;
+  } else if (my_func == 12) {
+    ex_tpose_toggle(playing, t_toggle_steps);
   };
   return;
 };
@@ -78,13 +82,16 @@ String ExButton::printFunc() {
     return String("Cycle Capo");
   } else if (my_func == 11) {
     return String("Auto-Crank");
+  } else if (my_func == 12) {
+    return String("Transpose: ") + t_toggle_steps;
   };
 
   return String("FIX ME!!!");
 };
 
 /// @brief Prompt user to choose the button function
-void ExButton::fn_choice_screen() {
+/// @return If choice was made
+bool ExButton::fn_choice_screen() {
 
   // Trying to put this as a function with the menu screens was a big problem because
   // this class calls those functions and there was a circular definition problem.
@@ -95,7 +102,7 @@ void ExButton::fn_choice_screen() {
 
     print_menu_6("Ex Button Func.", "Open Pause Menu", "Cycle Mel. Mute", "Cycle Dn/Tr. Mute",
                  "Toggle Drone Mute", "Toggle Trompette Mute", "Next Page...");
-    delay(200);
+    delay(150);
 
     my1Button->update();
     my2Button->update();
@@ -134,11 +141,11 @@ void ExButton::fn_choice_screen() {
       done = fn_choice_screen_2();
     
     } else if (myXButton->wasPressed()) {
-      return;
+      return false;
     };
   };
 
-  return;
+  return true;
 };
 
 /// @brief Prompt user to choose the button function, second page
@@ -149,8 +156,8 @@ bool ExButton::fn_choice_screen_2() {
   bool done = false;
   while (!done) {
 
-    print_menu_6("Ex Button Func., P.2", "Turn Volume Down", "Turn Volume Up", "Transpose Down", "Transpose Up", "Cycle Capo", "Auto-Crank");
-    delay(200);
+    print_menu_5("Ex Button Func., P.2", "Turn Volume Down", "Turn Volume Up", "Transpose", "Cycle Capo", "Auto-Crank");
+    delay(150);
 
     my1Button->update();
     my2Button->update();
@@ -171,26 +178,96 @@ bool ExButton::fn_choice_screen_2() {
       done = true;
 
     } else if (my3Button->wasPressed()) {
-      setFunc(8);
-      EEPROM.write(eeprom_addr,8);
-      done = true;
+      done = fn_choice_tpose();
 
     } else if (my4Button->wasPressed()) {
-      setFunc(9);
-      EEPROM.write(eeprom_addr,9);
-      done = true;
-
-    } else if (my5Button->wasPressed()) {
       setFunc(10);
       EEPROM.write(eeprom_addr,10);
       done = true;
 
-    } else if (my6Button->wasPressed()) {
+    } else if (my5Button->wasPressed()) {
       setFunc(11);
       EEPROM.write(eeprom_addr,11);
       done = true;
 
-    } else if (myXButton->wasPressed()) {
+    } else if (my6Button->wasPressed() || myXButton->wasPressed()) {
+      return false;
+    };
+  };
+
+  return true;
+};
+
+/// @brief Prompt user to choose the button function, second page
+/// @return True if user chose an option, false if user chose "go back" option
+/// @version *New in 2.5.7*
+bool ExButton::fn_choice_tpose() {
+
+  bool done = false;
+  while (!done) {
+
+    print_menu_3("Ex Button Transpose", "Transpose Down", "Transpose Up", "Transpose Toggle");
+    delay(150);
+
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    my4Button->update();
+    myXButton->update();
+
+    if (my1Button->wasPressed()) {
+      setFunc(8);
+      EEPROM.write(eeprom_addr,8);
+      done = true;
+
+    } else if (my2Button->wasPressed()) {
+      setFunc(9);
+      EEPROM.write(eeprom_addr,9);
+      done = true;
+
+    } else if (my3Button->wasPressed()) {
+
+      int new_step = 0;
+      bool done2 = false;
+      while (!done2) {
+
+        print_value_selection("Choose Transpose Toggle", new_step);
+
+        my1Button->update();
+        my2Button->update();
+        myXButton->update();
+
+        if (my1Button->wasPressed()) {
+          if (new_step > -12) {
+            new_step -= 1;
+            delay(300);
+          };
+        } else if (my1Button->beingPressed()) {
+          if (new_step > -12) {
+            new_step -= 1;
+            delay(100);
+          };
+        } else if (my2Button->wasPressed()) {
+          if (new_step < 12) {
+            new_step += 1;
+            delay(300);
+          };
+        } else if (my2Button->beingPressed()) {
+          if (new_step < 12) {
+            new_step += 1;
+            delay(100);
+          };
+        } else if (myXButton->wasPressed()) {
+          setFunc(12);
+          t_toggle_steps = new_step;
+          EEPROM.write(eeprom_addr, 12);
+          EEPROM.write(eeprom_step_addr, t_toggle_steps + 12);
+          done2 = true;
+        };
+      };
+      done = true;
+
+    } else if (my4Button->wasPressed() || myXButton->wasPressed()) {
       return false;
     };
   };

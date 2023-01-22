@@ -72,4 +72,13 @@ static const int EEPROM_SEC_OUT = 111;
 
 static const int EEPROM_MEL_VIBRATO = 112;
 
+// These hold transpose steps, if they exist.
+static const int EEPROM_EX1_TSTEP = 113;
+static const int EEPROM_EX2_TSTEP = 114;
+static const int EEPROM_EX3_TSTEP = 115;
+static const int EEPROM_EX4_TSTEP = 116;
+static const int EEPROM_EX5_TSTEP = 117;
+static const int EEPROM_EX6_TSTEP = 118;
+static const int EEPROM_EXBB_TSTEP = 119;
+
 #endif

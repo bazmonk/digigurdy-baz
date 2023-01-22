@@ -269,13 +269,13 @@ void setup() {
   tpose_offset = 0;
   capo_offset = 0;
 
-  ex1Button = new ExButton(EX1_PIN, EEPROM.read(EEPROM_EX1), 200, EEPROM_EX1);
-  ex2Button = new ExButton(EX2_PIN, EEPROM.read(EEPROM_EX2), 200, EEPROM_EX2);
-  ex3Button = new ExButton(EX3_PIN, EEPROM.read(EEPROM_EX3), 200, EEPROM_EX3);
-  ex4Button = new ExButton(EX4_PIN, EEPROM.read(EEPROM_EX4), 200, EEPROM_EX4);
-  ex5Button = new ExButton(EX5_PIN, EEPROM.read(EEPROM_EX5), 200, EEPROM_EX5);
-  ex6Button = new ExButton(EX6_PIN, EEPROM.read(EEPROM_EX6), 200, EEPROM_EX6);
-  bigButton = new ExButton(BIG_BUTTON_PIN, EEPROM.read(EEPROM_EXBB), 250, EEPROM_EXBB);
+  ex1Button = new ExButton(EX1_PIN, 200, EEPROM_EX1, EEPROM_EX1_TSTEP);
+  ex2Button = new ExButton(EX2_PIN, 200, EEPROM_EX2, EEPROM_EX2_TSTEP);
+  ex3Button = new ExButton(EX3_PIN, 200, EEPROM_EX3, EEPROM_EX3_TSTEP);
+  ex4Button = new ExButton(EX4_PIN, 200, EEPROM_EX4, EEPROM_EX4_TSTEP);
+  ex5Button = new ExButton(EX5_PIN, 200, EEPROM_EX5, EEPROM_EX5_TSTEP);
+  ex6Button = new ExButton(EX6_PIN, 200, EEPROM_EX6, EEPROM_EX6_TSTEP);
+  bigButton = new ExButton(BIG_BUTTON_PIN, 250, EEPROM_EXBB, EEPROM_EXBB_TSTEP);
 
   scene_signal_type = EEPROM.read(EEPROM_SCENE_SIGNALLING);
 

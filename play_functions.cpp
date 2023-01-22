@@ -193,4 +193,29 @@ void cycle_capo(bool playing) {
     };
 };
 
+/// @brief Adjusts the transpose by a given number of steps
+/// @param playing True if currently playing sound, false otherwise.
+/// @param steps Number of semitones to move (signed)
+/// @version *New in  2.5.7*
+void tpose_up_x(bool playing, int steps) {
+  if (max_tpose + tpose_offset > 0) {
+      tpose_offset = steps;
+
+    if (playing) {
+      no_buzz_soundOff();
+
+      mystring->soundOn(myoffset + tpose_offset, mel_vibrato);
+      mylowstring->soundOn(myoffset + tpose_offset, mel_vibrato);
+      mykeyclick->soundOn(tpose_offset);
+      mytromp->soundOn(tpose_offset + capo_offset);
+      mydrone->soundOn(tpose_offset + capo_offset);
+
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
+    } else {
+      print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
+                  tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
+    };
+  };
+};
+
 /// @}

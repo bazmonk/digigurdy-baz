@@ -13,6 +13,7 @@ extern ExButton *ex5Button;
 extern ExButton *ex6Button;
 extern ExButton *bigButton;
 
+void ex_config_screen();
 void ex_btn_choice_screen();
 
 #endif

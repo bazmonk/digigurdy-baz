@@ -190,4 +190,16 @@ void ex_tpose_down(bool playing) {
   tpose_down_1(playing);
 };
 
+/// @brief Toggles the transpose up or down a number of steps
+/// @param playing 
+/// @param toggled 
+/// @version *New in 2.5.7*
+void ex_tpose_toggle(bool playing, int steps) {
+  if (tpose_offset != steps) {
+    tpose_up_x(playing, steps);
+  } else {
+    tpose_up_x(playing, 0);
+  };
+};
+
 /// @}

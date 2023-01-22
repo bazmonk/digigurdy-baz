@@ -4,169 +4,136 @@
 /// @brief  Prompt user to choose which EX button to configure.
 void ex_btn_choice_screen() {
 
-  bool done = false;
-  while (!done) {
+  bool sel_1 = false;
+  bool sel_2 = false;
+  bool sel_3 = false;
+  bool sel_4 = false;
+  bool sel_5 = false;
+  bool sel_6 = false;
+  bool sel_BB = false;
 
-    #ifdef USE_GEARED_CRANK
+  print_message_2("EX Buttons", "Click a button to view...", "X) Go Back");
 
-    print_menu_5("EX Buttons",
-                 String("EX4 - ") + ex4Button->printFunc(),
-                 String("EX5 - ") + ex5Button->printFunc(),
-                 String("EX6 - ") + ex6Button->printFunc(),
-                 String("Big - ") + bigButton->printFunc(),
-                 "Reset All Buttons");
+  while (true) {
+
     delay(150);
 
-    my1Button->update();
-    my2Button->update();
-    my3Button->update();
-    my4Button->update();
-    my5Button->update();
-    my6Button->update();
-    myXButton->update();
-
-    if (my1Button->wasPressed()) {
-      ex4Button->fn_choice_screen(4);
-
-      print_message_2("EX Buttons", "EX4 Button", "Saved!");
-      delay(1000);
-
-    } else if (my2Button->wasPressed()) {
-      ex5Button->fn_choice_screen(5);
-
-      print_message_2("EX Buttons", "EX5 Button", "Saved!");
-      delay(1000);
-
-    } else if (my3Button->wasPressed()) {
-      ex6Button->fn_choice_screen(6);
-
-      print_message_2("EX Buttons", "EX6 Button", "Saved!");
-      delay(1000);
-
-    } else if (my4Button->wasPressed()) {
-      bigButton->fn_choice_screen(0);
-
-      print_message_2("EX Buttons", "Big Button", "Saved!");
-      delay(1000);
-
-    } else if (my5Button->wasPressed()) {
-      reset_ex_eeprom();
-
-      ex4Button->setFunc(EEPROM.read(EEPROM_EX4));
-      ex5Button->setFunc(EEPROM.read(EEPROM_EX5));
-      ex6Button->setFunc(EEPROM.read(EEPROM_EX6));
-      bigButton->setFunc(EEPROM.read(EEPROM_EXBB));
-
-      print_message_2("EX Buttons", "All Buttons", "Reset and Saved!");
-      delay(1000);
-
-    } else if (my6Button->wasPressed() || myXButton->wasPressed()) {
-      return;
-    };
-
-    #else
-
-    print_menu_4("EX Buttons",
-                 String("EX1 - ") + ex1Button->printFunc(),
-                 String("EX2 - ") + ex2Button->printFunc(),
-                 String("EX3 - ") + ex3Button->printFunc(),
-                 "Next Page");
-    delay(150);
-
-    my1Button->update();
-    my2Button->update();
-    my3Button->update();
-    my4Button->update();
-    my5Button->update();
-    myXButton->update();
-
-    if (my1Button->wasPressed()) {
-      ex1Button->fn_choice_screen();
-
-      print_message_2("EX Buttons", "EX1 Button", "Saved!");
-      delay(1000);
-
-    } else if (my2Button->wasPressed()) {
-      ex2Button->fn_choice_screen();
-
-      print_message_2("EX Buttons", "EX2 Button", "Saved!");
-      delay(1000);
-
-    } else if (my3Button->wasPressed()) {
-      ex3Button->fn_choice_screen();
-
-      print_message_2("EX Buttons", "EX3 Button", "Saved!");
-      delay(1000);
-
-    } else if (my4Button->wasPressed()) {
-
-      bool done2 = false;
-      while (!done2) {
-
-        print_menu_5("EX Buttons II",
-                  String("EX4 - ") + ex4Button->printFunc(),
-                  String("EX5 - ") + ex5Button->printFunc(),
-                  String("EX6 - ") + ex6Button->printFunc(),
-                  String("Big - ") + bigButton->printFunc(),
-                  "Reset All Buttons");
-        delay(150);
-
-        my1Button->update();
-        my2Button->update();
-        my3Button->update();
-        my4Button->update();
-        my5Button->update();
-        my6Button->update();
-        myXButton->update();
-
-        if (my1Button->wasPressed()) {
-          ex4Button->fn_choice_screen();
-
-          print_message_2("EX Buttons", "EX4 Button", "Saved!");
-          delay(1000);
-
-        } else if (my2Button->wasPressed()) {
-          ex5Button->fn_choice_screen();
-
-          print_message_2("EX Buttons", "EX5 Button", "Saved!");
-          delay(1000);
-
-        } else if (my3Button->wasPressed()) {
-          ex6Button->fn_choice_screen();
-
-          print_message_2("EX Buttons", "EX6 Button", "Saved!");
-          delay(1000);
-
-        } else if (my4Button->wasPressed()) {
-          bigButton->fn_choice_screen();
-
-          print_message_2("EX Buttons", "Big Button", "Saved!");
-          delay(1000);
-
-        } else if (my5Button->wasPressed()) {
-          reset_ex_eeprom();
-
-          ex1Button->setFunc(EEPROM.read(EEPROM_EX1));
-          ex2Button->setFunc(EEPROM.read(EEPROM_EX2));
-          ex3Button->setFunc(EEPROM.read(EEPROM_EX3));
-          ex4Button->setFunc(EEPROM.read(EEPROM_EX4));
-          ex5Button->setFunc(EEPROM.read(EEPROM_EX5));
-          ex6Button->setFunc(EEPROM.read(EEPROM_EX6));
-          bigButton->setFunc(EEPROM.read(EEPROM_EXBB));
-
-          print_message_2("EX Buttons", "All Buttons", "Reset and Saved!");
-          delay(1000);
-      
-        } else if (my6Button->wasPressed() || myXButton->wasPressed()) {
-          done2 = true;
-        };
-      };
-
-    } else if (my5Button->wasPressed() || myXButton->wasPressed()) {
-      return;
-    };
+    #ifndef USE_GEARED_CRANK
+    ex1Button->update();
+    ex2Button->update();
+    ex3Button->update();
     #endif
 
+    ex4Button->update();
+    ex5Button->update();
+    ex6Button->update();
+    bigButton->update();
+    myXButton->update();
+
+    if (ex4Button->wasPressed()) {
+      if (sel_4) {
+        if (ex4Button->fn_choice_screen()) {
+          print_message_2("EX Buttons", "EX4 Button", "Saved!");
+          delay(1000);
+          print_message_2("EX Buttons", "Click a button to view...", "X) Go Back");
+        };
+      } else {
+        sel_1 = sel_2 = sel_3 = sel_4 = sel_5 = sel_6 = sel_BB = false;
+        sel_4 = true;
+        print_message_2("EX Buttons", "Click a button to view...", String("EX4: ") + ex4Button->printFunc());
+        delay(150);
+      };
+      
+    } else if (ex5Button->wasPressed()) {
+      if (sel_5) {
+        if (ex5Button->fn_choice_screen()) {
+          print_message_2("EX Buttons", "EX5 Button", "Saved!");
+          delay(1000);
+          print_message_2("EX Buttons", "Click a button to view...", "X) Go Back");
+        };
+      } else {
+        sel_1 = sel_2 = sel_3 = sel_4 = sel_5 = sel_6 = sel_BB = false;
+        sel_5 = true;
+        print_message_2("EX Buttons", "Click a button to view...", String("EX5: ") + ex5Button->printFunc());
+        delay(150);
+      };
+
+    } else if (ex6Button->wasPressed()) {
+      if (sel_6) {
+        if (ex6Button->fn_choice_screen()) {
+          print_message_2("EX Buttons", "EX6 Button", "Saved!");
+          delay(1000);
+          print_message_2("EX Buttons", "Click a button to view...", "X) Go Back");
+        };
+      } else {
+        sel_1 = sel_2 = sel_3 = sel_4 = sel_5 = sel_6 = sel_BB = false;
+        sel_6 = true;
+        print_message_2("EX Buttons", "Click a button to view...", String("EX6: ") + ex6Button->printFunc());
+        delay(150);
+      };
+
+    } else if (bigButton->wasPressed()) {
+      if (sel_BB) {
+        if (bigButton->fn_choice_screen()) {
+          print_message_2("EX Buttons", "Big Button", "Saved!");
+          delay(1000);
+          print_message_2("EX Buttons", "Click a button to view...", "X) Go Back");
+        };
+      } else {
+        sel_1 = sel_2 = sel_3 = sel_4 = sel_5 = sel_6 = sel_BB = false;
+        sel_BB = true;
+        print_message_2("EX Buttons", "Click a button to view...", String("Big: ") + bigButton->printFunc());
+        delay(150);
+      };
+
+    #ifndef USE_GEARED_CRANK 
+
+    } else if (ex1Button->wasPressed()) {
+      if (sel_1) {
+        if (ex1Button->fn_choice_screen()) {
+          print_message_2("EX Buttons", "EX1 Button", "Saved!");
+          delay(1000);
+          print_message_2("EX Buttons", "Click a button to view...", "X) Go Back");
+        };
+      } else {
+        sel_1 = sel_2 = sel_3 = sel_4 = sel_5 = sel_6 = sel_BB = false;
+        sel_1 = true;
+        print_message_2("EX Buttons", "Click a button to view...", String("EX1: ") + ex1Button->printFunc());
+        delay(150);
+      };
+    } else if (ex2Button->wasPressed()) {
+      if (sel_2) {
+        if (ex2Button->fn_choice_screen()) {
+          print_message_2("EX Buttons", "EX2 Button", "Saved!");
+          delay(1000);
+          print_message_2("EX Buttons", "Click a button to view...", "X) Go Back");
+        };
+      } else {
+        sel_1 = sel_2 = sel_3 = sel_4 = sel_5 = sel_6 = sel_BB = false;
+        sel_2 = true;
+        print_message_2("EX Buttons", "Click a button to view...", String("EX2: ") + ex2Button->printFunc());
+        delay(150);
+      };
+    } else if (ex3Button->wasPressed()) {
+      if (sel_3) {
+        if (ex3Button->fn_choice_screen()) {
+          print_message_2("EX Buttons", "EX3 Button", "Saved!");
+          delay(1000);
+          print_message_2("EX Buttons", "Click a button to view...", "X) Go Back");
+        };
+      } else {
+        sel_1 = sel_2 = sel_3 = sel_4 = sel_5 = sel_6 = sel_BB = false;
+        sel_3 = true;
+        print_message_2("EX Buttons", "Click a button to view...", String("EX3: ") + ex3Button->printFunc());
+        delay(150);
+      };
+
+    #endif
+    
+    } else if (myXButton->wasPressed()) {
+      return;
+    };
   };
+
   return;
 };

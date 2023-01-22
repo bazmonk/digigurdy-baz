@@ -14,5 +14,6 @@ void turn_volume_up();
 void ex_cycle_capo(bool playing);
 void ex_tpose_up(bool playing);
 void ex_tpose_down(bool playing);
+void ex_tpose_toggle(bool playing,int steps);
 
 #endif

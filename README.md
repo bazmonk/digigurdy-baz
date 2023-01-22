@@ -6,7 +6,10 @@ See [the code documentation here](https://bazmonk.github.io/digigurdy-baz/html/i
 
 **Check out version 2.5.7! (NEW)**
 
-* 2.5.7 - 
+* 2.5.7 - Renamed clear EEPROM for clarity.
+  * Other logic improvements in EX buttons
+  * New Transpose Toggle EX function
+  * Prettier EX button menu.
 
 * 2.5.6 - Bug/hang fix, more improved trigger/crank behavior.
 
