@@ -13,10 +13,9 @@ void ex_btn_choice_screen() {
   bool sel_BB = false;
 
   print_message_2("EX Buttons", "Click a button to view...", "X) Go Back");
-
+  delay(150);
+  
   while (true) {
-
-    delay(150);
 
     #ifndef USE_GEARED_CRANK
     ex1Button->update();
