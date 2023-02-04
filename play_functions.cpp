@@ -198,7 +198,7 @@ void cycle_capo(bool playing) {
 /// @param steps Number of semitones to move (signed)
 /// @version *New in  2.5.7*
 void tpose_up_x(bool playing, int steps) {
-  if (max_tpose + tpose_offset >= 0) {
+  if (max_tpose + steps >= 0) {
       tpose_offset = steps;
 
     if (playing) {
