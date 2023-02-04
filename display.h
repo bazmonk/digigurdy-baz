@@ -13,15 +13,15 @@
 // These are the Teensy pins wired up for the OLED.
 // 2.2.1 - changes for HW SPI
 /// @brief The MOSI/DATA pin to the screen.
-#define OLED_MOSI 11
+#define OLED_MOSI 43
 /// @brief The CLK/SCL/SCK pin to the screen.
-#define OLED_CLK 13
+#define OLED_CLK 45
 /// @brief The DC pin to the screen.
-#define OLED_DC 9
+#define OLED_DC 46
 /// @brief The CS pin to the screen.
-#define OLED_CS 10
+#define OLED_CS 44
 /// @brief The RESET pin to the screen.
-#define OLED_RESET 38
+#define OLED_RESET 47
 
 /// @}
 
@@ -33,8 +33,11 @@
   // extern U8G2_SSD1306_128X64_NONAME_F_4W_SW_SPI u8g2;
 #endif
 #ifdef BLUE_OLED
+  #ifdef REV4_MODE
   extern U8G2_SH1106_128X64_NONAME_F_3RD_4W_HW_SPI u8g2;
-  //extern U8G2_SH1106_128X64_NONAME_F_4W_HW_SPI u8g2;
+  #else
+  extern U8G2_SH1106_128X64_NONAME_F_4W_HW_SPI u8g2;
+  #endif
   //extern U8G2_SH1106_128X64_NONAME_F_4W_SW_SPI u8g2;
 #endif
 

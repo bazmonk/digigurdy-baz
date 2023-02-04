@@ -11,6 +11,14 @@ extern ExButton *ex3Button;
 extern ExButton *ex4Button;
 extern ExButton *ex5Button;
 extern ExButton *ex6Button;
+
+#ifdef REV4_MODE
+extern ExButton *ex7Button;
+extern ExButton *ex8Button;
+extern ExButton *ex9Button;
+extern ExButton *ex10Button;
+#endif
+
 extern ExButton *bigButton;
 
 void ex_config_screen();

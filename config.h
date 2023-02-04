@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.9.0";
+const String VERSION = "2.9.1";
 const String REL_DATE = "2023-02-03, v" + VERSION;
 
 /// @defgroup config Configuration Options
@@ -40,6 +40,9 @@ const String EXTRA_LINE = " Rev4.0 Test Build ";
   /// @brief Setting this option allows both MIDI-OUT and Trigger/Tsunami use simultaneously.
   /// @details Set this only if the MIDI-OUT and Trigger/Tsunami Tx pins are different!
   #define ALLOW_COMBO_MODE
+  /// @brief Setting this option enables EX pins 7-10, and SPI2 display.
+  /// @details meant for rev4 boards.
+  #define REV4_MODE
 #endif
 
 // One of these OLED options must be enabled.
@@ -54,6 +57,8 @@ const String EXTRA_LINE = " Rev4.0 Test Build ";
 
 #define ALLOW_COMBO_MODE
 //#define BAZ_MODE
+
+#define REV4_MODE
 
 /// @brief The audio output channel used by the Tsunami unit.
 /// @details 0 == 1L, 1 == 1R, etc.
@@ -287,23 +292,23 @@ const int BUZZ_PIN = 16;
 const int BIG_BUTTON_PIN = 39;
 
 /// @brief The pin to the EX1 button.
-const int EX1_PIN = 41;
+const int EX1_PIN = 19;
 /// @brief The pin to the EX2 button.
-const int EX2_PIN = 17;
+const int EX2_PIN = 13;
 /// @brief The pin to the EX3 button.
-const int EX3_PIN = 14;
+const int EX3_PIN = 12;
 /// @brief The pin to the EX4 button.
-const int EX4_PIN = 21;
+const int EX4_PIN = 41;
 /// @brief The pin to the EX5 button.
-const int EX5_PIN = 22;
+const int EX5_PIN = 40;
 /// @brief The pin to the EX6 button.
-const int EX6_PIN = 23;
+const int EX6_PIN = 17;
 /// @brief The pin to the EX7 button.
-const int EX7_PIN = 23;
+const int EX7_PIN = 14;
 /// @brief The pin to the EX8 button.
-const int EX8_PIN = 23;
+const int EX8_PIN = 18;
 /// @brief The pin to the EX9 button.
-const int EX9_PIN = 23;
+const int EX9_PIN = 22;
 /// @brief The pin to the EX10 button.
 const int EX10_PIN = 23;
 
