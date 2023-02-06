@@ -60,6 +60,7 @@ class GurdyString {
     int getGrosMode();
     String getGrosString();
     void setTrackLoops();
+    void clearVolArray();
 };
 
 #endif

@@ -488,6 +488,8 @@ void save_tunings(int slot) {
 
 /// @brief Resets EX EEPROM values to their defaults
 void reset_ex_eeprom() {
+
+  #ifdef REV4_MODE
   EEPROM.write(EEPROM_BUZZ_LED, 1);
   EEPROM.write(EEPROM_EX1, 1);
   EEPROM.write(EEPROM_EX2, 2);
@@ -499,6 +501,15 @@ void reset_ex_eeprom() {
   EEPROM.write(EEPROM_EX8, 8);
   EEPROM.write(EEPROM_EX9, 9);
   EEPROM.write(EEPROM_EX10, 10);
+  #else
+  EEPROM.write(EEPROM_BUZZ_LED, 1);
+  EEPROM.write(EEPROM_EX1, 1);
+  EEPROM.write(EEPROM_EX2, 2);
+  EEPROM.write(EEPROM_EX3, 3);
+  EEPROM.write(EEPROM_EX4, 8);
+  EEPROM.write(EEPROM_EX5, 9);
+  EEPROM.write(EEPROM_EX6, 10);
+  #endif
 
   EEPROM.write(EEPROM_EXBB, 11);
 };
@@ -1132,6 +1143,7 @@ void sec_output_screen() {
       MIDI.begin(MIDI_CHANNEL_OMNI);
       delay(100);
 
+      all_clearVolArray();
       mystring->setOutputMode(0);
       mylowstring->setOutputMode(0);
       mytromp->setOutputMode(0);
@@ -1165,6 +1177,7 @@ void sec_output_screen() {
       trigger_obj.start();
       delay(100);
 
+      all_clearVolArray();
       mystring->setOutputMode(1);
       mylowstring->setOutputMode(1);
       mytromp->setOutputMode(1);
@@ -1195,6 +1208,7 @@ void sec_output_screen() {
       trigger_obj.start();
       delay(100);
 
+      all_clearVolArray();
       mystring->setOutputMode(2);
       mylowstring->setOutputMode(2);
       mytromp->setOutputMode(2);

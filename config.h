@@ -3,8 +3,8 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.9.1";
-const String REL_DATE = "2023-02-03, v" + VERSION;
+const String VERSION = "2.9.2";
+const String REL_DATE = "2023-02-05, v" + VERSION;
 
 /// @defgroup config Configuration Options
 /// These variables/definitions are compile-time configuration options.
@@ -217,8 +217,13 @@ const int BUZZ_DECAY = 1;
 /// * index 0 is unused and would theoretically not affect the note being played.
 /// * index 1 raises the note played by 1 semitone, index 2 by 2 semitones, etc.
 /// * pin_array can be extended or shortened for larger/smaller keyboxes
+#ifdef REV4_MODE
 const int pin_array[] = {-1, 2, 24, 3, 25, 26, 4, 27, 5, 28, 29, 6, 30,
                    7, 31, 8, 32, 33, 11, 34, 10, 35, 36, 9, 37};
+#else
+const int pin_array[] = {-1, 2, 24, 3, 25, 26, 4, 27, 5, 28, 29, 6, 30,
+                   7, 31, 8, 32, 33, 18, 34, 19, 35, 36, 20, 37};
+#endif
 
 // This is literally just the size of the above array minus one.  I need this as a const to
 // declare the KeyboxButton array later on... or I just don't know enough C++ to know how to
@@ -291,6 +296,7 @@ const int BUZZ_PIN = 16;
 /// @brief The pin running to the arcade, "auto-crank" button.
 const int BIG_BUTTON_PIN = 39;
 
+#ifdef REV4_MODE
 /// @brief The pin to the EX1 button.
 const int EX1_PIN = 19;
 /// @brief The pin to the EX2 button.
@@ -311,6 +317,21 @@ const int EX8_PIN = 18;
 const int EX9_PIN = 22;
 /// @brief The pin to the EX10 button.
 const int EX10_PIN = 23;
+
+#else
+/// @brief The pin to the EX1 button.
+const int EX1_PIN = 41;
+/// @brief The pin to the EX2 button.
+const int EX2_PIN = 17;
+/// @brief The pin to the EX3 button.
+const int EX3_PIN = 14;
+/// @brief The pin to the EX4 button.
+const int EX4_PIN = 21;
+/// @brief The pin to the EX5 button.
+const int EX5_PIN = 22;
+/// @brief The pin to the EX6 button.
+const int EX6_PIN = 23;
+#endif
 
 /// @}
 #endif

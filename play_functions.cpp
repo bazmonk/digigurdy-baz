@@ -119,6 +119,16 @@ void all_soundKill() {
   mybuzz->soundKill();
 };
 
+/// @brief Clears the volume array of all six string objects.
+void all_clearVolArray() {
+  mystring->clearVolArray();
+  mylowstring->clearVolArray();
+  mykeyclick->clearVolArray();
+  mytromp->clearVolArray();
+  mydrone->clearVolArray();
+  mybuzz->clearVolArray();
+};
+
 /// @brief Increases the transpose by 1 semitone, and adjusts any playing notes.
 /// @param playing True if currently playing sound, false otherwise.
 /// @version *New in  2.3.7*

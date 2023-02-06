@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['led_5fknob_0',['LED_KNOB',['../group__config.html#ga99ed1ce0eb57dcab8b4943aac388b319',1,'LED_KNOB():&#160;config.h'],['../group__config.html#ga99ed1ce0eb57dcab8b4943aac388b319',1,'LED_KNOB():&#160;config.oldgurdy.h']]],
-  ['led_5fpin_1',['LED_PIN',['../group__config.html#gadae60f691931ebee43e0b1779dbd4219',1,'LED_PIN():&#160;config.h'],['../group__config.html#gadae60f691931ebee43e0b1779dbd4219',1,'LED_PIN():&#160;config.oldgurdy.h']]],
+  ['led_5fknob_0',['LED_KNOB',['../group__config.html#ga99ed1ce0eb57dcab8b4943aac388b319',1,'config.h']]],
+  ['led_5fpin_1',['LED_PIN',['../group__config.html#gadae60f691931ebee43e0b1779dbd4219',1,'config.h']]],
   ['led_5fscreen_2',['led_screen',['../group__pause.html#gadab6836ffdab0b1b98afb3cc99406ad5',1,'led_screen():&#160;pause_screens.cpp'],['../group__pause.html#gadab6836ffdab0b1b98afb3cc99406ad5',1,'led_screen():&#160;pause_screens.cpp']]],
   ['load_5fpreset_5fscreen_3',['load_preset_screen',['../group__pause.html#ga805aaa5b50cb27a132354f717f5b5241',1,'load_preset_screen():&#160;pause_screens.cpp'],['../group__pause.html#ga805aaa5b50cb27a132354f717f5b5241',1,'load_preset_screen():&#160;pause_screens.cpp']]],
   ['load_5fpreset_5ftunings_4',['load_preset_tunings',['../group__pause.html#ga84f3a8e325627894326a749d7ee1473d',1,'load_preset_tunings(int preset):&#160;pause_screens.cpp'],['../group__pause.html#ga84f3a8e325627894326a749d7ee1473d',1,'load_preset_tunings(int preset):&#160;pause_screens.cpp']]],

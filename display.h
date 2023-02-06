@@ -10,6 +10,7 @@
 /// @ingroup display
 /// @{
 
+#ifdef REV4_MODE
 // These are the Teensy pins wired up for the OLED.
 // 2.2.1 - changes for HW SPI
 /// @brief The MOSI/DATA pin to the screen.
@@ -22,6 +23,15 @@
 #define OLED_CS 44
 /// @brief The RESET pin to the screen.
 #define OLED_RESET 47
+
+#else
+#define OLED_MOSI 11
+#define OLED_CLK 13
+#define OLED_DC 9
+#define OLED_CS 10
+#define OLED_RESET 38
+
+#endif
 
 /// @}
 
