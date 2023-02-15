@@ -189,7 +189,7 @@ void ex_btn_choice_screen() {
       } else {
         sel_1 = sel_2 = sel_3 = sel_4 = sel_5 = sel_6 = sel_7 = sel_8 = sel_9 = sel_10 = sel_BB = false;
         sel_9 = true;
-        print_message_2("EX Buttons", "Click a button to view...", String("EX9: ") + ex3Button->printFunc());
+        print_message_2("EX Buttons", "Click a button to view...", String("EX9: ") + ex9Button->printFunc());
         delay(150);
       };
     } else if (ex10Button->wasPressed()) {
@@ -203,7 +203,7 @@ void ex_btn_choice_screen() {
       } else {
         sel_1 = sel_2 = sel_3 = sel_4 = sel_5 = sel_6 = sel_7 = sel_8 = sel_9 = sel_10 = sel_BB = false;
         sel_10 = true;
-        print_message_2("EX Buttons", "Click a button to view...", String("EX10: ") + ex3Button->printFunc());
+        print_message_2("EX Buttons", "Click a button to view...", String("EX10: ") + ex10Button->printFunc());
         delay(150);
       };
     #endif
