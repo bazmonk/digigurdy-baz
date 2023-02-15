@@ -4,7 +4,12 @@ See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more docu
 
 See [the code documentation here](https://bazmonk.github.io/digigurdy-baz/html/index.html).
 
-**Check out version 2.6.0! (NEW)**
+**Check out version 2.9.2! (NEW)**
+
+* 2.9.2 - 
+  * New EX function: toggle secondary output
+
+* 2.9.1 - Maybe working REV4 build.
 
 * 2.6.0 - Changes since 2.4
 

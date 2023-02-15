@@ -3,15 +3,15 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.6.0";
-const String REL_DATE = "2023-01-21, v" + VERSION;
+const String VERSION = "2.9.2";
+const String REL_DATE = "2023-02-05, v" + VERSION;
 
 /// @defgroup config Configuration Options
 /// These variables/definitions are compile-time configuration options.
 /// @{
 
 /// @brief This is a freeform line displayed on the About screen
-const String EXTRA_LINE = " Production Build ";
+const String EXTRA_LINE = " Rev4.0 Test Build ";
 //const String EXTRA_LINE = "      3.5 TEST       ";
 //const String EXTRA_LINE = " MIDI-OUT, LED, SWSPI";
 //const String EXTRA_LINE = " TRIGGER - LED KNOB  ";
@@ -40,11 +40,14 @@ const String EXTRA_LINE = " Production Build ";
   /// @brief Setting this option allows both MIDI-OUT and Trigger/Tsunami use simultaneously.
   /// @details Set this only if the MIDI-OUT and Trigger/Tsunami Tx pins are different!
   #define ALLOW_COMBO_MODE
+  /// @brief Setting this option enables EX pins 7-10, and SPI2 display.
+  /// @details meant for rev4 boards.
+  #define REV4_MODE
 #endif
 
 // One of these OLED options must be enabled.
-#define WHITE_OLED
-//#define BLUE_OLED
+//#define WHITE_OLED
+#define BLUE_OLED
 
 //#define USE_GEARED_CRANK
 
@@ -52,8 +55,10 @@ const String EXTRA_LINE = " Production Build ";
 #define USE_TRIGGER
 //#define USE_TSUNAMI
 
-//#define ALLOW_COMBO_MODE
+#define ALLOW_COMBO_MODE
 //#define BAZ_MODE
+
+#define REV4_MODE
 
 /// @brief The audio output channel used by the Tsunami unit.
 /// @details 0 == 1L, 1 == 1R, etc.
@@ -63,8 +68,8 @@ const int TSUNAMI_OUT = 0;
 #define __TSUNAMI_USE_SERIAL1__
 
 /// @brief The Serial port to use on the Teensy unit for the Trigger.
-#define __WT_USE_SERIAL1__
-//#define __WT_USE_SERIAL5__
+//#define __WT_USE_SERIAL1__
+#define __WT_USE_SERIAL5__
 
 
 //#define LED_KNOB
@@ -76,7 +81,7 @@ const int LED_PIN = 40;
 #define USE_PEDAL
 
 /// @brief Pin used for the accessory pedal, if USE_PEDAL is enabled.
-const int PEDAL_PIN = 40;
+const int PEDAL_PIN = 38;
 
 /// @brief The max voltage reported by the accessory pedal.
 /// @details 
@@ -134,7 +139,7 @@ const float DECAY_FACTOR = 0.00;
 /// @details 
 /// * Increase this if buzzing feels too "jittery" or rapid.
 /// * Decrease if buzzing feels sluggish or unresponsive.
-const int BUZZ_MIN = 200;
+const int BUZZ_MIN = 100;
 
 
 /// @defgroup gear Gear-Motor Crank Configuration Variables
@@ -212,8 +217,13 @@ const int BUZZ_DECAY = 1;
 /// * index 0 is unused and would theoretically not affect the note being played.
 /// * index 1 raises the note played by 1 semitone, index 2 by 2 semitones, etc.
 /// * pin_array can be extended or shortened for larger/smaller keyboxes
+#ifdef REV4_MODE
+const int pin_array[] = {-1, 2, 24, 3, 25, 26, 4, 27, 5, 28, 29, 6, 30,
+                   7, 31, 8, 32, 33, 11, 34, 10, 35, 36, 9, 37};
+#else
 const int pin_array[] = {-1, 2, 24, 3, 25, 26, 4, 27, 5, 28, 29, 6, 30,
                    7, 31, 8, 32, 33, 18, 34, 19, 35, 36, 20, 37};
+#endif
 
 // This is literally just the size of the above array minus one.  I need this as a const to
 // declare the KeyboxButton array later on... or I just don't know enough C++ to know how to
@@ -286,6 +296,29 @@ const int BUZZ_PIN = 16;
 /// @brief The pin running to the arcade, "auto-crank" button.
 const int BIG_BUTTON_PIN = 39;
 
+#ifdef REV4_MODE
+/// @brief The pin to the EX1 button.
+const int EX1_PIN = 19;
+/// @brief The pin to the EX2 button.
+const int EX2_PIN = 13;
+/// @brief The pin to the EX3 button.
+const int EX3_PIN = 12;
+/// @brief The pin to the EX4 button.
+const int EX4_PIN = 41;
+/// @brief The pin to the EX5 button.
+const int EX5_PIN = 40;
+/// @brief The pin to the EX6 button.
+const int EX6_PIN = 17;
+/// @brief The pin to the EX7 button.
+const int EX7_PIN = 14;
+/// @brief The pin to the EX8 button.
+const int EX8_PIN = 18;
+/// @brief The pin to the EX9 button.
+const int EX9_PIN = 22;
+/// @brief The pin to the EX10 button.
+const int EX10_PIN = 23;
+
+#else
 /// @brief The pin to the EX1 button.
 const int EX1_PIN = 41;
 /// @brief The pin to the EX2 button.
@@ -298,6 +331,7 @@ const int EX4_PIN = 21;
 const int EX5_PIN = 22;
 /// @brief The pin to the EX6 button.
 const int EX6_PIN = 23;
+#endif
 
 /// @}
 #endif

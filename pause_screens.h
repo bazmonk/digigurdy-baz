@@ -15,6 +15,7 @@
 #include "startup_screens.h"
 #include "ex_screens.h"
 #include "tuning_screens.h"
+#include "play_functions.h"
 #include "usb_power.h"
 
 #ifdef USE_GEARED_CRANK

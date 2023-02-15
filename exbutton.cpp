@@ -53,6 +53,8 @@ void ExButton::doFunc(bool playing) {
     return;
   } else if (my_func == 12) {
     ex_tpose_toggle(playing, t_toggle_steps);
+  } else if (my_func == 13) {
+    ex_sec_out_toggle();
   };
   return;
 };
@@ -84,6 +86,8 @@ String ExButton::printFunc() {
     return String("Auto-Crank");
   } else if (my_func == 12) {
     return String("Transpose: ") + t_toggle_steps;
+  } else if (my_func == 13) {
+    return String("Sec. Output Toggle");
   };
 
   return String("FIX ME!!!");
@@ -156,7 +160,7 @@ bool ExButton::fn_choice_screen_2() {
   bool done = false;
   while (!done) {
 
-    print_menu_5("Ex Button Func., P.2", "Turn Volume Down", "Turn Volume Up", "Transpose", "Cycle Capo", "Auto-Crank");
+    print_menu_6("Ex Button Func., P.2", "Turn Volume Down", "Turn Volume Up", "Transpose", "Cycle Capo", "Auto-Crank", "Sec. Output Toggle");
     delay(150);
 
     my1Button->update();
@@ -190,7 +194,12 @@ bool ExButton::fn_choice_screen_2() {
       EEPROM.write(eeprom_addr,11);
       done = true;
 
-    } else if (my6Button->wasPressed() || myXButton->wasPressed()) {
+    } else if (my6Button->wasPressed()) {
+      setFunc(13);
+      EEPROM.write(eeprom_addr,13);
+      done = true;
+      
+    } else if (myXButton->wasPressed()) {
       return false;
     };
   };

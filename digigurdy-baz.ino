@@ -100,6 +100,13 @@ ExButton *ex4Button;
 ExButton *ex5Button;
 ExButton *ex6Button;
 
+#ifdef REV4_MODE
+ExButton *ex7Button;
+ExButton *ex8Button;
+ExButton *ex9Button;
+ExButton *ex10Button;
+#endif
+
 // This defines the +/- one octave transpose range.
 int max_tpose;
 int tpose_offset;
@@ -275,6 +282,14 @@ void setup() {
   ex4Button = new ExButton(EX4_PIN, 200, EEPROM_EX4, EEPROM_EX4_TSTEP);
   ex5Button = new ExButton(EX5_PIN, 200, EEPROM_EX5, EEPROM_EX5_TSTEP);
   ex6Button = new ExButton(EX6_PIN, 200, EEPROM_EX6, EEPROM_EX6_TSTEP);
+
+  #ifdef REV4_MODE
+  ex7Button = new ExButton(EX7_PIN, 200, EEPROM_EX7, EEPROM_EX7_TSTEP);
+  ex8Button = new ExButton(EX8_PIN, 200, EEPROM_EX8, EEPROM_EX8_TSTEP);
+  ex9Button = new ExButton(EX9_PIN, 200, EEPROM_EX9, EEPROM_EX9_TSTEP);
+  ex10Button = new ExButton(EX10_PIN, 200, EEPROM_EX10, EEPROM_EX10_TSTEP);
+  #endif
+
   bigButton = new ExButton(BIG_BUTTON_PIN, 250, EEPROM_EXBB, EEPROM_EXBB_TSTEP);
 
   scene_signal_type = EEPROM.read(EEPROM_SCENE_SIGNALLING);
@@ -331,6 +346,14 @@ void loop() {
     ex4Button->setFunc(EEPROM.read(EEPROM_EX4));
     ex5Button->setFunc(EEPROM.read(EEPROM_EX5));
     ex6Button->setFunc(EEPROM.read(EEPROM_EX6));
+
+    #ifdef REV4_MODE
+    ex7Button->setFunc(EEPROM.read(EEPROM_EX7));
+    ex8Button->setFunc(EEPROM.read(EEPROM_EX8));
+    ex9Button->setFunc(EEPROM.read(EEPROM_EX9));
+    ex10Button->setFunc(EEPROM.read(EEPROM_EX10));
+    #endif
+
     bigButton->setFunc(EEPROM.read(EEPROM_EXBB));
 
     use_solfege = EEPROM.read(EEPROM_USE_SOLFEGE);
@@ -375,6 +398,13 @@ void loop() {
   ex5Button->update();
   ex6Button->update();
 
+  #ifdef REV4_MODE
+  ex7Button->update();
+  ex8Button->update();
+  ex9Button->update();
+  ex10Button->update();
+  #endif
+
   bool go_menu = false;
 
   // Check if any pause manu EX buttons were pressed.
@@ -386,13 +416,22 @@ void loop() {
     go_menu = true;
   }
   #else
-  if ((bigButton->wasPressed() && bigButton->getFunc() == 1) ||
+  if (
       (ex1Button->wasPressed() && ex1Button->getFunc() == 1) ||
       (ex2Button->wasPressed() && ex2Button->getFunc() == 1) ||
       (ex3Button->wasPressed() && ex3Button->getFunc() == 1) ||
       (ex4Button->wasPressed() && ex4Button->getFunc() == 1) ||
       (ex5Button->wasPressed() && ex5Button->getFunc() == 1) ||
-      (ex6Button->wasPressed() && ex6Button->getFunc() == 1)) {
+      (ex6Button->wasPressed() && ex6Button->getFunc() == 1) ||
+
+      #ifdef REV4_MODE
+      (ex7Button->wasPressed() && ex7Button->getFunc() == 1) ||
+      (ex8Button->wasPressed() && ex8Button->getFunc() == 1) ||
+      (ex9Button->wasPressed() && ex9Button->getFunc() == 1) ||
+      (ex10Button->wasPressed() && ex10Button->getFunc() == 1) ||
+      #endif
+
+      (bigButton->wasPressed() && bigButton->getFunc() == 1)) {
     go_menu = true;
   }
   #endif
@@ -445,6 +484,21 @@ void loop() {
   } else if (ex6Button->getFunc() == 11 && ex6Button->wasPressed()) { 
     autocrank_toggle_on = !autocrank_toggle_on;
     any_newly_pressed = true;
+
+  #ifdef REV4_MODE
+  } else if (ex7Button->getFunc() == 11 && ex7Button->wasPressed()) { 
+    autocrank_toggle_on = !autocrank_toggle_on;
+    any_newly_pressed = true;
+  } else if (ex8Button->getFunc() == 11 && ex8Button->wasPressed()) { 
+    autocrank_toggle_on = !autocrank_toggle_on;
+    any_newly_pressed = true;
+  } else if (ex9Button->getFunc() == 11 && ex9Button->wasPressed()) { 
+    autocrank_toggle_on = !autocrank_toggle_on;
+    any_newly_pressed = true;
+  } else if (ex10Button->getFunc() == 11 && ex10Button->wasPressed()) { 
+    autocrank_toggle_on = !autocrank_toggle_on;
+    any_newly_pressed = true;
+  #endif
   };
 
   // Check if any autocrank EX buttons were released
@@ -460,13 +514,24 @@ void loop() {
 
   if (bigButton->getFunc() == 11 && bigButton->wasReleased()) { 
     any_newly_released = true;
-  } else 
-  if (ex4Button->getFunc() == 11 && ex4Button->wasReleased()) { 
+  } else if (ex4Button->getFunc() == 11 && ex4Button->wasReleased()) { 
     any_newly_released = true;
   } else if (ex5Button->getFunc() == 11 && ex5Button->wasReleased()) { 
     any_newly_released = true;
   } else if (ex6Button->getFunc() == 11 && ex6Button->wasReleased()) { 
     any_newly_released = true;
+
+  #ifdef REV4_MODE
+  } else if (ex7Button->getFunc() == 11 && ex7Button->wasReleased()) { 
+    any_newly_released = true;
+  } else if (ex8Button->getFunc() == 11 && ex8Button->wasReleased()) { 
+    any_newly_released = true;
+  } else if (ex9Button->getFunc() == 11 && ex9Button->wasReleased()) { 
+    any_newly_released = true;
+  } else if (ex10Button->getFunc() == 11 && ex10Button->wasReleased()) { 
+    any_newly_released = true;
+  #endif
+
   };
 
 
@@ -480,6 +545,13 @@ void loop() {
   if (ex4Button->wasPressed()) { ex4Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
   if (ex5Button->wasPressed()) { ex5Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
   if (ex6Button->wasPressed()) { ex6Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
+
+  #ifdef REV4_MODE
+  if (ex7Button->wasPressed()) { ex7Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
+  if (ex8Button->wasPressed()) { ex8Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
+  if (ex9Button->wasPressed()) { ex9Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
+  if (ex10Button->wasPressed()) { ex10Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
+  #endif
   
 
   // NOTE:

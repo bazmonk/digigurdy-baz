@@ -202,4 +202,105 @@ void ex_tpose_toggle(bool playing, int steps) {
   };
 };
 
+/// @brief Cycles through the secondary audio output options
+/// @version *New in 2.9.2*
+void ex_sec_out_toggle() {
+  autocrank_toggle_on = false;
+  all_soundOff();
+  delay(5);
+  all_clearVolArray();
+
+  int cur_mode = EEPROM.read(EEPROM_SEC_OUT);
+
+  if (cur_mode == 0) {
+
+    #ifndef ALLOW_COMBO_MODE
+    print_message_2("Secondary Output", "Un-plug any MIDI adapters!", "Press X to Continue");
+
+    bool done2= false;
+    while (!done2) {
+      delay(150);
+
+      myXButton->update();
+
+      if (myXButton->wasPressed()) {
+        done2 = true;
+      };
+    };
+    #endif
+
+    EEPROM.write(EEPROM_SEC_OUT, 1);
+
+    usb_power_on();
+    trigger_obj.start();
+    delay(100);
+
+    mystring->setOutputMode(1);
+    mylowstring->setOutputMode(1);
+    mytromp->setOutputMode(1);
+    mydrone->setOutputMode(1);
+    mykeyclick->setOutputMode(1);
+    mybuzz->setOutputMode(1);
+
+    print_message_2("Secondary Output", "Initializing Tracks,", "Please Wait ~5s...");
+    mystring->setTrackLoops();
+    mylowstring->setTrackLoops();
+    mytromp->setTrackLoops();
+    mydrone->setTrackLoops();
+    mybuzz->setTrackLoops();
+    mykeyclick->setTrackLoops();
+
+    print_message_2("Secondary Output", "Completed! Audio Socket", "Saved to EEPROM!");
+    delay(750);
+
+  } else if (cur_mode == 1) {
+
+  #ifdef ALLOW_COMBO_MODE 
+    EEPROM.write(EEPROM_SEC_OUT, 2);
+
+    usb_power_on();
+    MIDI.begin(MIDI_CHANNEL_OMNI);
+    trigger_obj.start();
+    delay(100);
+
+    mystring->setOutputMode(2);
+    mylowstring->setOutputMode(2);
+    mytromp->setOutputMode(2);
+    mydrone->setOutputMode(2);
+    mykeyclick->setOutputMode(2);
+    mybuzz->setOutputMode(2);
+
+    print_message_2("Secondary Output", "Initializing Tracks,", "Please Wait ~5s...");
+    mystring->setTrackLoops();
+    mylowstring->setTrackLoops();
+    mytromp->setTrackLoops();
+    mydrone->setTrackLoops();
+    mybuzz->setTrackLoops();
+    mykeyclick->setTrackLoops();
+
+    print_message_2("Secondary Output", "MIDI-OUT + Audio", "Saved to EEPROM!");
+    delay(750);
+
+  } else if (cur_mode == 2) {
+
+  #endif
+    EEPROM.write(EEPROM_SEC_OUT, 0);
+
+    usb_power_off();
+    MIDI.begin(MIDI_CHANNEL_OMNI);
+    delay(100);
+
+    mystring->setOutputMode(0);
+    mylowstring->setOutputMode(0);
+    mytromp->setOutputMode(0);
+    mydrone->setOutputMode(0);
+    mykeyclick->setOutputMode(0);
+    mybuzz->setOutputMode(0);
+    
+    print_message_2("Secondary Output", "MIDI-OUT", "Saved to EEPROM!");
+    delay(750);
+  };
+
+};
+
 /// @}

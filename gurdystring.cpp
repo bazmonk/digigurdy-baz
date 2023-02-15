@@ -17,9 +17,7 @@ GurdyString::GurdyString(int my_channel, int my_note, String my_name, int my_mod
 
   setOutputMode(my_mode);
 
-  for (int x = 0; x < 128; x++) {
-    vol_array[x] = 0;
-  };
+  clearVolArray();
 };
 
 // soundOn() sends sound on this string's channel at its notes
@@ -341,3 +339,9 @@ void GurdyString::setTrackLoops() {
     };
   #endif
 };
+
+void GurdyString::clearVolArray() {
+  for (int x = 0; x < 128; x++) {
+    vol_array[x] = 0;
+  };
+}
