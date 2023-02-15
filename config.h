@@ -139,7 +139,7 @@ const float DECAY_FACTOR = 0.00;
 /// @details 
 /// * Increase this if buzzing feels too "jittery" or rapid.
 /// * Decrease if buzzing feels sluggish or unresponsive.
-const int BUZZ_MIN = 200;
+const int BUZZ_MIN = 100;
 
 
 /// @defgroup gear Gear-Motor Crank Configuration Variables
