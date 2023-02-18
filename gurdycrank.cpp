@@ -1,5 +1,14 @@
 #include "gurdycrank.h"
 
+void myisr() {
+  if (debounce_timer >= 1250) {
+    num_events = num_events + 1;
+    last_event = last_event_timer;
+    debounce_timer = 0;
+  }
+  
+}
+
 /// @brief Constructor.
 /// @details This class abstracts the cranking mechanism on Digi-Gurdies.
 /// 
@@ -22,8 +31,10 @@ GurdyCrank::GurdyCrank(int s_pin, int buzz_pin, int led_pin) {
 
   sensor_pin = s_pin;
   pinMode(sensor_pin, INPUT_PULLUP);
-  last_event = digitalRead(sensor_pin);
+  attachInterrupt(digitalPinToInterrupt(sensor_pin), myisr, RISING);
+
   expression = 0;
+  the_buzz_timer = 0;
 };
 
 /// @brief Reports if a crank is connected.
@@ -42,88 +53,24 @@ void GurdyCrank::update() {
   // Check if we need to update the knob reading...
   myKnob->update();
 
-  // Check as close to the sample rate as possible...
-  if (the_timer > SAMPLE_RATE) {
-    this_event = digitalRead(sensor_pin);
-
-    // If there was a transition on the wheel:
-    if (this_event != last_event) {
-      last_event = this_event;
-
-      trans_count += 1;
-      rev_count = trans_count / (NUM_SPOKES * 2);
-
-      v_6 = v_5;
-      v_5 = v_4;
-      v_4 = v_3;
-      v_3 = v_2;
-      v_2 = v_smooth;
-
-      // Velocity is converted to rpm (no particular reason except it's easy to imagine how fast
-      // this is in real-world terms.  1 crank per sec is 60rpm, 3 seconds per crank is 20rpm...
-      //
-      // On nearly every wheel, spokes and holes won't be the same width.  So we average the raw
-      // reading of this transition with the last as we go, as a preliminary smoothing technique.
-      v_last = v_inst;
-      v_inst = (spoke_width * 60000000.0) / (the_spoke_timer);
-
-      //v_smooth = (v_inst + v_last) / 2.0;
-      v_smooth = v_inst;
-
-      v_avg = (v_smooth + v_2 + v_3 + v_4 + v_5 + v_6) / 6.0;
-
-      // Rotate our last times
-      lt_8 = lt_7;
-      lt_7 = lt_6;
-      lt_6 = lt_5;
-      lt_5 = lt_4;
-      lt_4 = lt_3;
-      lt_3 = lt_2;
-      lt_2 = lt_1;
-      lt_1 = the_spoke_timer;
-
-      // Calculate the average of the last four times between readings
-      lt_avg = (lt_1 + lt_2 + lt_3 + lt_4 + lt_5 + lt_6 + lt_7 + lt_8) / 8.0;
-
-      // Calculate the standard deviation of the last four times.
-      lt_stdev = sqrt((pow((lt_1 - lt_avg), 2) + pow((lt_2 - lt_avg), 2) + pow((lt_3 - lt_avg), 2) + pow((lt_4 - lt_avg), 2) + pow((lt_5 - lt_avg), 2) + pow((lt_6 - lt_avg), 2) + pow((lt_7 - lt_avg), 2) + pow((lt_8 - lt_avg), 2)) / 8.0);
-
-      the_stop_timer = 0;
-      the_spoke_timer = 0;
-
-    } else if (the_stop_timer > (lt_avg + (lt_stdev * 3.0)) || the_stop_timer > MAX_WAIT_TIME) {
-
-      v_6 = v_5;
-      v_5 = v_4;
-      v_4 = v_3;
-      v_3 = v_2;
-      v_2 = v_smooth;
-
-      v_smooth = v_smooth * DECAY_FACTOR;
-      v_avg = (v_smooth + v_2 + v_3 + v_4 + v_5 + v_6) / 6.0;
-
-
-      // Rotate our last times
-      lt_8 = lt_7;
-      lt_7 = lt_6;
-      lt_6 = lt_5;
-      lt_5 = lt_4;
-      lt_4 = lt_3;
-      lt_3 = lt_2;
-      lt_2 = lt_1;
-      lt_1 = the_spoke_timer;
-
-      // Calculate the average of the last four times between readings
-      lt_avg = (lt_1 + lt_2 + lt_3 + lt_4 + lt_5 + lt_6 + lt_7 + lt_8) / 8.0;
-
-      // Calculate the standard deviation of the last four times.
-      lt_stdev = sqrt((pow((lt_1 - lt_avg), 2) + pow((lt_2 - lt_avg), 2) + pow((lt_3 - lt_avg), 2) + pow((lt_4 - lt_avg), 2) + pow((lt_5 - lt_avg), 2) + pow((lt_6 - lt_avg), 2) + pow((lt_7 - lt_avg), 2) + pow((lt_8 - lt_avg), 2)) / 8.0);
-
-      the_stop_timer = 0;
-    }
-
-    the_timer = 0;
-  };
+  if (eval_timer > 25250 && num_events > 1) {
+    double new_vel = (num_events * spoke_width * 60000000.0) / (last_event);
+//    cur_vel = cur_vel + (smoothing_factor * (new_vel - cur_vel)) + 1;
+    cur_vel = (cur_vel + new_vel) / 2.0 + (0.3 * (new_vel - cur_vel));
+    num_events = 0;
+    last_event = 0;
+    last_event_timer = 0;
+    eval_timer = 0;
+  }
+  if (eval_timer > 31250 && num_events < 2) {
+//    cur_vel = cur_vel + (smoothing_factor * ( 0 - cur_vel)) - 2;
+    cur_vel = (cur_vel) / 2.0;
+    
+    num_events = 0;
+    last_event = 0;
+    last_event_timer = 0;
+    eval_timer = 0;
+  }
 
   updateExpression();
 };
@@ -193,7 +140,7 @@ bool GurdyCrank::stoppedSpinning() {
 /// @brief Reports whether the crank is currently spinning this update() cycle.
 /// @return True if crank is spinning, false otherwise.
 bool GurdyCrank::isSpinning() {
-  return (v_avg > V_THRESHOLD);
+  return (cur_vel > V_THRESHOLD);
 };
 
 /// @brief Reports whether buzzing began this update() cycle.
@@ -239,21 +186,7 @@ bool GurdyCrank::stoppedBuzzing() {
 /// @brief Returns the crank's current (heavily-adjusted) velocity.
 /// @return The crank's measured current average velocity in estimated RPMs.
 double GurdyCrank::getVAvg() {
-  return v_avg;
-};
-
-/// @brief Returns the number of detected spoke transitions.
-/// @return The number of detected off->on and on->off events.
-/// @note This is for debug purposes to see how well it tracks.  Not part of the core logic.
-int GurdyCrank::getCount() {
-  return trans_count;
-};
-
-/// @brief Returns the number of estimated crank revolutions.
-/// @return The number of estimated crank revolutions.
-/// @note This is for testing purposes and not part of the core logic.
-double GurdyCrank::getRev() {
-  return rev_count;
+  return cur_vel;
 };
 
 /// @brief Disables the buzz LED indicator object.

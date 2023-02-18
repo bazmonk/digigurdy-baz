@@ -57,6 +57,10 @@ ExButton *bigButton;
   GearCrank *mycrank;
 #else
   GurdyCrank *mycrank;
+  volatile int num_events = 0;
+  volatile int last_event = 0;
+  elapsedMicros last_event_timer;
+  elapsedMicros debounce_timer;
 #endif
 
 VibKnob *myvibknob;
@@ -646,7 +650,9 @@ void loop() {
   if (test_count > 100000) {
     test_count = 0;
      Serial.print("100,000 loop()s took: ");
-     Serial.println(millis() - start_time);
+     Serial.print(millis() - start_time);
+     Serial.print("  Cur V: ");
+     Serial.println(mycrank->getVAvg());
      // Serial.print("ms.  Avg Velocity: ");
      // Serial.print(mycrank->getVAvg());
      // Serial.print("rpm. Transitions: ");

@@ -3,33 +3,56 @@
         {
             "name": "Mac",
             "includePath": [
-                "${workspaceFolder}/**",
-                "${workspaceFolder}/../../Arduino/libraries/**",
                 "${workspaceFolder}/../../Arduino/libraries/U8g2-teensy41/src",
                 "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/cores/teensy3",
                 "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/libraries/Bounce",
                 "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/libraries/USBHost_t36",
                 "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/libraries/SdFat/src",
-                "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/cores/teensy4",
+                "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/cores/teensy4/**",
                 "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/libraries/ADC",
                 "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/libraries/EEPROM",
                 "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/libraries/SPI",
-                "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/libraries/MIDI/src"
+                "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/libraries/MIDI/src",
+                "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/cores/teensy4/"
             ],
             "defines": [
                 "USBCON",
                 "ARDUINO_TEENSY41",
                 "USB_MIDI_SERIAL",
                 "ARDUINO",
-                "ADC_DUAL_ADCS"
+                "ADC_DUAL_ADCS",
+                "ARDUINO=10819",
+                "__IMXRT1062__"
             ],
             "macFrameworkPath": [
                 "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks"
             ],
-            "compilerPath": "/usr/bin/clang",
-            "cStandard": "c17",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "macos-clang-x64"
+            "compilerPath": "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/../tools/arm/bin/arm-none-eabi-g++",
+            "cStandard": "c11",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "macos-gcc-arm",
+            "compilerArgs": [
+                "-E",
+                "-CC",
+                "\"-x\", \"c++\"",
+                "-w",
+                "-g",
+                "-Wall",
+                "-ffunction-sections",
+                "-fdata-sections",
+                "-nostdlib",
+                "-std=gnu++14",
+                "-fno-exceptions",
+                "-fpermissive",
+                "-fno-rtti",
+                "-fno-threadsafe-statics",
+                "-felide-constructors",
+                "-Wno-error=narrowing",
+                "-mthumb",
+                "-mcpu=cortex-m7",
+                "-mfloat-abi=hard ",
+                "-mfpu=fpv5-d16"
+            ]
         }
     ],
     "version": 4
