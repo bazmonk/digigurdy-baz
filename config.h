@@ -114,7 +114,7 @@ const int NUM_SPOKES = 80;
 
 /// @ingroup optical
 /// @brief The crank speed at which sound begins to play in RPMs.
-const float V_THRESHOLD = 6.0;
+const float V_THRESHOLD = 5.0;
 
 // This is how long in milliseconds to buzz *at least* once it starts.
 /// @ingroup optical
