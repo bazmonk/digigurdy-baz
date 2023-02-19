@@ -28,8 +28,8 @@ float BuzzKnob::getVoltage() {
 /// @brief Gets the calculated velocity threshold based off the current voltage.
 /// @return The buzzing velocity threshold.
 float BuzzKnob::getThreshold() {
-  if (getVoltage() > 975) {
-    return (60 + (getVoltage() / 2));
+  if (getVoltage() > 1000) {
+    return (240);
   }
-  return (60 + (getVoltage() / 6));
+  return (30 + (getVoltage() / 6));
 };

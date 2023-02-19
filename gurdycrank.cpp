@@ -56,7 +56,12 @@ void GurdyCrank::update() {
   if (eval_timer > 25250 && num_events > 1) {
     double new_vel = (num_events * spoke_width * 60000000.0) / (last_event);
 //    cur_vel = cur_vel + (smoothing_factor * (new_vel - cur_vel)) + 1;
-    cur_vel = (cur_vel + new_vel) / 2.0 + (0.3 * (new_vel - cur_vel));
+    if (new_vel > cur_vel) {
+      cur_vel = (cur_vel + new_vel) / 2.0 + (0.3 * (new_vel - cur_vel)) + 1;
+    }
+    else {
+      cur_vel = (cur_vel + new_vel) / 2.0 + (0.3 * (new_vel - cur_vel));
+    }
     num_events = 0;
     last_event = 0;
     last_event_timer = 0;
@@ -167,7 +172,7 @@ bool GurdyCrank::startedBuzzing() {
 /// @brief Reports whether buzzing stopped this update() cycle.
 /// @return True if buzzing stopped thie cycle, false otherwise.
 bool GurdyCrank::stoppedBuzzing() {
-  if (getVAvg() <= myKnob->getThreshold() && the_buzz_timer > BUZZ_MIN) {
+  if (getVAvg() <= (myKnob->getThreshold() * 0.85) && the_buzz_timer > BUZZ_MIN) {
     if (was_buzzing) {
       was_buzzing = false;
 
