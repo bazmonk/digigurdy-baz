@@ -57,10 +57,10 @@ void GurdyCrank::update() {
     double new_vel = (num_events * spoke_width * 60000000.0) / (last_event);
 //    cur_vel = cur_vel + (smoothing_factor * (new_vel - cur_vel)) + 1;
     if (new_vel > cur_vel) {
-      cur_vel = (cur_vel + new_vel) / 2.0 + (0.3 * (new_vel - cur_vel)) + 1;
+      cur_vel = cur_vel + (0.8 * (new_vel - cur_vel)) + 1;
     }
     else {
-      cur_vel = (cur_vel + new_vel) / 2.0 + (0.3 * (new_vel - cur_vel));
+      cur_vel = cur_vel + (0.8 * (new_vel - cur_vel));
     }
     num_events = 0;
     last_event = 0;
