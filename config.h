@@ -105,7 +105,7 @@ const float EXPRESSION_VMAX = 80.0;
 /// @details
 /// * Expression (MIDI CC11) value will be at least this much.
 /// * Silent = 0, Max = 127 
-const int EXPRESSION_START = 60;
+const int EXPRESSION_START = 70;
 
 /// @ingroup optical
 /// @brief The number of "spokes" on the optical crank wheel.
@@ -114,7 +114,7 @@ const int NUM_SPOKES = 80;
 
 /// @ingroup optical
 /// @brief The crank speed at which sound begins to play in RPMs.
-const float V_THRESHOLD = 5.0;
+const float V_THRESHOLD = 4.0;
 
 // This is how long in milliseconds to buzz *at least* once it starts.
 /// @ingroup optical

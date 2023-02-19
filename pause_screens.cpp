@@ -96,18 +96,22 @@ void pause_screen() {
         drone_mode = 1; // 1 == both off
         mydrone->setMute(true);
         mytromp->setMute(true);
+        mybuzz->setMute(true);
       } else if (drone_mode == 1) {
         drone_mode = 2; // 2 == drone on, tromp off
         mydrone->setMute(false);
         mytromp->setMute(true);
+        mybuzz->setMute(true);
       } else if (drone_mode == 2) {
         drone_mode = 3; // 3 == drone off, tromp on
         mydrone->setMute(true);
         mytromp->setMute(false);
+        mybuzz->setMute(false);
       } else if (drone_mode == 3) {
         drone_mode = 0; // 0 == both on
         mydrone->setMute(false);
         mytromp->setMute(false);
+        mybuzz->setMute(false);
       };
     } else if (myBButton->wasPressed()) {
       if (mel_mode == 0) {
