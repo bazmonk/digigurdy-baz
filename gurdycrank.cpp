@@ -91,7 +91,7 @@ void GurdyCrank::updateExpression() {
 
     float cur_v = getVAvg();
 
-    int new_buzz_expression = int(((cur_v - myKnob->getThreshold())/(0.3 * myKnob->getThreshold())) * (32) + 95);
+    int new_buzz_expression = int(((cur_v - myKnob->getThreshold())/(0.25 * myKnob->getThreshold())) * (32) + 95);
     if (new_buzz_expression > 127) {
       new_buzz_expression = 127;
     };
@@ -184,7 +184,7 @@ bool GurdyCrank::startedBuzzing() {
 /// @brief Reports whether buzzing stopped this update() cycle.
 /// @return True if buzzing stopped thie cycle, false otherwise.
 bool GurdyCrank::stoppedBuzzing() {
-  if (getVAvg() <= (myKnob->getThreshold() * 0.9) && the_buzz_timer > BUZZ_MIN) {
+  if (getVAvg() <= (myKnob->getThreshold() * 1.0) && the_buzz_timer > BUZZ_MIN) {
     if (was_buzzing) {
       was_buzzing = false;
 
