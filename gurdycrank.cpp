@@ -34,6 +34,7 @@ GurdyCrank::GurdyCrank(int s_pin, int buzz_pin, int led_pin) {
   attachInterrupt(digitalPinToInterrupt(sensor_pin), myisr, RISING);
 
   expression = 0;
+  buzz_expression = 0;
   the_buzz_timer = 0;
 };
 
@@ -89,6 +90,12 @@ void GurdyCrank::updateExpression() {
   if (the_expression_timer > 50) {
 
     float cur_v = getVAvg();
+
+    int new_buzz_expression = int(((cur_v - myKnob->getThreshold())/(0.3 * myKnob->getThreshold())) * (32) + 95);
+    if (new_buzz_expression > 127) {
+      new_buzz_expression = 127;
+    };
+    
     if (cur_v > EXPRESSION_VMAX) {
       cur_v = EXPRESSION_VMAX;
     } else if (cur_v < V_THRESHOLD) {
@@ -106,8 +113,13 @@ void GurdyCrank::updateExpression() {
       mylowstring->setExpression(expression);
       mytromp->setExpression(expression);
       mydrone->setExpression(expression);
-      mybuzz->setExpression(expression);
     };
+
+    if (buzz_expression != new_buzz_expression) {
+      buzz_expression = new_buzz_expression;
+      mybuzz->setExpression(buzz_expression);
+    };
+
     the_expression_timer = 0;
   };
 };

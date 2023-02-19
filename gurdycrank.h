@@ -23,6 +23,7 @@ class GurdyCrank {
     bool was_buzzing = false;
 
     int expression;
+    int buzz_expression;
 
     elapsedMicros eval_timer;
     elapsedMicros decay_timer;

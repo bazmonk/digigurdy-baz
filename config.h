@@ -98,14 +98,14 @@ const float PEDAL_MAX_V = 658.0;
 
 /// @ingroup optical
 /// @brief The crank speed in RPMs at which expression volume will max out.
-const float EXPRESSION_VMAX = 80.0;
+const float EXPRESSION_VMAX = 40.0;
 
 /// @ingroup optical
 /// @brief The minimum expression volume.
 /// @details
 /// * Expression (MIDI CC11) value will be at least this much.
 /// * Silent = 0, Max = 127 
-const int EXPRESSION_START = 70;
+const int EXPRESSION_START = 60;
 
 /// @ingroup optical
 /// @brief The number of "spokes" on the optical crank wheel.
