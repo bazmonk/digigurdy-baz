@@ -3,15 +3,15 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.9.2";
-const String REL_DATE = "2023-02-05, v" + VERSION;
+const String VERSION = "2.9.4";
+const String REL_DATE = "2023-02-19, v" + VERSION;
 
 /// @defgroup config Configuration Options
 /// These variables/definitions are compile-time configuration options.
 /// @{
 
 /// @brief This is a freeform line displayed on the About screen
-const String EXTRA_LINE = " Rev4.0 Test Build ";
+const String EXTRA_LINE = " Test Build ";
 //const String EXTRA_LINE = "      3.5 TEST       ";
 //const String EXTRA_LINE = " MIDI-OUT, LED, SWSPI";
 //const String EXTRA_LINE = " TRIGGER - LED KNOB  ";
@@ -46,8 +46,8 @@ const String EXTRA_LINE = " Rev4.0 Test Build ";
 #endif
 
 // One of these OLED options must be enabled.
-//#define WHITE_OLED
-#define BLUE_OLED
+#define WHITE_OLED
+//#define BLUE_OLED
 
 //#define USE_GEARED_CRANK
 
@@ -56,9 +56,9 @@ const String EXTRA_LINE = " Rev4.0 Test Build ";
 //#define USE_TSUNAMI
 
 #define ALLOW_COMBO_MODE
-//#define BAZ_MODE
+#define BAZ_MODE
 
-#define REV4_MODE
+//#define REV4_MODE
 
 /// @brief The audio output channel used by the Tsunami unit.
 /// @details 0 == 1L, 1 == 1R, etc.
@@ -72,13 +72,13 @@ const int TSUNAMI_OUT = 0;
 #define __WT_USE_SERIAL5__
 
 
-//#define LED_KNOB
+#define LED_KNOB
 
 /// @brief Pin used for the LED buzz indicator, if LED_KNOB is enabled.
 const int LED_PIN = 40;
 
 
-#define USE_PEDAL
+//#define USE_PEDAL
 
 /// @brief Pin used for the accessory pedal, if USE_PEDAL is enabled.
 const int PEDAL_PIN = 38;
@@ -98,14 +98,14 @@ const float PEDAL_MAX_V = 658.0;
 
 /// @ingroup optical
 /// @brief The crank speed in RPMs at which expression volume will max out.
-const float EXPRESSION_VMAX = 120.0;
+const float EXPRESSION_VMAX = 40.0;
 
 /// @ingroup optical
 /// @brief The minimum expression volume.
 /// @details
 /// * Expression (MIDI CC11) value will be at least this much.
 /// * Silent = 0, Max = 127 
-const int EXPRESSION_START = 90;
+const int EXPRESSION_START = 60;
 
 /// @ingroup optical
 /// @brief The number of "spokes" on the optical crank wheel.
@@ -114,24 +114,7 @@ const int NUM_SPOKES = 80;
 
 /// @ingroup optical
 /// @brief The crank speed at which sound begins to play in RPMs.
-const float V_THRESHOLD = 5.5;
-
-/// @ingroup optical
-/// @brief The delay between crank samples in microseconds.
-/// @details
-/// * Code will cycle though at least this long between samples.
-/// * This is not how long the code waits for movement, just how often it checks.
-const int SAMPLE_RATE = 1000;
-
-/// @ingroup optical
-/// @brief The maximum amount of time in microseconds to wait for crank movement.
-/// @details * The actual wait time changes dynamically, but will not exceed this value.
-const int MAX_WAIT_TIME = 40000;
-
-/// @ingroup optical
-/// @brief The multiplier applied to the velocity when no movement is detected.
-/// @details * Smaller values cause sound to cut out more quickly once crank motion stop.
-const float DECAY_FACTOR = 0.00;
+const float V_THRESHOLD = 4.0;
 
 // This is how long in milliseconds to buzz *at least* once it starts.
 /// @ingroup optical
