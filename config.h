@@ -11,7 +11,7 @@ const String REL_DATE = "2023-02-19, v" + VERSION;
 /// @{
 
 /// @brief This is a freeform line displayed on the About screen
-const String EXTRA_LINE = " Test Build ";
+const String EXTRA_LINE = " Rev4 Test Build ";
 //const String EXTRA_LINE = "      3.5 TEST       ";
 //const String EXTRA_LINE = " MIDI-OUT, LED, SWSPI";
 //const String EXTRA_LINE = " TRIGGER - LED KNOB  ";
@@ -46,8 +46,8 @@ const String EXTRA_LINE = " Test Build ";
 #endif
 
 // One of these OLED options must be enabled.
-#define WHITE_OLED
-//#define BLUE_OLED
+//#define WHITE_OLED
+#define BLUE_OLED
 
 //#define USE_GEARED_CRANK
 
@@ -56,9 +56,9 @@ const String EXTRA_LINE = " Test Build ";
 //#define USE_TSUNAMI
 
 #define ALLOW_COMBO_MODE
-#define BAZ_MODE
+//#define BAZ_MODE
 
-//#define REV4_MODE
+#define REV4_MODE
 
 /// @brief The audio output channel used by the Tsunami unit.
 /// @details 0 == 1L, 1 == 1R, etc.
@@ -72,13 +72,13 @@ const int TSUNAMI_OUT = 0;
 #define __WT_USE_SERIAL5__
 
 
-#define LED_KNOB
+//#define LED_KNOB
 
 /// @brief Pin used for the LED buzz indicator, if LED_KNOB is enabled.
 const int LED_PIN = 40;
 
 
-//#define USE_PEDAL
+#define USE_PEDAL
 
 /// @brief Pin used for the accessory pedal, if USE_PEDAL is enabled.
 const int PEDAL_PIN = 38;
@@ -114,7 +114,7 @@ const int NUM_SPOKES = 80;
 
 /// @ingroup optical
 /// @brief The crank speed at which sound begins to play in RPMs.
-const float V_THRESHOLD = 4.0;
+const float V_THRESHOLD = 0.5;
 
 
 /// @defgroup gear Gear-Motor Crank Configuration Variables
