@@ -116,14 +116,6 @@ const int NUM_SPOKES = 80;
 /// @brief The crank speed at which sound begins to play in RPMs.
 const float V_THRESHOLD = 4.0;
 
-// This is how long in milliseconds to buzz *at least* once it starts.
-/// @ingroup optical
-/// @brief The minimum duration of buzz sounds.
-/// @details 
-/// * Increase this if buzzing feels too "jittery" or rapid.
-/// * Decrease if buzzing feels sluggish or unresponsive.
-const int BUZZ_MIN = 100;
-
 
 /// @defgroup gear Gear-Motor Crank Configuration Variables
 /// These are configuration variables that only apply to gear-motor-crank models.
