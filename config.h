@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.9.4x";
+const String VERSION = "2.9.4";
 const String REL_DATE = "2023-02-19, v" + VERSION;
 
 /// @defgroup config Configuration Options
@@ -11,7 +11,7 @@ const String REL_DATE = "2023-02-19, v" + VERSION;
 /// @{
 
 /// @brief This is a freeform line displayed on the About screen
-const String EXTRA_LINE = " Rev4.0 Test Build ";
+const String EXTRA_LINE = " Test Build ";
 //const String EXTRA_LINE = "      3.5 TEST       ";
 //const String EXTRA_LINE = " MIDI-OUT, LED, SWSPI";
 //const String EXTRA_LINE = " TRIGGER - LED KNOB  ";

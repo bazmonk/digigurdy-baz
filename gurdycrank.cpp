@@ -58,10 +58,10 @@ void GurdyCrank::update() {
     double new_vel = (num_events * spoke_width * 60000000.0) / (last_event);
 //    cur_vel = cur_vel + (smoothing_factor * (new_vel - cur_vel)) + 1;
     if (new_vel > cur_vel) {
-      cur_vel = cur_vel + (0.8 * (new_vel - cur_vel)) + 1;
+      cur_vel = cur_vel + (0.8 * (new_vel - cur_vel)) + 0.5;
     }
     else {
-      cur_vel = cur_vel + (0.8 * (new_vel - cur_vel));
+      cur_vel = cur_vel + (0.75 * (new_vel - cur_vel));
     }
     num_events = 0;
     last_event = 0;
@@ -185,7 +185,7 @@ bool GurdyCrank::startedBuzzing() {
 /// @return True if buzzing stopped thie cycle, false otherwise.
 bool GurdyCrank::stoppedBuzzing() {
   if (getVAvg() <= (myKnob->getThreshold() * 0.95) && the_buzz_timer > BUZZ_MIN) {
-    if (was_buzzing) {
+    if (was_buzzing && the_buzz_timer > 65) {
       was_buzzing = false;
 
       #ifdef LED_KNOB

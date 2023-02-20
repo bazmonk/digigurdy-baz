@@ -31,5 +31,5 @@ float BuzzKnob::getThreshold() {
   if (getVoltage() > 1000) {
     return (240);
   }
-  return (30 + (getVoltage() / 6.0));
+  return (30 + (getVoltage() / 6.5));
 };
