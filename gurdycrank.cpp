@@ -184,8 +184,8 @@ bool GurdyCrank::startedBuzzing() {
 /// @brief Reports whether buzzing stopped this update() cycle.
 /// @return True if buzzing stopped thie cycle, false otherwise.
 bool GurdyCrank::stoppedBuzzing() {
-  if (getVAvg() <= (myKnob->getThreshold() * 0.95) && the_buzz_timer > BUZZ_MIN) {
-    if (was_buzzing && the_buzz_timer > 65) {
+  if (getVAvg() <= (myKnob->getThreshold() * 0.95)) {
+    if (was_buzzing && the_buzz_timer > 75) {
       was_buzzing = false;
 
       #ifdef LED_KNOB
