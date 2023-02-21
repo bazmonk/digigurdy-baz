@@ -62,7 +62,7 @@ const String EXTRA_LINE = " Rev4 Test Build ";
 
 #define ALLOW_COMBO_MODE
 //#define BAZ_MODE
-//#define BAZ2_MODE
+#define BAZ2_MODE
 
 #define REV4_MODE
 

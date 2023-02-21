@@ -99,7 +99,8 @@ void GurdyCrank::update() {
     double new_vel = (num_events * spoke_width * 60000000.0) / (last_event);
 //    cur_vel = cur_vel + (smoothing_factor * (new_vel - cur_vel)) + 1;
 
-    if (cur_vel < 30 && (new_vel - cur_vel) * (new_vel - cur_vel) > 7000) {
+    if (cur_vel > 5 && cur_vel < 30 && (new_vel - cur_vel) * (new_vel - cur_vel) > 7000) {
+      Serial.println(last_event);
       new_vel = cur_vel;
     }
 
