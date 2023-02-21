@@ -221,7 +221,11 @@ void setup() {
     };
 
   #else
-    mycrank = new GurdyCrank(CRANK_PIN, BUZZ_PIN, LED_PIN);
+    #ifdef USE_ENCODER
+      mycrank = new GurdyCrank(CRANK_PIN, CRANK_PIN2, BUZZ_PIN, LED_PIN);
+    #else
+      mycrank = new GurdyCrank(CRANK_PIN, BUZZ_PIN, LED_PIN);
+    #endif
   #endif
 
   #ifdef USE_PEDAL
@@ -400,7 +404,9 @@ void loop() {
   bigButton->update();
   ex4Button->update();
   ex5Button->update();
+  #ifndef USE_ENCODER
   ex6Button->update();
+  #endif
 
   #ifdef REV4_MODE
   ex7Button->update();
@@ -548,7 +554,9 @@ void loop() {
   if (bigButton->wasPressed()) { bigButton->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
   if (ex4Button->wasPressed()) { ex4Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
   if (ex5Button->wasPressed()) { ex5Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
+  #ifndef USE_ENCODER
   if (ex6Button->wasPressed()) { ex6Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
+  #endif
 
   #ifdef REV4_MODE
   if (ex7Button->wasPressed()) { ex7Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
@@ -647,7 +655,7 @@ void loop() {
 
   // My dev output stuff.
   test_count +=1;
-  if (test_count > 100000) {
+  if (test_count > 25000) {
     test_count = 0;
      Serial.print("100,000 loop()s took: ");
      Serial.print(millis() - start_time);
@@ -660,10 +668,10 @@ void loop() {
      // Serial.print(", est. rev: ");
      // Serial.println(mycrank->getRev());
      start_time = millis();
-     #ifdef USE_PEDAL
-       Serial.println(String("") + "\nKNOB_V = " + myvibknob->getVoltage());
-       Serial.println(String("") + "KNOB_VIB = " + myvibknob->getVibrato());
-     #endif
+//     #ifdef USE_PEDAL
+//       Serial.println(String("") + "\nKNOB_V = " + myvibknob->getVoltage());
+//       Serial.println(String("") + "KNOB_VIB = " + myvibknob->getVibrato());
+//     #endif
   }
 
 };

@@ -1,13 +1,29 @@
 #include "gurdycrank.h"
 
+#ifdef USE_ENCODER
+void myisr() {
+  num_events = num_events + 1;
+  last_event = last_event_timer;
+  debounce_timer = 0;  
+}
+
+void myisr2() {
+  num_events = num_events + 1;
+  last_event = last_event_timer;
+  debounce_timer = 0;  
+}
+
+#else
+
 void myisr() {
   if (debounce_timer >= 1250) {
     num_events = num_events + 1;
     last_event = last_event_timer;
     debounce_timer = 0;
-  }
-  
+  } 
 }
+
+#endif
 
 /// @brief Constructor.
 /// @details This class abstracts the cranking mechanism on Digi-Gurdies.
@@ -38,6 +54,25 @@ GurdyCrank::GurdyCrank(int s_pin, int buzz_pin, int led_pin) {
   the_buzz_timer = 0;
 };
 
+GurdyCrank::GurdyCrank(int s_pin, int s_pin2, int buzz_pin, int led_pin) {
+
+  myKnob = new BuzzKnob(buzz_pin);
+
+  #ifdef LED_KNOB
+    myLED = new SimpleLED(led_pin);
+  #endif
+
+  sensor_pin = s_pin;
+  pinMode(sensor_pin, INPUT_PULLUP);
+  pinMode(s_pin2, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(sensor_pin), myisr, RISING);
+  attachInterrupt(digitalPinToInterrupt(s_pin2), myisr, RISING);
+
+  expression = 0;
+  buzz_expression = 0;
+  the_buzz_timer = 0;
+};
+
 /// @brief Reports if a crank is connected.
 /// @return True
 /// @note Currently this method is pointless.  Gear-motor cranks do use this, however, and this is being kept for future changes.
@@ -54,6 +89,31 @@ void GurdyCrank::update() {
   // Check if we need to update the knob reading...
   myKnob->update();
 
+  #ifdef USE_ENCODER
+  if (eval_timer > 10000 && num_events > 0) {
+    double new_vel = (num_events * spoke_width * 60000000.0) / (last_event);
+//    cur_vel = cur_vel + (smoothing_factor * (new_vel - cur_vel)) + 1;
+    if (new_vel > cur_vel) {
+      cur_vel = cur_vel + (0.2 * (new_vel - cur_vel));
+    }
+    else {
+      cur_vel = cur_vel + (0.2 * (new_vel - cur_vel));
+    }
+    num_events = 0;
+    last_event = 0;
+    last_event_timer = 0;
+    eval_timer = 0;
+  }
+  if (eval_timer > 15000 && num_events < 1) {
+//    cur_vel = cur_vel + (smoothing_factor * ( 0 - cur_vel)) - 2;
+    cur_vel = (cur_vel) / 2.0;
+    
+    num_events = 0;
+    last_event = 0;
+    last_event_timer = 0;
+    eval_timer = 0;
+  }
+  #else
   if (eval_timer > 25250 && num_events > 1) {
     double new_vel = (num_events * spoke_width * 60000000.0) / (last_event);
 //    cur_vel = cur_vel + (smoothing_factor * (new_vel - cur_vel)) + 1;
@@ -77,6 +137,7 @@ void GurdyCrank::update() {
     last_event_timer = 0;
     eval_timer = 0;
   }
+  #endif
 
   updateExpression();
 };

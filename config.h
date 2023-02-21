@@ -3,8 +3,8 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.9.4";
-const String REL_DATE = "2023-02-19, v" + VERSION;
+const String VERSION = "2.9.5x";
+const String REL_DATE = "2023-02-20, v" + VERSION;
 
 /// @defgroup config Configuration Options
 /// These variables/definitions are compile-time configuration options.
@@ -33,6 +33,9 @@ const String EXTRA_LINE = " Rev4 Test Build ";
   /// @brief Enables geared-crank support.
   /// @details Disable for optical-crank support
   #define USE_GEARED_CRANK
+  /// @brief Enabled incremental encoder support.
+  /// @degails Disable for optical-crank support
+  #define USE_ENCODER
   /// @brief Enables an LED buzz indicator on LED_PIN.
   #define LED_KNOB
   /// @brief Enables the accessory/vibrato pedal on PEDAL_PIN.
@@ -51,12 +54,15 @@ const String EXTRA_LINE = " Rev4 Test Build ";
 
 //#define USE_GEARED_CRANK
 
+#define USE_ENCODER
+
 // Only one of these should be defined.
 #define USE_TRIGGER
 //#define USE_TSUNAMI
 
 #define ALLOW_COMBO_MODE
 //#define BAZ_MODE
+#define BAZ2_MODE
 
 #define REV4_MODE
 
@@ -105,12 +111,16 @@ const float EXPRESSION_VMAX = 40.0;
 /// @details
 /// * Expression (MIDI CC11) value will be at least this much.
 /// * Silent = 0, Max = 127 
-const int EXPRESSION_START = 60;
+const int EXPRESSION_START = 30;
 
 /// @ingroup optical
 /// @brief The number of "spokes" on the optical crank wheel.
 /// @details * This is the number of black/blocking bars on the wheel, not the number of transitions.
+#ifdef USE_ENCODER
+const int NUM_SPOKES = 300;
+#else
 const int NUM_SPOKES = 80;
+#endif
 
 /// @ingroup optical
 /// @brief The crank speed at which sound begins to play in RPMs.
@@ -263,6 +273,9 @@ const int TPOSE_DN_INDEX = num_keys - 3;
 /// @brief The pin running to the crank.
 /// @warning If using a geared crank, this pin must be analog-capable.
 const int CRANK_PIN = 15;
+
+/// @brief The second sensor pin for encoder.
+const int CRANK_PIN2 = 17;
 
 /// @brief The analog pin running to the buzz potentiometer/knob.
 /// @warning This pin must be analog-capable.
