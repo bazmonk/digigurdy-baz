@@ -24,7 +24,7 @@ See [the code documentation here](https://bazmonk.github.io/digigurdy-baz/html/i
 
 * 2.5.6 - Bug/hang fix, more improved trigger/crank behavior.
 
-* 2.5.5 - Improved crank behavior, reducing phandom buzzes.
+* 2.5.5 - Improved crank behavior, reducing phantom buzzes.
 
 * 2.5.4 - Melody vibrato is now adjustable in the Input/Output Config menu.
 
