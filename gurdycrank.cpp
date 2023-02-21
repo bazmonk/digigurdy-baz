@@ -2,15 +2,19 @@
 
 #ifdef USE_ENCODER
 void myisr() {
-  num_events = num_events + 1;
-  last_event = last_event_timer;
-  debounce_timer = 0;  
+  if (debounce_timer >= 400) {
+    num_events = num_events + 1;
+    last_event = last_event_timer;
+    debounce_timer = 0;
+  }  
 }
 
 void myisr2() {
-  num_events = num_events + 1;
-  last_event = last_event_timer;
-  debounce_timer = 0;  
+  if (debounce_timer >= 400) {
+    num_events = num_events + 1;
+    last_event = last_event_timer;
+    debounce_timer = 0;
+  } 
 }
 
 #else
@@ -90,14 +94,20 @@ void GurdyCrank::update() {
   myKnob->update();
 
   #ifdef USE_ENCODER
-  if (eval_timer > 10000 && num_events > 0) {
+  if (eval_timer > 12500 && num_events > 0) {
+    
     double new_vel = (num_events * spoke_width * 60000000.0) / (last_event);
 //    cur_vel = cur_vel + (smoothing_factor * (new_vel - cur_vel)) + 1;
+
+    if (cur_vel < 30 && (new_vel - cur_vel) * (new_vel - cur_vel) > 7000) {
+      new_vel = cur_vel;
+    }
+
     if (new_vel > cur_vel) {
-      cur_vel = cur_vel + (0.2 * (new_vel - cur_vel));
+      cur_vel = cur_vel + (0.25 * (new_vel - cur_vel));
     }
     else {
-      cur_vel = cur_vel + (0.2 * (new_vel - cur_vel));
+      cur_vel = cur_vel + (0.25 * (new_vel - cur_vel));
     }
     num_events = 0;
     last_event = 0;
@@ -106,7 +116,7 @@ void GurdyCrank::update() {
   }
   if (eval_timer > 15000 && num_events < 1) {
 //    cur_vel = cur_vel + (smoothing_factor * ( 0 - cur_vel)) - 2;
-    cur_vel = (cur_vel) / 2.0;
+    cur_vel = (cur_vel) - 0.4 * (cur_vel);
     
     num_events = 0;
     last_event = 0;

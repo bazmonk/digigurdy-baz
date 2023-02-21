@@ -62,7 +62,7 @@ const String EXTRA_LINE = " Rev4 Test Build ";
 
 #define ALLOW_COMBO_MODE
 //#define BAZ_MODE
-#define BAZ2_MODE
+//#define BAZ2_MODE
 
 #define REV4_MODE
 
@@ -104,7 +104,7 @@ const float PEDAL_MAX_V = 658.0;
 
 /// @ingroup optical
 /// @brief The crank speed in RPMs at which expression volume will max out.
-const float EXPRESSION_VMAX = 40.0;
+const float EXPRESSION_VMAX = 20.0;
 
 /// @ingroup optical
 /// @brief The minimum expression volume.
