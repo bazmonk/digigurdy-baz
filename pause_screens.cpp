@@ -1143,7 +1143,7 @@ void sec_output_screen() {
     if (my1Button->wasPressed()) {
       EEPROM.write(EEPROM_SEC_OUT, 0);
 
-      usb_power_on();
+      usb_power_off();
       MIDI.begin(MIDI_CHANNEL_OMNI);
       delay(100);
 
