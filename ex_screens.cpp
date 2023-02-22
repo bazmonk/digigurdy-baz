@@ -32,7 +32,9 @@ void ex_btn_choice_screen() {
     ex6Button->update();
 
     #ifdef REV4_MODE
+    #ifndef USE_ENCODER
     ex7Button->update();
+    #endif
     ex8Button->update();
     ex9Button->update();
     ex10Button->update();
@@ -150,6 +152,8 @@ void ex_btn_choice_screen() {
     #endif
 
     #ifdef REV4_MODE
+
+    #ifndef USE_ENCODER
     } else if (ex7Button->wasPressed()) {
       if (sel_7) {
         if (ex7Button->fn_choice_screen()) {
@@ -164,6 +168,8 @@ void ex_btn_choice_screen() {
         print_message_2("EX Buttons", "Click a button to view...", String("EX7: ") + ex7Button->printFunc());
         delay(150);
       };
+    #endif
+
     } else if (ex8Button->wasPressed()) {
       if (sel_8) {
         if (ex8Button->fn_choice_screen()) {
@@ -233,7 +239,11 @@ void ex_btn_choice_screen() {
           ex6Button->setFunc(EEPROM.read(EEPROM_EX6));
 
           #ifdef REV4_MODE
+
+          #ifndef USE_ENCODER
           ex7Button->setFunc(EEPROM.read(EEPROM_EX7));
+          #endif
+          
           ex8Button->setFunc(EEPROM.read(EEPROM_EX8));
           ex9Button->setFunc(EEPROM.read(EEPROM_EX9));
           ex10Button->setFunc(EEPROM.read(EEPROM_EX10));

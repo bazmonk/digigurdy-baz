@@ -3,8 +3,8 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.9.5x";
-const String REL_DATE = "2023-02-20, v" + VERSION;
+const String VERSION = "2.9.6x";
+const String REL_DATE = "2023-02-21, v" + VERSION;
 
 /// @defgroup config Configuration Options
 /// These variables/definitions are compile-time configuration options.
@@ -62,7 +62,6 @@ const String EXTRA_LINE = " Rev4 Test Build ";
 
 #define ALLOW_COMBO_MODE
 //#define BAZ_MODE
-#define BAZ2_MODE
 
 #define REV4_MODE
 
@@ -104,7 +103,7 @@ const float PEDAL_MAX_V = 658.0;
 
 /// @ingroup optical
 /// @brief The crank speed in RPMs at which expression volume will max out.
-const float EXPRESSION_VMAX = 20.0;
+const float EXPRESSION_VMAX = 5.0;
 
 /// @ingroup optical
 /// @brief The minimum expression volume.
@@ -116,8 +115,9 @@ const int EXPRESSION_START = 30;
 /// @ingroup optical
 /// @brief The number of "spokes" on the optical crank wheel.
 /// @details * This is the number of black/blocking bars on the wheel, not the number of transitions.
+/// @details * For rotary encoders, this is half of the pulses per rotation.
 #ifdef USE_ENCODER
-const int NUM_SPOKES = 300;
+const int NUM_SPOKES = 1200;
 #else
 const int NUM_SPOKES = 80;
 #endif
@@ -275,7 +275,7 @@ const int TPOSE_DN_INDEX = num_keys - 3;
 const int CRANK_PIN = 15;
 
 /// @brief The second sensor pin for encoder.
-const int CRANK_PIN2 = 17;
+const int CRANK_PIN2 = 14;
 
 /// @brief The analog pin running to the buzz potentiometer/knob.
 /// @warning This pin must be analog-capable.

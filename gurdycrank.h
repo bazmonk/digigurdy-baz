@@ -8,6 +8,11 @@
 #include "config.h"
 #include "simpleled.h"
 
+#ifdef USE_ENCODER
+#define ENCODER_OPTIMIZE_INTERRUPTS
+#include <Encoder.h>
+#endif
+
 extern volatile int num_events;
 extern volatile int last_event;
 extern elapsedMicros last_event_timer;
@@ -20,6 +25,13 @@ class GurdyCrank {
     double cur_vel;
     bool was_spinning = false;
     bool was_buzzing = false;
+
+    #ifdef USE_ENCODER
+    long pulse;
+    long last_pulse;
+    double new_vel;
+    Encoder *myEnc;
+    #endif
 
     int expression;
     int buzz_expression;

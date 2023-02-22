@@ -105,7 +105,11 @@ ExButton *ex5Button;
 ExButton *ex6Button;
 
 #ifdef REV4_MODE
+
+#ifndef USE_ENCODER
 ExButton *ex7Button;
+#endif
+
 ExButton *ex8Button;
 ExButton *ex9Button;
 ExButton *ex10Button;
@@ -292,7 +296,11 @@ void setup() {
   ex6Button = new ExButton(EX6_PIN, 200, EEPROM_EX6, EEPROM_EX6_TSTEP);
 
   #ifdef REV4_MODE
+
+  #ifndef USE_ENCODER
   ex7Button = new ExButton(EX7_PIN, 200, EEPROM_EX7, EEPROM_EX7_TSTEP);
+  #endif
+
   ex8Button = new ExButton(EX8_PIN, 200, EEPROM_EX8, EEPROM_EX8_TSTEP);
   ex9Button = new ExButton(EX9_PIN, 200, EEPROM_EX9, EEPROM_EX9_TSTEP);
   ex10Button = new ExButton(EX10_PIN, 200, EEPROM_EX10, EEPROM_EX10_TSTEP);
@@ -356,7 +364,11 @@ void loop() {
     ex6Button->setFunc(EEPROM.read(EEPROM_EX6));
 
     #ifdef REV4_MODE
+
+    #ifndef USE_ENCODER
     ex7Button->setFunc(EEPROM.read(EEPROM_EX7));
+    #endif
+
     ex8Button->setFunc(EEPROM.read(EEPROM_EX8));
     ex9Button->setFunc(EEPROM.read(EEPROM_EX9));
     ex10Button->setFunc(EEPROM.read(EEPROM_EX10));
@@ -404,12 +416,12 @@ void loop() {
   bigButton->update();
   ex4Button->update();
   ex5Button->update();
-  #ifndef USE_ENCODER
   ex6Button->update();
-  #endif
 
   #ifdef REV4_MODE
+  #ifndef USE_ENCODER
   ex7Button->update();
+  #endif
   ex8Button->update();
   ex9Button->update();
   ex10Button->update();
@@ -435,7 +447,11 @@ void loop() {
       (ex6Button->wasPressed() && ex6Button->getFunc() == 1) ||
 
       #ifdef REV4_MODE
+
+      #ifndef USE_ENCODER
       (ex7Button->wasPressed() && ex7Button->getFunc() == 1) ||
+      #endif
+
       (ex8Button->wasPressed() && ex8Button->getFunc() == 1) ||
       (ex9Button->wasPressed() && ex9Button->getFunc() == 1) ||
       (ex10Button->wasPressed() && ex10Button->getFunc() == 1) ||
@@ -496,9 +512,13 @@ void loop() {
     any_newly_pressed = true;
 
   #ifdef REV4_MODE
+
+  #ifndef USE_ENCODER
   } else if (ex7Button->getFunc() == 11 && ex7Button->wasPressed()) { 
     autocrank_toggle_on = !autocrank_toggle_on;
     any_newly_pressed = true;
+  #endif
+
   } else if (ex8Button->getFunc() == 11 && ex8Button->wasPressed()) { 
     autocrank_toggle_on = !autocrank_toggle_on;
     any_newly_pressed = true;
@@ -532,8 +552,12 @@ void loop() {
     any_newly_released = true;
 
   #ifdef REV4_MODE
+
+  #ifndef USE_ENCODER
   } else if (ex7Button->getFunc() == 11 && ex7Button->wasReleased()) { 
     any_newly_released = true;
+  #endif
+
   } else if (ex8Button->getFunc() == 11 && ex8Button->wasReleased()) { 
     any_newly_released = true;
   } else if (ex9Button->getFunc() == 11 && ex9Button->wasReleased()) { 
@@ -554,12 +578,14 @@ void loop() {
   if (bigButton->wasPressed()) { bigButton->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
   if (ex4Button->wasPressed()) { ex4Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
   if (ex5Button->wasPressed()) { ex5Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
-  #ifndef USE_ENCODER
   if (ex6Button->wasPressed()) { ex6Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
-  #endif
 
   #ifdef REV4_MODE
+
+  #ifndef USE_ENCODER
   if (ex7Button->wasPressed()) { ex7Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
+  #endif
+  
   if (ex8Button->wasPressed()) { ex8Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
   if (ex9Button->wasPressed()) { ex9Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
   if (ex10Button->wasPressed()) { ex10Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
@@ -657,7 +683,7 @@ void loop() {
   test_count +=1;
   if (test_count > 25000) {
     test_count = 0;
-     Serial.print("100,000 loop()s took: ");
+     Serial.print("25,000 loop()s took: ");
      Serial.print(millis() - start_time);
      Serial.print("  Cur V: ");
      Serial.println(mycrank->getVAvg());

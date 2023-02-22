@@ -1,24 +1,5 @@
 #include "gurdycrank.h"
 
-#ifdef USE_ENCODER
-void myisr() {
-  if (debounce_timer >= 400) {
-    num_events = num_events + 1;
-    last_event = last_event_timer;
-    debounce_timer = 0;
-  }  
-}
-
-void myisr2() {
-  if (debounce_timer >= 400) {
-    num_events = num_events + 1;
-    last_event = last_event_timer;
-    debounce_timer = 0;
-  } 
-}
-
-#else
-
 void myisr() {
   if (debounce_timer >= 1250) {
     num_events = num_events + 1;
@@ -26,8 +7,6 @@ void myisr() {
     debounce_timer = 0;
   } 
 }
-
-#endif
 
 /// @brief Constructor.
 /// @details This class abstracts the cranking mechanism on Digi-Gurdies.
@@ -38,7 +17,7 @@ void myisr() {
 /// @warning 
 /// * A hidden member object here is a BuzzKnob.
 /// * This class' header includes common.h and specific string objects are expected to exist.  See common.h.
-/// @param s_pin The analog voltage pin coming from the motor.
+/// @param s_pin The digital pin coming from the optical sensor.
 /// @param buzz_pin The pin of the buzz knob.
 /// @param led_pin The pin of the LED indicator.
 GurdyCrank::GurdyCrank(int s_pin, int buzz_pin, int led_pin) {
@@ -58,6 +37,12 @@ GurdyCrank::GurdyCrank(int s_pin, int buzz_pin, int led_pin) {
   the_buzz_timer = 0;
 };
 
+/// @brief Constructor (2-pin encoders).
+/// @param s_pin A pin (digital, interrupt-capable)
+/// @param s_pin2 B pin (digital, interrupt-capable)
+/// @param buzz_pin The pin of the buzz knob.
+/// @param led_pin The pin of the LED indicator.
+/// @version *New in 2.9.5*
 GurdyCrank::GurdyCrank(int s_pin, int s_pin2, int buzz_pin, int led_pin) {
 
   myKnob = new BuzzKnob(buzz_pin);
@@ -65,12 +50,12 @@ GurdyCrank::GurdyCrank(int s_pin, int s_pin2, int buzz_pin, int led_pin) {
   #ifdef LED_KNOB
     myLED = new SimpleLED(led_pin);
   #endif
+  
+  // This automatically enabled INPUT_PULLUP, FYI.
+  myEnc = new Encoder(s_pin2, s_pin);
+  last_event_timer = 0;
 
-  sensor_pin = s_pin;
-  pinMode(sensor_pin, INPUT_PULLUP);
-  pinMode(s_pin2, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(sensor_pin), myisr, RISING);
-  attachInterrupt(digitalPinToInterrupt(s_pin2), myisr, RISING);
+  last_pulse = -999;
 
   expression = 0;
   buzz_expression = 0;
@@ -94,36 +79,30 @@ void GurdyCrank::update() {
   myKnob->update();
 
   #ifdef USE_ENCODER
-  if (eval_timer > 12500 && num_events > 0) {
-    
-    double new_vel = (num_events * spoke_width * 60000000.0) / (last_event);
-//    cur_vel = cur_vel + (smoothing_factor * (new_vel - cur_vel)) + 1;
 
-    if (cur_vel > 5 && cur_vel < 30 && (new_vel - cur_vel) * (new_vel - cur_vel) > 7000) {
-      Serial.println(last_event);
-      new_vel = cur_vel;
-    }
 
-    if (new_vel > cur_vel) {
-      cur_vel = cur_vel + (0.25 * (new_vel - cur_vel));
-    }
-    else {
-      cur_vel = cur_vel + (0.25 * (new_vel - cur_vel));
-    }
-    num_events = 0;
-    last_event = 0;
-    last_event_timer = 0;
+  if (eval_timer > 30000) {
+    cur_vel = (cur_vel) / 2.0;
     eval_timer = 0;
-  }
-  if (eval_timer > 15000 && num_events < 1) {
-//    cur_vel = cur_vel + (smoothing_factor * ( 0 - cur_vel)) - 2;
-    cur_vel = (cur_vel) - 0.4 * (cur_vel);
-    
-    num_events = 0;
-    last_event = 0;
-    last_event_timer = 0;
-    eval_timer = 0;
-  }
+    return;
+  };
+  
+  if (eval_timer > 10000) {
+    pulse = myEnc->read();
+
+    if (last_pulse != pulse) {
+      
+      new_vel = (abs(last_pulse - pulse) * 30000000.0) / (NUM_SPOKES * last_event_timer);
+
+      cur_vel = cur_vel + (0.8 * (new_vel - cur_vel));
+      last_pulse = pulse;
+      last_event_timer = 0;
+      eval_timer = 0;
+    };
+  } 
+  
+  
+
   #else
   if (eval_timer > 25250 && num_events > 1) {
     double new_vel = (num_events * spoke_width * 60000000.0) / (last_event);
@@ -257,7 +236,7 @@ bool GurdyCrank::startedBuzzing() {
 /// @return True if buzzing stopped thie cycle, false otherwise.
 bool GurdyCrank::stoppedBuzzing() {
   if (getVAvg() <= (myKnob->getThreshold() * 0.95)) {
-    if (was_buzzing && the_buzz_timer > 75) {
+    if (was_buzzing && the_buzz_timer > 50) {
       was_buzzing = false;
 
       #ifdef LED_KNOB

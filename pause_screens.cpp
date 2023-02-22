@@ -496,20 +496,12 @@ void reset_ex_eeprom() {
   #ifdef REV4_MODE
   EEPROM.write(EEPROM_BUZZ_LED, 1);
   EEPROM.write(EEPROM_EX1, 1);
-  #ifdef BAZ2_MODE
-  EEPROM.write(EEPROM_EX2, 0);
-  #else
   EEPROM.write(EEPROM_EX2, 2);
-  #endif
   EEPROM.write(EEPROM_EX3, 4);
   EEPROM.write(EEPROM_EX4, 5);
   EEPROM.write(EEPROM_EX5, 11);
   EEPROM.write(EEPROM_EX6, 6);
-  #ifdef BAZ2_MODE
-  EEPROM.write(EEPROM_EX7, 0);
-  #else
   EEPROM.write(EEPROM_EX7, 7);
-  #endif
   EEPROM.write(EEPROM_EX8, 8);
   EEPROM.write(EEPROM_EX9, 9);
   EEPROM.write(EEPROM_EX10, 10);
