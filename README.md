@@ -4,7 +4,10 @@ See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more docu
 
 See [the code documentation here](https://bazmonk.github.io/digigurdy-baz/html/index.html).
 
-**Check out version 2.9.4! (NEW)**
+**Check out version 2.9.6! (NEW)**
+
+* 2.9.6 -
+  * Incremental encoder support (USE_ENCODER)
 
 * 2.9.4 -
   * New Crank algorithm, improved behavior and feel

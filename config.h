@@ -3,8 +3,8 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.9.6y";
-const String REL_DATE = "2023-02-21, v" + VERSION;
+const String VERSION = "2.9.6";
+const String REL_DATE = "2023-02-23, v" + VERSION;
 
 /// @defgroup config Configuration Options
 /// These variables/definitions are compile-time configuration options.
@@ -83,7 +83,7 @@ const int TSUNAMI_OUT = 0;
 const int LED_PIN = 40;
 
 
-#define USE_PEDAL
+//#define USE_PEDAL
 
 /// @brief Pin used for the accessory pedal, if USE_PEDAL is enabled.
 const int PEDAL_PIN = 38;
@@ -124,7 +124,7 @@ const int NUM_SPOKES = 80;
 
 /// @ingroup optical
 /// @brief The crank speed at which sound begins to play in RPMs.
-const float V_THRESHOLD = 0.5;
+const float V_THRESHOLD = 2.0;
 
 
 /// @defgroup gear Gear-Motor Crank Configuration Variables
@@ -275,7 +275,7 @@ const int TPOSE_DN_INDEX = num_keys - 3;
 const int CRANK_PIN = 15;
 
 /// @brief The second sensor pin for encoder.
-const int CRANK_PIN2 = 14;
+const int CRANK_PIN2 = 38;
 
 /// @brief The analog pin running to the buzz potentiometer/knob.
 /// @warning This pin must be analog-capable.
