@@ -50,12 +50,14 @@ GurdyCrank::GurdyCrank(int s_pin, int s_pin2, int buzz_pin, int led_pin) {
   #ifdef LED_KNOB
     myLED = new SimpleLED(led_pin);
   #endif
-  
+
+  #ifdef USE_ENCODER
   // This automatically enabled INPUT_PULLUP, FYI.
   myEnc = new Encoder(s_pin2, s_pin);
   last_event_timer = 0;
 
   last_pulse = -999;
+  #endif
 
   expression = 0;
   buzz_expression = 0;

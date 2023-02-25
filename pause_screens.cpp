@@ -528,7 +528,7 @@ void reset_eeprom() {
   // But now let's fill in the defaults:
   reset_ex_eeprom();
 
-  #ifndef BAZ_MODE2
+  #ifndef USB_ALWAYS_ON
   usb_power_off();
   #endif
   MIDI.begin(MIDI_CHANNEL_OMNI);
@@ -1145,7 +1145,7 @@ void sec_output_screen() {
     if (my1Button->wasPressed()) {
       EEPROM.write(EEPROM_SEC_OUT, 0);
 
-      #ifndef BAZ_MODE2
+      #ifndef USB_ALWAYS_ON
       usb_power_off();
       #endif
       MIDI.begin(MIDI_CHANNEL_OMNI);

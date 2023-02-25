@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.9.6";
+const String VERSION = "2.9.6*";
 const String REL_DATE = "2023-02-23, v" + VERSION;
 
 /// @defgroup config Configuration Options
@@ -62,6 +62,7 @@ const String EXTRA_LINE = " Rev4 Test Build ";
 
 #define ALLOW_COMBO_MODE
 //#define BAZ_MODE
+//#define USB_ALWAYS_ON
 
 #define REV4_MODE
 

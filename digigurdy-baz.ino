@@ -261,10 +261,15 @@ void setup() {
   // be a working tuning.
 
   // Turn on the power if we're using it.
+  #ifdef USB_ALWAYS_ON
+  usb_power_on();
+  delay(100);
+  #else
   if (EEPROM.read(EEPROM_SEC_OUT) > 0) {
     usb_power_on();
     delay(100);
   };
+  #endif
   
   mystring = new GurdyString(1, Note(g4), "Hi Melody", EEPROM.read(EEPROM_SEC_OUT));
   mylowstring = new GurdyString(2, Note(g3), "Low Melody", EEPROM.read(EEPROM_SEC_OUT));
