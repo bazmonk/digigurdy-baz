@@ -657,11 +657,13 @@ void loop() {
 
   // My dev output stuff.
   test_count +=1;
-  if (test_count > 25000) {
+  if (test_count > 500000) {
     test_count = 0;
-     Serial.print("25,000 loop()s took: ");
+     Serial.print("500,000 loop()s took: ");
      Serial.print(millis() - start_time);
-     Serial.print("  Cur V: ");
+     Serial.print(" milliseconds. ");
+     Serial.print(500000/(millis() - start_time));
+     Serial.print("kHz.  Cur Velocity: ");
      Serial.println(mycrank->getVAvg());
      // Serial.print("ms.  Avg Velocity: ");
      // Serial.print(mycrank->getVAvg());

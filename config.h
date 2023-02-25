@@ -4,7 +4,7 @@
 #include <Arduino.h>
 
 const String VERSION = "2.9.6*";
-const String REL_DATE = "2023-02-23, v" + VERSION;
+const String REL_DATE = "2023-02-24, v" + VERSION;
 
 /// @defgroup config Configuration Options
 /// These variables/definitions are compile-time configuration options.
@@ -289,7 +289,7 @@ const int BIG_BUTTON_PIN = 39;
 /// @brief The pin to the EX1 button.
 const int EX1_PIN = 19;
 /// @brief The pin to the EX2 button.
-const int EX2_PIN = 13;
+const int EX2_PIN = 50;
 /// @brief The pin to the EX3 button.
 const int EX3_PIN = 12;
 /// @brief The pin to the EX4 button.

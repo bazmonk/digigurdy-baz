@@ -9,7 +9,7 @@
 #include "simpleled.h"
 
 #ifdef USE_ENCODER
-//#define ENCODER_OPTIMIZE_INTERRUPTS
+#define ENCODER_OPTIMIZE_INTERRUPTS
 #include <Encoder.h>
 #endif
 
