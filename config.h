@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.9.6*";
+const String VERSION = "2.9.7";
 const String REL_DATE = "2023-02-24, v" + VERSION;
 
 /// @defgroup config Configuration Options
@@ -81,7 +81,7 @@ const int TSUNAMI_OUT = 0;
 //#define LED_KNOB
 
 /// @brief Pin used for the LED buzz indicator, if LED_KNOB is enabled.
-const int LED_PIN = 40;
+const int LED_PIN = 13;
 
 
 //#define USE_PEDAL

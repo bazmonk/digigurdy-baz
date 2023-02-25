@@ -32,7 +32,8 @@
 #include "pause_screens.h"   // The pause screen menus
 
 // As far as I can tell, this *has* to be done here or else you get spooooky runtime problems.
-MIDI_CREATE_DEFAULT_INSTANCE();
+//MIDI_CREATE_DEFAULT_INSTANCE();
+MIDI_CREATE_INSTANCE(HardwareSerial, Serial1, MIDI);
 
 #ifdef USE_TRIGGER
   wavTrigger  trigger_obj;
@@ -175,6 +176,7 @@ void setup() {
   // The usbMIDI object is available by Teensyduino magic that I don't know about.
   if (EEPROM.read(EEPROM_SEC_OUT) != 1) {
     MIDI.begin(MIDI_CHANNEL_OMNI);
+    MIDI.setInputChannel(MIDI_CHANNEL_OMNI);
   }
   
   #if defined(USE_TRIGGER)
@@ -650,9 +652,18 @@ void loop() {
   // Apparently we need to do this to discard incoming data.
   if (EEPROM.read(EEPROM_SEC_OUT) != 1) {
     while (MIDI.read()) {
+        Serial.print("Read MIDI message: ");
+        Serial.print(MIDI.getData1());
+        Serial.print(" ");
+        Serial.println(MIDI.getData2());
       };
   };
+
   while (usbMIDI.read()) {
+    Serial.print("Read USB MIDI message: ");
+    Serial.print(usbMIDI.getData1());
+    Serial.print(" ");
+    Serial.println(usbMIDI.getData2());
   };
 
   // My dev output stuff.
