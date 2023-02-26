@@ -4,7 +4,7 @@
 #include <Arduino.h>
 
 const String VERSION = "2.9.7";
-const String REL_DATE = "2023-02-24, v" + VERSION;
+const String REL_DATE = "2023-02-25, v" + VERSION;
 
 /// @defgroup config Configuration Options
 /// These variables/definitions are compile-time configuration options.
@@ -78,7 +78,7 @@ const int TSUNAMI_OUT = 0;
 #define __WT_USE_SERIAL5__
 
 
-//#define LED_KNOB
+#define LED_KNOB
 
 /// @brief Pin used for the LED buzz indicator, if LED_KNOB is enabled.
 const int LED_PIN = 13;

@@ -5,6 +5,7 @@
 #include "play_functions.h"
 #include "common.h"
 #include "usb_power.h"
+#include "bitmaps.h"
 
 void cycle_mel_mute();
 void cycle_drone_tromp_mute();

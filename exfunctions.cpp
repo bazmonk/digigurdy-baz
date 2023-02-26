@@ -229,12 +229,19 @@ void ex_sec_out_toggle() {
     };
     #endif
 
+    draw_xbm(progress[0]);
+    delay(100);
+    draw_xbm(progress[1]);
+
     EEPROM.write(EEPROM_SEC_OUT, 1);
 
     usb_power_on();
     trigger_obj.start();
     delay(100);
 
+    draw_xbm(progress[2]);
+
+    all_clearVolArray();
     mystring->setOutputMode(1);
     mylowstring->setOutputMode(1);
     mytromp->setOutputMode(1);
@@ -242,20 +249,32 @@ void ex_sec_out_toggle() {
     mykeyclick->setOutputMode(1);
     mybuzz->setOutputMode(1);
 
-    print_message_2("Secondary Output", "Initializing Tracks,", "Please Wait ~5s...");
+    draw_xbm(progress[3]);
     mystring->setTrackLoops();
+    draw_xbm(progress[4]);
     mylowstring->setTrackLoops();
+    draw_xbm(progress[5]);
     mytromp->setTrackLoops();
+    draw_xbm(progress[6]);
     mydrone->setTrackLoops();
+    draw_xbm(progress[7]);
     mybuzz->setTrackLoops();
+    draw_xbm(progress[8]);
     mykeyclick->setTrackLoops();
+    draw_xbm(progress[9]);
+    delay(400);
 
     print_message_2("Secondary Output", "Completed! Audio Socket", "Saved to EEPROM!");
-    delay(750);
+    delay(600);
+    print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
 
   } else if (cur_mode == 1) {
 
   #ifdef ALLOW_COMBO_MODE 
+    draw_xbm(progress[0]);
+    delay(100);
+    draw_xbm(progress[1]);
+
     EEPROM.write(EEPROM_SEC_OUT, 2);
 
     usb_power_on();
@@ -263,6 +282,9 @@ void ex_sec_out_toggle() {
     trigger_obj.start();
     delay(100);
 
+    draw_xbm(progress[2]);
+
+    all_clearVolArray();
     mystring->setOutputMode(2);
     mylowstring->setOutputMode(2);
     mytromp->setOutputMode(2);
@@ -270,16 +292,24 @@ void ex_sec_out_toggle() {
     mykeyclick->setOutputMode(2);
     mybuzz->setOutputMode(2);
 
-    print_message_2("Secondary Output", "Initializing Tracks,", "Please Wait ~5s...");
+    draw_xbm(progress[3]);
     mystring->setTrackLoops();
+    draw_xbm(progress[4]);
     mylowstring->setTrackLoops();
+    draw_xbm(progress[5]);
     mytromp->setTrackLoops();
+    draw_xbm(progress[6]);
     mydrone->setTrackLoops();
+    draw_xbm(progress[7]);
     mybuzz->setTrackLoops();
+    draw_xbm(progress[8]);
     mykeyclick->setTrackLoops();
+    draw_xbm(progress[9]);
+    delay(400);
 
     print_message_2("Secondary Output", "MIDI-OUT + Audio", "Saved to EEPROM!");
-    delay(750);
+    delay(600);
+    print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
 
   } else if (cur_mode == 2) {
 
@@ -299,6 +329,7 @@ void ex_sec_out_toggle() {
     
     print_message_2("Secondary Output", "MIDI-OUT", "Saved to EEPROM!");
     delay(750);
+    print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
   };
 
 };

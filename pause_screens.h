@@ -7,6 +7,7 @@
 #include <EEPROM.h>
 
 #include "common.h"
+#include "config.h"
 #include "display.h"
 #include "bitmaps.h"
 #include "notes.h"

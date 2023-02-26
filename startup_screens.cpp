@@ -43,9 +43,7 @@ void startup_screen_sequence() {
 
   for (int x = 0; x < 11; x++) {
     // Clear the buffer.
-    u8g2.clearBuffer();
-    u8g2.drawXBM(0, 0, 128, 64, logos[x]);
-    u8g2.sendBuffer();
+    draw_xbm(logos[x]);
     if (x == 0) {
       delay(140);
     } else if (x > 9) {

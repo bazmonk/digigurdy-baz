@@ -1166,6 +1166,7 @@ void sec_output_screen() {
 
     } else if (my2Button->wasPressed()) {
 
+      #ifndef ALLOW_COMBO_MODE
       print_message_2("Secondary Output", "Un-plug any MIDI adapters!", "Press X to Continue");
 
       bool done2= false;
@@ -1178,12 +1179,19 @@ void sec_output_screen() {
           done2 = true;
         };
       };
+      #endif
+
+      draw_xbm(progress[0]);
+      delay(100);
+      draw_xbm(progress[1]);
 
       EEPROM.write(EEPROM_SEC_OUT, 1);
 
       usb_power_on();
       trigger_obj.start();
       delay(100);
+
+      draw_xbm(progress[2]);
 
       all_clearVolArray();
       mystring->setOutputMode(1);
@@ -1193,28 +1201,42 @@ void sec_output_screen() {
       mykeyclick->setOutputMode(1);
       mybuzz->setOutputMode(1);
 
-      print_message_2("Secondary Output", "Initializing Tracks,", "Please Wait ~5s...");
+      draw_xbm(progress[3]);
       mystring->setTrackLoops();
+      draw_xbm(progress[4]);
       mylowstring->setTrackLoops();
+      draw_xbm(progress[5]);
       mytromp->setTrackLoops();
+      draw_xbm(progress[6]);
       mydrone->setTrackLoops();
+      draw_xbm(progress[7]);
       mybuzz->setTrackLoops();
+      draw_xbm(progress[8]);
       mykeyclick->setTrackLoops();
+      draw_xbm(progress[9]);
+      delay(400);
 
       print_message_2("Secondary Output", "Completed! Audio Socket", "Saved to EEPROM!");
-      delay(750);
+      delay(600);
 
       done = true;
 
     #ifdef ALLOW_COMBO_MODE
       
     } else if (my3Button->wasPressed()) {
+
+      draw_xbm(progress[0]);
+      delay(100);
+      draw_xbm(progress[1]);
+
       EEPROM.write(EEPROM_SEC_OUT, 2);
 
       usb_power_on();
       MIDI.begin(MIDI_CHANNEL_OMNI);
       trigger_obj.start();
       delay(100);
+
+      draw_xbm(progress[2]);
 
       all_clearVolArray();
       mystring->setOutputMode(2);
@@ -1224,16 +1246,23 @@ void sec_output_screen() {
       mykeyclick->setOutputMode(2);
       mybuzz->setOutputMode(2);
 
-      print_message_2("Secondary Output", "Initializing Tracks,", "Please Wait ~5s...");
+      draw_xbm(progress[3]);
       mystring->setTrackLoops();
+      draw_xbm(progress[4]);
       mylowstring->setTrackLoops();
+      draw_xbm(progress[5]);
       mytromp->setTrackLoops();
+      draw_xbm(progress[6]);
       mydrone->setTrackLoops();
+      draw_xbm(progress[7]);
       mybuzz->setTrackLoops();
+      draw_xbm(progress[8]);
       mykeyclick->setTrackLoops();
+      draw_xbm(progress[9]);
+      delay(400);
 
       print_message_2("Secondary Output", "MIDI-OUT + Audio", "Saved to EEPROM!");
-      delay(750);
+      delay(600);
 
       done = true;
 
