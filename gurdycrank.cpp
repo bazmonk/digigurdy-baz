@@ -56,7 +56,7 @@ GurdyCrank::GurdyCrank(int s_pin, int s_pin2, int buzz_pin, int led_pin) {
   myEnc = new Encoder(s_pin2, s_pin);
   last_event_timer = 0;
 
-  last_pulse = -999;
+  last_pulse = 0;
   #endif
 
   expression = 0;
@@ -144,7 +144,7 @@ void GurdyCrank::updateExpression() {
 
     float cur_v = getVAvg();
 
-    int new_buzz_expression = int(((cur_v - myKnob->getThreshold())/(0.25 * myKnob->getThreshold())) * (32) + 95);
+    int new_buzz_expression = int(((cur_v - myKnob->getThreshold())/(0.45 * myKnob->getThreshold())) * (42) + 85);
     if (new_buzz_expression > 127) {
       new_buzz_expression = 127;
     };
