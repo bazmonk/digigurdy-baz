@@ -32,7 +32,8 @@
 #include "pause_screens.h"   // The pause screen menus
 
 // As far as I can tell, this *has* to be done here or else you get spooooky runtime problems.
-MIDI_CREATE_DEFAULT_INSTANCE();
+//MIDI_CREATE_DEFAULT_INSTANCE();
+MIDI_CREATE_INSTANCE(HardwareSerial, Serial1, MIDI);
 
 #ifdef USE_TRIGGER
   wavTrigger  trigger_obj;
@@ -105,6 +106,7 @@ ExButton *ex5Button;
 ExButton *ex6Button;
 
 #ifdef REV4_MODE
+
 ExButton *ex7Button;
 ExButton *ex8Button;
 ExButton *ex9Button;
@@ -174,6 +176,7 @@ void setup() {
   // The usbMIDI object is available by Teensyduino magic that I don't know about.
   if (EEPROM.read(EEPROM_SEC_OUT) != 1) {
     MIDI.begin(MIDI_CHANNEL_OMNI);
+    MIDI.setInputChannel(MIDI_CHANNEL_OMNI);
   }
   
   #if defined(USE_TRIGGER)
@@ -221,7 +224,11 @@ void setup() {
     };
 
   #else
-    mycrank = new GurdyCrank(CRANK_PIN, BUZZ_PIN, LED_PIN);
+    #ifdef USE_ENCODER
+      mycrank = new GurdyCrank(CRANK_PIN, CRANK_PIN2, BUZZ_PIN, LED_PIN);
+    #else
+      mycrank = new GurdyCrank(CRANK_PIN, BUZZ_PIN, LED_PIN);
+    #endif
   #endif
 
   #ifdef USE_PEDAL
@@ -256,11 +263,16 @@ void setup() {
   // be a working tuning.
 
   // Turn on the power if we're using it.
+  #ifdef USB_ALWAYS_ON
+  usb_power_on();
+  delay(100);
+  #else
   if (EEPROM.read(EEPROM_SEC_OUT) > 0) {
     usb_power_on();
     delay(100);
   };
-
+  #endif
+  
   mystring = new GurdyString(1, Note(g4), "Hi Melody", EEPROM.read(EEPROM_SEC_OUT));
   mylowstring = new GurdyString(2, Note(g3), "Low Melody", EEPROM.read(EEPROM_SEC_OUT));
   mytromp = new GurdyString(3, Note(c3), "Trompette", EEPROM.read(EEPROM_SEC_OUT));
@@ -640,18 +652,29 @@ void loop() {
   // Apparently we need to do this to discard incoming data.
   if (EEPROM.read(EEPROM_SEC_OUT) != 1) {
     while (MIDI.read()) {
+        Serial.print("Read MIDI message: ");
+        Serial.print(MIDI.getData1());
+        Serial.print(" ");
+        Serial.println(MIDI.getData2());
       };
   };
+
   while (usbMIDI.read()) {
+    Serial.print("Read USB MIDI message: ");
+    Serial.print(usbMIDI.getData1());
+    Serial.print(" ");
+    Serial.println(usbMIDI.getData2());
   };
 
   // My dev output stuff.
   test_count +=1;
-  if (test_count > 100000) {
+  if (test_count > 500000) {
     test_count = 0;
-     Serial.print("100,000 loop()s took: ");
+     Serial.print("500,000 loop()s took: ");
      Serial.print(millis() - start_time);
-     Serial.print("  Cur V: ");
+     Serial.print(" milliseconds. ");
+     Serial.print(500000/(millis() - start_time));
+     Serial.print("kHz.  Cur Velocity: ");
      Serial.println(mycrank->getVAvg());
      // Serial.print("ms.  Avg Velocity: ");
      // Serial.print(mycrank->getVAvg());
@@ -660,10 +683,10 @@ void loop() {
      // Serial.print(", est. rev: ");
      // Serial.println(mycrank->getRev());
      start_time = millis();
-     #ifdef USE_PEDAL
-       Serial.println(String("") + "\nKNOB_V = " + myvibknob->getVoltage());
-       Serial.println(String("") + "KNOB_VIB = " + myvibknob->getVibrato());
-     #endif
+//     #ifdef USE_PEDAL
+//       Serial.println(String("") + "\nKNOB_V = " + myvibknob->getVoltage());
+//       Serial.println(String("") + "KNOB_VIB = " + myvibknob->getVibrato());
+//     #endif
   }
 
 };

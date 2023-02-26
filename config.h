@@ -3,8 +3,8 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.9.4";
-const String REL_DATE = "2023-02-19, v" + VERSION;
+const String VERSION = "2.9.8";
+const String REL_DATE = "2023-02-26, v" + VERSION;
 
 /// @defgroup config Configuration Options
 /// These variables/definitions are compile-time configuration options.
@@ -33,6 +33,9 @@ const String EXTRA_LINE = " Rev4 Test Build ";
   /// @brief Enables geared-crank support.
   /// @details Disable for optical-crank support
   #define USE_GEARED_CRANK
+  /// @brief Enabled incremental encoder support.
+  /// @degails Disable for optical-crank support
+  #define USE_ENCODER
   /// @brief Enables an LED buzz indicator on LED_PIN.
   #define LED_KNOB
   /// @brief Enables the accessory/vibrato pedal on PEDAL_PIN.
@@ -51,12 +54,15 @@ const String EXTRA_LINE = " Rev4 Test Build ";
 
 //#define USE_GEARED_CRANK
 
+#define USE_ENCODER
+
 // Only one of these should be defined.
 #define USE_TRIGGER
 //#define USE_TSUNAMI
 
 #define ALLOW_COMBO_MODE
 //#define BAZ_MODE
+//#define USB_ALWAYS_ON
 
 #define REV4_MODE
 
@@ -72,13 +78,13 @@ const int TSUNAMI_OUT = 0;
 #define __WT_USE_SERIAL5__
 
 
-//#define LED_KNOB
+#define LED_KNOB
 
 /// @brief Pin used for the LED buzz indicator, if LED_KNOB is enabled.
-const int LED_PIN = 40;
+const int LED_PIN = 13;
 
 
-#define USE_PEDAL
+//#define USE_PEDAL
 
 /// @brief Pin used for the accessory pedal, if USE_PEDAL is enabled.
 const int PEDAL_PIN = 38;
@@ -98,23 +104,28 @@ const float PEDAL_MAX_V = 658.0;
 
 /// @ingroup optical
 /// @brief The crank speed in RPMs at which expression volume will max out.
-const float EXPRESSION_VMAX = 40.0;
+const float EXPRESSION_VMAX = 5.0;
 
 /// @ingroup optical
 /// @brief The minimum expression volume.
 /// @details
 /// * Expression (MIDI CC11) value will be at least this much.
 /// * Silent = 0, Max = 127 
-const int EXPRESSION_START = 60;
+const int EXPRESSION_START = 30;
 
 /// @ingroup optical
 /// @brief The number of "spokes" on the optical crank wheel.
 /// @details * This is the number of black/blocking bars on the wheel, not the number of transitions.
+/// @details * For rotary encoders, this is half of the pulses per rotation.
+#ifdef USE_ENCODER
+const int NUM_SPOKES = 1200;
+#else
 const int NUM_SPOKES = 80;
+#endif
 
 /// @ingroup optical
 /// @brief The crank speed at which sound begins to play in RPMs.
-const float V_THRESHOLD = 0.5;
+const float V_THRESHOLD = 2.0;
 
 
 /// @defgroup gear Gear-Motor Crank Configuration Variables
@@ -264,6 +275,9 @@ const int TPOSE_DN_INDEX = num_keys - 3;
 /// @warning If using a geared crank, this pin must be analog-capable.
 const int CRANK_PIN = 15;
 
+/// @brief The second sensor pin for encoder.
+const int CRANK_PIN2 = 38;
+
 /// @brief The analog pin running to the buzz potentiometer/knob.
 /// @warning This pin must be analog-capable.
 const int BUZZ_PIN = 16;
@@ -275,7 +289,7 @@ const int BIG_BUTTON_PIN = 39;
 /// @brief The pin to the EX1 button.
 const int EX1_PIN = 19;
 /// @brief The pin to the EX2 button.
-const int EX2_PIN = 13;
+const int EX2_PIN = 50;
 /// @brief The pin to the EX3 button.
 const int EX3_PIN = 12;
 /// @brief The pin to the EX4 button.

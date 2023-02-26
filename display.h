@@ -67,5 +67,6 @@ void print_tuning(String title, String hi_note, String low_note, String drone_no
 void print_tuning_summary(int hi, int lo, int tromp, int drone);
 void print_tuning_choice_3(String title, int opt1, int opt2, int opt3);
 void print_value_selection(String title, String value);
+void draw_xbm(const uint8_t *bitmap);
 
 #endif

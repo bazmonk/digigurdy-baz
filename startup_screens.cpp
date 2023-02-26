@@ -41,22 +41,20 @@ void about_screen() {
 /// @brief Draws the startup animation sequence.
 void startup_screen_sequence() {
 
-  for (int x = 0; x < 8; x++) {
+  for (int x = 0; x < 11; x++) {
     // Clear the buffer.
-    u8g2.clearBuffer();
-    u8g2.drawBitmap(0, 0, 16, 64, logos[x]);
-    u8g2.sendBuffer();
+    draw_xbm(logos[x]);
     if (x == 0) {
-      delay(800);
-    } else if (x > 6) {
-      delay(500);
+      delay(140);
+    } else if (x > 9) {
+      delay(750);
     } else {
-      delay(120);
+      delay(140);
     };
   };
   // Display the about screen
   about_screen();
-  delay(2500);
+  delay(2000);
 };
 
 /// @}

@@ -5,8 +5,7 @@ void myisr() {
     num_events = num_events + 1;
     last_event = last_event_timer;
     debounce_timer = 0;
-  }
-  
+  } 
 }
 
 /// @brief Constructor.
@@ -18,7 +17,7 @@ void myisr() {
 /// @warning 
 /// * A hidden member object here is a BuzzKnob.
 /// * This class' header includes common.h and specific string objects are expected to exist.  See common.h.
-/// @param s_pin The analog voltage pin coming from the motor.
+/// @param s_pin The digital pin coming from the optical sensor.
 /// @param buzz_pin The pin of the buzz knob.
 /// @param led_pin The pin of the LED indicator.
 GurdyCrank::GurdyCrank(int s_pin, int buzz_pin, int led_pin) {
@@ -32,6 +31,33 @@ GurdyCrank::GurdyCrank(int s_pin, int buzz_pin, int led_pin) {
   sensor_pin = s_pin;
   pinMode(sensor_pin, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(sensor_pin), myisr, RISING);
+
+  expression = 0;
+  buzz_expression = 0;
+  the_buzz_timer = 0;
+};
+
+/// @brief Constructor (2-pin encoders).
+/// @param s_pin A pin (digital, interrupt-capable)
+/// @param s_pin2 B pin (digital, interrupt-capable)
+/// @param buzz_pin The pin of the buzz knob.
+/// @param led_pin The pin of the LED indicator.
+/// @version *New in 2.9.5*
+GurdyCrank::GurdyCrank(int s_pin, int s_pin2, int buzz_pin, int led_pin) {
+
+  myKnob = new BuzzKnob(buzz_pin);
+
+  #ifdef LED_KNOB
+    myLED = new SimpleLED(led_pin);
+  #endif
+
+  #ifdef USE_ENCODER
+  // This automatically enabled INPUT_PULLUP, FYI.
+  myEnc = new Encoder(s_pin2, s_pin);
+  last_event_timer = 0;
+
+  last_pulse = 0;
+  #endif
 
   expression = 0;
   buzz_expression = 0;
@@ -54,6 +80,32 @@ void GurdyCrank::update() {
   // Check if we need to update the knob reading...
   myKnob->update();
 
+  #ifdef USE_ENCODER
+
+
+  if (eval_timer > 30000) {
+    cur_vel = (cur_vel) / 2.0;
+    eval_timer = 0;
+    return;
+  };
+  
+  if (eval_timer > 10000) {
+    pulse = myEnc->read();
+
+    if (last_pulse != pulse) {
+      
+      new_vel = (abs(last_pulse - pulse) * 30000000.0) / (NUM_SPOKES * last_event_timer);
+
+      cur_vel = cur_vel + (0.8 * (new_vel - cur_vel));
+      last_pulse = pulse;
+      last_event_timer = 0;
+      eval_timer = 0;
+    };
+  } 
+  
+  
+
+  #else
   if (eval_timer > 25250 && num_events > 1) {
     double new_vel = (num_events * spoke_width * 60000000.0) / (last_event);
 //    cur_vel = cur_vel + (smoothing_factor * (new_vel - cur_vel)) + 1;
@@ -77,6 +129,7 @@ void GurdyCrank::update() {
     last_event_timer = 0;
     eval_timer = 0;
   }
+  #endif
 
   updateExpression();
 };
@@ -91,7 +144,7 @@ void GurdyCrank::updateExpression() {
 
     float cur_v = getVAvg();
 
-    int new_buzz_expression = int(((cur_v - myKnob->getThreshold())/(0.25 * myKnob->getThreshold())) * (32) + 95);
+    int new_buzz_expression = int(((cur_v - myKnob->getThreshold())/(0.45 * myKnob->getThreshold())) * (42) + 85);
     if (new_buzz_expression > 127) {
       new_buzz_expression = 127;
     };
@@ -185,7 +238,7 @@ bool GurdyCrank::startedBuzzing() {
 /// @return True if buzzing stopped thie cycle, false otherwise.
 bool GurdyCrank::stoppedBuzzing() {
   if (getVAvg() <= (myKnob->getThreshold() * 0.95)) {
-    if (was_buzzing && the_buzz_timer > 75) {
+    if (was_buzzing && the_buzz_timer > 50) {
       was_buzzing = false;
 
       #ifdef LED_KNOB

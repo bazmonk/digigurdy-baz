@@ -13,6 +13,7 @@
                 "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/libraries/EEPROM",
                 "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/libraries/SPI",
                 "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/libraries/MIDI/src",
+                "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/libraries/Encoder",
                 "/Applications/Teensyduino.app/Contents/Java/hardware/teensy/avr/cores/teensy4/"
             ],
             "defines": [

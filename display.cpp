@@ -579,4 +579,10 @@ void print_value_selection(String title, String value) {
   u8g2.sendBuffer();
 };
 
+void draw_xbm(const uint8_t *bitmap) {
+  u8g2.clearBuffer();
+  u8g2.drawXBM(0, 0, 128, 64, bitmap);
+  u8g2.sendBuffer();
+};
+
 /// @}
