@@ -4,7 +4,13 @@ See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more docu
 
 See [the code documentation here](https://bazmonk.github.io/digigurdy-baz/html/index.html).
 
-**Check out version 2.9.6! (NEW)**
+**Check out version 2.9.7! (NEW)**
+
+* 2.9.7 -
+  * Incremental encoder support fully working :-P
+  * EX2 button disabled, pin 13 being used as Buzz LED again.
+  * New logo and animations from Billy Amateo (thanks Billy!)
+  * New logo "progress meter" when switching sec. output.
 
 * 2.9.6 -
   * Incremental encoder support (USE_ENCODER)
