@@ -69,6 +69,8 @@ extern int mel_mode;
 
 extern int d_mode;
 extern int t_mode;
+extern int h_mode;
+extern int l_mode;
 
 extern int play_screen_type;
 extern uint8_t scene_signal_type;

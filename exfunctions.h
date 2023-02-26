@@ -18,5 +18,7 @@ void ex_tpose_up(bool playing);
 void ex_tpose_down(bool playing);
 void ex_tpose_toggle(bool playing,int steps);
 void ex_sec_out_toggle();
+void ex_cycle_hi_mel_mute();
+void ex_cycle_lo_mel_mute();
 
 #endif

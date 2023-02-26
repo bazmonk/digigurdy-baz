@@ -141,6 +141,8 @@ int mel_mode;
 
 int d_mode;
 int t_mode;
+int h_mode;
+int l_mode;
 
 int mel_vibrato;
 
@@ -316,6 +318,8 @@ void setup() {
 
   d_mode = 0;
   t_mode = 0;
+  h_mode = 0;
+  l_mode = 0;
 
   play_screen_type = 0;
   scene_signal_type = 0;

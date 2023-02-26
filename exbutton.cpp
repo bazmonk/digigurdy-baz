@@ -55,6 +55,10 @@ void ExButton::doFunc(bool playing) {
     ex_tpose_toggle(playing, t_toggle_steps);
   } else if (my_func == 13) {
     ex_sec_out_toggle();
+  } else if (my_func == 14) {
+    ex_cycle_hi_mel_mute();
+  } else if (my_func == 15) {
+    ex_cycle_lo_mel_mute();
   };
   return;
 };
@@ -88,6 +92,10 @@ String ExButton::printFunc() {
     return String("Transpose: ") + t_toggle_steps;
   } else if (my_func == 13) {
     return String("Sec. Output Toggle");
+  } else if (my_func == 14) {
+    return String("Hi Melody Mute");
+  } else if (my_func == 15) {
+    return String("Lo Melody Mute");
   };
 
   return String("FIX ME!!!");

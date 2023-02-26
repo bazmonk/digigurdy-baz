@@ -10,7 +10,7 @@ See [the code documentation here](https://bazmonk.github.io/digigurdy-baz/html/i
   * Fixed brief "chirp" of sound after "Crank On!" screen that was due to counting the starting position of the crank as initial motion.
   * Adjusted buzz expression to better cover the range of an average (I hope!) couping motion.
   * Volume up/down step amount cut in half for more granularity.
-  
+  * Hi/Low melody mute EX functions (dedicated for each).
 
 * 2.9.7 -
   * Incremental encoder support fully working :-P

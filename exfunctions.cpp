@@ -334,4 +334,54 @@ void ex_sec_out_toggle() {
 
 };
 
+/// @brief Toggles mute on the high melody string
+/// @version *New in 2.9.8*
+void ex_cycle_hi_mel_mute() {
+  if (h_mode == 0) {
+    h_mode = 1;
+    mystring->setMute(true);
+    if (mystring->isPlaying()) {
+      mystring->soundOff();
+      mystring->soundOn();
+    };
+  } else if (h_mode == 1) {
+    h_mode = 0;
+    mystring->setMute(false);
+    if (mystring->isPlaying()) {
+      mystring->soundOff();
+      mystring->soundOn();
+    };
+  };
+  if (mystring->isPlaying()) {
+    draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
+  } else {
+    print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
+  };
+};
+
+/// @brief Toggles mute on the low melody string
+/// @version *New in 2.9.8*
+void ex_cycle_lo_mel_mute() {
+  if (l_mode == 0) {
+    l_mode = 1;
+    mylowstring->setMute(true);
+    if (mylowstring->isPlaying()) {
+      mylowstring->soundOff();
+      mylowstring->soundOn();
+    };
+  } else if (l_mode == 1) {
+    l_mode = 0;
+    mylowstring->setMute(false);
+    if (mylowstring->isPlaying()) {
+      mylowstring->soundOff();
+      mylowstring->soundOn();
+    };
+  };
+  if (mystring->isPlaying()) {
+    draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
+  } else {
+    print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
+  };
+};
+
 /// @}
