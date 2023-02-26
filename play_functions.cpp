@@ -3,11 +3,11 @@
 /// @ingroup play
 /// @{
 
-/// @brief Turns the volume of all strings up by 10, if possible.
+/// @brief Turns the volume of all strings up by 5, if possible.
 /// @details 
 /// * Checks volume of all strings
-/// * If the loudest string is more than 10 from full volume, increases the volume of all strings by 10.
-/// * If the loudest string is less than 10 from full, do nothing.
+/// * If the loudest string is more than 5 from full volume, increases the volume of all strings by 5.
+/// * If the loudest string is less than 5 from full, do nothing.
 /// @version *New in 2.3.4*
 void vol_up() {
   int highest_vol = 0;
@@ -19,13 +19,13 @@ void vol_up() {
   if (mybuzz->getVolume() > highest_vol) { highest_vol = mybuzz->getVolume(); };
   if (mykeyclick->getVolume() > highest_vol) { highest_vol = mykeyclick->getVolume(); };
 
-  if (highest_vol < 117) {
-    mystring->setVolume(mystring->getVolume() + 10);
-    mylowstring->setVolume(mylowstring->getVolume() + 10);
-    mytromp->setVolume(mytromp->getVolume() + 10);
-    mydrone->setVolume(mydrone->getVolume() + 10);
-    mybuzz->setVolume(mybuzz->getVolume() + 10);
-    mykeyclick->setVolume(mykeyclick->getVolume() + 10);
+  if (highest_vol < 122) {
+    mystring->setVolume(mystring->getVolume() + 5);
+    mylowstring->setVolume(mylowstring->getVolume() + 5);
+    mytromp->setVolume(mytromp->getVolume() + 5);
+    mydrone->setVolume(mydrone->getVolume() + 5);
+    mybuzz->setVolume(mybuzz->getVolume() + 5);
+    mykeyclick->setVolume(mykeyclick->getVolume() + 5);
   };
 
   if (mystring->isPlaying()) {
@@ -46,11 +46,11 @@ void vol_up() {
   };
 };
 
-/// @brief Turns the volume of all strings down by 10, if possible.
+/// @brief Turns the volume of all strings down by 5, if possible.
 /// @details 
 /// * Checks volume of all strings
-/// * If the quietest string is less than 10 from min volume, decreases the volume of all strings by 10.
-/// * If the quietest string is more than 10 from min volume, do nothing.
+/// * If the quietest string is less than 5 from min volume, decreases the volume of all strings by 5.
+/// * If the quietest string is more than 5 from min volume, do nothing.
 /// @version *New in 2.3.4*
 void vol_down() {
 
@@ -63,13 +63,13 @@ void vol_down() {
   if (mybuzz->getVolume() < lowest_vol) { lowest_vol = mybuzz->getVolume(); };
   if (mykeyclick->getVolume() < lowest_vol) { lowest_vol = mykeyclick->getVolume(); };
 
-  if (lowest_vol > 10) {
-    mystring->setVolume(mystring->getVolume() - 10);
-    mylowstring->setVolume(mylowstring->getVolume() - 10);
-    mytromp->setVolume(mytromp->getVolume() - 10);
-    mydrone->setVolume(mydrone->getVolume() - 10);
-    mybuzz->setVolume(mybuzz->getVolume() - 10);
-    mykeyclick->setVolume(mykeyclick->getVolume() - 10);
+  if (lowest_vol > 5) {
+    mystring->setVolume(mystring->getVolume() - 5);
+    mylowstring->setVolume(mylowstring->getVolume() - 5);
+    mytromp->setVolume(mytromp->getVolume() - 5);
+    mydrone->setVolume(mydrone->getVolume() - 5);
+    mybuzz->setVolume(mybuzz->getVolume() - 5);
+    mykeyclick->setVolume(mykeyclick->getVolume() - 5);
   };
 
   if (mystring->isPlaying()) {
