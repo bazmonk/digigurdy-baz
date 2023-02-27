@@ -281,6 +281,7 @@ void options_about_screen() {
   u8g2.sendBuffer();
   
   while (true) {
+    delay(150);
     myXButton->update();
 
     if(myXButton->wasPressed()) {
@@ -288,25 +289,28 @@ void options_about_screen() {
     };
   };
 
-  // BAZ - FIX THIS LATER
-  // String disp_str = "      DigiGurdy      \n"
-  //                   "---------------------\n"
-  //                   "Special Thanks:      \n"
-  //                   "                     \n"
-  //                   "John Dingley         \n"
-  //                   "David Jacobs         \n"
-  //                   "lune36400            \n"
-  //                   "SalusaSecondus       ";
-  //
-  // print_screen(disp_str);
-  //
-  // while (true) {
-  //   myXButton->update();
-  //
-  //   if(myXButton->wasPressed()) {
-  //     break;
-  //   };
-  // };
+  print_message_3("Special Thanks!", "John Dingley", "David Jacobs", "Billy Amateo");
+
+  while (true) {
+    delay(150);
+    myXButton->update();
+
+    if(myXButton->wasPressed()) {
+      break;
+    };
+  };
+
+  print_message_2("Special Thanks!", "lune36400", "SalusaSecondus");
+
+  while (true) {
+    delay(150);
+    myXButton->update();
+
+    if(myXButton->wasPressed()) {
+      break;
+    };
+  };
+
 };
 
 /// @brief This prompts the user to choose between the non-tuning/volume configuration options.
