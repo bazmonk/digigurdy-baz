@@ -89,4 +89,16 @@ static const int EEPROM_EX9_TSTEP = 125;
 static const int EEPROM_EX10_TSTEP = 126;
 static const int EEPROM_EXBB_TSTEP = 127;
 
+static const int EEPROM_EX1_SLOT = 128;
+static const int EEPROM_EX2_SLOT = 129;
+static const int EEPROM_EX3_SLOT = 130;
+static const int EEPROM_EX4_SLOT = 131;
+static const int EEPROM_EX5_SLOT = 132;
+static const int EEPROM_EX6_SLOT = 133;
+static const int EEPROM_EX7_SLOT = 134;
+static const int EEPROM_EX8_SLOT = 135;
+static const int EEPROM_EX9_SLOT = 136;
+static const int EEPROM_EX10_SLOT = 137;
+static const int EEPROM_EXBB_SLOT = 138;
+
 #endif

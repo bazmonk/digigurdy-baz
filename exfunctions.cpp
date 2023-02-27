@@ -384,4 +384,36 @@ void ex_cycle_lo_mel_mute() {
   };
 };
 
+/// @brief Loads the given preset slot
+/// @param preset_slot 1-4, the slot to load
+/// @version *New in 2.9.8*
+void ex_load_preset(int preset_slot) {
+  autocrank_toggle_on = false;
+  all_soundOff();
+  delay(5);
+  
+  load_preset_tunings(preset_slot);
+
+  print_message_2("Load Preset Tuning", String("Preset ") + preset_slot, "Loaded!");
+  delay(750);
+  print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
+
+};
+
+/// @brief Loads the given save slot
+/// @param save_slot 1-4, the slot to load
+/// @version *New in 2.9.8*
+void ex_load_save_slot(int save_slot) {
+  autocrank_toggle_on = false;
+  all_soundOff();
+  delay(5);
+  
+  load_saved_tunings(save_slot);
+
+  print_message_2("Load Saved Tuning", String("Save slot ") + save_slot, "Loaded!");
+  delay(750);
+  print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
+
+};
+
 /// @}

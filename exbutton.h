@@ -15,10 +15,12 @@ class ExButton: public ToggleButton {
     int my_func;
     int eeprom_addr;
     int eeprom_step_addr;
+    int eeprom_slot_addr;
     int t_toggle_steps;
+    int slot;
 
   public:
-    ExButton(int my_pin, int interval, int my_addr, int my_step_addr);
+    ExButton(int my_pin, int interval, int my_addr, int my_step_addr, int my_slot_addr);
 
     int getFunc();
 

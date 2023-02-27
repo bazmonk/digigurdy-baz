@@ -4,10 +4,12 @@
 /// @param my_pin The digital pin this button is connected to
 /// @param func The beginning function for this button (See ExButton::doFunc for the numbering)
 /// @param interval The debounce interval for this button in milliseconds
-ExButton::ExButton(int my_pin, int interval, int my_addr, int my_step_addr) : ToggleButton(my_pin, interval) {
+ExButton::ExButton(int my_pin, int interval, int my_addr, int my_step_addr, int my_slot_addr) : ToggleButton(my_pin, interval) {
   eeprom_addr = my_addr;
   my_func = EEPROM.read(my_addr);
   eeprom_step_addr = my_step_addr;
+  eeprom_slot_addr = my_slot_addr;
+  slot = EEPROM.read(my_slot_addr);
   t_toggle_steps = EEPROM.read(my_step_addr) - 12;
 };
 
@@ -59,6 +61,10 @@ void ExButton::doFunc(bool playing) {
     ex_cycle_hi_mel_mute();
   } else if (my_func == 15) {
     ex_cycle_lo_mel_mute();
+  } else if (my_func == 16) {
+    ex_load_preset(slot);
+  } else if (my_func == 17) {
+    ex_load_save_slot(slot);
   };
   return;
 };
@@ -96,6 +102,10 @@ String ExButton::printFunc() {
     return String("Hi Melody Mute");
   } else if (my_func == 15) {
     return String("Lo Melody Mute");
+  } else if (my_func == 16) {
+    return String("Load Preset: " + slot);
+  } else if (my_func == 17) {
+    return String("Load Save Slot: " + slot);
   };
 
   return String("FIX ME!!!");

@@ -3,6 +3,7 @@
 
 #include "play_screens.h"
 #include "play_functions.h"
+#include "pause_screens.h"
 #include "common.h"
 #include "usb_power.h"
 #include "bitmaps.h"
@@ -20,5 +21,7 @@ void ex_tpose_toggle(bool playing,int steps);
 void ex_sec_out_toggle();
 void ex_cycle_hi_mel_mute();
 void ex_cycle_lo_mel_mute();
+void ex_load_preset(int preset_slot);
+void ex_load_save_slot(int save_slot);
 
 #endif
