@@ -6,7 +6,7 @@
 #include "eeprom_values.h"
 
 void load_preset_tunings(int preset);
-void load_saved_tunings(int slot);
+void load_saved_tunings(int slot_num);
 
 bool view_slot_screen(int slot_num);
 bool view_preset_screen(int preset);

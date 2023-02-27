@@ -103,9 +103,9 @@ String ExButton::printFunc() {
   } else if (my_func == 15) {
     return String("Lo Melody Mute");
   } else if (my_func == 16) {
-    return String("Load Preset: " + slot);
+    return String("Load Preset ") + slot;
   } else if (my_func == 17) {
-    return String("Load Save Slot: " + slot);
+    return String("Load Save Slot ") + slot;
   };
 
   return String("FIX ME!!!");
@@ -348,6 +348,7 @@ bool ExButton::fn_choice_audio() {
     my1Button->update();
     my2Button->update();
     my3Button->update();
+    my4Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {

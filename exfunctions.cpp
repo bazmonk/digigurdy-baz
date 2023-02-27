@@ -30,12 +30,22 @@ void cycle_mel_mute() {
       mylowstring->soundOn();
     };
   } else if (mel_mode == 2) {
+    mel_mode = 3; // 3 == high off, low off
+    mystring->setMute(true);
+    mylowstring->setMute(true);
+    if (mystring->isPlaying()) {
+      mylowstring->soundOff();
+      mylowstring->soundOn();
+    };
+  } else if (mel_mode == 3) {
     mel_mode = 0; // 0 == high on, low on
     mystring->setMute(false);
     mylowstring->setMute(false);
     if (mystring->isPlaying()) {
       mystring->soundOff();
       mystring->soundOn();
+      mylowstring->soundOff();
+      mylowstring->soundOn();
     };
   };
   if (mystring->isPlaying()) {

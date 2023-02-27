@@ -22,8 +22,14 @@ void load_preset_tunings(int preset) {
 /// @brief Loads the given saved tuning slot.
 /// @param slot 1-4, representing one of the EEPROM tuning save slots to load.
 /// @details Sets tuning of all strings, tpose, capo, and volume.
-void load_saved_tunings(int slot) {
+void load_saved_tunings(int slot_num) {
   byte value;
+
+  int slot;
+  if (slot_num == 1) { slot = EEPROM_SLOT1; };
+  if (slot_num == 2) { slot = EEPROM_SLOT2; };
+  if (slot_num == 3) { slot = EEPROM_SLOT3; };
+  if (slot_num == 4) { slot = EEPROM_SLOT4; };
 
   // Notes
   value = EEPROM.read(slot + EEPROM_HI_MEL);

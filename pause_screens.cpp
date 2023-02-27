@@ -20,10 +20,10 @@ void pause_screen() {
     if (drone_mode == 1 || drone_mode == 3) {
       d_str = "OFF";
     };
-    if (mel_mode == 1) {
+    if (mel_mode == 1 || mel_mode == 3) {
       l_str = "OFF";
     };
-    if (mel_mode == 2) {
+    if (mel_mode == 2 || mel_mode == 3) {
       h_str = "OFF";
     };
 
@@ -123,6 +123,10 @@ void pause_screen() {
         mystring->setMute(true);
         mylowstring->setMute(false);
       } else if (mel_mode == 2) {
+        mel_mode = 3; // 3 = high off, low off
+        mystring->setMute(true);
+        mylowstring->setMute(true);
+      } else if (mel_mode == 3) {
         mel_mode = 0; // 0 == high on, low on
         mystring->setMute(false);
         mylowstring->setMute(false);
