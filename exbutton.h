@@ -8,6 +8,7 @@
 #include "exfunctions.h"
 #include "display.h"
 #include "eeprom_values.h"
+#include "default_tunings.h"
 //#include "common.h"
 
 class ExButton: public ToggleButton {
@@ -32,9 +33,11 @@ class ExButton: public ToggleButton {
 
     bool fn_choice_screen();
 
-    bool fn_choice_screen_2();
-
+    bool fn_choice_actions();
+    bool fn_choice_mutes();
     bool fn_choice_tpose();
+    bool fn_choice_audio();
+    bool fn_choice_tuning();
 };
 
 #endif

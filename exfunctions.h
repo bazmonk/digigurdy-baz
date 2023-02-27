@@ -3,7 +3,7 @@
 
 #include "play_screens.h"
 #include "play_functions.h"
-#include "pause_screens.h"
+#include "load_tunings.h"
 #include "common.h"
 #include "usb_power.h"
 #include "bitmaps.h"

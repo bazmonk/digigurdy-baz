@@ -122,8 +122,8 @@ bool ExButton::fn_choice_screen() {
   bool done = false;
   while (!done) {
 
-    print_menu_6("Ex Button Func.", "Open Pause Menu", "Cycle Mel. Mute", "Cycle Dn/Tr. Mute",
-                 "Toggle Drone Mute", "Toggle Trompette Mute", "Next Page...");
+    print_menu_5("Ex Button Func.", "Actions", "Mutes", "Transpose/Capo",
+                 "Audio", "Load Tunings");
     delay(150);
 
     my1Button->update();
@@ -132,6 +132,46 @@ bool ExButton::fn_choice_screen() {
     my4Button->update();
     my5Button->update();
     my6Button->update();
+    myXButton->update();
+
+    if (my1Button->wasPressed()) {
+      done = fn_choice_actions();
+
+    } else if (my2Button->wasPressed()) {
+      done = fn_choice_mutes();
+
+    } else if (my3Button->wasPressed()) {
+      done = fn_choice_tpose();
+
+    } else if (my4Button->wasPressed()) {
+      done = fn_choice_audio();
+
+    } else if (my5Button->wasPressed()) {
+      done = fn_choice_tuning();
+
+    } else if (my6Button->wasPressed() || myXButton->wasPressed()) {
+      return false;
+
+    };
+  };
+
+  return true;
+};
+
+/// @brief Prompt user to select an action-based EX button function.
+/// @return True if user chose an option, false if user chose "go back" option
+/// @version *New in 2.9.8*
+bool ExButton::fn_choice_actions() {
+
+  bool done = false;
+  while (!done) {
+
+    print_menu_2("Ex Button Actions", "Open Pause Menu", "Auto-Crank");
+    delay(150);
+
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {
@@ -140,45 +180,28 @@ bool ExButton::fn_choice_screen() {
       done = true;
 
     } else if (my2Button->wasPressed()) {
-      setFunc(2);
-      EEPROM.write(eeprom_addr,2);
+      setFunc(11);
+      EEPROM.write(eeprom_addr,11);
       done = true;
 
-    } else if (my3Button->wasPressed()) {
-      setFunc(3);
-      EEPROM.write(eeprom_addr,3);
-      done = true;
-
-    } else if (my4Button->wasPressed()) {
-      setFunc(4);
-      EEPROM.write(eeprom_addr,4);
-      done = true;
-
-    } else if (my5Button->wasPressed()) {
-      setFunc(5);
-      EEPROM.write(eeprom_addr,5);
-      done = true;
-
-    } else if (my6Button->wasPressed()) {
-      done = fn_choice_screen_2();
-    
-    } else if (myXButton->wasPressed()) {
+    } else if (my3Button->wasPressed() || myXButton->wasPressed()) {
       return false;
+
     };
   };
 
   return true;
 };
 
-/// @brief Prompt user to choose the button function, second page
+/// @brief Prompt user to select an EX button string mute function.
 /// @return True if user chose an option, false if user chose "go back" option
-/// @version *New in 2.3.3*
-bool ExButton::fn_choice_screen_2() {
+/// @version *New in 2.9.8*
+bool ExButton::fn_choice_mutes() {
 
   bool done = false;
   while (!done) {
 
-    print_menu_6("Ex Button Func., P.2", "Turn Volume Down", "Turn Volume Up", "Transpose", "Cycle Capo", "Auto-Crank", "Sec. Output Toggle");
+    print_menu_6("Ex Button Mutes", "Cycle Mel. Mutes", "Cycle Dn/Tr. Mutes", "Hi Melody Mute", "Lo Melody Mute", "Drone Mute", "Tromp/Buzz Mute");
     delay(150);
 
     my1Button->update();
@@ -190,31 +213,33 @@ bool ExButton::fn_choice_screen_2() {
     myXButton->update();
 
     if (my1Button->wasPressed()) {
-      setFunc(6);
-      EEPROM.write(eeprom_addr,6);
+      setFunc(2);
+      EEPROM.write(eeprom_addr,2);
       done = true;
 
     } else if (my2Button->wasPressed()) {
-      setFunc(7);
-      EEPROM.write(eeprom_addr,7);
+      setFunc(3);
+      EEPROM.write(eeprom_addr,3);
       done = true;
 
     } else if (my3Button->wasPressed()) {
-      done = fn_choice_tpose();
+      setFunc(14);
+      EEPROM.write(eeprom_addr,14);
+      done = true;
 
     } else if (my4Button->wasPressed()) {
-      setFunc(10);
-      EEPROM.write(eeprom_addr,10);
+      setFunc(15);
+      EEPROM.write(eeprom_addr,15);
       done = true;
 
     } else if (my5Button->wasPressed()) {
-      setFunc(11);
-      EEPROM.write(eeprom_addr,11);
+      setFunc(4);
+      EEPROM.write(eeprom_addr,4);
       done = true;
 
     } else if (my6Button->wasPressed()) {
-      setFunc(13);
-      EEPROM.write(eeprom_addr,13);
+      setFunc(5);
+      EEPROM.write(eeprom_addr,5);
       done = true;
       
     } else if (myXButton->wasPressed()) {
@@ -225,21 +250,22 @@ bool ExButton::fn_choice_screen_2() {
   return true;
 };
 
-/// @brief Prompt user to choose the button function, second page
+/// @brief Prompt user to select a transpose/capo EX button function.
 /// @return True if user chose an option, false if user chose "go back" option
-/// @version *New in 2.5.7*
+/// @version *New in 2.9.8*
 bool ExButton::fn_choice_tpose() {
 
   bool done = false;
   while (!done) {
 
-    print_menu_3("Ex Button Transpose", "Transpose Down", "Transpose Up", "Transpose Toggle");
+    print_menu_4("Ex Button Tpose/Capo", "Transpose Down", "Transpose Up", "Transpose Toggle", "Cycle Capo");
     delay(150);
 
     my1Button->update();
     my2Button->update();
     my3Button->update();
     my4Button->update();
+    my5Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {
@@ -294,8 +320,167 @@ bool ExButton::fn_choice_tpose() {
       };
       done = true;
 
+    } else if (my4Button->wasPressed()) {
+      setFunc(10);
+      EEPROM.write(eeprom_addr,10);
+      done = true;
+
+    } else if (my5Button->wasPressed() || myXButton->wasPressed()) {
+      return false;
+
+    };
+  };
+
+  return true;
+};
+
+/// @brief Prompt user to select an audio-related EX button function.
+/// @return True if user chose an option, false if user chose "go back" option
+/// @version *New in 2.9.8*
+bool ExButton::fn_choice_audio() {
+
+  bool done = false;
+  while (!done) {
+
+    print_menu_3("Ex Button Audio", "Turn Volume Down", "Turn Volume Up", "Sec. Output Toggle");
+    delay(150);
+
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    myXButton->update();
+
+    if (my1Button->wasPressed()) {
+      setFunc(6);
+      EEPROM.write(eeprom_addr,6);
+      done = true;
+
+    } else if (my2Button->wasPressed()) {
+      setFunc(7);
+      EEPROM.write(eeprom_addr,7);
+      done = true;
+
+    } else if (my3Button->wasPressed()) {
+      setFunc(13);
+      EEPROM.write(eeprom_addr,13);
+      done = true;
+
     } else if (my4Button->wasPressed() || myXButton->wasPressed()) {
       return false;
+
+    };
+  };
+
+  return true;
+};
+
+/// @brief Prompt user to select an load-tuning EX button function.
+/// @return True if user chose an option, false if user chose "go back" option
+/// @version *New in 2.9.8*
+bool ExButton::fn_choice_tuning() {
+
+  bool done = false;
+  while (!done) {
+
+    print_menu_2("Ex Button Load Tuning", "Load Preset Tuning", "Load Save Slot");
+    delay(150);
+
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    myXButton->update();
+
+    if (my1Button->wasPressed()) {
+
+      bool done2 = false;
+      while (!done2) {
+
+        print_menu_4("Ex Button Preset",
+                 PRESET1_NAME, PRESET2_NAME,
+                 PRESET3_NAME, PRESET4_NAME);
+        delay(150);
+
+        // Check the 1 and 2 buttons
+        my1Button->update();
+        my2Button->update();
+        my3Button->update();
+        my4Button->update();
+        my5Button->update();
+        myXButton->update();
+
+        if (my1Button->wasPressed()) {
+          slot = 1;
+          done2 = true;
+        
+        } else if (my2Button->wasPressed()) {
+          slot = 2;
+          done2 = true;
+      
+        } else if (my3Button->wasPressed()) {
+          slot = 3;
+          done2 = true;
+    
+        } else if (my4Button->wasPressed()) {
+          slot = 4;
+          done2 = true;
+  
+        } else if (my5Button->wasPressed() || myXButton->wasPressed()) {
+          return false;
+        };
+      };
+
+      setFunc(16);
+      EEPROM.write(eeprom_addr, 16);
+      EEPROM.write(eeprom_slot_addr, slot);
+      done = true;
+
+    } else if (my2Button->wasPressed()) {
+
+      bool done2 = false;
+      while (!done2) {
+
+        print_menu_4("Ex Button Save Slot",
+                 "Save Slot 1", "Save Slot 2",
+                 "Save Slot 3", "Save Slot 4");
+        delay(150);
+
+        // Check the 1 and 2 buttons
+        my1Button->update();
+        my2Button->update();
+        my3Button->update();
+        my4Button->update();
+        my5Button->update();
+        myXButton->update();
+
+        if (my1Button->wasPressed()) {
+          slot = 1;
+          done2 = true;
+        
+        } else if (my2Button->wasPressed()) {
+          slot = 2;
+          done2 = true;
+      
+        } else if (my3Button->wasPressed()) {
+          slot = 3;
+          done2 = true;
+    
+        } else if (my4Button->wasPressed()) {
+          slot = 4;
+          done2 = true;
+
+        } else if (my5Button->wasPressed() || myXButton->wasPressed()) {
+          return false;
+        };
+      };
+
+      setFunc(17);
+      EEPROM.write(eeprom_addr, 17);
+      EEPROM.write(eeprom_slot_addr, slot);
+      done = true;
+
+    } else if (my3Button->wasPressed() || myXButton->wasPressed()) {
+      return false;
+
     };
   };
 

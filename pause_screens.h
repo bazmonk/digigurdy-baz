@@ -18,6 +18,7 @@
 #include "tuning_screens.h"
 #include "play_functions.h"
 #include "usb_power.h"
+#include "load_tunings.h"
 
 #ifdef USE_GEARED_CRANK
   #include "gearcrank.h"
@@ -42,13 +43,10 @@ void save_tunings(int slot);
 bool load_tuning_screen();
 bool check_save_tuning(int slot);
 void save_tuning_screen();
-void signal_scene_change(int scene_idx);
-void load_preset_tunings(int preset);
-void load_saved_tunings(int slot);
+
 void reset_ex_eeprom();
 void reset_eeprom();
-bool view_slot_screen(int slot_num);
-bool view_preset_screen(int preset);
+
 bool load_saved_screen();
 bool load_preset_screen();
 void scene_options_screen();
