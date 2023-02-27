@@ -289,7 +289,7 @@ void options_about_screen() {
     };
   };
 
-  print_message_3("Special Thanks!", "John Dingley", "David Jacobs", "Billy Amateo");
+  print_message_3("Special Thanks!", "John Dingley", "David Jacobs", "Matteo Billia");
 
   while (true) {
     delay(150);
