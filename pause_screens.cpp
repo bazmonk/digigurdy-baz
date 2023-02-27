@@ -289,7 +289,7 @@ void options_about_screen() {
     };
   };
 
-  print_message_3("Special Thanks!", "John Dingley", "David Jacobs", "Matteo Billia");
+  print_message_3("Special Thanks!", "John Dingley (UK)", "David Jacobs (AUS)", "Matteo Billia (ITA)");
 
   while (true) {
     delay(150);
