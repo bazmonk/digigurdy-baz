@@ -60,6 +60,10 @@ ToggleButton *bigbutton;
   GearCrank *mycrank;
 #else
   GurdyCrank *mycrank;
+  volatile int num_events = 0;
+  volatile int last_event = 0;
+  elapsedMicros last_event_timer;
+  elapsedMicros debounce_timer;
 #endif
 
 VibKnob *myvibknob;

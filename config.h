@@ -3,13 +3,13 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.0.23";
-const String REL_DATE = "2022-12-25, v" + VERSION;
+const String VERSION = "2.0.30";
+const String REL_DATE = "2023-02-27, v" + VERSION;
 
 // Use one of these if you want, on the title/about screen.  Or make your own!
 //const String EXTRA_LINE = "                     ";
 //const String EXTRA_LINE = " BLUE,TSUNAMI,GEARED ";
-const String EXTRA_LINE = "  MIDI-OUT - PEDAL   ";
+const String EXTRA_LINE = "  Production Build   ";
 //const String EXTRA_LINE = " TRIGGER - LED KNOB  ";
 //const String EXTRA_LINE = " TSUNAMI - LED KNOB  ";
 
@@ -72,32 +72,14 @@ const int EXPRESSION_START = 90;
 // Cranking and buzz behavior:
 
 // NEW FOR OPTICAL CRANKS:
-//
-// The crank algorithm works in terms of the crank's actual velocity and acceleration.  Thus it is
-// necessary to know how many slots there are in a revolution.
-//
-// This is a count of the black/blocking bars on your wheel, not the number of transitions.
+
+/// @brief The number of "spokes" on the optical crank wheel.
+/// @details * This is the number of black/blocking bars on the wheel, not the number of transitions.
 const int NUM_SPOKES = 80;
 
-// This is the minimum velocity that produces sound.  This is actual crank rpm (rev/minute).
-const float V_THRESHOLD = 5.5;
-
-// This is how long (in microseconds, 1000us = 1ms = 0.001s) the code waits in between reading the
-// crank.  This determines the resolution, not how long we're waiting to detect movement.
-//const int SAMPLE_RATE = 100;
-const int SAMPLE_RATE = 100;
-
-// How long we wait for potential movement of the crank changes dynamically, but not longer than
-// this time in microseconds.
-const int MAX_WAIT_TIME = 40000;
-
-// Once the crank has stopped (after the DECAY_RATE above), we multiply the last velocity by this.
-// E.g. 0.2 means if the velocity was 60, once we stop we consider the current velocity to be 12,
-// then 2.4, then 0.48, etc.  This gets averaged in to give us a "smooth" spin-down.
-const float DECAY_FACTOR = 0.00;
-
-// This is how long in milliseconds to buzz *at least* once it starts.
-const int BUZZ_MIN = 100;
+/// @ingroup optical
+/// @brief The crank speed at which sound begins to play in RPMs.
+const float V_THRESHOLD = 2.0;
 
 
 // GEAR CRANK OPTIONS

@@ -4,7 +4,10 @@ See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more docu
 
 **Pre-compiled builds of the code will be made available from 1.7.99 and up.  See https://github.com/bazmonk/digigurdy-baz/wiki/install-by-hex for installation instructions.**
 
-**Check out version 2.0.23! (NEW)**
+**Check out version 2.0.30! (NEW)**
+
+* 2.0.30 -
+  * Backported interrupt-based optical crank code from the 2.9.9.
 
 * 2.0.23 -
   * Volume control key combo (X + altTposeUp/Down) backported from 2.3.4.

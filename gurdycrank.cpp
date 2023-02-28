@@ -1,13 +1,24 @@
 #include "gurdycrank.h"
 
-// class GurdyCrank controls the cranking mechanism, including the buzz triggers.
-//   * This version is for optical (IR gate) sensors.  The digital pin readings are expected to
-//     oscillate between 0 and 1 only.
-//   * NUM_SPOKES in config.h needs to be defined as the number of "spokes" (dark lines) on your
-//     wheel, not the number of dark+light bars.  Your RPMs will be half-speed if you do that.
+void myisr() {
+  if (debounce_timer >= 1250) {
+    num_events = num_events + 1;
+    last_event = last_event_timer;
+    debounce_timer = 0;
+  }
+}
 
-// s_pin is the out pin of the optical sensor.  This is pin 15 (same as analog A1)
-// on a normal didigurdy.  buzz_pin is the out pin of the buzz pot, usually A2 (a.k.a 16).
+/// @brief Constructor.
+/// @details This class abstracts the cranking mechanism on Digi-Gurdies.
+///
+/// @warning This is for optical-sensor cranks.  See GearCrank for a gear-motor crank version.
+///
+/// @warning
+/// * A hidden member object here is a BuzzKnob.
+/// * This class' header includes common.h and specific string objects are expected to exist.  See common.h.
+/// @param s_pin The digital pin coming from the optical sensor.
+/// @param buzz_pin The pin of the buzz knob.
+/// @param led_pin The pin of the LED indicator.
 GurdyCrank::GurdyCrank(int s_pin, int buzz_pin, int led_pin) {
 
   myKnob = new BuzzKnob(buzz_pin);
@@ -18,112 +29,69 @@ GurdyCrank::GurdyCrank(int s_pin, int buzz_pin, int led_pin) {
 
   sensor_pin = s_pin;
   pinMode(sensor_pin, INPUT_PULLUP);
-  last_event = digitalRead(sensor_pin);
+  attachInterrupt(digitalPinToInterrupt(sensor_pin), myisr, RISING);
+
   expression = 0;
+  buzz_expression = 0;
+  the_buzz_timer = 0;
 };
 
-// This had a use, and may just go away...
+/// @brief Reports if a crank is connected.
+/// @return True
+/// @note Currently this method is pointless.  Gear-motor cranks do use this, however, and this is being kept for future changes.
+/// It may be useful to expect any crank object to be able to report this in-code whether or not it's relevant...
 bool GurdyCrank::isDetected() {
   return true;
 };
 
-// This is meant to be run every loop().
+/// @brief Samples the crank and updates its state
+/// @details Also updates the buzz knob, and calls updateExpression().
+/// This should be run every loop().  It paces itself internally and expects to be run frequently.
 void GurdyCrank::update() {
 
   // Check if we need to update the knob reading...
   myKnob->update();
 
-  // Check as close to the sample rate as possible...
-  if (the_timer > SAMPLE_RATE) {
-    this_event = digitalRead(sensor_pin);
-
-    // If there was a transition on the wheel:
-    if (this_event != last_event) {
-      last_event = this_event;
-
-      trans_count += 1;
-      rev_count = trans_count / (NUM_SPOKES * 2);
-
-      v_6 = v_5;
-      v_5 = v_4;
-      v_4 = v_3;
-      v_3 = v_2;
-      v_2 = v_smooth;
-
-      // Velocity is converted to rpm (no particular reason except it's easy to imagine how fast
-      // this is in real-world terms.  1 crank per sec is 60rpm, 3 seconds per crank is 20rpm...
-      //
-      // On nearly every wheel, spokes and holes won't be the same width.  So we average the raw
-      // reading of this transition with the last as we go, as a preliminary smoothing technique.
-      v_last = v_inst;
-      v_inst = (spoke_width * 60000000.0) / (the_spoke_timer);
-
-      //v_smooth = (v_inst + v_last) / 2.0;
-      v_smooth = v_inst;
-
-      v_avg = (v_smooth + v_2 + v_3 + v_4 + v_5 + v_6) / 6.0;
-
-      // Rotate our last times
-      lt_8 = lt_7;
-      lt_7 = lt_6;
-      lt_6 = lt_5;
-      lt_5 = lt_4;
-      lt_4 = lt_3;
-      lt_3 = lt_2;
-      lt_2 = lt_1;
-      lt_1 = the_spoke_timer;
-
-      // Calculate the average of the last four times between readings
-      lt_avg = (lt_1 + lt_2 + lt_3 + lt_4 + lt_5 + lt_6 + lt_7 + lt_8) / 8.0;
-
-      // Calculate the standard deviation of the last four times.
-      lt_stdev = sqrt((pow((lt_1 - lt_avg), 2) + pow((lt_2 - lt_avg), 2) + pow((lt_3 - lt_avg), 2) + pow((lt_4 - lt_avg), 2) + pow((lt_5 - lt_avg), 2) + pow((lt_6 - lt_avg), 2) + pow((lt_7 - lt_avg), 2) + pow((lt_8 - lt_avg), 2)) / 8.0);
-
-      the_stop_timer = 0;
-      the_spoke_timer = 0;
-
-    } else if (the_stop_timer > (lt_avg + (lt_stdev * 3.0)) || the_stop_timer > MAX_WAIT_TIME) {
-
-      v_6 = v_5;
-      v_5 = v_4;
-      v_4 = v_3;
-      v_3 = v_2;
-      v_2 = v_smooth;
-
-      v_smooth = v_smooth * DECAY_FACTOR;
-      v_avg = (v_smooth + v_2 + v_3 + v_4 + v_5 + v_6) / 6.0;
-
-
-      // Rotate our last times
-      lt_8 = lt_7;
-      lt_7 = lt_6;
-      lt_6 = lt_5;
-      lt_5 = lt_4;
-      lt_4 = lt_3;
-      lt_3 = lt_2;
-      lt_2 = lt_1;
-      lt_1 = the_spoke_timer;
-
-      // Calculate the average of the last four times between readings
-      lt_avg = (lt_1 + lt_2 + lt_3 + lt_4 + lt_5 + lt_6 + lt_7 + lt_8) / 8.0;
-
-      // Calculate the standard deviation of the last four times.
-      lt_stdev = sqrt((pow((lt_1 - lt_avg), 2) + pow((lt_2 - lt_avg), 2) + pow((lt_3 - lt_avg), 2) + pow((lt_4 - lt_avg), 2) + pow((lt_5 - lt_avg), 2) + pow((lt_6 - lt_avg), 2) + pow((lt_7 - lt_avg), 2) + pow((lt_8 - lt_avg), 2)) / 8.0);
-
-      the_stop_timer = 0;
+  if (eval_timer > 25250 && num_events > 1) {
+    double new_vel = (num_events * spoke_width * 60000000.0) / (last_event);
+//    cur_vel = cur_vel + (smoothing_factor * (new_vel - cur_vel)) + 1;
+    if (new_vel > cur_vel) {
+      cur_vel = cur_vel + (0.8 * (new_vel - cur_vel)) + 0.5;
     }
+    else {
+      cur_vel = cur_vel + (0.75 * (new_vel - cur_vel));
+    }
+    num_events = 0;
+    last_event = 0;
+    last_event_timer = 0;
+    eval_timer = 0;
+  }
+  if (eval_timer > 31250 && num_events < 2) {
+    cur_vel = (cur_vel) / 2.0;
 
-    the_timer = 0;
-  };
-
+    num_events = 0;
+    last_event = 0;
+    last_event_timer = 0;
+    eval_timer = 0;
+  }
+  
   updateExpression();
 };
 
+/// @brief Updates the expression value and applies it to the strings.
+/// @details * Expression is MIDI CC11 which is usually interpreted as a volume adjustment independent of the channel volume.
+/// * The end-user effect is that the volume "swells" as the user cranks faster up to a point.
 void GurdyCrank::updateExpression() {
   // Only do anything every 50ms (20x/sec)
   if (the_expression_timer > 50) {
 
     float cur_v = getVAvg();
+
+    int new_buzz_expression = int(((cur_v - myKnob->getThreshold())/(0.45 * myKnob->getThreshold())) * (42) + 85);
+    if (new_buzz_expression > 127) {
+      new_buzz_expression = 127;
+    };
+
     if (cur_v > EXPRESSION_VMAX) {
       cur_v = EXPRESSION_VMAX;
     } else if (cur_v < V_THRESHOLD) {
@@ -141,12 +109,19 @@ void GurdyCrank::updateExpression() {
       mylowstring->setExpression(expression);
       mytromp->setExpression(expression);
       mydrone->setExpression(expression);
-      mybuzz->setExpression(expression);
     };
+
+    if (buzz_expression != new_buzz_expression) {
+      buzz_expression = new_buzz_expression;
+      mybuzz->setExpression(buzz_expression);
+    };
+
     the_expression_timer = 0;
   };
 };
 
+/// @brief Reports whether the crank started spinning this update() cycle.
+/// @return True if crank started spinning this cycle, false otherwise
 bool GurdyCrank::startedSpinning() {
   if (isSpinning()) {
     if (!was_spinning) {
@@ -160,6 +135,8 @@ bool GurdyCrank::startedSpinning() {
   }
 };
 
+/// @brief Reports whether the crank stopped spinning this update() cycle.
+/// @return True if crank stopped spinning this cycle, false otherwise
 bool GurdyCrank::stoppedSpinning() {
   if (!isSpinning()) {
     if (was_spinning) {
@@ -173,10 +150,14 @@ bool GurdyCrank::stoppedSpinning() {
   }
 };
 
+/// @brief Reports whether the crank is currently spinning this update() cycle.
+/// @return True if crank is spinning, false otherwise.
 bool GurdyCrank::isSpinning() {
-  return (v_avg > V_THRESHOLD);
+  return (cur_vel > V_THRESHOLD);
 };
 
+/// @brief Reports whether buzzing began this update() cycle.
+/// @return True if buzzing started thie cycle, false otherwise.
 bool GurdyCrank::startedBuzzing() {
   if (getVAvg() > myKnob->getThreshold()) {
     if (!was_buzzing) {
@@ -196,9 +177,11 @@ bool GurdyCrank::startedBuzzing() {
   }
 };
 
+/// @brief Reports whether buzzing stopped this update() cycle.
+/// @return True if buzzing stopped thie cycle, false otherwise.
 bool GurdyCrank::stoppedBuzzing() {
-  if (getVAvg() <= myKnob->getThreshold() && the_buzz_timer > BUZZ_MIN) {
-    if (was_buzzing) {
+  if (getVAvg() <= (myKnob->getThreshold() * 0.95)) {
+    if (was_buzzing && the_buzz_timer > 50) {
       was_buzzing = false;
 
       #ifdef LED_KNOB
@@ -213,24 +196,22 @@ bool GurdyCrank::stoppedBuzzing() {
   return false;
 };
 
+/// @brief Returns the crank's current (heavily-adjusted) velocity.
+/// @return The crank's measured current average velocity in estimated RPMs.
 double GurdyCrank::getVAvg() {
-  return v_avg;
+  return cur_vel;
 };
 
-int GurdyCrank::getCount() {
-  return trans_count;
-};
-
-double GurdyCrank::getRev() {
-  return rev_count;
-};
-
+/// @brief Disables the buzz LED indicator object.
+/// @note This does nothing if LED_KNOB is not defined.
 void GurdyCrank::disableLED() {
   #ifdef LED_KNOB
   myLED->disable();
   #endif
 };
 
+/// @brief Enables the buzz LED indicator object.
+/// @note This does nothing if LED_KNOB is not defined.
 void GurdyCrank::enableLED() {
   #ifdef LED_KNOB
   myLED->enable();
