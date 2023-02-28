@@ -275,7 +275,7 @@ void ex_sec_out_toggle() {
     delay(400);
 
     print_message_2("Secondary Output", "Completed! Audio Socket", "Saved to EEPROM!");
-    delay(600);
+    delay(1500);
     print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
 
   } else if (cur_mode == 1) {
@@ -318,7 +318,7 @@ void ex_sec_out_toggle() {
     delay(400);
 
     print_message_2("Secondary Output", "MIDI-OUT + Audio", "Saved to EEPROM!");
-    delay(600);
+    delay(1500);
     print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
 
   } else if (cur_mode == 2) {
@@ -338,7 +338,7 @@ void ex_sec_out_toggle() {
     mybuzz->setOutputMode(0);
     
     print_message_2("Secondary Output", "MIDI-OUT", "Saved to EEPROM!");
-    delay(750);
+    delay(1500);
     print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
   };
 
