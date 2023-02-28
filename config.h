@@ -3,8 +3,8 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.9.9";
-const String REL_DATE = "2023-02-26, v" + VERSION;
+const String VERSION = "3.0rc1";
+const String REL_DATE = "2023-02-27, v" + VERSION;
 
 /// @defgroup config Configuration Options
 /// These variables/definitions are compile-time configuration options.
