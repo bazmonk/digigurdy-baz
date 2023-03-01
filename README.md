@@ -4,7 +4,10 @@ See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more docu
 
 See [the code documentation here](https://bazmonk.github.io/digigurdy-baz/html/index.html).
 
-**Check out version 2.9.9! (NEW)**
+**Check out version 3.0.0! (NEW)**
+
+* 3.0.0 -
+  * Minor screen-delay tweaks + changes since 2.6
 
 * 2.9.9 - 
   * Reorganized EX function menus
