@@ -20,10 +20,10 @@ void pause_screen() {
     if (drone_mode == 1 || drone_mode == 3) {
       d_str = "OFF";
     };
-    if (mel_mode == 1) {
+    if (mel_mode == 1 || mel_mode == 3) {
       l_str = "OFF";
     };
-    if (mel_mode == 2) {
+    if (mel_mode == 2 || mel_mode == 3) {
       h_str = "OFF";
     };
 
@@ -37,6 +37,7 @@ void pause_screen() {
     my3Button->update();
     my4Button->update();
     my5Button->update();
+    my6Button->update();
     myXButton->update();
     myAButton->update();
     myBButton->update();
@@ -60,7 +61,34 @@ void pause_screen() {
         done = true;
       };
 
-    } else if (my5Button->wasPressed() || myXButton->wasPressed()) {
+    } else if (my5Button->wasPressed()) {
+
+      delay(150);
+
+      print_message_2("Help/User Guide", "Scan with your phone,", "Press X to continue...");
+
+      while (true) {
+        myXButton->update();
+
+        if(myXButton->wasPressed()) {
+          break;
+        };
+      };
+      
+      u8g2.clearBuffer();
+      u8g2.drawXBM(0, 0, 128, 64, qrcode);
+      u8g2.sendBuffer();
+      
+      while (true) {
+        delay(150);
+        myXButton->update();
+
+        if(myXButton->wasPressed()) {
+          break;
+        };
+      };
+
+    } else if (my6Button->wasPressed() || myXButton->wasPressed()) {
       done = true;
 
     } else if (myAButton->wasPressed()) {
@@ -68,18 +96,22 @@ void pause_screen() {
         drone_mode = 1; // 1 == both off
         mydrone->setMute(true);
         mytromp->setMute(true);
+        mybuzz->setMute(true);
       } else if (drone_mode == 1) {
         drone_mode = 2; // 2 == drone on, tromp off
         mydrone->setMute(false);
         mytromp->setMute(true);
+        mybuzz->setMute(true);
       } else if (drone_mode == 2) {
         drone_mode = 3; // 3 == drone off, tromp on
         mydrone->setMute(true);
         mytromp->setMute(false);
+        mybuzz->setMute(false);
       } else if (drone_mode == 3) {
         drone_mode = 0; // 0 == both on
         mydrone->setMute(false);
         mytromp->setMute(false);
+        mybuzz->setMute(false);
       };
     } else if (myBButton->wasPressed()) {
       if (mel_mode == 0) {
@@ -91,6 +123,10 @@ void pause_screen() {
         mystring->setMute(true);
         mylowstring->setMute(false);
       } else if (mel_mode == 2) {
+        mel_mode = 3; // 3 = high off, low off
+        mystring->setMute(true);
+        mylowstring->setMute(true);
+      } else if (mel_mode == 3) {
         mel_mode = 0; // 0 == high on, low on
         mystring->setMute(false);
         mylowstring->setMute(false);
@@ -240,25 +276,41 @@ void options_about_screen() {
     };
   };
 
-  // BAZ - FIX THIS LATER
-  // String disp_str = "      DigiGurdy      \n"
-  //                   "---------------------\n"
-  //                   "Special Thanks:      \n"
-  //                   "                     \n"
-  //                   "John Dingley         \n"
-  //                   "David Jacobs         \n"
-  //                   "lune36400            \n"
-  //                   "SalusaSecondus       ";
-  //
-  // print_screen(disp_str);
-  //
-  // while (true) {
-  //   myXButton->update();
-  //
-  //   if(myXButton->wasPressed()) {
-  //     break;
-  //   };
-  // };
+  u8g2.clearBuffer();
+  u8g2.drawXBM(0, 0, 128, 64, qrcode_digigurdy);
+  u8g2.sendBuffer();
+  
+  while (true) {
+    delay(150);
+    myXButton->update();
+
+    if(myXButton->wasPressed()) {
+      break;
+    };
+  };
+
+  print_message_3("Special Thanks!", "John Dingley (UK)", "David Jacobs (AUS)", "Matteo Billia (ITA)");
+
+  while (true) {
+    delay(150);
+    myXButton->update();
+
+    if(myXButton->wasPressed()) {
+      break;
+    };
+  };
+
+  print_message_2("Special Thanks!", "lune36400", "SalusaSecondus");
+
+  while (true) {
+    delay(150);
+    myXButton->update();
+
+    if(myXButton->wasPressed()) {
+      break;
+    };
+  };
+
 };
 
 /// @brief This prompts the user to choose between the non-tuning/volume configuration options.
@@ -344,83 +396,6 @@ bool other_options_screen() {
   return true;
 };
 
-/// @brief Send a scene-change signal (program change) on MIDI channel 1
-/// @param scene_idx 0-127, representing the scene/program being changed to.
-/// @details This is intended to be used with BS-16i, which will change its soundfonts and settings in reaction to these signals.
-void signal_scene_change(int scene_idx) {
-  if (scene_signal_type == 1) {
-    // Signal as a Program Control message on Channel 1
-    mystring->setProgram(scene_idx);
-  } else {
-    // 0 = Do nothing
-    // While this should be 0, if there is bad data we'll just ignore it and do nothing.
-  }
-};
-
-/// @brief Loads the given tuning preset.
-/// @param preset 1-4, representing one of the EEPROM tuning preset slots to load.
-/// @details see `default_tunings.h` for the actual presets themselves.
-void load_preset_tunings(int preset) {
-  const int *tunings;
-  if (preset == 1) { tunings = PRESET1; };
-  if (preset == 2) { tunings = PRESET2; };
-  if (preset == 3) { tunings = PRESET3; };
-  if (preset == 4) { tunings = PRESET4; };
-
-  mystring->setOpenNote(tunings[0]);
-  mylowstring->setOpenNote(tunings[1]);
-  mydrone->setOpenNote(tunings[2]);
-  mytromp->setOpenNote(tunings[3]);
-  mybuzz->setOpenNote(tunings[4]);
-  tpose_offset = tunings[5];
-  capo_offset = tunings[6];
-}
-
-/// @brief Loads the given saved tuning slot.
-/// @param slot 1-4, representing one of the EEPROM tuning save slots to load.
-/// @details Sets tuning of all strings, tpose, capo, and volume.
-void load_saved_tunings(int slot) {
-  byte value;
-
-  // Notes
-  value = EEPROM.read(slot + EEPROM_HI_MEL);
-  mystring->setOpenNote(value);
-  value = EEPROM.read(slot + EEPROM_LO_MEL);
-  mylowstring->setOpenNote(value);
-  value = EEPROM.read(slot + EEPROM_DRONE);
-  mydrone->setOpenNote(value);
-  value = EEPROM.read(slot + EEPROM_TROMP);
-  mytromp->setOpenNote(value);
-  value = EEPROM.read(slot + EEPROM_BUZZ);
-  mybuzz->setOpenNote(value);
-  value = EEPROM.read(slot + EEPROM_TPOSE);
-  tpose_offset = value - 12;
-  value = EEPROM.read(slot + EEPROM_CAPO);
-  capo_offset = value;
-
-  // Volumes
-  value = EEPROM.read(slot + EEPROM_HI_MEL_VOL);
-  mystring->setVolume(value);
-  value = EEPROM.read(slot + EEPROM_LOW_MEL_VOL);
-  mylowstring->setVolume(value);
-  value = EEPROM.read(slot + EEPROM_DRONE_VOL);
-  mydrone->setVolume(value);
-  value = EEPROM.read(slot + EEPROM_TROMP_VOL);
-  mytromp->setVolume(value);
-  value = EEPROM.read(slot + EEPROM_BUZZ_VOL);
-  mybuzz->setVolume(value);
-  value = EEPROM.read(slot + EEPROM_KEYCLICK_VOL);
-  mykeyclick->setVolume(value);
-
-  // Gros Modes
-  mystring->setGrosMode(EEPROM.read(slot + EEPROM_HI_MEL_GROS));
-  mylowstring->setGrosMode(EEPROM.read(slot + EEPROM_LOW_MEL_GROS));
-  mytromp->setGrosMode(EEPROM.read(slot + EEPROM_TROMP_GROS));
-  mydrone->setGrosMode(EEPROM.read(slot + EEPROM_DRONE_GROS));
-  mybuzz->setGrosMode(EEPROM.read(slot + EEPROM_BUZZ_GROS));
-
-};
-
 /// @brief Saves the current tuning/volume to the given save slot.
 /// @param slot 1-4, the EEPROM save slot to write to.
 void save_tunings(int slot) {
@@ -446,14 +421,22 @@ void save_tunings(int slot) {
 
 };
 
-/// @brief Clears the EEPROM and sets some default values in it.
-/// @note Most values set to zero, but LED and EX values have non-zero defaults also set here.
-void clear_eeprom() {
-  // Not much to say here... write 0 everywhere:
-  for (int i = 0 ; i < EEPROM.length() ; i++ )
-    EEPROM.write(i, 0);
+/// @brief Resets EX EEPROM values to their defaults
+void reset_ex_eeprom() {
 
-  // But now let's fill in the defaults:
+  #ifdef REV4_MODE
+  EEPROM.write(EEPROM_BUZZ_LED, 1);
+  EEPROM.write(EEPROM_EX1, 1);
+  EEPROM.write(EEPROM_EX2, 2);
+  EEPROM.write(EEPROM_EX3, 4);
+  EEPROM.write(EEPROM_EX4, 5);
+  EEPROM.write(EEPROM_EX5, 11);
+  EEPROM.write(EEPROM_EX6, 6);
+  EEPROM.write(EEPROM_EX7, 7);
+  EEPROM.write(EEPROM_EX8, 8);
+  EEPROM.write(EEPROM_EX9, 9);
+  EEPROM.write(EEPROM_EX10, 10);
+  #else
   EEPROM.write(EEPROM_BUZZ_LED, 1);
   EEPROM.write(EEPROM_EX1, 1);
   EEPROM.write(EEPROM_EX2, 2);
@@ -461,10 +444,24 @@ void clear_eeprom() {
   EEPROM.write(EEPROM_EX4, 8);
   EEPROM.write(EEPROM_EX5, 9);
   EEPROM.write(EEPROM_EX6, 10);
-  EEPROM.write(EEPROM_SCENE_SIGNALLING, 0);
-  EEPROM.write(EEPROM_USE_SOLFEGE, 0);
+  #endif
 
+  EEPROM.write(EEPROM_EXBB, 11);
+};
+
+/// @brief Clears the EEPROM and sets some default values in it.
+/// @note Most values set to zero, but LED and EX values have non-zero defaults also set here.
+void reset_eeprom() {
+  // Not much to say here... write 0 everywhere:
+  for (int i = 0 ; i < EEPROM.length() ; i++ )
+    EEPROM.write(i, 0);
+
+  // But now let's fill in the defaults:
+  reset_ex_eeprom();
+
+  #ifndef USB_ALWAYS_ON
   usb_power_off();
+  #endif
   MIDI.begin(MIDI_CHANNEL_OMNI);
   delay(100);
 
@@ -474,100 +471,6 @@ void clear_eeprom() {
   mydrone->setOutputMode(0);
   mykeyclick->setOutputMode(0);
   mybuzz->setOutputMode(0);  
-};
-
-/// @brief Displays a given saved slot tuning and prompts user to accept.
-/// @param slot_num 1-4, the EEPROM tuning save slot to display and possibly load.
-/// @return True if the user loaded the tuning, false if the user rejected it.
-bool view_slot_screen(int slot_num) {
-  int slot;
-  if (slot_num == 1) { slot = EEPROM_SLOT1; };
-  if (slot_num == 2) { slot = EEPROM_SLOT2; };
-  if (slot_num == 3) { slot = EEPROM_SLOT3; };
-  if (slot_num == 4) { slot = EEPROM_SLOT4; };
-
-  String t_str = "";
-  if (EEPROM.read(slot + EEPROM_TPOSE) > 12) { t_str += "+"; };
-  t_str = t_str + ((EEPROM.read(slot + EEPROM_TPOSE))-12);
-
-  String cap_str = "";
-  if (EEPROM.read(slot + EEPROM_CAPO) > 0) { cap_str += "+"; };
-  cap_str = cap_str + (EEPROM.read(slot + EEPROM_CAPO));
-
-  print_tuning("Saved Slot Tuning",
-               getLongNoteNum(EEPROM.read(slot + EEPROM_HI_MEL)),
-               getLongNoteNum(EEPROM.read(slot + EEPROM_LO_MEL)),
-               getLongNoteNum(EEPROM.read(slot + EEPROM_DRONE)),
-               getLongNoteNum(EEPROM.read(slot + EEPROM_TROMP)),
-               t_str, cap_str);
-  delay(150);
-
-  bool done = false;
-  while (!done) {
-
-    // Check the 1 and 2 buttons
-    my1Button->update();
-    my2Button->update();
-    myAButton->update();
-    myXButton->update();
-
-    if (my1Button->wasPressed() || myAButton->wasPressed()) {
-      load_saved_tunings(slot);
-      signal_scene_change(slot_num + 3); // Zero indexed and first 4 are reserved for presets
-      done = true;
-
-    } else if (my2Button->wasPressed() || myXButton->wasPressed()) {
-      return false;
-    };
-  };
-  return true;
-};
-
-/// @brief Displays a given preset tuning slot and prompts user to accept.
-/// @param preset 1-4, the preset tuning slot to display and possibly load.
-/// @return True if the user loaded the tuning, false if the user rejected it.
-bool view_preset_screen(int preset) {
-  const int *tunings;
-  if (preset == 1) { tunings = PRESET1; };
-  if (preset == 2) { tunings = PRESET2; };
-  if (preset == 3) { tunings = PRESET3; };
-  if (preset == 4) { tunings = PRESET4; };
-
-  String t_str = "";
-  if (tunings[5] > 12) { t_str += "+"; };
-  t_str = t_str + tunings[5];
-
-  String cap_str = "";
-  if (tunings[6] > 0) { cap_str += "+"; };
-  cap_str = cap_str + tunings[6];
-
-  print_tuning("Preset Tuning",
-               getLongNoteNum(tunings[0]),
-               getLongNoteNum(tunings[1]),
-               getLongNoteNum(tunings[2]),
-               getLongNoteNum(tunings[3]),
-               t_str, cap_str);
-  delay(150);
-
-  bool done = false;
-  while (!done) {
-
-    // Check the 1 and 2 buttons
-    my1Button->update();
-    my2Button->update();
-    myAButton->update();
-    myXButton->update();
-
-    if (my1Button->wasPressed() || myAButton->wasPressed()) {
-      load_preset_tunings(preset);
-      signal_scene_change(preset - 1); // Zero indexed
-      done = true;
-
-    } else if (my2Button->wasPressed() || myXButton->wasPressed()) {
-      return false;
-    };
-  };
-  return true;
 };
 
 /// @brief Prompts the user to choose a saved tuning slot, and calls view_slot_screen() for that slot.
@@ -755,7 +658,7 @@ void options_screen() {
   bool done = false;
   while (!done) {
 
-    print_menu_4("Options", "Clear EEPROM", "Scene Control", "Secondary Output", "About Digi-Gurdy");
+    print_menu_4("Options", "Reset All Settings", "Scene Control", "Secondary Output", "About Digi-Gurdy");
     delay(150);
 
     // Check the 1 and 2 buttons
@@ -768,10 +671,10 @@ void options_screen() {
 
     if (my1Button->wasPressed()) {
 
-      clear_eeprom();
+      reset_eeprom();
 
-      print_message_2("Clear EEPROM", "EEPROM Cleared,", "(Defaults Reset)");
-      delay(750);
+      print_message_2("Reset All Settings", "All settings reset", "to defaults!");
+      delay(1000);
       done = true;
 
     } else if (my2Button->wasPressed()) {
@@ -1020,9 +923,9 @@ void io_screen() {
     #endif
 
     #ifndef USE_GEARED_CRANK
-    print_menu_3("Input/Output Options", "Secondary Output", opt2, opt3);
+    print_menu_4("Input/Output Options", "Secondary Output", "MIDI Melody Vibrato", opt2, opt3);
     #else
-    print_menu_3("Input/Output Options", "Secondary Output", opt2, opt3);
+    print_menu_4("Input/Output Options", "Secondary Output", "MIDI Melody Vibrato", opt2, opt3);
     #endif
 
     delay(150);
@@ -1031,22 +934,26 @@ void io_screen() {
     my2Button->update();
     my3Button->update();
     my4Button->update();
+    my5Button->update();
     myXButton->update();
 
     if (my1Button->wasPressed()) {
       sec_output_screen();
-        
+
     } else if (my2Button->wasPressed()) {
+      mel_vib_screen();
+    
+    } else if (my3Button->wasPressed()) {
       #ifdef USE_PEDAL
       vib_screen();
       #endif
 
-    } else if (my3Button->wasPressed()) {
+    } else if (my4Button->wasPressed()) {
       #ifdef LED_KNOB
       led_screen();
       #endif
 
-    } else if (my4Button->wasPressed() || myXButton->wasPressed()) {
+    } else if (my5Button->wasPressed() || myXButton->wasPressed()) {
       done = true;
     };
   };
@@ -1075,10 +982,13 @@ void sec_output_screen() {
     if (my1Button->wasPressed()) {
       EEPROM.write(EEPROM_SEC_OUT, 0);
 
+      #ifndef USB_ALWAYS_ON
       usb_power_off();
+      #endif
       MIDI.begin(MIDI_CHANNEL_OMNI);
       delay(100);
 
+      all_clearVolArray();
       mystring->setOutputMode(0);
       mylowstring->setOutputMode(0);
       mytromp->setOutputMode(0);
@@ -1093,6 +1003,7 @@ void sec_output_screen() {
 
     } else if (my2Button->wasPressed()) {
 
+      #ifndef ALLOW_COMBO_MODE
       print_message_2("Secondary Output", "Un-plug any MIDI adapters!", "Press X to Continue");
 
       bool done2= false;
@@ -1105,6 +1016,11 @@ void sec_output_screen() {
           done2 = true;
         };
       };
+      #endif
+
+      draw_xbm(progress[0]);
+      delay(100);
+      draw_xbm(progress[1]);
 
       EEPROM.write(EEPROM_SEC_OUT, 1);
 
@@ -1112,6 +1028,9 @@ void sec_output_screen() {
       trigger_obj.start();
       delay(100);
 
+      draw_xbm(progress[2]);
+
+      all_clearVolArray();
       mystring->setOutputMode(1);
       mylowstring->setOutputMode(1);
       mytromp->setOutputMode(1);
@@ -1119,14 +1038,34 @@ void sec_output_screen() {
       mykeyclick->setOutputMode(1);
       mybuzz->setOutputMode(1);
 
-      print_message_2("Secondary Output", "Audio Socket", "Saved to EEPROM!");
-      delay(750);
+      draw_xbm(progress[3]);
+      mystring->setTrackLoops();
+      draw_xbm(progress[4]);
+      mylowstring->setTrackLoops();
+      draw_xbm(progress[5]);
+      mytromp->setTrackLoops();
+      draw_xbm(progress[6]);
+      mydrone->setTrackLoops();
+      draw_xbm(progress[7]);
+      mybuzz->setTrackLoops();
+      draw_xbm(progress[8]);
+      mykeyclick->setTrackLoops();
+      draw_xbm(progress[9]);
+      delay(400);
+
+      print_message_2("Secondary Output", "Completed! Audio Socket", "Saved to EEPROM!");
+      delay(600);
 
       done = true;
 
     #ifdef ALLOW_COMBO_MODE
       
     } else if (my3Button->wasPressed()) {
+
+      draw_xbm(progress[0]);
+      delay(100);
+      draw_xbm(progress[1]);
+
       EEPROM.write(EEPROM_SEC_OUT, 2);
 
       usb_power_on();
@@ -1134,6 +1073,9 @@ void sec_output_screen() {
       trigger_obj.start();
       delay(100);
 
+      draw_xbm(progress[2]);
+
+      all_clearVolArray();
       mystring->setOutputMode(2);
       mylowstring->setOutputMode(2);
       mytromp->setOutputMode(2);
@@ -1141,8 +1083,23 @@ void sec_output_screen() {
       mykeyclick->setOutputMode(2);
       mybuzz->setOutputMode(2);
 
+      draw_xbm(progress[3]);
+      mystring->setTrackLoops();
+      draw_xbm(progress[4]);
+      mylowstring->setTrackLoops();
+      draw_xbm(progress[5]);
+      mytromp->setTrackLoops();
+      draw_xbm(progress[6]);
+      mydrone->setTrackLoops();
+      draw_xbm(progress[7]);
+      mybuzz->setTrackLoops();
+      draw_xbm(progress[8]);
+      mykeyclick->setTrackLoops();
+      draw_xbm(progress[9]);
+      delay(400);
+
       print_message_2("Secondary Output", "MIDI-OUT + Audio", "Saved to EEPROM!");
-      delay(750);
+      delay(600);
 
       done = true;
 
@@ -1157,6 +1114,50 @@ void sec_output_screen() {
     };
 
     #endif
+  };
+};
+
+/// @brief Prompts user to choose what amount of constant vibrato to send with the melody strings.
+void mel_vib_screen() {
+  bool done = false;
+  int new_vib = mel_vibrato;
+
+  delay(300);
+  while (!done) {
+
+    print_value_selection("Choose Vibrato Amount", new_vib);
+
+    my1Button->update();
+    my2Button->update();
+    myXButton->update();
+
+    if (my1Button->wasPressed()) {
+      if (new_vib > 0) {
+        new_vib -= 1;
+        delay(300);
+      };
+    } else if (my1Button->beingPressed()) {
+      if (new_vib > 0) {
+        new_vib -= 1;
+        delay(100);
+      };
+    } else if (my2Button->wasPressed()) {
+      if (new_vib < 127) {
+        new_vib += 1;
+        delay(300);
+      };
+    } else if (my2Button->beingPressed()) {
+      if (new_vib < 127) {
+        new_vib += 1;
+        delay(100);
+      };
+    } else if (myXButton->wasPressed()) {
+      mel_vibrato = new_vib;
+      EEPROM.write(EEPROM_MEL_VIBRATO, mel_vibrato);
+      print_message_2("Choose Vibrato Amount", "MIDI Melody Vibrato", "Saved to EEPROM");
+      delay(500);
+      done = true;
+    };
   };
 };
 

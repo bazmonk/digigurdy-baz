@@ -23,6 +23,7 @@ var searchData=
   ['f_5f1_20',['f_1',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6cea898150f8b0112f910c51c9a50910009e',1,'notes.h']]],
   ['f_5f1s_21',['f_1s',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6cea6f427aabc11ca5bb742e864575b07a75',1,'notes.h']]],
   ['first_5floop_22',['first_loop',['../digigurdy-baz_8ino.html#a0aafe87552d0b8c2b104d044c40fc1a8',1,'digigurdy-baz.ino']]],
-  ['fn_5fchoice_5fscreen_23',['fn_choice_screen',['../class_ex_button.html#aa8ee43cebc6c2c8a461e7e2cd44f25b2',1,'ExButton']]],
-  ['fn_5fchoice_5fscreen_5f2_24',['fn_choice_screen_2',['../class_ex_button.html#a56b033941efa68e639d8a309b959ac12',1,'ExButton']]]
+  ['fn_5fchoice_5fscreen_23',['fn_choice_screen',['../class_ex_button.html#aff203a45537c97af8acc6f0b08297f0a',1,'ExButton']]],
+  ['fn_5fchoice_5fscreen_5f2_24',['fn_choice_screen_2',['../class_ex_button.html#a01dd28b6e9554db47fe50ef31c3a4cd9',1,'ExButton']]],
+  ['fn_5fchoice_5ftpose_25',['fn_choice_tpose',['../class_ex_button.html#abc2030bf41eada961f5958f7072724d2',1,'ExButton']]]
 ];

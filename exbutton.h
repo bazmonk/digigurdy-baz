@@ -4,18 +4,24 @@
 #include <Arduino.h>
 #include <EEPROM.h>
 
-#include "gurdybutton.h"
+#include "togglebutton.h"
 #include "exfunctions.h"
 #include "display.h"
 #include "eeprom_values.h"
+#include "default_tunings.h"
 //#include "common.h"
 
-class ExButton: public GurdyButton {
+class ExButton: public ToggleButton {
   private:
     int my_func;
+    int eeprom_addr;
+    int eeprom_step_addr;
+    int eeprom_slot_addr;
+    int t_toggle_steps;
+    int slot;
 
   public:
-    ExButton(int my_pin, int func, int interval);
+    ExButton(int my_pin, int interval, int my_addr, int my_step_addr, int my_slot_addr);
 
     int getFunc();
 
@@ -25,9 +31,13 @@ class ExButton: public GurdyButton {
 
     String printFunc();
 
-    void fn_choice_screen(int but_num);
+    bool fn_choice_screen();
 
-    bool fn_choice_screen_2(int but_num);
+    bool fn_choice_actions();
+    bool fn_choice_mutes();
+    bool fn_choice_tpose();
+    bool fn_choice_audio();
+    bool fn_choice_tuning();
 };
 
 #endif

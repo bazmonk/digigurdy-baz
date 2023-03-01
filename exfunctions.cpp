@@ -30,12 +30,22 @@ void cycle_mel_mute() {
       mylowstring->soundOn();
     };
   } else if (mel_mode == 2) {
+    mel_mode = 3; // 3 == high off, low off
+    mystring->setMute(true);
+    mylowstring->setMute(true);
+    if (mystring->isPlaying()) {
+      mylowstring->soundOff();
+      mylowstring->soundOn();
+    };
+  } else if (mel_mode == 3) {
     mel_mode = 0; // 0 == high on, low on
     mystring->setMute(false);
     mylowstring->setMute(false);
     if (mystring->isPlaying()) {
       mystring->soundOff();
       mystring->soundOn();
+      mylowstring->soundOff();
+      mylowstring->soundOn();
     };
   };
   if (mystring->isPlaying()) {
@@ -188,6 +198,232 @@ void ex_tpose_up(bool playing) {
 /// @version *New in  2.3.7*
 void ex_tpose_down(bool playing) {
   tpose_down_1(playing);
+};
+
+/// @brief Toggles the transpose up or down a number of steps
+/// @param playing 
+/// @param toggled 
+/// @version *New in 2.5.7*
+void ex_tpose_toggle(bool playing, int steps) {
+  if (tpose_offset != steps) {
+    tpose_up_x(playing, steps);
+  } else {
+    tpose_up_x(playing, 0);
+  };
+};
+
+/// @brief Cycles through the secondary audio output options
+/// @version *New in 2.9.2*
+void ex_sec_out_toggle() {
+  autocrank_toggle_on = false;
+  all_soundOff();
+  delay(5);
+  all_clearVolArray();
+
+  int cur_mode = EEPROM.read(EEPROM_SEC_OUT);
+
+  if (cur_mode == 0) {
+
+    #ifndef ALLOW_COMBO_MODE
+    print_message_2("Secondary Output", "Un-plug any MIDI adapters!", "Press X to Continue");
+
+    bool done2= false;
+    while (!done2) {
+      delay(150);
+
+      myXButton->update();
+
+      if (myXButton->wasPressed()) {
+        done2 = true;
+      };
+    };
+    #endif
+
+    draw_xbm(progress[0]);
+    delay(100);
+    draw_xbm(progress[1]);
+
+    EEPROM.write(EEPROM_SEC_OUT, 1);
+
+    usb_power_on();
+    trigger_obj.start();
+    delay(100);
+
+    draw_xbm(progress[2]);
+
+    all_clearVolArray();
+    mystring->setOutputMode(1);
+    mylowstring->setOutputMode(1);
+    mytromp->setOutputMode(1);
+    mydrone->setOutputMode(1);
+    mykeyclick->setOutputMode(1);
+    mybuzz->setOutputMode(1);
+
+    draw_xbm(progress[3]);
+    mystring->setTrackLoops();
+    draw_xbm(progress[4]);
+    mylowstring->setTrackLoops();
+    draw_xbm(progress[5]);
+    mytromp->setTrackLoops();
+    draw_xbm(progress[6]);
+    mydrone->setTrackLoops();
+    draw_xbm(progress[7]);
+    mybuzz->setTrackLoops();
+    draw_xbm(progress[8]);
+    mykeyclick->setTrackLoops();
+    draw_xbm(progress[9]);
+    delay(400);
+
+    print_message_2("Secondary Output", "Completed! Audio Socket", "Saved to EEPROM!");
+    delay(1500);
+    print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
+
+  } else if (cur_mode == 1) {
+
+  #ifdef ALLOW_COMBO_MODE 
+    draw_xbm(progress[0]);
+    delay(100);
+    draw_xbm(progress[1]);
+
+    EEPROM.write(EEPROM_SEC_OUT, 2);
+
+    usb_power_on();
+    MIDI.begin(MIDI_CHANNEL_OMNI);
+    trigger_obj.start();
+    delay(100);
+
+    draw_xbm(progress[2]);
+
+    all_clearVolArray();
+    mystring->setOutputMode(2);
+    mylowstring->setOutputMode(2);
+    mytromp->setOutputMode(2);
+    mydrone->setOutputMode(2);
+    mykeyclick->setOutputMode(2);
+    mybuzz->setOutputMode(2);
+
+    draw_xbm(progress[3]);
+    mystring->setTrackLoops();
+    draw_xbm(progress[4]);
+    mylowstring->setTrackLoops();
+    draw_xbm(progress[5]);
+    mytromp->setTrackLoops();
+    draw_xbm(progress[6]);
+    mydrone->setTrackLoops();
+    draw_xbm(progress[7]);
+    mybuzz->setTrackLoops();
+    draw_xbm(progress[8]);
+    mykeyclick->setTrackLoops();
+    draw_xbm(progress[9]);
+    delay(400);
+
+    print_message_2("Secondary Output", "MIDI-OUT + Audio", "Saved to EEPROM!");
+    delay(1500);
+    print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
+
+  } else if (cur_mode == 2) {
+
+  #endif
+    EEPROM.write(EEPROM_SEC_OUT, 0);
+
+    usb_power_off();
+    MIDI.begin(MIDI_CHANNEL_OMNI);
+    delay(100);
+
+    mystring->setOutputMode(0);
+    mylowstring->setOutputMode(0);
+    mytromp->setOutputMode(0);
+    mydrone->setOutputMode(0);
+    mykeyclick->setOutputMode(0);
+    mybuzz->setOutputMode(0);
+    
+    print_message_2("Secondary Output", "MIDI-OUT", "Saved to EEPROM!");
+    delay(1500);
+    print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
+  };
+
+};
+
+/// @brief Toggles mute on the high melody string
+/// @version *New in 2.9.8*
+void ex_cycle_hi_mel_mute() {
+  if (h_mode == 0) {
+    h_mode = 1;
+    mystring->setMute(true);
+    if (mystring->isPlaying()) {
+      mystring->soundOff();
+      mystring->soundOn();
+    };
+  } else if (h_mode == 1) {
+    h_mode = 0;
+    mystring->setMute(false);
+    if (mystring->isPlaying()) {
+      mystring->soundOff();
+      mystring->soundOn();
+    };
+  };
+  if (mystring->isPlaying()) {
+    draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
+  } else {
+    print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
+  };
+};
+
+/// @brief Toggles mute on the low melody string
+/// @version *New in 2.9.8*
+void ex_cycle_lo_mel_mute() {
+  if (l_mode == 0) {
+    l_mode = 1;
+    mylowstring->setMute(true);
+    if (mylowstring->isPlaying()) {
+      mylowstring->soundOff();
+      mylowstring->soundOn();
+    };
+  } else if (l_mode == 1) {
+    l_mode = 0;
+    mylowstring->setMute(false);
+    if (mylowstring->isPlaying()) {
+      mylowstring->soundOff();
+      mylowstring->soundOn();
+    };
+  };
+  if (mystring->isPlaying()) {
+    draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
+  } else {
+    print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
+  };
+};
+
+/// @brief Loads the given preset slot
+/// @param preset_slot 1-4, the slot to load
+/// @version *New in 2.9.8*
+void ex_load_preset(int preset_slot) {
+  autocrank_toggle_on = false;
+  all_soundOff();
+  delay(5);
+  
+  load_preset_tunings(preset_slot);
+
+  print_message_2("Load Preset Tuning", String("Preset ") + preset_slot, "Loaded!");
+  delay(750);
+  print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
+
+};
+
+/// @brief Loads the given save slot
+/// @param save_slot 1-4, the slot to load
+/// @version *New in 2.9.8*
+void ex_load_save_slot(int save_slot) {
+  autocrank_toggle_on = false;
+  all_soundOff();
+  delay(5);
+  
+  load_saved_tunings(save_slot);
+
+  print_message_2("Load Saved Tuning", String("Save slot ") + save_slot, "Loaded!");
+  delay(750);
+  print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
+
 };
 
 /// @}

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['blue_5foled_0',['BLUE_OLED',['../config_8white_8led_8h.html#aabd0795a6e969570c69db607fa48c59c',1,'config.white.led.h']]]
+  ['midi_5fname_0',['MIDI_NAME',['../name_8c.html#acfb86508806c2d3aabbe8f8c2ef9f401',1,'name.c']]],
+  ['midi_5fname_5flen_1',['MIDI_NAME_LEN',['../name_8c.html#a7b129d726ca2eff9f6b5fd035af68834',1,'name.c']]]
 ];

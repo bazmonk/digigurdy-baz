@@ -1,11 +1,11 @@
 var searchData=
 [
   ['max_5fcapo_0',['max_capo',['../common_8h.html#ae1a9962beab12e413192839dda631b98',1,'max_capo():&#160;digigurdy-baz.ino'],['../digigurdy-baz_8ino.html#ae1a9962beab12e413192839dda631b98',1,'max_capo():&#160;digigurdy-baz.ino']]],
-  ['max_5fspin_1',['MAX_SPIN',['../group__gear.html#gac689d2c5743b51dff57eac4aea9adbd2',1,'MAX_SPIN():&#160;config.h'],['../group__gear.html#gac689d2c5743b51dff57eac4aea9adbd2',1,'MAX_SPIN():&#160;config.white.led.h'],['../config_8white_8pedal_8h.html#ac689d2c5743b51dff57eac4aea9adbd2',1,'MAX_SPIN():&#160;config.white.pedal.h']]],
+  ['max_5fspin_1',['MAX_SPIN',['../group__gear.html#gac689d2c5743b51dff57eac4aea9adbd2',1,'config.h']]],
   ['max_5ftpose_2',['max_tpose',['../common_8h.html#a199ace712d63f934d053b0ea2a2074f8',1,'max_tpose():&#160;digigurdy-baz.ino'],['../digigurdy-baz_8ino.html#a199ace712d63f934d053b0ea2a2074f8',1,'max_tpose():&#160;digigurdy-baz.ino']]],
-  ['max_5fwait_5ftime_3',['MAX_WAIT_TIME',['../group__optical.html#ga3058235a747a9d622ede5d86bc3dae3e',1,'MAX_WAIT_TIME():&#160;config.h'],['../group__optical.html#ga3058235a747a9d622ede5d86bc3dae3e',1,'MAX_WAIT_TIME():&#160;config.white.led.h'],['../config_8white_8pedal_8h.html#a3058235a747a9d622ede5d86bc3dae3e',1,'MAX_WAIT_TIME():&#160;config.white.pedal.h']]],
+  ['max_5fwait_5ftime_3',['MAX_WAIT_TIME',['../group__optical.html#ga3058235a747a9d622ede5d86bc3dae3e',1,'config.h']]],
   ['mel_5fmode_4',['mel_mode',['../common_8h.html#a0e07af8c5746ef42caca29e0dd1c7c50',1,'mel_mode():&#160;digigurdy-baz.ino'],['../digigurdy-baz_8ino.html#a0e07af8c5746ef42caca29e0dd1c7c50',1,'mel_mode():&#160;digigurdy-baz.ino']]],
-  ['melody_5fvibrato_5',['MELODY_VIBRATO',['../group__config.html#gacc6f66ced9eb66d374f6ed443a5ebfeb',1,'MELODY_VIBRATO():&#160;config.h'],['../config_8white_8led_8h.html#acc6f66ced9eb66d374f6ed443a5ebfeb',1,'MELODY_VIBRATO():&#160;config.white.led.h'],['../config_8white_8pedal_8h.html#acc6f66ced9eb66d374f6ed443a5ebfeb',1,'MELODY_VIBRATO():&#160;config.white.pedal.h']]],
+  ['mel_5fvibrato_5',['mel_vibrato',['../common_8h.html#ade100eefbe0d89a7b0a9efecae213fd9',1,'mel_vibrato():&#160;digigurdy-baz.ino'],['../digigurdy-baz_8ino.html#ade100eefbe0d89a7b0a9efecae213fd9',1,'mel_vibrato():&#160;digigurdy-baz.ino']]],
   ['midi_6',['MIDI',['../gurdystring_8h.html#a2a8837fc198c535dcef0f0508717c31c',1,'gurdystring.h']]],
   ['my1button_7',['my1Button',['../common_8h.html#a8f381e9bf3f1de8ea1be2ef96b77dc47',1,'my1Button():&#160;digigurdy-baz.ino'],['../digigurdy-baz_8ino.html#a8f381e9bf3f1de8ea1be2ef96b77dc47',1,'my1Button():&#160;digigurdy-baz.ino']]],
   ['my2button_8',['my2Button',['../common_8h.html#a49b3a111da34df37bf239546a55e0a42',1,'my2Button():&#160;digigurdy-baz.ino'],['../digigurdy-baz_8ino.html#a49b3a111da34df37bf239546a55e0a42',1,'my2Button():&#160;digigurdy-baz.ino']]],

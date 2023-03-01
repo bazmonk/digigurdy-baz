@@ -3,15 +3,15 @@
 
 #include <Arduino.h>
 
-const String VERSION = "2.4.0";
-const String REL_DATE = "2023-01-07, v" + VERSION;
+const String VERSION = "3.0.0";
+const String REL_DATE = "2023-03-01, v" + VERSION;
 
 /// @defgroup config Configuration Options
 /// These variables/definitions are compile-time configuration options.
 /// @{
 
 /// @brief This is a freeform line displayed on the About screen
-const String EXTRA_LINE = " Production Build ";
+const String EXTRA_LINE = "   ";
 //const String EXTRA_LINE = "      3.5 TEST       ";
 //const String EXTRA_LINE = " MIDI-OUT, LED, SWSPI";
 //const String EXTRA_LINE = " TRIGGER - LED KNOB  ";
@@ -33,6 +33,9 @@ const String EXTRA_LINE = " Production Build ";
   /// @brief Enables geared-crank support.
   /// @details Disable for optical-crank support
   #define USE_GEARED_CRANK
+  /// @brief Enabled incremental encoder support.
+  /// @degails Disable for optical-crank support
+  #define USE_ENCODER
   /// @brief Enables an LED buzz indicator on LED_PIN.
   #define LED_KNOB
   /// @brief Enables the accessory/vibrato pedal on PEDAL_PIN.
@@ -40,27 +43,28 @@ const String EXTRA_LINE = " Production Build ";
   /// @brief Setting this option allows both MIDI-OUT and Trigger/Tsunami use simultaneously.
   /// @details Set this only if the MIDI-OUT and Trigger/Tsunami Tx pins are different!
   #define ALLOW_COMBO_MODE
-  /// @brief Setting this option disables USBHost power control.
-  #define USE_TEENSY35
-  /// @brief Setting this uses 3.6-style USBHost power control (default is 4.x-style).
-  #define USE_TEENSY36
+  /// @brief Setting this option enables EX pins 7-10, and SPI2 display.
+  /// @details meant for rev4 boards.
+  #define REV4_MODE
 #endif
 
-// #define USE_TEENSY35
-// #define USE_TEENSY36
-
 // One of these OLED options must be enabled.
-#define WHITE_OLED
-//#define BLUE_OLED
+//#define WHITE_OLED
+#define BLUE_OLED
 
 //#define USE_GEARED_CRANK
+
+#define USE_ENCODER
 
 // Only one of these should be defined.
 #define USE_TRIGGER
 //#define USE_TSUNAMI
 
-//#define ALLOW_COMBO_MODE
+#define ALLOW_COMBO_MODE
 //#define BAZ_MODE
+//#define USB_ALWAYS_ON
+
+#define REV4_MODE
 
 /// @brief The audio output channel used by the Tsunami unit.
 /// @details 0 == 1L, 1 == 1R, etc.
@@ -70,20 +74,20 @@ const int TSUNAMI_OUT = 0;
 #define __TSUNAMI_USE_SERIAL1__
 
 /// @brief The Serial port to use on the Teensy unit for the Trigger.
-#define __WT_USE_SERIAL1__
-//#define __WT_USE_SERIAL5__
+//#define __WT_USE_SERIAL1__
+#define __WT_USE_SERIAL5__
 
 
-//#define LED_KNOB
+#define LED_KNOB
 
 /// @brief Pin used for the LED buzz indicator, if LED_KNOB is enabled.
-const int LED_PIN = 40;
+const int LED_PIN = 13;
 
 
-#define USE_PEDAL
+//#define USE_PEDAL
 
 /// @brief Pin used for the accessory pedal, if USE_PEDAL is enabled.
-const int PEDAL_PIN = 40;
+const int PEDAL_PIN = 38;
 
 /// @brief The max voltage reported by the accessory pedal.
 /// @details 
@@ -91,14 +95,6 @@ const int PEDAL_PIN = 40;
 /// * Value need not be exact
 /// * Value is on a 0-1023 scale: 1023 = 3.3V
 const float PEDAL_MAX_V = 658.0;
-
-
-/// @brief Amount of modulation to apply to the melody strings.
-/// @details
-/// * Meant to give a slight vibrato effect
-/// * Intensity 0 = no modulation, 127 = full modulation
-/// * Actual modulation behavior is controlled by the MIDI sampler/synthesizer.  This only controls the intensity of it.
-const int MELODY_VIBRATO = 16;
 
 /// @}
 
@@ -108,48 +104,28 @@ const int MELODY_VIBRATO = 16;
 
 /// @ingroup optical
 /// @brief The crank speed in RPMs at which expression volume will max out.
-const float EXPRESSION_VMAX = 120.0;
+const float EXPRESSION_VMAX = 5.0;
 
 /// @ingroup optical
 /// @brief The minimum expression volume.
 /// @details
 /// * Expression (MIDI CC11) value will be at least this much.
 /// * Silent = 0, Max = 127 
-const int EXPRESSION_START = 90;
+const int EXPRESSION_START = 30;
 
 /// @ingroup optical
 /// @brief The number of "spokes" on the optical crank wheel.
 /// @details * This is the number of black/blocking bars on the wheel, not the number of transitions.
+/// @details * For rotary encoders, this is half of the pulses per rotation.
+#ifdef USE_ENCODER
+const int NUM_SPOKES = 1200;
+#else
 const int NUM_SPOKES = 80;
+#endif
 
 /// @ingroup optical
 /// @brief The crank speed at which sound begins to play in RPMs.
-const float V_THRESHOLD = 5.5;
-
-/// @ingroup optical
-/// @brief The delay between crank samples in microseconds.
-/// @details
-/// * Code will cycle though at least this long between samples.
-/// * This is not how long the code waits for movement, just how often it checks.
-const int SAMPLE_RATE = 100;
-
-/// @ingroup optical
-/// @brief The maximum amount of time in microseconds to wait for crank movement.
-/// @details * The actual wait time changes dynamically, but will not exceed this value.
-const int MAX_WAIT_TIME = 40000;
-
-/// @ingroup optical
-/// @brief The multiplier applied to the velocity when no movement is detected.
-/// @details * Smaller values cause sound to cut out more quickly once crank motion stop.
-const float DECAY_FACTOR = 0.00;
-
-// This is how long in milliseconds to buzz *at least* once it starts.
-/// @ingroup optical
-/// @brief The minimum duration of buzz sounds.
-/// @details 
-/// * Increase this if buzzing feels too "jittery" or rapid.
-/// * Decrease if buzzing feels sluggish or unresponsive.
-const int BUZZ_MIN = 100;
+const float V_THRESHOLD = 2.0;
 
 
 /// @defgroup gear Gear-Motor Crank Configuration Variables
@@ -227,8 +203,13 @@ const int BUZZ_DECAY = 1;
 /// * index 0 is unused and would theoretically not affect the note being played.
 /// * index 1 raises the note played by 1 semitone, index 2 by 2 semitones, etc.
 /// * pin_array can be extended or shortened for larger/smaller keyboxes
+#ifdef REV4_MODE
+const int pin_array[] = {-1, 2, 24, 3, 25, 26, 4, 27, 5, 28, 29, 6, 30,
+                   7, 31, 8, 32, 33, 11, 34, 10, 35, 36, 9, 37};
+#else
 const int pin_array[] = {-1, 2, 24, 3, 25, 26, 4, 27, 5, 28, 29, 6, 30,
                    7, 31, 8, 32, 33, 18, 34, 19, 35, 36, 20, 37};
+#endif
 
 // This is literally just the size of the above array minus one.  I need this as a const to
 // declare the KeyboxButton array later on... or I just don't know enough C++ to know how to
@@ -294,12 +275,39 @@ const int TPOSE_DN_INDEX = num_keys - 3;
 /// @warning If using a geared crank, this pin must be analog-capable.
 const int CRANK_PIN = 15;
 
+/// @brief The second sensor pin for encoder.
+const int CRANK_PIN2 = 38;
+
 /// @brief The analog pin running to the buzz potentiometer/knob.
-const int BUZZ_PIN = A2;
+/// @warning This pin must be analog-capable.
+const int BUZZ_PIN = 16;
 
 /// @brief The pin running to the arcade, "auto-crank" button.
 const int BIG_BUTTON_PIN = 39;
 
+#ifdef REV4_MODE
+/// @brief The pin to the EX1 button.
+const int EX1_PIN = 19;
+/// @brief The pin to the EX2 button.
+const int EX2_PIN = 50;
+/// @brief The pin to the EX3 button.
+const int EX3_PIN = 12;
+/// @brief The pin to the EX4 button.
+const int EX4_PIN = 41;
+/// @brief The pin to the EX5 button.
+const int EX5_PIN = 40;
+/// @brief The pin to the EX6 button.
+const int EX6_PIN = 17;
+/// @brief The pin to the EX7 button.
+const int EX7_PIN = 14;
+/// @brief The pin to the EX8 button.
+const int EX8_PIN = 18;
+/// @brief The pin to the EX9 button.
+const int EX9_PIN = 22;
+/// @brief The pin to the EX10 button.
+const int EX10_PIN = 23;
+
+#else
 /// @brief The pin to the EX1 button.
 const int EX1_PIN = 41;
 /// @brief The pin to the EX2 button.
@@ -312,6 +320,7 @@ const int EX4_PIN = 21;
 const int EX5_PIN = 22;
 /// @brief The pin to the EX6 button.
 const int EX6_PIN = 23;
+#endif
 
 /// @}
 #endif

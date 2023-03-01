@@ -3,11 +3,11 @@
 
 #include "config.h"
 
-#if !defined(USE_TEENSY35) && !defined(USE_TEENSY36)
+#ifdef ARDUINO_TEENSY41
 #include <imxrt.h>
 #endif
 
-#ifdef USE_TEENSY36
+#ifdef ARDUINO_TEENSY36
 #include <kinetis.h>
 #endif
 

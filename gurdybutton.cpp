@@ -6,12 +6,9 @@
 /// @details This class assumes the button is wired up as an active-low button.  It applies the internal pullup resistor.
 GurdyButton::GurdyButton(int my_pin, int interval) {
 
-  bounce_obj = new Bounce(my_pin, interval);
-
-  // In John's code the non-keybox buttons weren't using Bounce.
-  // I'm taking a guess that INPUT_PULLUP is what I want to use here but I think so.
-  // Originally it was using DirectRead/Write and INPUT.
   pinMode(my_pin, INPUT_PULLUP);
+
+  bounce_obj = new Bounce(my_pin, interval);
 
   being_pressed = false;
 };

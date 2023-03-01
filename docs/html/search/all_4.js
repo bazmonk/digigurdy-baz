@@ -23,7 +23,7 @@ var searchData=
   ['d_5f1_20',['d_1',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6cea8a95a629913693953085b1c4c4ae4ee2',1,'notes.h']]],
   ['d_5f1s_21',['d_1s',['../notes_8h.html#a133274d390ac226cb82aa9d32b98d6cea3a3f209206c9efe7386d346ea3e4dd35',1,'notes.h']]],
   ['d_5fmode_22',['d_mode',['../digigurdy-baz_8ino.html#a0b69b55a5bf038722cb39d32929c40f3',1,'d_mode():&#160;digigurdy-baz.ino'],['../common_8h.html#a0b69b55a5bf038722cb39d32929c40f3',1,'d_mode():&#160;digigurdy-baz.ino']]],
-  ['decay_5ffactor_23',['DECAY_FACTOR',['../config_8white_8pedal_8h.html#ad2a7efecb656d9f3bc43751269d4dc24',1,'DECAY_FACTOR():&#160;config.white.pedal.h'],['../group__optical.html#gad2a7efecb656d9f3bc43751269d4dc24',1,'DECAY_FACTOR():&#160;config.white.led.h'],['../group__optical.html#gad2a7efecb656d9f3bc43751269d4dc24',1,'DECAY_FACTOR():&#160;config.h']]],
+  ['decay_5ffactor_23',['DECAY_FACTOR',['../group__optical.html#gad2a7efecb656d9f3bc43751269d4dc24',1,'config.h']]],
   ['default_5ftunings_2eh_24',['default_tunings.h',['../default__tunings_8h.html',1,'']]],
   ['detect_25',['detect',['../class_gear_crank.html#af2a3ac44e4190cfadea96a63faf4d38a',1,'GearCrank']]],
   ['digigurdy_2dbaz_26',['digigurdy-baz',['../index.html',1,'']]],

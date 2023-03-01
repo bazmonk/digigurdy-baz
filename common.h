@@ -56,8 +56,6 @@ extern GurdyButton *tpose_up;
 extern GurdyButton *tpose_down;
 extern GurdyButton *capo;
 
-extern ToggleButton *bigbutton;
-
 // This defines the +/- one octave transpose range.
 extern int max_tpose;
 extern int tpose_offset;
@@ -71,11 +69,17 @@ extern int mel_mode;
 
 extern int d_mode;
 extern int t_mode;
+extern int h_mode;
+extern int l_mode;
 
 extern int play_screen_type;
 extern uint8_t scene_signal_type;
 extern bool gc_or_dg;
 
 extern int myoffset;
+
+extern bool autocrank_toggle_on;
+
+extern int mel_vibrato;
 
 #endif

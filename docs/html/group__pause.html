@@ -110,9 +110,12 @@ Functions</h2></td></tr>
 <tr class="memitem:ga68fb76fb664d3fe3aa90ca914eb009f6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__pause.html#ga68fb76fb664d3fe3aa90ca914eb009f6">save_tunings</a> (int slot)</td></tr>
 <tr class="memdesc:ga68fb76fb664d3fe3aa90ca914eb009f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves the current tuning/volume to the given save slot.  <a href="group__pause.html#ga68fb76fb664d3fe3aa90ca914eb009f6">More...</a><br /></td></tr>
 <tr class="separator:ga68fb76fb664d3fe3aa90ca914eb009f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9e02466fbd55b6e7e78b9826d3cd6d38"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__pause.html#ga9e02466fbd55b6e7e78b9826d3cd6d38">clear_eeprom</a> ()</td></tr>
-<tr class="memdesc:ga9e02466fbd55b6e7e78b9826d3cd6d38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the EEPROM and sets some default values in it.  <a href="group__pause.html#ga9e02466fbd55b6e7e78b9826d3cd6d38">More...</a><br /></td></tr>
-<tr class="separator:ga9e02466fbd55b6e7e78b9826d3cd6d38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1fba6c6ad829d3949a684267d60ee579"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__pause.html#ga1fba6c6ad829d3949a684267d60ee579">reset_ex_eeprom</a> ()</td></tr>
+<tr class="memdesc:ga1fba6c6ad829d3949a684267d60ee579"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets EX EEPROM values to their defaults.  <a href="group__pause.html#ga1fba6c6ad829d3949a684267d60ee579">More...</a><br /></td></tr>
+<tr class="separator:ga1fba6c6ad829d3949a684267d60ee579"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac2da7f5f193a840c4500132e675f2f65"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__pause.html#gac2da7f5f193a840c4500132e675f2f65">reset_eeprom</a> ()</td></tr>
+<tr class="memdesc:gac2da7f5f193a840c4500132e675f2f65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the EEPROM and sets some default values in it.  <a href="group__pause.html#gac2da7f5f193a840c4500132e675f2f65">More...</a><br /></td></tr>
+<tr class="separator:gac2da7f5f193a840c4500132e675f2f65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga935a701641be4cd0bd25466f0fd193a3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__pause.html#ga935a701641be4cd0bd25466f0fd193a3">view_slot_screen</a> (int slot_num)</td></tr>
 <tr class="memdesc:ga935a701641be4cd0bd25466f0fd193a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Displays a given saved slot tuning and prompts user to accept.  <a href="group__pause.html#ga935a701641be4cd0bd25466f0fd193a3">More...</a><br /></td></tr>
 <tr class="separator:ga935a701641be4cd0bd25466f0fd193a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -155,6 +158,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ga8b4f15fa3adc406d21f23dba653f5819"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__pause.html#ga8b4f15fa3adc406d21f23dba653f5819">sec_output_screen</a> ()</td></tr>
 <tr class="memdesc:ga8b4f15fa3adc406d21f23dba653f5819"><td class="mdescLeft">&#160;</td><td class="mdescRight">Promts user to choose the secondary output (primary output is usbMIDI)  <a href="group__pause.html#ga8b4f15fa3adc406d21f23dba653f5819">More...</a><br /></td></tr>
 <tr class="separator:ga8b4f15fa3adc406d21f23dba653f5819"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaab8b8fc21cdb6b364836274ec75e07b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__pause.html#gaab8b8fc21cdb6b364836274ec75e07b5">mel_vib_screen</a> ()</td></tr>
+<tr class="memdesc:gaab8b8fc21cdb6b364836274ec75e07b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prompts user to choose what amount of constant vibrato to send with the melody strings.  <a href="group__pause.html#gaab8b8fc21cdb6b364836274ec75e07b5">More...</a><br /></td></tr>
+<tr class="separator:gaab8b8fc21cdb6b364836274ec75e07b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p >These are the menu screens which don't have to do with tuning. </p>
@@ -183,26 +189,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if slot is empty or user wants to overwrite it, false otherwise </dd></dl>
-
-</div>
-</div>
-<a id="ga9e02466fbd55b6e7e78b9826d3cd6d38" name="ga9e02466fbd55b6e7e78b9826d3cd6d38"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga9e02466fbd55b6e7e78b9826d3cd6d38">&#9670;&#160;</a></span>clear_eeprom()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void clear_eeprom </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Clears the EEPROM and sets some default values in it. </p>
-<dl class="section note"><dt>Note</dt><dd>Most values set to zero, but LED and EX values have non-zero defaults also set here. </dd></dl>
 
 </div>
 </div>
@@ -377,6 +363,25 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="gaab8b8fc21cdb6b364836274ec75e07b5" name="gaab8b8fc21cdb6b364836274ec75e07b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaab8b8fc21cdb6b364836274ec75e07b5">&#9670;&#160;</a></span>mel_vib_screen()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void mel_vib_screen </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Prompts user to choose what amount of constant vibrato to send with the melody strings. </p>
+
+</div>
+</div>
 <a id="ga18fc5642672f8f2392c73a1b546ab85d" name="ga18fc5642672f8f2392c73a1b546ab85d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga18fc5642672f8f2392c73a1b546ab85d">&#9670;&#160;</a></span>notation_config_screen()</h2>
 
@@ -508,6 +513,45 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Prompts user to choose which play screen to use. </p>
+
+</div>
+</div>
+<a id="gac2da7f5f193a840c4500132e675f2f65" name="gac2da7f5f193a840c4500132e675f2f65"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac2da7f5f193a840c4500132e675f2f65">&#9670;&#160;</a></span>reset_eeprom()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reset_eeprom </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Clears the EEPROM and sets some default values in it. </p>
+<dl class="section note"><dt>Note</dt><dd>Most values set to zero, but LED and EX values have non-zero defaults also set here. </dd></dl>
+
+</div>
+</div>
+<a id="ga1fba6c6ad829d3949a684267d60ee579" name="ga1fba6c6ad829d3949a684267d60ee579"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1fba6c6ad829d3949a684267d60ee579">&#9670;&#160;</a></span>reset_ex_eeprom()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reset_ex_eeprom </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Resets EX EEPROM values to their defaults. </p>
 
 </div>
 </div>

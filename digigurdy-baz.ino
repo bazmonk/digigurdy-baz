@@ -23,7 +23,6 @@
 #endif
 
 #include "hurdygurdy.h"
-#include "togglebutton.h"
 #include "vibknob.h"
 
 // These are all about the display
@@ -33,7 +32,8 @@
 #include "pause_screens.h"   // The pause screen menus
 
 // As far as I can tell, this *has* to be done here or else you get spooooky runtime problems.
-MIDI_CREATE_DEFAULT_INSTANCE();
+//MIDI_CREATE_DEFAULT_INSTANCE();
+MIDI_CREATE_INSTANCE(HardwareSerial, Serial1, MIDI);
 
 #ifdef USE_TRIGGER
   wavTrigger  trigger_obj;
@@ -52,12 +52,16 @@ ADC* adc;
 
 // Declare the "keybox" and buttons.
 HurdyGurdy *mygurdy;
-ToggleButton *bigbutton;
+ExButton *bigButton;
 
 #ifdef USE_GEARED_CRANK
   GearCrank *mycrank;
 #else
   GurdyCrank *mycrank;
+  volatile int num_events = 0;
+  volatile int last_event = 0;
+  elapsedMicros last_event_timer;
+  elapsedMicros debounce_timer;
 #endif
 
 VibKnob *myvibknob;
@@ -101,6 +105,14 @@ ExButton *ex4Button;
 ExButton *ex5Button;
 ExButton *ex6Button;
 
+#ifdef REV4_MODE
+
+ExButton *ex7Button;
+ExButton *ex8Button;
+ExButton *ex9Button;
+ExButton *ex10Button;
+#endif
+
 // This defines the +/- one octave transpose range.
 int max_tpose;
 int tpose_offset;
@@ -129,6 +141,10 @@ int mel_mode;
 
 int d_mode;
 int t_mode;
+int h_mode;
+int l_mode;
+
+int mel_vibrato;
 
 int play_screen_type;
 uint8_t scene_signal_type;
@@ -136,6 +152,8 @@ uint8_t scene_signal_type;
 bool gc_or_dg;
 
 int use_solfege;
+
+bool autocrank_toggle_on = false;
 
 /// @brief The main setup function.
 /// @details Arduinio/Teensy sketches run this function once upon startup.
@@ -160,6 +178,7 @@ void setup() {
   // The usbMIDI object is available by Teensyduino magic that I don't know about.
   if (EEPROM.read(EEPROM_SEC_OUT) != 1) {
     MIDI.begin(MIDI_CHANNEL_OMNI);
+    MIDI.setInputChannel(MIDI_CHANNEL_OMNI);
   }
   
   #if defined(USE_TRIGGER)
@@ -207,7 +226,11 @@ void setup() {
     };
 
   #else
-    mycrank = new GurdyCrank(CRANK_PIN, BUZZ_PIN, LED_PIN);
+    #ifdef USE_ENCODER
+      mycrank = new GurdyCrank(CRANK_PIN, CRANK_PIN2, BUZZ_PIN, LED_PIN);
+    #else
+      mycrank = new GurdyCrank(CRANK_PIN, BUZZ_PIN, LED_PIN);
+    #endif
   #endif
 
   #ifdef USE_PEDAL
@@ -217,7 +240,6 @@ void setup() {
   // The keybox arrangement is decided by pin_array, which is up in the CONFIG SECTION
   // of this file.  Make adjustments there.
   mygurdy = new HurdyGurdy(pin_array, num_keys);
-  bigbutton = new ToggleButton(BIG_BUTTON_PIN, 250);
 
   // These indices are defined in config.h
   myXButton = mygurdy->keybox[X_INDEX];
@@ -243,11 +265,16 @@ void setup() {
   // be a working tuning.
 
   // Turn on the power if we're using it.
+  #ifdef USB_ALWAYS_ON
+  usb_power_on();
+  delay(100);
+  #else
   if (EEPROM.read(EEPROM_SEC_OUT) > 0) {
     usb_power_on();
     delay(100);
   };
-
+  #endif
+  
   mystring = new GurdyString(1, Note(g4), "Hi Melody", EEPROM.read(EEPROM_SEC_OUT));
   mylowstring = new GurdyString(2, Note(g3), "Low Melody", EEPROM.read(EEPROM_SEC_OUT));
   mytromp = new GurdyString(3, Note(c3), "Trompette", EEPROM.read(EEPROM_SEC_OUT));
@@ -255,15 +282,33 @@ void setup() {
   mybuzz = new GurdyString(5,Note(c3), "Buzz", EEPROM.read(EEPROM_SEC_OUT));
   mykeyclick = new GurdyString(6, Note(b5), "Key Click", EEPROM.read(EEPROM_SEC_OUT));
 
+  if (EEPROM.read(EEPROM_SEC_OUT) > 0) {
+    mystring->setTrackLoops();
+    mylowstring->setTrackLoops();
+    mytromp->setTrackLoops();
+    mydrone->setTrackLoops();
+    mybuzz->setTrackLoops();
+    mykeyclick->setTrackLoops();
+  };
+ 
   tpose_offset = 0;
   capo_offset = 0;
 
-  ex1Button = new ExButton(41, EEPROM.read(EEPROM_EX1), 200);
-  ex2Button = new ExButton(17, EEPROM.read(EEPROM_EX2), 200);
-  ex3Button = new ExButton(14, EEPROM.read(EEPROM_EX3), 200);
-  ex4Button = new ExButton(21, EEPROM.read(EEPROM_EX4), 200);
-  ex5Button = new ExButton(22, EEPROM.read(EEPROM_EX5), 200);
-  ex6Button = new ExButton(23, EEPROM.read(EEPROM_EX6), 200);
+  ex1Button = new ExButton(EX1_PIN, 200, EEPROM_EX1, EEPROM_EX1_TSTEP, EEPROM_EX1_SLOT);
+  ex2Button = new ExButton(EX2_PIN, 200, EEPROM_EX2, EEPROM_EX2_TSTEP, EEPROM_EX2_SLOT);
+  ex3Button = new ExButton(EX3_PIN, 200, EEPROM_EX3, EEPROM_EX3_TSTEP, EEPROM_EX3_SLOT);
+  ex4Button = new ExButton(EX4_PIN, 200, EEPROM_EX4, EEPROM_EX4_TSTEP, EEPROM_EX4_SLOT);
+  ex5Button = new ExButton(EX5_PIN, 200, EEPROM_EX5, EEPROM_EX5_TSTEP, EEPROM_EX5_SLOT);
+  ex6Button = new ExButton(EX6_PIN, 200, EEPROM_EX6, EEPROM_EX6_TSTEP, EEPROM_EX6_SLOT);
+
+  #ifdef REV4_MODE
+  ex7Button = new ExButton(EX7_PIN, 200, EEPROM_EX7, EEPROM_EX7_TSTEP, EEPROM_EX7_SLOT);
+  ex8Button = new ExButton(EX8_PIN, 200, EEPROM_EX8, EEPROM_EX8_TSTEP, EEPROM_EX8_SLOT);
+  ex9Button = new ExButton(EX9_PIN, 200, EEPROM_EX9, EEPROM_EX9_TSTEP, EEPROM_EX9_SLOT);
+  ex10Button = new ExButton(EX10_PIN, 200, EEPROM_EX10, EEPROM_EX10_TSTEP, EEPROM_EX10_SLOT);
+  #endif
+
+  bigButton = new ExButton(BIG_BUTTON_PIN, 250, EEPROM_EXBB, EEPROM_EXBB_TSTEP, EEPROM_EXBB_SLOT);
 
   scene_signal_type = EEPROM.read(EEPROM_SCENE_SIGNALLING);
 
@@ -273,6 +318,8 @@ void setup() {
 
   d_mode = 0;
   t_mode = 0;
+  h_mode = 0;
+  l_mode = 0;
 
   play_screen_type = 0;
   scene_signal_type = 0;
@@ -281,6 +328,8 @@ void setup() {
   max_capo = 4;
 
   use_solfege = EEPROM.read(EEPROM_USE_SOLFEGE);
+
+  mel_vibrato = EEPROM.read(EEPROM_MEL_VIBRATO);
 };
 
 //
@@ -318,7 +367,18 @@ void loop() {
     ex5Button->setFunc(EEPROM.read(EEPROM_EX5));
     ex6Button->setFunc(EEPROM.read(EEPROM_EX6));
 
+    #ifdef REV4_MODE
+    ex7Button->setFunc(EEPROM.read(EEPROM_EX7));
+    ex8Button->setFunc(EEPROM.read(EEPROM_EX8));
+    ex9Button->setFunc(EEPROM.read(EEPROM_EX9));
+    ex10Button->setFunc(EEPROM.read(EEPROM_EX10));
+    #endif
+
+    bigButton->setFunc(EEPROM.read(EEPROM_EXBB));
+
     use_solfege = EEPROM.read(EEPROM_USE_SOLFEGE);
+
+    mel_vibrato = EEPROM.read(EEPROM_MEL_VIBRATO);
 
     // LED may have been reset, too... thanks John!
     if (EEPROM.read(EEPROM_BUZZ_LED) == 1) {
@@ -339,7 +399,6 @@ void loop() {
 
   // Update the keys, buttons, and crank status (which includes the buzz knob)
   myoffset = mygurdy->getMaxOffset();  // This covers the keybox buttons.
-  bigbutton->update();
   mycrank->update();
 
   #ifdef USE_PEDAL
@@ -354,37 +413,55 @@ void loop() {
   ex2Button->update();
   ex3Button->update();
   #endif
+  bigButton->update();
   ex4Button->update();
   ex5Button->update();
   ex6Button->update();
 
+  #ifdef REV4_MODE
+  ex7Button->update();
+  ex8Button->update();
+  ex9Button->update();
+  ex10Button->update();
+  #endif
+
   bool go_menu = false;
 
+  // Check if any pause manu EX buttons were pressed.
   #ifdef USE_GEARED_CRANK
-  if ((ex4Button->wasPressed() && ex4Button->getFunc() == 1) ||
-      (ex5Button->wasPressed() && ex5Button->getFunc() == 1) ||
-      (ex6Button->wasPressed() && ex6Button->getFunc() == 1)) {
-    go_menu = true;
-  }
-  #else
-  if ((ex1Button->wasPressed() && ex1Button->getFunc() == 1) ||
-      (ex2Button->wasPressed() && ex2Button->getFunc() == 1) ||
-      (ex3Button->wasPressed() && ex3Button->getFunc() == 1) ||
+  if ((bigButton->wasPressed() && bigButton->getFunc() == 1) ||
       (ex4Button->wasPressed() && ex4Button->getFunc() == 1) ||
       (ex5Button->wasPressed() && ex5Button->getFunc() == 1) ||
       (ex6Button->wasPressed() && ex6Button->getFunc() == 1)) {
     go_menu = true;
   }
+  #else
+  if (
+      (ex1Button->wasPressed() && ex1Button->getFunc() == 1) ||
+      (ex2Button->wasPressed() && ex2Button->getFunc() == 1) ||
+      (ex3Button->wasPressed() && ex3Button->getFunc() == 1) ||
+      (ex4Button->wasPressed() && ex4Button->getFunc() == 1) ||
+      (ex5Button->wasPressed() && ex5Button->getFunc() == 1) ||
+      (ex6Button->wasPressed() && ex6Button->getFunc() == 1) ||
+
+      #ifdef REV4_MODE
+      (ex7Button->wasPressed() && ex7Button->getFunc() == 1) ||
+      (ex8Button->wasPressed() && ex8Button->getFunc() == 1) ||
+      (ex9Button->wasPressed() && ex9Button->getFunc() == 1) ||
+      (ex10Button->wasPressed() && ex10Button->getFunc() == 1) ||
+      #endif
+
+      (bigButton->wasPressed() && bigButton->getFunc() == 1)) {
+    go_menu = true;
+  }
   #endif
+
   // If the "X" and "O" buttons are both down, or if the first extra button is pressed,
   // trigger the tuning menu
   if ((myAButton->beingPressed() && myXButton->beingPressed()) || go_menu) {
 
     // Turn off the sound :-)
     all_soundOff();
-
-    // If I don't do this, it comes on afterwards.
-    bigbutton->setToggle(false);
 
     pause_screen();
     print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
@@ -398,31 +475,103 @@ void loop() {
     vol_down();
   };
 
+  bool any_newly_pressed = false;
+  bool any_newly_released = false;
+
+  // Check if any autocrank EX buttons were pressed
   #ifndef USE_GEARED_CRANK
-  if (ex1Button->wasPressed()) {
-    ex1Button->doFunc(mycrank->isSpinning() || bigbutton->toggleOn());
-  };
-
-  if (ex2Button->wasPressed()) {
-    ex2Button->doFunc(mycrank->isSpinning() || bigbutton->toggleOn());
-  };
-
-  if (ex3Button->wasPressed()) {
-    ex3Button->doFunc(mycrank->isSpinning() || bigbutton->toggleOn());
-  };
+  if (ex1Button->getFunc() == 11 && ex1Button->wasPressed()) { 
+    autocrank_toggle_on = !autocrank_toggle_on;
+    any_newly_pressed = true;
+  } else if (ex2Button->getFunc() == 11 && ex2Button->wasPressed()) { 
+    autocrank_toggle_on = !autocrank_toggle_on;
+    any_newly_pressed = true;
+  } else if (ex3Button->getFunc() == 11 && ex3Button->wasPressed()) { 
+    autocrank_toggle_on = !autocrank_toggle_on;
+    any_newly_pressed = true;
+  } else
   #endif
-  
-  if (ex4Button->wasPressed()) {
-    ex4Button->doFunc(mycrank->isSpinning() || bigbutton->toggleOn());
+
+  if (bigButton->getFunc() == 11 && bigButton->wasPressed()) { 
+    autocrank_toggle_on = !autocrank_toggle_on;
+    any_newly_pressed = true;
+  } else if (ex4Button->getFunc() == 11 && ex4Button->wasPressed()) { 
+    autocrank_toggle_on = !autocrank_toggle_on;
+    any_newly_pressed = true;
+  } else if (ex5Button->getFunc() == 11 && ex5Button->wasPressed()) { 
+    autocrank_toggle_on = !autocrank_toggle_on;
+    any_newly_pressed = true;
+  } else if (ex6Button->getFunc() == 11 && ex6Button->wasPressed()) { 
+    autocrank_toggle_on = !autocrank_toggle_on;
+    any_newly_pressed = true;
+
+  #ifdef REV4_MODE
+  } else if (ex7Button->getFunc() == 11 && ex7Button->wasPressed()) { 
+    autocrank_toggle_on = !autocrank_toggle_on;
+    any_newly_pressed = true;
+  } else if (ex8Button->getFunc() == 11 && ex8Button->wasPressed()) { 
+    autocrank_toggle_on = !autocrank_toggle_on;
+    any_newly_pressed = true;
+  } else if (ex9Button->getFunc() == 11 && ex9Button->wasPressed()) { 
+    autocrank_toggle_on = !autocrank_toggle_on;
+    any_newly_pressed = true;
+  } else if (ex10Button->getFunc() == 11 && ex10Button->wasPressed()) { 
+    autocrank_toggle_on = !autocrank_toggle_on;
+    any_newly_pressed = true;
+  #endif
   };
 
-  if (ex5Button->wasPressed()) {
-    ex5Button->doFunc(mycrank->isSpinning() || bigbutton->toggleOn());
+  // Check if any autocrank EX buttons were released
+  #ifndef USE_GEARED_CRANK
+  if (ex1Button->getFunc() == 11 && ex1Button->wasReleased()) { 
+    any_newly_released = true;
+  } else if (ex2Button->getFunc() == 11 && ex2Button->wasReleased()) { 
+    any_newly_released = true;
+  } else if (ex3Button->getFunc() == 11 && ex3Button->wasReleased()) { 
+    any_newly_released = true;
+  } else
+  #endif
+
+  if (bigButton->getFunc() == 11 && bigButton->wasReleased()) { 
+    any_newly_released = true;
+  } else if (ex4Button->getFunc() == 11 && ex4Button->wasReleased()) { 
+    any_newly_released = true;
+  } else if (ex5Button->getFunc() == 11 && ex5Button->wasReleased()) { 
+    any_newly_released = true;
+  } else if (ex6Button->getFunc() == 11 && ex6Button->wasReleased()) { 
+    any_newly_released = true;
+
+  #ifdef REV4_MODE
+  } else if (ex7Button->getFunc() == 11 && ex7Button->wasReleased()) { 
+    any_newly_released = true;
+  } else if (ex8Button->getFunc() == 11 && ex8Button->wasReleased()) { 
+    any_newly_released = true;
+  } else if (ex9Button->getFunc() == 11 && ex9Button->wasReleased()) { 
+    any_newly_released = true;
+  } else if (ex10Button->getFunc() == 11 && ex10Button->wasReleased()) { 
+    any_newly_released = true;
+  #endif
+
   };
 
-  if (ex6Button->wasPressed()) {
-    ex6Button->doFunc(mycrank->isSpinning() || bigbutton->toggleOn());
-  };
+
+  // Run EX functions (other than open-pause-menu and auto-crank)
+  #ifndef USE_GEARED_CRANK
+  if (ex1Button->wasPressed()) { ex1Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
+  if (ex2Button->wasPressed()) { ex2Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
+  if (ex3Button->wasPressed()) { ex3Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
+  #endif
+  if (bigButton->wasPressed()) { bigButton->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
+  if (ex4Button->wasPressed()) { ex4Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
+  if (ex5Button->wasPressed()) { ex5Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
+  if (ex6Button->wasPressed()) { ex6Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
+
+  #ifdef REV4_MODE
+  if (ex7Button->wasPressed()) { ex7Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
+  if (ex8Button->wasPressed()) { ex8Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
+  if (ex9Button->wasPressed()) { ex9Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
+  if (ex10Button->wasPressed()) { ex10Button->doFunc(mycrank->isSpinning() || autocrank_toggle_on); };
+  #endif
   
 
   // NOTE:
@@ -431,21 +580,22 @@ void loop() {
   // MIDI note itself.  We just turn that on and off like the other strings.
 
   // If the big button is toggled on or the crank is active (i.e., if we're making noise):
-  if (bigbutton->toggleOn() || mycrank->isSpinning()) {
+  if (autocrank_toggle_on || mycrank->isSpinning()) {
 
     // Turn on the strings without a click if:
     // * We just hit the button and we weren't cranking, OR
     // * We just started cranking and we hadn't hit the button.
-    if (bigbutton->wasPressed() && !mycrank->isSpinning()) {
-      mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
-      mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
+
+    if (any_newly_pressed && !mycrank->isSpinning()) {
+      mystring->soundOn(myoffset + tpose_offset, mel_vibrato);
+      mylowstring->soundOn(myoffset + tpose_offset, mel_vibrato);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
       draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
 
-    } else if (mycrank->startedSpinning() && !bigbutton->toggleOn()) {
-      mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
-      mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
+    } else if (mycrank->startedSpinning() && !autocrank_toggle_on) {
+      mystring->soundOn(myoffset + tpose_offset, mel_vibrato);
+      mylowstring->soundOn(myoffset + tpose_offset, mel_vibrato);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
       draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
@@ -457,8 +607,8 @@ void loop() {
       mylowstring->soundOff();
       mykeyclick->soundOff();
 
-      mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
-      mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
+      mystring->soundOn(myoffset + tpose_offset, mel_vibrato);
+      mylowstring->soundOn(myoffset + tpose_offset, mel_vibrato);
       mykeyclick->soundOn(tpose_offset);
       draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
     };
@@ -475,7 +625,7 @@ void loop() {
     };
 
   // If the toggle came off and the crank is off, turn off sound.
-  } else if (bigbutton->wasReleased() && !mycrank->isSpinning()) {
+  } else if (any_newly_released && !mycrank->isSpinning()) {
     all_soundOff();
 
     // Just to be sure...
@@ -486,7 +636,7 @@ void loop() {
     note_display_off = false;
 
   // If the crank stops and the toggle was off, turn off sound.
-  } else if (mycrank->stoppedSpinning() && !bigbutton->toggleOn()) {
+  } else if (mycrank->stoppedSpinning() && !autocrank_toggle_on) {
     all_soundOff();
 
     stopped_playing_time = millis();
@@ -496,7 +646,7 @@ void loop() {
   // Once the sound stops, track the time until a fifth of a second has passed, then go back to the
   // non-playing display.  This just makes the display looks a bit nicer even if the sound jitters a
   // little.  It's subtle but I like the touch.
-  if (!note_display_off && !bigbutton->toggleOn() && !mycrank->isSpinning()) {
+  if (!note_display_off && !autocrank_toggle_on && !mycrank->isSpinning()) {
     if ((millis() - stopped_playing_time) > 200) {
       note_display_off = true;
       print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
@@ -506,17 +656,30 @@ void loop() {
   // Apparently we need to do this to discard incoming data.
   if (EEPROM.read(EEPROM_SEC_OUT) != 1) {
     while (MIDI.read()) {
+        Serial.print("Read MIDI message: ");
+        Serial.print(MIDI.getData1());
+        Serial.print(" ");
+        Serial.println(MIDI.getData2());
       };
   };
+
   while (usbMIDI.read()) {
+    Serial.print("Read USB MIDI message: ");
+    Serial.print(usbMIDI.getData1());
+    Serial.print(" ");
+    Serial.println(usbMIDI.getData2());
   };
 
   // My dev output stuff.
   test_count +=1;
-  if (test_count > 100000) {
+  if (test_count > 500000) {
     test_count = 0;
-     Serial.print("100,000 loop()s took: ");
-     Serial.println(millis() - start_time);
+     Serial.print("500,000 loop()s took: ");
+     Serial.print(millis() - start_time);
+     Serial.print(" milliseconds. ");
+     Serial.print(500000/(millis() - start_time));
+     Serial.print("kHz.  Cur Velocity: ");
+     Serial.println(mycrank->getVAvg());
      // Serial.print("ms.  Avg Velocity: ");
      // Serial.print(mycrank->getVAvg());
      // Serial.print("rpm. Transitions: ");
@@ -524,10 +687,10 @@ void loop() {
      // Serial.print(", est. rev: ");
      // Serial.println(mycrank->getRev());
      start_time = millis();
-     #ifdef USE_PEDAL
-       Serial.println(String("") + "\nKNOB_V = " + myvibknob->getVoltage());
-       Serial.println(String("") + "KNOB_VIB = " + myvibknob->getVibrato());
-     #endif
+//     #ifdef USE_PEDAL
+//       Serial.println(String("") + "\nKNOB_V = " + myvibknob->getVoltage());
+//       Serial.println(String("") + "KNOB_VIB = " + myvibknob->getVibrato());
+//     #endif
   }
 
 };

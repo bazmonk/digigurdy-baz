@@ -29,11 +29,11 @@ void about_screen() {
 
   u8g2.setFont(u8g2_font_finderskeepers_tf);
 
-  u8g2.drawStr(64 - (u8g2.getStrWidth("By Basil Lalli") / 2), 28, "By Basil Lalli");
-  u8g2.drawStr(64 - (u8g2.getStrWidth("Concept By John Dingley") / 2), 37, "Concept By John Dingley");
+  u8g2.drawStr(64 - (u8g2.getStrWidth("Hardware by John Dingley") / 2), 28, "Hardware by John Dingley");
+  u8g2.drawStr(64 - (u8g2.getStrWidth("Software by Basil Lalli") / 2), 37, "Software by Basil Lalli");
   u8g2.drawStr(64 - (u8g2.getStrWidth(REL_DATE.c_str()) / 2), 46, REL_DATE.c_str());
-  u8g2.drawStr(64 - (u8g2.getStrWidth(EXTRA_LINE.c_str()) / 2), 55, EXTRA_LINE.c_str());
-  u8g2.drawStr(64 - (u8g2.getStrWidth("shorturl.at/tuDY1") / 2), 64, "shorturl.at/tuDY1");
+  u8g2.drawStr(64 - (u8g2.getStrWidth("https://digigurdy.com") / 2), 55, "https://digigurdy.com");
+  u8g2.drawStr(64 - (u8g2.getStrWidth(EXTRA_LINE.c_str()) / 2), 64, EXTRA_LINE.c_str());
 
   u8g2.sendBuffer();
 };
@@ -41,22 +41,20 @@ void about_screen() {
 /// @brief Draws the startup animation sequence.
 void startup_screen_sequence() {
 
-  for (int x = 0; x < 8; x++) {
+  for (int x = 0; x < 11; x++) {
     // Clear the buffer.
-    u8g2.clearBuffer();
-    u8g2.drawBitmap(0, 0, 16, 64, logos[x]);
-    u8g2.sendBuffer();
+    draw_xbm(logos[x]);
     if (x == 0) {
-      delay(800);
-    } else if (x > 6) {
-      delay(500);
+      delay(140);
+    } else if (x > 9) {
+      delay(750);
     } else {
-      delay(120);
+      delay(140);
     };
   };
   // Display the about screen
   about_screen();
-  delay(2500);
+  delay(2000);
 };
 
 /// @}

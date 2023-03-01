@@ -4,7 +4,60 @@ See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more docu
 
 See [the code documentation here](https://bazmonk.github.io/digigurdy-baz/html/index.html).
 
-**Check out version 2.4.0! (NEW)**
+**Check out version 3.0.0! (NEW)**
+
+* 3.0.0 -
+  * Minor screen-delay tweaks + changes since 2.6
+
+* 2.9.9 - 
+  * Reorganized EX function menus
+  * Load save slot / preset tuning EX functions.
+
+* 2.9.8 -
+  * Fixed brief "chirp" of sound after "Crank On!" screen that was due to counting the starting position of the crank as initial motion.
+  * Adjusted buzz expression to better cover the range of an average (I hope!) couping motion.
+  * Volume up/down step amount cut in half for more granularity.
+  * Hi/Low melody mute EX functions (dedicated for each).
+
+* 2.9.7 -
+  * Incremental encoder support fully working :-P
+  * EX2 button disabled, pin 13 being used as Buzz LED again.
+  * New logo and animations from Billy Amateo (thanks Billy!)
+  * New logo "progress meter" when switching sec. output.
+
+* 2.9.6 -
+  * Incremental encoder support (USE_ENCODER)
+
+* 2.9.4 -
+  * New Crank algorithm, improved behavior and feel
+  * Minor bug fixes.
+
+* 2.9.2 - 
+  * New EX function: toggle secondary output
+
+* 2.9.1 - Maybe working REV4 build.
+
+* 2.6.0 - Changes since 2.4
+
+* 2.5.7 - Renamed clear EEPROM for clarity.
+  * Other logic improvements in EX buttons
+  * New Transpose Toggle EX function
+  * Prettier EX button menu.
+
+* 2.5.6 - Bug/hang fix, more improved trigger/crank behavior.
+
+* 2.5.5 - Improved crank behavior, reducing phantom buzzes.
+
+* 2.5.4 - Melody vibrato is now adjustable in the Input/Output Config menu.
+
+* 2.5.3 - eliminated need for USE_TEENSY35/36 variables.
+
+* 2.5.2 - 
+  * Auto-Crank is an EX function.
+  * Auto-Crank button is an EX button!
+
+* 2.5.1 -
+  * Added QR codes as a help function (to User Guide), and after the about screen (to main Digi-Gurdy site)
 
 * 2.4.0 = 2.3.8 rebadged for main branch.  **Summary of changes since 2.2**:
   * *Switch to hardware SPI screen wiring requirement.*

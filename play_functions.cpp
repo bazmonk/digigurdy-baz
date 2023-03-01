@@ -3,11 +3,11 @@
 /// @ingroup play
 /// @{
 
-/// @brief Turns the volume of all strings up by 10, if possible.
+/// @brief Turns the volume of all strings up by 5, if possible.
 /// @details 
 /// * Checks volume of all strings
-/// * If the loudest string is more than 10 from full volume, increases the volume of all strings by 10.
-/// * If the loudest string is less than 10 from full, do nothing.
+/// * If the loudest string is more than 5 from full volume, increases the volume of all strings by 5.
+/// * If the loudest string is less than 5 from full, do nothing.
 /// @version *New in 2.3.4*
 void vol_up() {
   int highest_vol = 0;
@@ -19,13 +19,13 @@ void vol_up() {
   if (mybuzz->getVolume() > highest_vol) { highest_vol = mybuzz->getVolume(); };
   if (mykeyclick->getVolume() > highest_vol) { highest_vol = mykeyclick->getVolume(); };
 
-  if (highest_vol < 117) {
-    mystring->setVolume(mystring->getVolume() + 10);
-    mylowstring->setVolume(mylowstring->getVolume() + 10);
-    mytromp->setVolume(mytromp->getVolume() + 10);
-    mydrone->setVolume(mydrone->getVolume() + 10);
-    mybuzz->setVolume(mybuzz->getVolume() + 10);
-    mykeyclick->setVolume(mykeyclick->getVolume() + 10);
+  if (highest_vol < 122) {
+    mystring->setVolume(mystring->getVolume() + 5);
+    mylowstring->setVolume(mylowstring->getVolume() + 5);
+    mytromp->setVolume(mytromp->getVolume() + 5);
+    mydrone->setVolume(mydrone->getVolume() + 5);
+    mybuzz->setVolume(mybuzz->getVolume() + 5);
+    mykeyclick->setVolume(mykeyclick->getVolume() + 5);
   };
 
   if (mystring->isPlaying()) {
@@ -46,11 +46,11 @@ void vol_up() {
   };
 };
 
-/// @brief Turns the volume of all strings down by 10, if possible.
+/// @brief Turns the volume of all strings down by 5, if possible.
 /// @details 
 /// * Checks volume of all strings
-/// * If the quietest string is less than 10 from min volume, decreases the volume of all strings by 10.
-/// * If the quietest string is more than 10 from min volume, do nothing.
+/// * If the quietest string is less than 5 from min volume, decreases the volume of all strings by 5.
+/// * If the quietest string is more than 5 from min volume, do nothing.
 /// @version *New in 2.3.4*
 void vol_down() {
 
@@ -63,13 +63,13 @@ void vol_down() {
   if (mybuzz->getVolume() < lowest_vol) { lowest_vol = mybuzz->getVolume(); };
   if (mykeyclick->getVolume() < lowest_vol) { lowest_vol = mykeyclick->getVolume(); };
 
-  if (lowest_vol > 10) {
-    mystring->setVolume(mystring->getVolume() - 10);
-    mylowstring->setVolume(mylowstring->getVolume() - 10);
-    mytromp->setVolume(mytromp->getVolume() - 10);
-    mydrone->setVolume(mydrone->getVolume() - 10);
-    mybuzz->setVolume(mybuzz->getVolume() - 10);
-    mykeyclick->setVolume(mykeyclick->getVolume() - 10);
+  if (lowest_vol > 5) {
+    mystring->setVolume(mystring->getVolume() - 5);
+    mylowstring->setVolume(mylowstring->getVolume() - 5);
+    mytromp->setVolume(mytromp->getVolume() - 5);
+    mydrone->setVolume(mydrone->getVolume() - 5);
+    mybuzz->setVolume(mybuzz->getVolume() - 5);
+    mykeyclick->setVolume(mykeyclick->getVolume() - 5);
   };
 
   if (mystring->isPlaying()) {
@@ -119,6 +119,16 @@ void all_soundKill() {
   mybuzz->soundKill();
 };
 
+/// @brief Clears the volume array of all six string objects.
+void all_clearVolArray() {
+  mystring->clearVolArray();
+  mylowstring->clearVolArray();
+  mykeyclick->clearVolArray();
+  mytromp->clearVolArray();
+  mydrone->clearVolArray();
+  mybuzz->clearVolArray();
+};
+
 /// @brief Increases the transpose by 1 semitone, and adjusts any playing notes.
 /// @param playing True if currently playing sound, false otherwise.
 /// @version *New in  2.3.7*
@@ -129,8 +139,8 @@ void tpose_up_1(bool playing) {
     if (playing) {
       no_buzz_soundOff();
 
-      mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
-      mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
+      mystring->soundOn(myoffset + tpose_offset, mel_vibrato);
+      mylowstring->soundOn(myoffset + tpose_offset, mel_vibrato);
       mykeyclick->soundOn(tpose_offset);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
@@ -153,8 +163,8 @@ void tpose_down_1(bool playing) {
     if (playing) {
       no_buzz_soundOff();
 
-      mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
-      mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
+      mystring->soundOn(myoffset + tpose_offset, mel_vibrato);
+      mylowstring->soundOn(myoffset + tpose_offset, mel_vibrato);
       mykeyclick->soundOn(tpose_offset);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
@@ -180,8 +190,8 @@ void cycle_capo(bool playing) {
     if (playing) {
       no_buzz_soundOff();
 
-      mystring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
-      mylowstring->soundOn(myoffset + tpose_offset, MELODY_VIBRATO);
+      mystring->soundOn(myoffset + tpose_offset, mel_vibrato);
+      mylowstring->soundOn(myoffset + tpose_offset, mel_vibrato);
       mykeyclick->soundOn(tpose_offset);
       mytromp->soundOn(tpose_offset + capo_offset);
       mydrone->soundOn(tpose_offset + capo_offset);
@@ -191,6 +201,31 @@ void cycle_capo(bool playing) {
       print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
                  tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
     };
+};
+
+/// @brief Adjusts the transpose by a given number of steps
+/// @param playing True if currently playing sound, false otherwise.
+/// @param steps Number of semitones to move (signed)
+/// @version *New in  2.5.7*
+void tpose_up_x(bool playing, int steps) {
+  if (max_tpose + steps >= 0) {
+      tpose_offset = steps;
+
+    if (playing) {
+      no_buzz_soundOff();
+
+      mystring->soundOn(myoffset + tpose_offset, mel_vibrato);
+      mylowstring->soundOn(myoffset + tpose_offset, mel_vibrato);
+      mykeyclick->soundOn(tpose_offset);
+      mytromp->soundOn(tpose_offset + capo_offset);
+      mydrone->soundOn(tpose_offset + capo_offset);
+
+      draw_play_screen(mystring->getOpenNote() + tpose_offset + myoffset, play_screen_type, false);
+    } else {
+      print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(),
+                  tpose_offset, capo_offset, myoffset, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
+    };
+  };
 };
 
 /// @}

@@ -86,6 +86,7 @@ $(function() {
 <code>#include &quot;<a class="el" href="startup__screens_8h_source.html">startup_screens.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ex__screens_8h_source.html">ex_screens.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="tuning__screens_8h_source.html">tuning_screens.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="play__functions_8h_source.html">play_functions.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="usb__power_8h_source.html">usb_power.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="gearcrank_8h_source.html">gearcrank.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="vibknob_8h_source.html">vibknob.h</a>&quot;</code><br />
@@ -124,9 +125,12 @@ Functions</h2></td></tr>
 <tr class="memitem:ga97f332e5f0aed9a0997cf593a8f6ec77"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__pause.html#ga97f332e5f0aed9a0997cf593a8f6ec77">load_saved_tunings</a> (int slot)</td></tr>
 <tr class="memdesc:ga97f332e5f0aed9a0997cf593a8f6ec77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads the given saved tuning slot.  <a href="group__pause.html#ga97f332e5f0aed9a0997cf593a8f6ec77">More...</a><br /></td></tr>
 <tr class="separator:ga97f332e5f0aed9a0997cf593a8f6ec77"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9e02466fbd55b6e7e78b9826d3cd6d38"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__pause.html#ga9e02466fbd55b6e7e78b9826d3cd6d38">clear_eeprom</a> ()</td></tr>
-<tr class="memdesc:ga9e02466fbd55b6e7e78b9826d3cd6d38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the EEPROM and sets some default values in it.  <a href="group__pause.html#ga9e02466fbd55b6e7e78b9826d3cd6d38">More...</a><br /></td></tr>
-<tr class="separator:ga9e02466fbd55b6e7e78b9826d3cd6d38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1fba6c6ad829d3949a684267d60ee579"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__pause.html#ga1fba6c6ad829d3949a684267d60ee579">reset_ex_eeprom</a> ()</td></tr>
+<tr class="memdesc:ga1fba6c6ad829d3949a684267d60ee579"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets EX EEPROM values to their defaults.  <a href="group__pause.html#ga1fba6c6ad829d3949a684267d60ee579">More...</a><br /></td></tr>
+<tr class="separator:ga1fba6c6ad829d3949a684267d60ee579"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac2da7f5f193a840c4500132e675f2f65"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__pause.html#gac2da7f5f193a840c4500132e675f2f65">reset_eeprom</a> ()</td></tr>
+<tr class="memdesc:gac2da7f5f193a840c4500132e675f2f65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the EEPROM and sets some default values in it.  <a href="group__pause.html#gac2da7f5f193a840c4500132e675f2f65">More...</a><br /></td></tr>
+<tr class="separator:gac2da7f5f193a840c4500132e675f2f65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga935a701641be4cd0bd25466f0fd193a3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__pause.html#ga935a701641be4cd0bd25466f0fd193a3">view_slot_screen</a> (int slot_num)</td></tr>
 <tr class="memdesc:ga935a701641be4cd0bd25466f0fd193a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Displays a given saved slot tuning and prompts user to accept.  <a href="group__pause.html#ga935a701641be4cd0bd25466f0fd193a3">More...</a><br /></td></tr>
 <tr class="separator:ga935a701641be4cd0bd25466f0fd193a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -169,6 +173,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ga18fc5642672f8f2392c73a1b546ab85d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__pause.html#ga18fc5642672f8f2392c73a1b546ab85d">notation_config_screen</a> ()</td></tr>
 <tr class="memdesc:ga18fc5642672f8f2392c73a1b546ab85d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prompts user to choose the on-screen note notation to be used.  <a href="group__pause.html#ga18fc5642672f8f2392c73a1b546ab85d">More...</a><br /></td></tr>
 <tr class="separator:ga18fc5642672f8f2392c73a1b546ab85d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaab8b8fc21cdb6b364836274ec75e07b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__pause.html#gaab8b8fc21cdb6b364836274ec75e07b5">mel_vib_screen</a> ()</td></tr>
+<tr class="memdesc:gaab8b8fc21cdb6b364836274ec75e07b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prompts user to choose what amount of constant vibrato to send with the melody strings.  <a href="group__pause.html#gaab8b8fc21cdb6b364836274ec75e07b5">More...</a><br /></td></tr>
+<tr class="separator:gaab8b8fc21cdb6b364836274ec75e07b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>

@@ -60,14 +60,45 @@ static const int EEPROM_EX3 = 105;
 static const int EEPROM_EX4 = 106;
 static const int EEPROM_EX5 = 107;
 static const int EEPROM_EX6 = 108;
+static const int EEPROM_EX7 = 109;
+static const int EEPROM_EX8 = 110;
+static const int EEPROM_EX9 = 111;
+static const int EEPROM_EX10 = 112;
+static const int EEPROM_EXBB = 113;
 
-
-static const bool EEPROM_USE_SOLFEGE = 109;
+static const bool EEPROM_USE_SOLFEGE = 114;
 
 // This determines which output to use besides usbMIDI
 // 0 = MIDI-OUT
 // 1 = Trigger/Tsunami
 // 2 = Both
-static const int EEPROM_SEC_OUT = 110;
+static const int EEPROM_SEC_OUT = 115;
+
+static const int EEPROM_MEL_VIBRATO = 116;
+
+// These hold transpose steps, if they exist.
+static const int EEPROM_EX1_TSTEP = 117;
+static const int EEPROM_EX2_TSTEP = 118;
+static const int EEPROM_EX3_TSTEP = 119;
+static const int EEPROM_EX4_TSTEP = 120;
+static const int EEPROM_EX5_TSTEP = 121;
+static const int EEPROM_EX6_TSTEP = 122;
+static const int EEPROM_EX7_TSTEP = 123;
+static const int EEPROM_EX8_TSTEP = 124;
+static const int EEPROM_EX9_TSTEP = 125;
+static const int EEPROM_EX10_TSTEP = 126;
+static const int EEPROM_EXBB_TSTEP = 127;
+
+static const int EEPROM_EX1_SLOT = 128;
+static const int EEPROM_EX2_SLOT = 129;
+static const int EEPROM_EX3_SLOT = 130;
+static const int EEPROM_EX4_SLOT = 131;
+static const int EEPROM_EX5_SLOT = 132;
+static const int EEPROM_EX6_SLOT = 133;
+static const int EEPROM_EX7_SLOT = 134;
+static const int EEPROM_EX8_SLOT = 135;
+static const int EEPROM_EX9_SLOT = 136;
+static const int EEPROM_EX10_SLOT = 137;
+static const int EEPROM_EXBB_SLOT = 138;
 
 #endif

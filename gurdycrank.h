@@ -8,33 +8,38 @@
 #include "config.h"
 #include "simpleled.h"
 
+#ifdef USE_ENCODER
+#define ENCODER_OPTIMIZE_INTERRUPTS
+#include <Encoder.h>
+#endif
+
+extern volatile int num_events;
+extern volatile int last_event;
+extern elapsedMicros last_event_timer;
+extern elapsedMicros debounce_timer;
+
 class GurdyCrank {
   private:
     int sensor_pin;
     double spoke_width = 1.0 / (NUM_SPOKES * 2.0);
-    double v_inst = 0.0;
-    double v_last = 0.0;
-    double v_smooth = 0.0;
-    double v_2 = 0.0;
-    double v_3 = 0.0;
-    double v_4 = 0.0;
-    double v_5 = 0.0;
-    double v_6 = 0.0;
-    double v_7 = 0.0;
-    double v_8 = 0.0;
-    double v_avg = 0.0;
-
-    unsigned int this_time;
-    unsigned int lt_1, lt_2, lt_3, lt_4, lt_5, lt_6, lt_7, lt_8 = 0;
-    float lt_avg;
-    float lt_stdev;
-
-    bool last_event;
-    bool this_event;
+    double cur_vel;
     bool was_spinning = false;
     bool was_buzzing = false;
 
+    #ifdef USE_ENCODER
+    long pulse;
+    long last_pulse;
+    double new_vel;
+    Encoder *myEnc;
+    #endif
+
     int expression;
+    int buzz_expression;
+
+    elapsedMicros eval_timer;
+    elapsedMicros decay_timer;
+    elapsedMillis the_expression_timer;
+    elapsedMillis the_buzz_timer;
 
     BuzzKnob* myKnob;
 
@@ -42,17 +47,9 @@ class GurdyCrank {
       SimpleLED* myLED;
     #endif
 
-    int trans_count = 0;
-    float rev_count = 0;
-
-    elapsedMicros the_timer;
-    elapsedMicros the_spoke_timer;
-    elapsedMicros the_stop_timer;
-    elapsedMillis the_buzz_timer;
-    elapsedMillis the_expression_timer;
-
   public:
     GurdyCrank(int s_pin, int buzz_pin, int led_pin);
+    GurdyCrank(int s_pin, int s_pin2, int buzz_pin, int led_pin);
 
     bool isDetected();
     void update();
@@ -63,8 +60,6 @@ class GurdyCrank {
     bool startedBuzzing();
     bool stoppedBuzzing();
     double getVAvg();
-    int getCount();
-    double getRev();
     void disableLED();
     void enableLED();
 };
