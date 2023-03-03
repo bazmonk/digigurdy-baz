@@ -3,15 +3,15 @@
 
 #include <Arduino.h>
 
-const String VERSION = "3.0.0";
-const String REL_DATE = "2023-03-01, v" + VERSION;
+const String VERSION = "3.0.1";
+const String REL_DATE = "2023-03-03, v" + VERSION;
 
 /// @defgroup config Configuration Options
 /// These variables/definitions are compile-time configuration options.
 /// @{
 
 /// @brief This is a freeform line displayed on the About screen
-const String EXTRA_LINE = "   ";
+const String EXTRA_LINE = "  Test Build  ";
 //const String EXTRA_LINE = "      3.5 TEST       ";
 //const String EXTRA_LINE = " MIDI-OUT, LED, SWSPI";
 //const String EXTRA_LINE = " TRIGGER - LED KNOB  ";
@@ -104,14 +104,14 @@ const float PEDAL_MAX_V = 658.0;
 
 /// @ingroup optical
 /// @brief The crank speed in RPMs at which expression volume will max out.
-const float EXPRESSION_VMAX = 5.0;
+const float EXPRESSION_VMAX = 18.0;
 
 /// @ingroup optical
 /// @brief The minimum expression volume.
 /// @details
 /// * Expression (MIDI CC11) value will be at least this much.
 /// * Silent = 0, Max = 127 
-const int EXPRESSION_START = 30;
+const int EXPRESSION_START = 60;
 
 /// @ingroup optical
 /// @brief The number of "spokes" on the optical crank wheel.
@@ -125,7 +125,7 @@ const int NUM_SPOKES = 80;
 
 /// @ingroup optical
 /// @brief The crank speed at which sound begins to play in RPMs.
-const float V_THRESHOLD = 2.0;
+const float V_THRESHOLD = 5.0;
 
 
 /// @defgroup gear Gear-Motor Crank Configuration Variables

@@ -62,6 +62,7 @@ GurdyCrank::GurdyCrank(int s_pin, int s_pin2, int buzz_pin, int led_pin) {
   expression = 0;
   buzz_expression = 0;
   the_buzz_timer = 0;
+  clockwise = true;
 };
 
 /// @brief Reports if a crank is connected.
@@ -89,14 +90,31 @@ void GurdyCrank::update() {
     return;
   };
   
+
   if (eval_timer > 10000) {
     pulse = myEnc->read();
 
+    if (clockwise && pulse < last_pulse) {
+      clockwise = false;
+      cur_vel = -5;
+
+      last_pulse = pulse;
+      last_event_timer = 0;
+      eval_timer = 0;
+    } else if (!clockwise && pulse > last_pulse) {
+      clockwise = true;
+      cur_vel = 0;
+
+      last_pulse = pulse;
+      last_event_timer = 0;
+      eval_timer = 0;
+    }
+    
     if (last_pulse != pulse) {
       
       new_vel = (abs(last_pulse - pulse) * 30000000.0) / (NUM_SPOKES * last_event_timer);
 
-      cur_vel = cur_vel + (0.8 * (new_vel - cur_vel));
+      cur_vel = cur_vel + (0.78 * (new_vel - cur_vel));
       last_pulse = pulse;
       last_event_timer = 0;
       eval_timer = 0;

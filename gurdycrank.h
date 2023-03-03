@@ -30,6 +30,7 @@ class GurdyCrank {
     long pulse;
     long last_pulse;
     double new_vel;
+    bool clockwise;
     Encoder *myEnc;
     #endif
 
