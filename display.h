@@ -10,7 +10,7 @@
 /// @ingroup display
 /// @{
 
-#ifdef REV4_MODE
+#ifdef USE_SPI2
 // These are the Teensy pins wired up for the OLED.
 // 2.2.1 - changes for HW SPI
 /// @brief The MOSI/DATA pin to the screen.
@@ -36,14 +36,19 @@
 /// @}
 
 #ifdef WHITE_OLED
+
+  #ifdef USE_SPI2
+  extern U8G2_SSD1306_128X64_NONAME_F_3RD_4W_HW_SPI u8g2;
+  #else
   extern U8G2_SSD1306_128X64_NONAME_F_4W_HW_SPI u8g2;
+  #endif
 
   // This is just here for my reference/testing
   // when I want to see how bad SW SPI speed is.
   // extern U8G2_SSD1306_128X64_NONAME_F_4W_SW_SPI u8g2;
 #endif
 #ifdef BLUE_OLED
-  #ifdef REV4_MODE
+  #ifdef USE_SPI2
   extern U8G2_SH1106_128X64_NONAME_F_3RD_4W_HW_SPI u8g2;
   #else
   extern U8G2_SH1106_128X64_NONAME_F_4W_HW_SPI u8g2;

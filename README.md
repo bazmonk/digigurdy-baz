@@ -4,7 +4,10 @@ See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more docu
 
 See [the code documentation here](https://bazmonk.github.io/digigurdy-baz/html/index.html).
 
-**Check out version 3.0.1! (NEW)**
+**Check out version 3.0.2! (NEW)**
+
+* 3.0.2 -
+  * White OLED SPI2 support (USE_SPI2)
 
 * 3.0.1 -
   * Velocity cuts out if reversing crank.
