@@ -3,15 +3,15 @@
 
 #include <Arduino.h>
 
-const String VERSION = "3.0.2";
-const String REL_DATE = "2023-03-08, v" + VERSION;
+const String VERSION = "3.0.2x";
+const String REL_DATE = "2023-03-12, v" + VERSION;
 
 /// @defgroup config Configuration Options
 /// These variables/definitions are compile-time configuration options.
 /// @{
 
 /// @brief This is a freeform line displayed on the About screen
-const String EXTRA_LINE = "  Test Build  ";
+const String EXTRA_LINE = "  No Expression  ";
 //const String EXTRA_LINE = "      3.5 TEST       ";
 //const String EXTRA_LINE = " MIDI-OUT, LED, SWSPI";
 //const String EXTRA_LINE = " TRIGGER - LED KNOB  ";

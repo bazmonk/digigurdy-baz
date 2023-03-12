@@ -254,12 +254,12 @@ void GurdyString::setProgram(uint8_t program) {
 /// @param exp The expression value, 0-127.
 /// @note This has no effect on Tsunami/Trigger units.
 void GurdyString::setExpression(int exp) {
+  return;
+  // usbMIDI.sendControlChange(11, exp, midi_channel);
 
-  usbMIDI.sendControlChange(11, exp, midi_channel);
-
-  if (output_mode != 1) {
-    MIDI.sendControlChange(11, exp, midi_channel);
-  };
+  // if (output_mode != 1) {
+  //   MIDI.sendControlChange(11, exp, midi_channel);
+  // };
 };
 
 /// @brief Bends this string's sound to the specified amount.
