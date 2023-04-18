@@ -57,6 +57,8 @@ GurdyCrank::GurdyCrank(int s_pin, int s_pin2, int buzz_pin, int led_pin) {
   last_event_timer = 0;
 
   last_pulse = 0;
+
+  angle = 0;
   #endif
 
   expression = 0;
@@ -292,3 +294,14 @@ void GurdyCrank::enableLED() {
   myLED->enable();
   #endif
 };
+
+#ifdef USE_ENCODER
+int GurdyCrank::getAngle() {
+  return int(pulse * 0.15) % 360;
+}
+
+void GurdyCrank::resetAngle() {
+  last_pulse = 0;
+  myEnc->readAndReset();
+}
+#endif

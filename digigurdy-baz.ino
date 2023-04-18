@@ -391,6 +391,7 @@ void loop() {
     u8g2.clearBuffer();
     u8g2.drawBitmap(0, 0, 16, 64, crank_on_logo);
     u8g2.sendBuffer();
+    all_soundKill();
     delay(750);
 
     print_display(mystring->getOpenNote(), mylowstring->getOpenNote(), mydrone->getOpenNote(), mytromp->getOpenNote(), tpose_offset, capo_offset, 0, mystring->getMute(), mylowstring->getMute(), mydrone->getMute(), mytromp->getMute());
@@ -672,14 +673,16 @@ void loop() {
 
   // My dev output stuff.
   test_count +=1;
-  if (test_count > 500000) {
+  if (test_count > 250000) {
     test_count = 0;
-     Serial.print("500,000 loop()s took: ");
+     Serial.print("250,000 loop()s took: ");
      Serial.print(millis() - start_time);
      Serial.print(" milliseconds. ");
      Serial.print(500000/(millis() - start_time));
      Serial.print("kHz.  Cur Velocity: ");
-     Serial.println(mycrank->getVAvg());
+     Serial.print(mycrank->getVAvg());
+     Serial.print(", CRANK ANGLE: ");
+     Serial.println(mycrank->getAngle());
      // Serial.print("ms.  Avg Velocity: ");
      // Serial.print(mycrank->getVAvg());
      // Serial.print("rpm. Transitions: ");
