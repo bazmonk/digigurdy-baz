@@ -219,6 +219,18 @@ int GurdyString::getVolume() {
   return midi_volume;
 };
 
+/// @brief Sets a new channel for this string.
+/// @param vol The new MIDI channel for this string.  1-16.
+void GurdyString::setChannel(int cha) {
+  midi_channel = cha;
+};
+
+/// @brief Returns the string's MIDI channel.
+/// @return The string's volume, 1-16
+int GurdyString::getChannel() {
+  return midi_channel;
+};
+
 /// @brief Mutes/unmutes the string.
 /// @param mute True = mute, false = unmute
 /// @note While muted, soundOn/Off events do nothing.  This exists for programming ease (calling sounOn() on all strings without checking if they are muted).

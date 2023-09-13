@@ -61,6 +61,20 @@ void load_saved_tunings(int slot_num) {
   value = EEPROM.read(slot + EEPROM_KEYCLICK_VOL);
   mykeyclick->setVolume(value);
 
+  // MIDI Channels
+  value = EEPROM.read(slot + EEPROM_HI_MEL_CHAN);
+  mystring->setChannel(value);
+  value = EEPROM.read(slot + EEPROM_LO_MEL_CHAN);
+  mylowstring->setChannel(value);
+  value = EEPROM.read(slot + EEPROM_DRONE_CHAN);
+  mydrone->setChannel(value);
+  value = EEPROM.read(slot + EEPROM_TROMP_CHAN);
+  mytromp->setChannel(value);
+  value = EEPROM.read(slot + EEPROM_BUZZ_CHAN);
+  mybuzz->setChannel(value);
+  value = EEPROM.read(slot + EEPROM_KEYCLICK_CHAN);
+  mykeyclick->setChannel(value);
+
   // Gros Modes
   mystring->setGrosMode(EEPROM.read(slot + EEPROM_HI_MEL_GROS));
   mylowstring->setGrosMode(EEPROM.read(slot + EEPROM_LOW_MEL_GROS));

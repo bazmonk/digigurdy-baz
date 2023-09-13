@@ -47,6 +47,8 @@ class GurdyString {
     void setOpenNote(int new_note);
     void setVolume(int vol);
     int getVolume();
+    void setChannel(int cha);
+    int getChannel();
     void setMute(bool mute);
     bool getMute();
     bool isPlaying();
