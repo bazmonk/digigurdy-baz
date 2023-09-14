@@ -275,12 +275,12 @@ void setup() {
   };
   #endif
   
-  mystring = new GurdyString(1, Note(g4), "Hi Melody", EEPROM.read(EEPROM_SEC_OUT));
-  mylowstring = new GurdyString(2, Note(g3), "Low Melody", EEPROM.read(EEPROM_SEC_OUT));
-  mytromp = new GurdyString(3, Note(c3), "Trompette", EEPROM.read(EEPROM_SEC_OUT));
-  mydrone = new GurdyString(4, Note(c2), "Drone", EEPROM.read(EEPROM_SEC_OUT));
-  mybuzz = new GurdyString(5,Note(c3), "Buzz", EEPROM.read(EEPROM_SEC_OUT));
-  mykeyclick = new GurdyString(6, Note(b5), "Key Click", EEPROM.read(EEPROM_SEC_OUT));
+  mystring    = new GurdyString(MIDI_HI_CHANNEL, Note(g4), "Hi Melody", EEPROM.read(EEPROM_SEC_OUT));
+  mylowstring = new GurdyString(MIDI_LO_CHANNEL, Note(g3), "Low Melody", EEPROM.read(EEPROM_SEC_OUT));
+  mytromp     = new GurdyString(MIDI_TR_CHANNEL, Note(c3), "Trompette", EEPROM.read(EEPROM_SEC_OUT));
+  mydrone     = new GurdyString(MIDI_DR_CHANNEL, Note(c2), "Drone", EEPROM.read(EEPROM_SEC_OUT));
+  mybuzz      = new GurdyString(MIDI_BZ_CHANNEL, Note(c3), "Buzz", EEPROM.read(EEPROM_SEC_OUT));
+  mykeyclick  = new GurdyString(MIDI_KC_CHANNEL, Note(b5), "Key Click", EEPROM.read(EEPROM_SEC_OUT));
 
   if (EEPROM.read(EEPROM_SEC_OUT) > 0) {
     mystring->setTrackLoops();

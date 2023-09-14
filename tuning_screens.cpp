@@ -5,7 +5,7 @@
 /// @warning These functions are hardcoded to expect certain string objects to exist.
 /// @{
 
-/// @brief Prompts the user to choose between the primary tunining options: guided tuinings, manual tunings, volume control.
+/// @brief Prompts the user to choose between the primary tunining options: guided tuinings, manual tunings, volume control, MIDI channel assignment.
 /// @return True if an option was chosen, false otherwise.
 bool tuning() {
 
@@ -13,11 +13,11 @@ bool tuning() {
   while (!done) {
 
     if (use_solfege == 0) {
-      print_menu_4("Tuning Menu", "G/C, Guided", "D/G, Guided", "Manual Setup", "Volume Control");
+      print_menu_5("Tuning Menu", "G/C, Guided", "D/G, Guided", "Manual Setup", "Volume Control", "MIDI Channels");
     } else if (use_solfege == 1) {
-      print_menu_4("Tuning Menu", "Sol/Do, Guided", "Re/Sol, Guided", "Manual Setup", "Volume Control");
+      print_menu_5("Tuning Menu", "Sol/Do, Guided", "Re/Sol, Guided", "Manual Setup", "Volume Control", "MIDI Channels");
     } else {
-      print_menu_4("Tuning Menu", "G/C (Sol/Do), Guided", "D/G (Re/Sol), Guided", "Manual Setup", "Volume Control");
+      print_menu_5("Tuning Menu", "G/C (Sol/Do), Guided", "D/G (Re/Sol), Guided", "Manual Setup", "Volume Control", "MIDI Channels");
     };
     delay(150);
 
@@ -42,7 +42,9 @@ bool tuning() {
       manual_tuning_screen();
     } else if (my4Button->wasPressed()) {
       volume_screen();
-    } else if (my5Button->wasPressed() || myXButton->wasPressed()) {
+    } else if (my5Button->wasPressed()) {
+      channel_screen();
+    } else if (myXButton->wasPressed()) {
       return false;
     } else if (my6Button->wasPressed()) {
       cool_kids_screen();
@@ -408,6 +410,98 @@ void change_volume_screen(GurdyString *this_string) {
       };
     } else if (myXButton->wasPressed()) {
       this_string->setVolume(new_vol);
+      done = true;
+    };
+  };
+};
+
+// This screen allows the user to make manual changes to each string's MIDI channel assignment.
+
+/// @brief Promts the user to choose a string to change the MIDI channel of.
+void channel_screen() {
+
+  while (true) {
+
+    print_menu_6("MIDI Channel",
+                 String("Hi Melody - ") + mystring->getChannel(),
+                 String("Low Melody - ") + mylowstring->getChannel(),
+                 String("Trompette - ") + mytromp->getChannel(),
+                 String("Drone - ") + mydrone->getChannel(),
+                 String("Buzz - ") + mybuzz->getChannel(),
+                 String("Key Click - ") + mykeyclick->getChannel());
+    delay(150);
+
+    // Check the 1 and 2 buttons
+    my1Button->update();
+    my2Button->update();
+    my3Button->update();
+    my4Button->update();
+    my5Button->update();
+    my6Button->update();
+    myXButton->update();
+
+    if (my1Button->wasPressed()) {
+      change_channel_screen(mystring);
+
+    } else if (my2Button->wasPressed()) {
+      change_channel_screen(mylowstring);
+
+    } else if (my3Button->wasPressed()) {
+      change_channel_screen(mytromp);
+
+    } else if (my4Button->wasPressed()) {
+      change_channel_screen(mydrone);
+
+    } else if (my5Button->wasPressed()) {
+      change_channel_screen(mybuzz);
+
+    } else if (my6Button->wasPressed()) {
+      change_channel_screen(mykeyclick);
+
+    } else if (myXButton->wasPressed()) {
+      return;
+    };
+  };
+
+  return;
+};
+
+/// @brief Prompts the user to adjust the volume of the given string.
+/// @param this_string The GurdyString object to adjust the volume of
+void change_channel_screen(GurdyString *this_string) {
+  bool done = false;
+  int new_cha = this_string->getChannel();
+  delay(300);
+  while (!done) {
+
+    print_value_selection("MIDI Channel - " + this_string->getName(), new_cha);
+
+    my1Button->update();
+    my2Button->update();
+    myXButton->update();
+
+    if (my1Button->wasPressed()) {
+      if (new_cha > 1) {
+        new_cha -= 1;
+        delay(300);
+      };
+    } else if (my1Button->beingPressed()) {
+      if (new_cha > 1) {
+        new_cha -= 1;
+        delay(100);
+      };
+    } else if (my2Button->wasPressed()) {
+      if (new_cha < 16) {
+        new_cha += 1;
+        delay(300);
+      };
+    } else if (my2Button->beingPressed()) {
+      if (new_cha < 16) {
+        new_cha += 1;
+        delay(100);
+      };
+    } else if (myXButton->wasPressed()) {
+      this_string->setChannel(new_cha);
       done = true;
     };
   };

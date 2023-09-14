@@ -270,6 +270,30 @@ const int TPOSE_UP_INDEX = num_keys - 1;
 /// @details This is intended to be the bottom second key from the right.
 const int TPOSE_DN_INDEX = num_keys - 3;
 
+/// @brief The MIDI channel of the "Hi Melody" string.
+/// @details Default is MIDI channel 1.
+const int MIDI_HI_CHANNEL = 1;
+
+/// @brief The MIDI channel of the "Low Melody" string.
+/// @details Default is MIDI channel 2.
+const int MIDI_LO_CHANNEL = 2;
+
+/// @brief The MIDI channel of the "Trompette" string.
+/// @details Default is MIDI channel 3.
+const int MIDI_TR_CHANNEL = 3;
+
+/// @brief The MIDI channel of the "Drone" string.
+/// @details Default is MIDI channel 4.
+const int MIDI_DR_CHANNEL = 4;
+
+/// @brief The MIDI channel of the "Buzz" string.
+/// @details Default is MIDI channel 5.
+const int MIDI_BZ_CHANNEL = 5;
+
+/// @brief The MIDI channel of the "Key Click" string.
+/// @details Default is MIDI channel 6.
+const int MIDI_KC_CHANNEL = 6;
+
 
 // These are less-commonly-changed options:
 

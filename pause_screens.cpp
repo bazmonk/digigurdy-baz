@@ -418,6 +418,12 @@ void save_tunings(int slot) {
   EEPROM.write(slot + EEPROM_TROMP_GROS, mytromp->getGrosMode());
   EEPROM.write(slot + EEPROM_DRONE_GROS, mydrone->getGrosMode());
   EEPROM.write(slot + EEPROM_BUZZ_GROS, mybuzz->getGrosMode());
+  EEPROM.write(slot + EEPROM_HI_MEL_CHAN, mystring->getChannel());
+  EEPROM.write(slot + EEPROM_LO_MEL_CHAN, mylowstring->getChannel());
+  EEPROM.write(slot + EEPROM_DRONE_CHAN, mydrone->getChannel());
+  EEPROM.write(slot + EEPROM_TROMP_CHAN, mytromp->getChannel());
+  EEPROM.write(slot + EEPROM_BUZZ_CHAN, mybuzz->getChannel());
+  EEPROM.write(slot + EEPROM_KEYCLICK_CHAN, mykeyclick->getChannel());
 
 };
 

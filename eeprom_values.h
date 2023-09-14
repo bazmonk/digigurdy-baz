@@ -7,15 +7,15 @@
 // If you end up burning out one of the memory locations, you can shift them around
 // by redefining the assingments here.
 
-// The slots below should be arranged so that they are at least 20 apart.  This is
+// The slots below should be arranged so that they are at least 25 apart.  This is
 // to provide room for future upgrades.  There may be two more channels later, as well
 // as a second value (volume) for each channel.
 //
 // Teensy3.5 has 4096 bytes of EEPROM, so there's lots of room here.
 static const int EEPROM_SLOT1 = 0;
-static const int EEPROM_SLOT2 = 20;
-static const int EEPROM_SLOT3 = 40;
-static const int EEPROM_SLOT4 = 60;
+static const int EEPROM_SLOT2 = 25;
+static const int EEPROM_SLOT3 = 50;
+static const int EEPROM_SLOT4 = 75;
 
 // These define what the values are within the "slots".  You'd add this to one of the
 // SLOTs above to get the actual address in EEPROM.
@@ -37,6 +37,12 @@ static const int EEPROM_LOW_MEL_GROS = 14;
 static const int EEPROM_TROMP_GROS = 15;
 static const int EEPROM_DRONE_GROS = 16;
 static const int EEPROM_BUZZ_GROS = 17;
+static const int EEPROM_HI_MEL_CHAN = 18;
+static const int EEPROM_LO_MEL_CHAN = 19;
+static const int EEPROM_DRONE_CHAN = 20;
+static const int EEPROM_TROMP_CHAN = 21;
+static const int EEPROM_BUZZ_CHAN = 22;
+static const int EEPROM_KEYCLICK_CHAN = 23;
 
 // This int saves the play screen type.  0 = note + staff, 1 = note only;
 static const int EEPROM_DISPLY_TYPE = 100;
