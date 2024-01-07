@@ -31,6 +31,7 @@ class GurdyCrank {
     long last_pulse;
     double new_vel;
     bool clockwise;
+    int angle;
     Encoder *myEnc;
     #endif
 
@@ -63,6 +64,11 @@ class GurdyCrank {
     double getVAvg();
     void disableLED();
     void enableLED();
+    
+    #ifdef USE_ENCODER
+    int getAngle();
+    void resetAngle();
+    #endif
 };
 
 #endif
