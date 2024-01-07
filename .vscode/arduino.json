@@ -1,4 +1,7 @@
 {
-    "configuration": "usb=serial,speed=600,opt=o2std,keys=en-us",
-    "board": "teensy:avr:teensy41"
+    "configuration": "usb=serialmidi,speed=600,opt=o3std,keys=en-us",
+    "board": "teensy:avr:teensy41",
+    "port": "/dev/tty.usbmodem126943101",
+    "sketch": "digigurdy-baz.ino",
+    "output": "/Users/baz/Documents/Arduino/builds"
 }
