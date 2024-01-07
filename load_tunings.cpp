@@ -106,7 +106,7 @@ bool view_slot_screen(int slot_num) {
     myXButton->update();
 
     if (my1Button->wasPressed() || myAButton->wasPressed()) {
-      load_saved_tunings(slot);
+      load_saved_tunings(slot_num);
       signal_scene_change(slot_num + 3); // Zero indexed and first 4 are reserved for presets
       done = true;
 
