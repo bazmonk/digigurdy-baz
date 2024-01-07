@@ -430,7 +430,7 @@ void reset_ex_eeprom() {
   EEPROM.write(EEPROM_EX2, 2);
   EEPROM.write(EEPROM_EX3, 4);
   EEPROM.write(EEPROM_EX4, 5);
-  EEPROM.write(EEPROM_EX5, 11);
+  EEPROM.write(EEPROM_EX5, 13);
   EEPROM.write(EEPROM_EX6, 6);
   EEPROM.write(EEPROM_EX7, 7);
   EEPROM.write(EEPROM_EX8, 8);
