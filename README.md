@@ -4,7 +4,13 @@ See [the wiki here](https://github.com/bazmonk/digigurdy-baz/wiki) for more docu
 
 See [the code documentation here](https://bazmonk.github.io/digigurdy-baz/html/index.html).
 
-**Check out version 3.0.2! (NEW)**
+* 3.0221 -
+  * Smoothing filter for crank removed (better response)
+  * Buzz knob floor lowered
+
+* 3.0107 -
+  * New version numbering: version.mmdd
+  * Major bug fix when loading save slots (thank you Tianze for reporting it!)
 
 * 3.0.2 -
   * White OLED SPI2 support (USE_SPI2)

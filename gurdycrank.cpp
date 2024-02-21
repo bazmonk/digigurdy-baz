@@ -116,7 +116,8 @@ void GurdyCrank::update() {
       
       new_vel = (abs(last_pulse - pulse) * 30000000.0) / (NUM_SPOKES * last_event_timer);
 
-      cur_vel = cur_vel + (0.78 * (new_vel - cur_vel));
+      //cur_vel = cur_vel + (0.78 * (new_vel - cur_vel));    //Rolling mean
+      cur_vel = new_vel;     // No rolling mean, gives subjective fastest response. Not much difference but still works fine.
       last_pulse = pulse;
       last_event_timer = 0;
       eval_timer = 0;
@@ -256,8 +257,15 @@ bool GurdyCrank::startedBuzzing() {
 
 /// @brief Reports whether buzzing stopped this update() cycle.
 /// @return True if buzzing stopped thie cycle, false otherwise.
+
+// Basils default was  * 0.95
+       // Comment JD   If the value here is higher, close to 1, what you find is that you can get double buzzes. If you let the value drop a little before it turns off, it is then
+       // not immediately hovering on the cusp of turning the buzz on again, you have to accelerate the crank a little to get the next buzz
+       // You can hide double buzzes by making the minimum buzz duration longer, but if you make that too long, you struggle to get 4 buzzes per turn as it has not turned off 
+       // by the time you need the next buzz.
+       // So balancing several factors here
 bool GurdyCrank::stoppedBuzzing() {
-  if (getVAvg() <= (myKnob->getThreshold() * 0.95)) {
+  if (getVAvg() <= (myKnob->getThreshold() * 0.85)) {
     if (was_buzzing && the_buzz_timer > 50) {
       was_buzzing = false;
 
